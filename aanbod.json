@@ -1,0 +1,25 @@
+{
+  "bijgewerkt": "2026-06-10",
+  "aanbod": [
+    {
+      "id": "PND-2025-011",
+      "adres": "Laan op Zuid 304",
+      "plaats": "Rotterdam",
+      "type": "Appartement",
+      "status": "Te koop",
+      "prijs": 415000,
+      "label": "A",
+      "m2": 92,
+      "kamers": 3,
+      "omschrijving": "Volledig gerenoveerd 3-kamerappartement op de Kop van Zuid. Nieuwe installaties, warmtepomp, energielabel A en hoogwaardige afwerking — direct te betrekken."
+    }
+  ],
+  "verkocht": [
+    {
+      "adres": "Schiekade 18",
+      "plaats": "Rotterdam",
+      "type": "Appartement",
+      "label": "B"
+    }
+  ]
+}

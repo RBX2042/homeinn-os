@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HomeINN OS | Vastgoedportaal</title>
+  <meta name="description" content="HomeINN OS: portaal voor aankoop, projectontwikkeling en verkoop van vastgoed.">
+  <link rel="icon" href="assets/favicon-512.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#dashboard" aria-label="HomeINN OS">
+      <img src="assets/logo-light.png" alt="HomeINN">
+      <span>OS</span>
+    </a>
+    <nav class="side-nav" aria-label="Hoofdnavigatie">
+      <p class="nav-group">Overzicht</p>
+      <button class="nav-item active" data-view="dashboard">Dashboard</button>
+      <button class="nav-item" data-view="inbox">Aanvragen</button>
+      <p class="nav-group">Aankoop</p>
+      <button class="nav-item" data-view="deals">Aankoopkansen</button>
+      <button class="nav-item" data-view="calculator">Dealcalculator</button>
+      <p class="nav-group">Portfolio</p>
+      <button class="nav-item" data-view="portfolio">Panden</button>
+      <button class="nav-item" data-view="projects">Ontwikkelprojecten</button>
+      <button class="nav-item" data-view="costs">Kosten</button>
+      <p class="nav-group">Verkoop</p>
+      <button class="nav-item" data-view="sales">Verkoop</button>
+      <p class="nav-group">Organisatie</p>
+      <button class="nav-item" data-view="planning">Planning</button>
+      <button class="nav-item" data-view="relations">Relaties</button>
+      <p class="nav-group">Overig</p>
+      <button class="nav-item" data-view="landing">Website preview</button>
+      <button class="nav-item" data-view="settings">Instellingen</button>
+    </nav>
+    <div class="sidebar-card">
+      <span class="mini-label">Vandaag</span>
+      <strong id="sidebar-actions">—</strong>
+      <p id="sidebar-sub">Acties worden geladen…</p>
+    </div>
+  </aside>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">HomeINN Vastgoedportaal</p>
+        <h1 id="view-title">Dashboard</h1>
+      </div>
+      <div class="top-actions">
+        <label class="search">
+          <span>Zoeken</span>
+          <input id="search-input" type="search" placeholder="Pand, kans, relatie, project…" autocomplete="off">
+          <div class="search-results" id="search-results" hidden></div>
+        </label>
+        <button class="btn secondary" id="export-btn">Exporteer</button>
+        <button class="btn primary" id="primary-action">Nieuwe aankoopkans</button>
+      </div>
+    </header>
+
+    <!-- ===== Website preview ===== -->
+    <section class="view" id="landing">
+      <iframe class="public-site-frame" src="homeinn-public.html" title="HomeINN landingspagina"></iframe>
+      <button class="btn primary back-to-app" id="back-to-app">← Terug naar portaal</button>
+    </section>
+
+
+    <!-- ===== Aanvragen (website) ===== -->
+    <section class="view" id="inbox">
+      <div class="kpi-grid three" id="inbox-kpis"></div>
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Aanvragen via de website</h2>
+            <p>Formulieren van je website (kennismaking, pand verkopen, contact) komen hier automatisch binnen. Zet ze met één klik om naar een aankoopkans of relatie.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Datum</th>
+                <th>Type</th>
+                <th>Naam</th>
+                <th>Contactgegevens</th>
+                <th>Betreft</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="inbox-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Dashboard ===== -->
+    <section class="view active" id="dashboard">
+      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="dash-grid">
+        <section class="panel wide">
+          <div class="panel-head">
+            <div>
+              <h2>Geïnvesteerd vermogen per pand</h2>
+              <p>Waar je kapitaal nu zit — inclusief aankoop, ontwikkeling en houdkosten.</p>
+            </div>
+          </div>
+          <div class="chart" id="invest-chart" aria-label="Kapitaalgrafiek"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head compact">
+            <h2>Actielijst</h2>
+            <span class="badge" id="signal-count"></span>
+          </div>
+          <p class="hint">Automatisch gesignaleerd op basis van biedingen, verkoop, budgetten, financiering en planning.</p>
+          <div class="priority-list" id="signal-list"></div>
+        </section>
+      </div>
+      <div class="dash-grid bottom">
+        <section class="panel">
+          <div class="panel-head compact">
+            <h2>Planning deze week</h2>
+            <button class="text-btn" data-view-jump="planning">Naar planning</button>
+          </div>
+          <div class="priority-list" id="today-plan"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head compact">
+            <h2>Eigen taken</h2>
+          </div>
+          <form id="task-form" class="inline-form">
+            <input id="task-input" placeholder="Nieuwe taak… (Enter om toe te voegen)" required>
+            <input id="task-date" type="date" title="Deadline (optioneel)">
+            <button class="btn primary slim" type="submit">+</button>
+          </form>
+          <div class="priority-list" id="task-panel"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ===== Aankoopkansen ===== -->
+    <section class="view" id="deals">
+      <div id="deal-list-wrap">
+        <div class="kpi-grid three" id="deal-kpis"></div>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Aankooppijplijn</h2>
+              <p>Van lead tot notaris. Klik op een kaart voor calculatie, biedingen en vervolgstappen.</p>
+            </div>
+          </div>
+          <div class="lead-board" id="deal-board"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head compact">
+            <h2>Archief</h2>
+            <span class="sub">Aangekocht of afgehaakt</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Referentie</th><th>Adres</th><th>Vraagprijs</th><th>Resultaat</th><th></th></tr></thead>
+              <tbody id="deal-archive"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="deal-detail" hidden></div>
+    </section>
+
+    <!-- ===== Dealcalculator ===== -->
+    <section class="view" id="calculator">
+      <div class="split">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Dealcalculator</h2>
+              <p>Reken een aankoop volledig door vóór je biedt: alle kosten, houdkosten en je marge.</p>
+            </div>
+          </div>
+          <form class="calc-form" id="calc-form">
+            <div class="form-grid">
+              <label>Adres<input name="address" placeholder="Bijv. Noordsingel 84"></label>
+              <label>Plaats<input name="city" value="Rotterdam"></label>
+              <label>Vraagprijs (€)<input name="vraagprijs" type="number" min="0" step="any" value="300000"></label>
+              <label>Jouw koopsom / bod (€)<input name="koopsom" type="number" min="0" step="any" value="280000" required></label>
+              <label>Verbouwbudget (€)<input name="verbouwing" type="number" min="0" step="any" value="60000"></label>
+              <label>Verwachte verkoopprijs (€)<input name="verkoopprijs" type="number" min="0" step="any" value="425000" required></label>
+              <label>Doorlooptijd (maanden)<input name="maanden" type="number" min="1" max="60" step="any" value="9"></label>
+              <label>Financiering (% van koopsom + verbouwing)<input name="financieringPct" type="number" min="0" max="100" step="any" value="80"></label>
+            </div>
+            <details class="calc-advanced">
+              <summary>Kostenpercentages aanpassen (standaard uit Instellingen)</summary>
+              <div class="form-grid">
+                <label>Overdrachtsbelasting (%)<input name="otbPct" type="number" min="0" step="any"></label>
+                <label>Notaris &amp; recherche (€)<input name="notaris" type="number" min="0" step="any"></label>
+                <label>Aankoopmakelaar (%)<input name="makelaarPct" type="number" min="0" step="any"></label>
+                <label>Rente financiering (% per jaar)<input name="rentePct" type="number" min="0" step="any"></label>
+                <label>Vaste lasten per maand (€)<input name="vasteLasten" type="number" min="0" step="any"></label>
+                <label>Verkoopkosten (%)<input name="verkoopkostenPct" type="number" min="0" step="any"></label>
+              </div>
+            </details>
+          </form>
+        </section>
+        <aside class="panel calc-result-panel">
+          <span class="mini-label">Resultaat</span>
+          <div id="calc-result"></div>
+          <div class="stack">
+            <button class="btn primary" id="calc-save">Opslaan als aankoopkans</button>
+            <button class="btn secondary" id="calc-print">Print calculatie (voor financier)</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== Portfolio / Panden ===== -->
+    <section class="view" id="portfolio">
+      <div id="portfolio-list-wrap">
+        <div class="kpi-grid three" id="portfolio-kpis"></div>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Panden in portfolio</h2>
+              <p>Klik op een pand voor financiën, documenten, projecten en verkoopdossier.</p>
+            </div>
+            <div class="segmented" id="portfolio-filter">
+              <button class="active" data-pfilter="bezit">In bezit</button>
+              <button data-pfilter="all">Alles</button>
+              <button data-pfilter="In ontwikkeling">In ontwikkeling</button>
+              <button data-pfilter="Te koop">Te koop</button>
+              <button data-pfilter="Verhuurd">Verhuurd</button>
+              <button data-pfilter="Verkocht">Verkocht</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pand</th>
+                  <th>Status</th>
+                  <th>Aankoop</th>
+                  <th>Totale investering</th>
+                  <th>Waarde / verkoop</th>
+                  <th>Winst (verwacht)</th>
+                  <th>ROI</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="portfolio-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="property-detail" hidden></div>
+    </section>
+
+    <!-- ===== Ontwikkelprojecten ===== -->
+    <section class="view" id="projects">
+      <div id="project-list-wrap">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Ontwikkelprojecten</h2>
+              <p>Renovatie en ontwikkeling per pand: budget, realisatie en voortgang.</p>
+            </div>
+            <div class="segmented" id="project-filter">
+              <button class="active" data-prfilter="actief">Actief</button>
+              <button data-prfilter="all">Alles</button>
+              <button data-prfilter="Afgerond">Afgerond</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Pand</th>
+                  <th>Status</th>
+                  <th>Budget</th>
+                  <th>Realisatie</th>
+                  <th>Verschil</th>
+                  <th>Voortgang</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="projects-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="project-detail" hidden></div>
+    </section>
+
+    <!-- ===== Kosten ===== -->
+    <section class="view" id="costs">
+      <div class="kpi-grid three" id="cost-kpis"></div>
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Kosten &amp; verplichtingen</h2>
+            <p>Alle ontwikkel- en pandkosten met status — zo bewaak je budget en betalingen.</p>
+          </div>
+          <div class="segmented" id="cost-filter">
+            <button class="active" data-cfilter="all">Alles</button>
+            <button data-cfilter="Opdracht">Opdracht</button>
+            <button data-cfilter="Factuur ontvangen">Factuur ontvangen</button>
+            <button data-cfilter="Betaald">Betaald</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Datum</th>
+                <th>Pand / project</th>
+                <th>Leverancier</th>
+                <th>Omschrijving</th>
+                <th>Categorie</th>
+                <th>Bedrag</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="costs-table"></tbody>
+            <tfoot id="costs-foot"></tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Verkoop ===== -->
+    <section class="view" id="sales">
+      <div class="kpi-grid" id="sales-kpis"></div>
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Te koop &amp; onder bod</h2>
+            <p>Lopende verkoopdossiers met bezichtigingen en biedingen.</p>
+          </div>
+          <button class="btn secondary" id="publish-aanbod">Publiceer aanbod (JSON)</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pand</th>
+                <th>Status</th>
+                <th>Vraagprijs</th>
+                <th>Dagen te koop</th>
+                <th>Bezichtigingen</th>
+                <th>Hoogste bod</th>
+                <th>Verwachte winst</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="sales-active-table"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head compact">
+          <h2>Verkocht</h2>
+          <span class="sub">Gerealiseerd resultaat per pand</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pand</th>
+                <th>Aangekocht</th>
+                <th>Verkocht</th>
+                <th>Investering</th>
+                <th>Opbrengst</th>
+                <th>Winst</th>
+                <th>ROI</th>
+                <th>Bezitsduur</th>
+              </tr>
+            </thead>
+            <tbody id="sales-sold-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Planning ===== -->
+    <section class="view" id="planning">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="week-title">Weekplanning</h2>
+            <p>Bezichtigingen, notarisafspraken, opleveringen, taxaties en aannemers per dag.</p>
+          </div>
+          <div class="head-actions">
+            <button class="btn secondary slim" id="week-prev">← Vorige</button>
+            <button class="btn secondary slim" id="week-today">Vandaag</button>
+            <button class="btn secondary slim" id="week-next">Volgende →</button>
+          </div>
+        </div>
+        <div class="week-grid" id="week-grid"></div>
+      </div>
+    </section>
+
+    <!-- ===== Relaties ===== -->
+    <section class="view" id="relations">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Relaties</h2>
+            <p>Makelaars, notarissen, aannemers, financiers en kopers/verkopers.</p>
+          </div>
+          <div class="segmented" id="relation-filter">
+            <button class="active" data-rfilter="all">Alle</button>
+            <button data-rfilter="Makelaar">Makelaars</button>
+            <button data-rfilter="Notaris">Notarissen</button>
+            <button data-rfilter="Aannemer">Aannemers</button>
+            <button data-rfilter="Financier">Financiers</button>
+            <button data-rfilter="Koper/Verkoper">Kopers &amp; verkopers</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Naam</th>
+                <th>Type</th>
+                <th>Contactpersoon</th>
+                <th>E-mail</th>
+                <th>Telefoon</th>
+                <th>Notitie</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="relations-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Instellingen ===== -->
+    <section class="view" id="settings">
+      <div class="split">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Bedrijfsgegevens &amp; standaarden</h2>
+              <p>De percentages hieronder zijn de standaardwaarden voor de dealcalculator — controleer ze met je fiscalist.</p>
+            </div>
+          </div>
+          <form id="settings-form" class="settings-form">
+            <div class="form-grid">
+              <label>Bedrijfsnaam<input name="companyName" required></label>
+              <label>Adres<input name="address" placeholder="Straat 1, 3011 AA Rotterdam"></label>
+              <label>E-mail<input name="email" type="email"></label>
+              <label>Telefoon<input name="phone"></label>
+              <label>KvK-nummer<input name="kvk" placeholder="12345678"></label>
+              <label>BTW-nummer<input name="btw" placeholder="NL123456789B01"></label>
+              <label>Overdrachtsbelasting (%)<input name="otbPct" type="number" min="0" step="any"></label>
+              <label>Notaris &amp; recherche aankoop (€)<input name="notaris" type="number" min="0" step="any"></label>
+              <label>Aankoopmakelaar (%)<input name="makelaarPct" type="number" min="0" step="any"></label>
+              <label>Rente financiering (% per jaar)<input name="rentePct" type="number" min="0" step="any"></label>
+              <label>Vaste lasten per pand (€/mnd)<input name="vasteLasten" type="number" min="0" step="any"></label>
+              <label>Verkoopkosten (%)<input name="verkoopkostenPct" type="number" min="0" step="any"></label>
+              <label>Doel-ROI per deal (%)<input name="doelROI" type="number" min="0" step="any"></label>
+            </div>
+            <menu><button class="btn primary" type="submit">Instellingen opslaan</button></menu>
+          </form>
+        </section>
+        <aside class="panel">
+          <h2>Gegevensbeheer</h2>
+          <p class="hint">Alles wordt lokaal in deze browser opgeslagen. Maak regelmatig een backup — bij het wissen van browserdata ben je anders alles kwijt.</p>
+          <div class="stack">
+            <button class="btn primary" id="backup-btn">Download backup (JSON)</button>
+            <label class="btn secondary file-btn">Herstel backup<input type="file" id="restore-input" accept="application/json" hidden></label>
+            <button class="btn secondary danger" id="reset-btn">Reset naar demo-gegevens</button>
+          </div>
+          <p class="hint" id="storage-info"></p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Modals ===== -->
+  <dialog class="modal" id="contact-modal">
+    <form method="dialog" class="modal-card" id="contact-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Relatie</p>
+      <h2 id="contact-modal-title">Relatie toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Type
+          <select name="type">
+            <option>Makelaar</option>
+            <option>Notaris</option>
+            <option>Aannemer</option>
+            <option>Financier</option>
+            <option>Koper/Verkoper</option>
+            <option>Overig</option>
+          </select>
+        </label>
+        <label>Naam<input name="name" required placeholder="Bijv. Maas Makelaardij"></label>
+        <label>Contactpersoon<input name="contact"></label>
+        <label>E-mail<input name="email" type="email"></label>
+        <label>Telefoon<input name="phone"></label>
+        <label>Adres<input name="address"></label>
+      </div>
+      <label>Notitie<textarea name="note" rows="2" placeholder="Afspraken, tarieven, specialiteit…"></textarea></label>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal wide-modal" id="deal-modal">
+    <form method="dialog" class="modal-card" id="deal-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Aankoopkans</p>
+      <h2 id="deal-modal-title">Aankoopkans toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Adres<input name="address" required placeholder="Straat + nummer"></label>
+        <label>Plaats<input name="city" value="Rotterdam"></label>
+        <label>Type
+          <select name="ptype">
+            <option>Appartement</option>
+            <option>Eengezinswoning</option>
+            <option>Portiekpand</option>
+            <option>Bedrijfspand</option>
+            <option>Kavel</option>
+            <option>Overig</option>
+          </select>
+        </label>
+        <label>Status
+          <select name="status">
+            <option>Lead</option>
+            <option>Bezichtiging</option>
+            <option>Bod uitgebracht</option>
+            <option>Onder voorbehoud</option>
+            <option>Notaris</option>
+          </select>
+        </label>
+        <label>Vraagprijs (€)<input name="vraagprijs" type="number" min="0" step="any"></label>
+        <label>Verkopend makelaar<select name="makelaarId"></select></label>
+        <label>Bezichtiging gepland<input name="viewingDate" type="date"></label>
+        <label>Bron<input name="source" placeholder="Funda / netwerk / veiling…"></label>
+      </div>
+      <h3 class="modal-section">Calculatie</h3>
+      <div class="form-grid">
+        <label>Koopsom / max. bod (€)<input name="koopsom" type="number" min="0" step="any" required></label>
+        <label>Verbouwbudget (€)<input name="verbouwing" type="number" min="0" step="any" value="0"></label>
+        <label>Verwachte verkoopprijs (€)<input name="verkoopprijs" type="number" min="0" step="any"></label>
+        <label>Doorlooptijd (maanden)<input name="maanden" type="number" min="1" max="60" value="9"></label>
+      </div>
+      <div class="totals-box" id="deal-calc-preview"></div>
+      <label>Notitie<textarea name="note" rows="2" placeholder="Staat, VvE, bijzonderheden, strategie…"></textarea></label>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="bid-modal">
+    <form method="dialog" class="modal-card" id="bid-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Bod uitbrengen</p>
+      <h2>Bod registreren</h2>
+      <input type="hidden" name="dealId">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Datum<input name="date" type="date" required></label>
+        <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
+        <label>Geldig tot<input name="validUntil" type="date"></label>
+        <label>Voorbehoud<input name="note" placeholder="Financiering / bouwkundige keuring…"></label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal wide-modal" id="acquire-modal">
+    <form method="dialog" class="modal-card" id="acquire-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Aankoop afronden</p>
+      <h2>Pand aangekocht — naar portfolio</h2>
+      <input type="hidden" name="dealId">
+      <div class="form-grid">
+        <label>Passeerdatum notaris<input name="date" type="date" required></label>
+        <label>Definitieve koopsom (€)<input name="koopsom" type="number" min="0" step="any" required></label>
+        <label>Overdrachtsbelasting (€)<input name="otb" type="number" min="0" step="any"></label>
+        <label>Notaris &amp; recherche (€)<input name="notaris" type="number" min="0" step="any"></label>
+        <label>Aankoopmakelaar (€)<input name="makelaar" type="number" min="0" step="any"></label>
+        <label>Overige aankoopkosten (€)<input name="overig" type="number" min="0" step="any" value="0"></label>
+      </div>
+      <h3 class="modal-section">Financiering (optioneel)</h3>
+      <div class="form-grid">
+        <label>Financier<select name="financierId"></select></label>
+        <label>Hoofdsom (€)<input name="finBedrag" type="number" min="0" step="any" value="0"></label>
+        <label>Rente (% per jaar)<input name="finRente" type="number" min="0" step="any"></label>
+        <label>Einddatum / herziening<input name="finEind" type="date"></label>
+      </div>
+      <label class="check-label"><input type="checkbox" name="maakProject" checked> Maak direct een ontwikkelproject aan met het verbouwbudget uit de calculatie</label>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Aankoop afronden</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal wide-modal" id="property-modal">
+    <form method="dialog" class="modal-card" id="property-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Pand</p>
+      <h2 id="property-modal-title">Pand toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Adres<input name="address" required></label>
+        <label>Plaats<input name="city" value="Rotterdam"></label>
+        <label>Type
+          <select name="ptype">
+            <option>Appartement</option>
+            <option>Eengezinswoning</option>
+            <option>Portiekpand</option>
+            <option>Bedrijfspand</option>
+            <option>Kavel</option>
+            <option>Overig</option>
+          </select>
+        </label>
+        <label>Status
+          <select name="status">
+            <option>In ontwikkeling</option>
+            <option>Te koop</option>
+            <option>Onder bod</option>
+            <option>Verhuurd</option>
+          </select>
+        </label>
+        <label>Energielabel
+          <select name="label">
+            <option value="">Onbekend</option>
+            <option>A</option><option>B</option><option>C</option><option>D</option>
+            <option>E</option><option>F</option><option>G</option>
+          </select>
+        </label>
+        <label>Taxatiewaarde (€)<input name="taxatie" type="number" min="0" step="any"></label>
+        <label>Taxatiedatum<input name="taxatieDatum" type="date"></label>
+        <label>Vraagprijs bij verkoop (€)<input name="vraagprijs" type="number" min="0" step="any"></label>
+        <label>Te koop sinds<input name="teKoopSinds" type="date"></label>
+      </div>
+      <h3 class="modal-section">Aankoop</h3>
+      <div class="form-grid">
+        <label>Aankoopdatum<input name="purchaseDate" type="date"></label>
+        <label>Koopsom (€)<input name="koopsom" type="number" min="0" step="any" required></label>
+        <label>Overdrachtsbelasting (€)<input name="otb" type="number" min="0" step="any" value="0"></label>
+        <label>Notaris (€)<input name="notarisK" type="number" min="0" step="any" value="0"></label>
+        <label>Makelaar (€)<input name="makelaarK" type="number" min="0" step="any" value="0"></label>
+        <label>Overig (€)<input name="overig" type="number" min="0" step="any" value="0"></label>
+      </div>
+      <h3 class="modal-section">Financiering &amp; lasten</h3>
+      <div class="form-grid">
+        <label>Financier<select name="financierId"></select></label>
+        <label>Hoofdsom (€)<input name="finBedrag" type="number" min="0" step="any" value="0"></label>
+        <label>Rente (% per jaar)<input name="finRente" type="number" min="0" step="any" value="0"></label>
+        <label>Einddatum / herziening<input name="finEind" type="date"></label>
+        <label>Vaste lasten (€/mnd)<input name="vasteLasten" type="number" min="0" step="any" value="0"></label>
+      </div>
+      <h3 class="modal-section">Website-presentatie (aanbod.json)</h3>
+      <div class="form-grid">
+        <label>Woonoppervlakte (m²)<input name="m2" type="number" min="0" step="any"></label>
+        <label>Kamers<input name="kamers" type="number" min="0" step="any"></label>
+      </div>
+      <label>Omschrijving voor de website<textarea name="webOmschrijving" rows="2" placeholder="Bijv. Volledig gerenoveerd 3-kamerappartement met energielabel A…"></textarea></label>
+      <h3 class="modal-section">Verhuur (alleen bij status Verhuurd)</h3>
+      <div class="form-grid">
+        <label>Maandhuur (€)<input name="maandhuur" type="number" min="0" step="any" value="0"></label>
+        <label>Huurder<input name="huurder"></label>
+      </div>
+      <label>Notitie<textarea name="note" rows="2"></textarea></label>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="project-modal">
+    <form method="dialog" class="modal-card" id="project-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Ontwikkelproject</p>
+      <h2 id="project-modal-title">Project toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Projectnaam<input name="name" required placeholder="Bijv. Volledige renovatie + splitsing"></label>
+        <label>Pand<select name="propertyId" required></select></label>
+        <label>Status
+          <select name="status">
+            <option>Voorbereiding</option>
+            <option>Vergunning</option>
+            <option>Uitvoering</option>
+            <option>Oplevering</option>
+            <option>Afgerond</option>
+          </select>
+        </label>
+        <label>Budget (€)<input name="budget" type="number" min="0" step="any" required></label>
+        <label>Startdatum<input name="startDate" type="date"></label>
+        <label>Opleverdatum (gepland)<input name="endDate" type="date"></label>
+      </div>
+      <label>Notitie<textarea name="note" rows="2"></textarea></label>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="cost-modal">
+    <form method="dialog" class="modal-card" id="cost-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Kostenpost</p>
+      <h2 id="cost-modal-title">Kostenpost toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Pand<select name="propertyId" required></select></label>
+        <label>Project (optioneel)<select name="projectId"></select></label>
+        <label>Leverancier / partij<select name="contactId"></select></label>
+        <label>Categorie
+          <select name="category">
+            <option>Aannemer</option>
+            <option>Installaties</option>
+            <option>Materiaal</option>
+            <option>Architect &amp; advies</option>
+            <option>Leges &amp; vergunning</option>
+            <option>Styling &amp; oplevering</option>
+            <option>Overig</option>
+          </select>
+        </label>
+        <label>Omschrijving<input name="desc" required placeholder="Bijv. badkamer compleet"></label>
+        <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
+        <label>Datum<input name="date" type="date" required></label>
+        <label>Status
+          <select name="status">
+            <option>Opdracht</option>
+            <option>Factuur ontvangen</option>
+            <option>Betaald</option>
+          </select>
+        </label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="viewing-modal">
+    <form method="dialog" class="modal-card" id="viewing-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Verkoop</p>
+      <h2>Bezichtiging registreren</h2>
+      <input type="hidden" name="propertyId">
+      <div class="form-grid">
+        <label>Datum<input name="date" type="date" required></label>
+        <label>Naam / partij<input name="name" required placeholder="Bijv. fam. Janssen via makelaar"></label>
+      </div>
+      <label>Indruk / feedback<textarea name="note" rows="2" placeholder="Serieus? Tweede bezichtiging? Opmerkingen…"></textarea></label>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="offer-modal">
+    <form method="dialog" class="modal-card" id="offer-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Verkoop</p>
+      <h2>Ontvangen bod registreren</h2>
+      <input type="hidden" name="propertyId">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Datum<input name="date" type="date" required></label>
+        <label>Bieder<input name="name" required placeholder="Naam koper of makelaar"></label>
+        <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
+        <label>Voorbehoud<input name="note" placeholder="Financiering / geen voorbehoud…"></label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="sale-modal">
+    <form method="dialog" class="modal-card" id="sale-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Verkoop afronden</p>
+      <h2>Pand verkocht</h2>
+      <input type="hidden" name="propertyId">
+      <div class="form-grid">
+        <label>Verkoopprijs (€)<input name="verkoopprijs" type="number" min="0" step="any" required></label>
+        <label>Passeerdatum<input name="date" type="date" required></label>
+        <label>Verkoopkosten totaal (€)<input name="kosten" type="number" min="0" step="any" value="0"></label>
+        <label>Koper<input name="koper" placeholder="Naam koper"></label>
+      </div>
+      <div class="totals-box" id="sale-preview"></div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Verkoop afronden</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="plan-modal">
+    <form method="dialog" class="modal-card" id="plan-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Planning</p>
+      <h2 id="plan-modal-title">Planning toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Datum<input name="date" type="date" required></label>
+        <label>Type
+          <select name="type">
+            <option>Bezichtiging</option>
+            <option>Notaris</option>
+            <option>Aannemer</option>
+            <option>Taxatie</option>
+            <option>Oplevering</option>
+            <option>Afspraak</option>
+          </select>
+        </label>
+        <label>Omschrijving<input name="title" required placeholder="Bijv. bezichtiging Noordsingel 84"></label>
+        <label>Wie<input name="who" placeholder="Eigen / makelaar / aannemer"></label>
+        <label>Betreft<select name="ref"></select></label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div id="print-area" aria-hidden="true"></div>
+  <script src="app.js"></script>
+</body>
+</html>
