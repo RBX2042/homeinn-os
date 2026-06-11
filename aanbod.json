@@ -11,7 +11,13 @@
       "label": "A",
       "m2": 92,
       "kamers": 3,
-      "omschrijving": "Volledig gerenoveerd 3-kamerappartement op de Kop van Zuid. Nieuwe installaties, warmtepomp, energielabel A en hoogwaardige afwerking — direct te betrekken."
+      "omschrijving": "Volledig gerenoveerd 3-kamerappartement op de Kop van Zuid. Nieuwe installaties, warmtepomp, energielabel A en hoogwaardige afwerking — direct te betrekken.",
+      "fotos": [
+        "fotos/laan-op-zuid-1.svg",
+        "fotos/laan-op-zuid-2.svg",
+        "fotos/laan-op-zuid-3.svg",
+        "fotos/laan-op-zuid-4.svg"
+      ]
     }
   ],
   "projecten": [
@@ -27,9 +33,18 @@
       "oplevering": "2026-07-14",
       "omschrijving": "Karakteristieke eengezinswoning aan de Kralingse Plas, volledig gerenoveerd met uitbouw en energielabel A. Binnenkort in verkoop.",
       "updates": [
-        { "datum": "2026-06-08", "tekst": "Afbouw in volle gang — stucwerk gereed, keukenplaatsing gepland." },
-        { "datum": "2026-05-27", "tekst": "Installaties gestart: warmtepomp en nieuwe groepenkast geplaatst." },
-        { "datum": "2026-05-01", "tekst": "Sloop en ruwbouw afgerond — het pand is wind- en waterdicht." }
+        {
+          "datum": "2026-06-08",
+          "tekst": "Afbouw in volle gang — stucwerk gereed, keukenplaatsing gepland."
+        },
+        {
+          "datum": "2026-05-27",
+          "tekst": "Installaties gestart: warmtepomp en nieuwe groepenkast geplaatst."
+        },
+        {
+          "datum": "2026-05-01",
+          "tekst": "Sloop en ruwbouw afgerond — het pand is wind- en waterdicht."
+        }
       ],
       "investering": {
         "doelbedrag": 150000,
@@ -37,7 +52,10 @@
         "minInleg": 25000,
         "rendementPct": 8,
         "looptijd": "12 maanden"
-      }
+      },
+      "fotos": [
+        "fotos/kralingse-plaslaan-1.svg"
+      ]
     }
   ],
   "verkocht": [

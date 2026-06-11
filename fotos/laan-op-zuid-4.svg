@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<defs>
+<linearGradient id="muur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f2ec"/><stop offset="1" stop-color="#e9e2d4"/></linearGradient>
+<linearGradient id="licht" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="lucht" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0ee"/><stop offset="1" stop-color="#f3ece0"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="url(#muur)"/>
+<rect y="620" width="1200" height="180" fill="#e9e2d4"/>
+<line x1="0" y1="620" x2="1200" y2="620" stroke="#0b1e30" stroke-opacity=".12" stroke-width="2"/>
+
+<rect x="640" y="140" width="320" height="320" fill="url(#lucht)" stroke="#0b1e30" stroke-width="10"/>
+<line x1="800" y1="140" x2="800" y2="460" stroke="#0b1e30" stroke-width="8"/>
+<rect x="120" y="430" width="460" height="150" rx="10" fill="#0b1e30"/>
+<rect x="135" y="370" width="430" height="80" rx="12" fill="#ffffff" stroke="#0b1e30" stroke-width="4"/>
+<rect x="150" y="385" width="120" height="50" rx="10" fill="#cca94a"/><rect x="290" y="385" width="120" height="50" rx="10" fill="#e9e2d4"/>
+<rect x="100" y="320" width="500" height="24" rx="8" fill="#14304b"/>
+<rect x="1000" y="300" width="90" height="280" rx="8" fill="#14304b"/>
+<circle cx="700" cy="600" r="5" fill="#0b1e30"/><rect x="696" y="470" width="8" height="130" fill="#0b1e30"/><path d="M660 470 Q700 430 740 470 Z" fill="#b49030"/>
+
+<rect x="40" y="700" width="330" height="58" rx="4" fill="#0b1e30" opacity=".92"/>
+<text x="62" y="730" font-family="Georgia,serif" font-size="24" fill="#cca94a">Slaapkamer</text>
+<text x="62" y="750" font-family="sans-serif" font-size="13" fill="#ffffff" opacity=".6">HomeINN impressie — foto volgt</text>
+</svg>

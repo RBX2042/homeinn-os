@@ -174,7 +174,8 @@ function openModal(subject, ref) {
 function closeModal() {
   if (!modalEl) return;
   modalEl.classList.remove('on');
-  document.body.classList.remove('no-scroll');
+  var wdOpen = document.getElementById('woning-detail');
+  if (!(wdOpen && wdOpen.classList.contains('on'))) document.body.classList.remove('no-scroll');
 }
 if (modalEl) {
   modalEl.addEventListener('click', e => {
@@ -276,6 +277,8 @@ function fmtPrijs(n) {
   return '€ ' + (Number(n) || 0).toLocaleString('nl-NL') + ' k.k.';
 }
 
+var aanbodCache = [];
+
 function renderAanbod() {
   var grid = document.getElementById('aanbod-grid');
   var soldBox = document.getElementById('aanbod-verkocht');
@@ -285,19 +288,24 @@ function renderAanbod() {
     .then(function (r) { if (!r.ok) throw new Error('geen aanbod.json'); return r.json(); })
     .then(function (data) {
       var items = (data && Array.isArray(data.aanbod)) ? data.aanbod : [];
+      aanbodCache = items;
       grid.innerHTML = items.length ? items.map(function (w, i) {
         var kenmerken = [escHtml(w.plaats), escHtml(w.type), w.m2 ? w.m2 + ' m²' : '', w.kamers ? w.kamers + ' kamers' : '', w.label ? 'Energielabel ' + escHtml(w.label) : '']
           .filter(Boolean).join(' · ');
         var mapsQ = encodeURIComponent((w.adres || '') + ', ' + (w.plaats || 'Rotterdam'));
+        var fotos = Array.isArray(w.fotos) ? w.fotos : [];
+        var visual = fotos.length
+          ? '<div class="card-visual" data-woning="' + i + '"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="' + escHtml(fotos[0]) + '" alt="' + escHtml(w.adres) + '">' + (fotos.length > 1 ? '<span class="foto-count">' + fotos.length + ' foto\u2019s</span>' : '') + '</div>'
+          : '<iframe class="card-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(w.adres) + '"></iframe>';
         return '<article class="blog-card rv in ' + (i === 1 ? 'd1' : i === 2 ? 'd2' : '') + '">' +
-          '<iframe class="card-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(w.adres) + '"></iframe><div class="blog-body">' +
+          visual + '<div class="blog-body">' +
           '<div class="proj-status' + (w.status === 'Onder bod' ? ' sold' : '') + '">' + escHtml(w.status || 'Te koop') + '</div>' +
           '<h3>' + escHtml(w.adres) + '</h3>' +
           '<p class="aanbod-kenmerken">' + kenmerken + '</p>' +
           '<div class="aanbod-prijs">' + fmtPrijs(w.prijs) + '</div>' +
-          '<p>' + escHtml(w.omschrijving || '') + '</p>' +
-          '<button class="pillar-cta" data-open-modal data-subject="Woningaanbod ontvangen" data-ref="' + escHtml(w.id || w.adres) + '">Plan een bezichtiging →</button> ' +
-          '<a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + mapsQ + '">Route & omgeving →</a>' +
+          '<p>' + escHtml((w.omschrijving || '').slice(0, 140) + ((w.omschrijving || '').length > 140 ? '…' : '')) + '</p>' +
+          '<button class="pillar-cta" data-woning="' + i + '">Bekijk deze woning →</button> ' +
+          '<button class="pillar-cta" data-open-modal data-subject="Woningaanbod ontvangen" data-ref="' + escHtml(w.id || w.adres) + '">Plan een bezichtiging →</button>' +
           '</div></article>';
       }).join('') : leeg;
       var sold = (data && Array.isArray(data.verkocht)) ? data.verkocht : [];
@@ -344,8 +352,12 @@ function renderProjectenPublic() {
             '<button class="pillar-cta" data-open-modal data-subject="Investeren in een project" data-ref="' + refLabel + '">Ik wil meedoen →</button>' +
             '</div>';
         }
+        var prFotos = Array.isArray(pr.fotos) ? pr.fotos : [];
+        var prVisual = prFotos.length
+          ? '<div class="card-visual"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="' + escHtml(prFotos[0]) + '" alt="' + escHtml(pr.adres) + '"></div>'
+          : '<iframe class="card-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(pr.adres) + '"></iframe>';
         return '<article class="blog-card rv in ' + (i === 1 ? 'd1' : i === 2 ? 'd2' : '') + '">' +
-          '<iframe class="card-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(pr.adres) + '"></iframe>' +
+          prVisual +
           '<div class="blog-body">' +
           '<div class="proj-status">' + escHtml(pr.status || 'In ontwikkeling') + '</div>' +
           '<h3>' + escHtml(pr.titel || pr.adres) + '</h3>' +
@@ -368,4 +380,77 @@ document.addEventListener('DOMContentLoaded', renderProjectenPublic);
 document.addEventListener('click', function (e) {
   var btn = e.target && e.target.closest ? e.target.closest('[data-open-modal]') : null;
   if (btn) openModal(btn.getAttribute('data-subject') || '', btn.getAttribute('data-ref') || '');
+});
+
+/* ===== Woningdetail: galerij, kenmerken, kaart ===== */
+function openWoningDetail(w) {
+  var box = document.getElementById('woning-detail');
+  if (!box || !w) return;
+  var fotos = Array.isArray(w.fotos) ? w.fotos : [];
+  var mapsQ = encodeURIComponent((w.adres || '') + ', ' + (w.plaats || 'Rotterdam'));
+  var prijs = '€ ' + (Number(w.prijs) || 0).toLocaleString('nl-NL') + ' k.k.';
+  var rows = [
+    ['Vraagprijs', prijs],
+    ['Status', w.status || 'Te koop'],
+    ['Type', w.type || ''],
+    ['Woonoppervlakte', w.m2 ? w.m2 + ' m²' : ''],
+    ['Kamers', w.kamers || ''],
+    ['Energielabel', w.label || ''],
+    ['Plaats', w.plaats || '']
+  ].filter(function (r) { return r[1]; });
+  box.innerHTML =
+    '<div class="wd">' +
+      '<button class="wd-close" data-wd-close aria-label="Sluiten">✕</button>' +
+      (fotos.length
+        ? '<div class="wd-gallery"><img class="wd-main" id="wd-main" src="' + escHtml(fotos[0]) + '" alt="' + escHtml(w.adres) + '">' +
+          (fotos.length > 1 ? '<div class="wd-thumbs">' + fotos.map(function (f, i) {
+            return '<img class="wd-thumb' + (i === 0 ? ' on' : '') + '" onerror="this.style.display=&quot;none&quot;" data-src="' + escHtml(f) + '" src="' + escHtml(f) + '" alt="Foto ' + (i + 1) + '">';
+          }).join('') + '</div>' : '') + '</div>'
+        : '') +
+      '<div class="wd-body">' +
+        '<div class="proj-status">' + escHtml(w.status || 'Te koop') + '</div>' +
+        '<h3 class="wd-titel">' + escHtml(w.adres) + ', ' + escHtml(w.plaats || 'Rotterdam') + '</h3>' +
+        '<div class="wd-prijs">' + prijs + '</div>' +
+        '<div class="wd-kenmerken">' + rows.map(function (r) {
+          return '<div class="wd-row"><span>' + escHtml(r[0]) + '</span><strong>' + escHtml(String(r[1])) + '</strong></div>';
+        }).join('') + '</div>' +
+        (w.omschrijving ? '<p class="wd-tekst">' + escHtml(w.omschrijving) + '</p>' : '') +
+        '<div class="wd-acties">' +
+          '<button class="btn btn-primary" data-open-modal data-subject="Woningaanbod ontvangen" data-ref="' + escHtml((w.id || '') + ' — ' + (w.adres || '')) + '" data-wd-close>Plan een bezichtiging <span class="arr">→</span></button>' +
+          '<a class="btn btn-outline-dark" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + mapsQ + '">Route & omgeving</a>' +
+        '</div>' +
+        '<iframe class="wd-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(w.adres) + '"></iframe>' +
+      '</div>' +
+    '</div>';
+  box.classList.add('on');
+  box.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('no-scroll');
+  box.scrollTop = 0;
+}
+
+function closeWoningDetail() {
+  var box = document.getElementById('woning-detail');
+  if (!box) return;
+  box.classList.remove('on');
+  box.setAttribute('aria-hidden', 'true');
+  if (!(modalEl && modalEl.classList.contains('on'))) document.body.classList.remove('no-scroll');
+}
+
+document.addEventListener('click', function (e) {
+  if (!e.target) return;
+  var open = e.target.closest ? e.target.closest('[data-woning]') : null;
+  if (open) { openWoningDetail(aanbodCache[Number(open.getAttribute('data-woning'))]); return; }
+  var thumb = e.target.closest ? e.target.closest('.wd-thumb') : null;
+  if (thumb) {
+    var main = document.getElementById('wd-main');
+    if (main) main.src = thumb.getAttribute('data-src');
+    document.querySelectorAll('.wd-thumb').forEach(function (t) { t.classList.toggle('on', t === thumb); });
+    return;
+  }
+  var dicht = e.target.closest ? e.target.closest('[data-wd-close]') : null;
+  var bg = document.getElementById('woning-detail');
+  if (dicht || e.target === bg) closeWoningDetail();
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeWoningDetail();
 });

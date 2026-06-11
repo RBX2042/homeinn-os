@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<defs>
+<linearGradient id="muur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f2ec"/><stop offset="1" stop-color="#e9e2d4"/></linearGradient>
+<linearGradient id="licht" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="lucht" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0ee"/><stop offset="1" stop-color="#f3ece0"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="url(#muur)"/>
+<rect y="620" width="1200" height="180" fill="#e9e2d4"/>
+<line x1="0" y1="620" x2="1200" y2="620" stroke="#0b1e30" stroke-opacity=".12" stroke-width="2"/>
+
+<rect width="1200" height="620" fill="url(#lucht)"/>
+<rect x="320" y="140" width="560" height="480" fill="#0b1e30"/>
+<rect x="345" y="165" width="510" height="430" fill="#14304b"/>
+<polygon points="320,140 600,60 880,140" fill="#0b1e30"/>
+<rect x="380" y="200" width="120" height="150" fill="#cfe0ee" stroke="#b49030" stroke-width="6"/>
+<rect x="540" y="200" width="120" height="150" fill="#cfe0ee" stroke="#b49030" stroke-width="6"/>
+<rect x="700" y="200" width="120" height="150" fill="#cfe0ee" stroke="#b49030" stroke-width="6"/>
+<rect x="380" y="400" width="120" height="150" fill="#cfe0ee" stroke="#b49030" stroke-width="6"/>
+<rect x="700" y="400" width="120" height="150" fill="#cfe0ee" stroke="#b49030" stroke-width="6"/>
+<rect x="540" y="410" width="120" height="185" fill="#b49030"/><circle cx="640" cy="505" r="6" fill="#0b1e30"/>
+<rect x="100" y="560" width="160" height="60" rx="8" fill="#3f5b3a" opacity=".7"/><rect x="940" y="560" width="160" height="60" rx="8" fill="#3f5b3a" opacity=".7"/>
+
+<rect x="40" y="700" width="330" height="58" rx="4" fill="#0b1e30" opacity=".92"/>
+<text x="62" y="730" font-family="Georgia,serif" font-size="24" fill="#cca94a">Exterieur</text>
+<text x="62" y="750" font-family="sans-serif" font-size="13" fill="#ffffff" opacity=".6">HomeINN impressie — foto volgt</text>
+</svg>

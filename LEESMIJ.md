@@ -29,7 +29,7 @@ klik om naar een aankoopkans of relatie.
 | **Aankoopkansen** | Pijplijn: Lead → Bezichtiging → Bod → Onder voorbehoud → Notaris, met biedingen en calculatie per kans |
 | **Dealcalculator** | Reken een deal door vóór je biedt: alle kosten, houdkosten, winst, ROI en rendement op eigen geld. Printbaar voor je financier |
 | **Panden** | Portfolio: aankoopkosten, ontwikkelkosten, houdkosten, financiering met einddatum-bewaking, documentenchecklist, verkoopdossier |
-| **Ontwikkelprojecten** | Budget vs. realisatie, fases, opleverpunten |
+| **Ontwikkelprojecten** | Budget vs. realisatie, fases, opleverpunten — plus per project: publicatie op de website (volgen), updates-tijdlijn en investeerders-administratie (doelbedrag, inleg, voortgang) |
 | **Kosten** | Alle kostenposten: Opdracht → Factuur ontvangen → Betaald |
 | **Verkoop** | Bezichtigingen, ontvangen biedingen, gerealiseerde winst/ROI/bezitsduur per verkocht pand |
 | **Planning / Relaties** | Weekplanning en alle makelaars, notarissen, aannemers, financiers, kopers |
@@ -42,9 +42,23 @@ het portaal:
 
 1. Zet per pand de websitegegevens klaar: *Pand bewerken → Website-presentatie*
    (m², kamers, omschrijving) en een vraagprijs
-2. Ga naar **Verkoop → "Publiceer aanbod (JSON)"** — je downloadt `aanbod.json`
-   met alles wat te koop / onder bod staat (+ recent verkocht als referentie)
-3. Vervang `aanbod.json` in deze map én op je hosting
+2. Wil je dat mensen een **project kunnen volgen of erin investeren**? Zet in
+   *Project bewerken → Website & investeren* de schakelaars aan en vul doelbedrag,
+   minimale inleg, rendement en looptijd in. Voortgangsberichten plaats je in het
+   projectdetail onder "Website-updates"; inleg registreer je onder "Investeerders"
+3. Klik op **"Publiceer website (JSON)"** (knop in Verkoop én Ontwikkelprojecten)
+   — je downloadt `aanbod.json` met je aanbod, projecten en track record
+4. Vervang `aanbod.json` in deze map én op je hosting
+
+**Foto's:** beheer je per pand in het panddetail ("Foto's voor de website").
+Twee manieren: (1) zet fotobestanden in de map **fotos/** en voeg ze toe als
+"fotos/bestandsnaam.jpg" — vergeet de map niet mee te uploaden naar je hosting
+(het website-pakket doet dit automatisch); of (2) upload direct vanaf je
+computer (JPG/PNG, wordt automatisch verkleind, max. 8 per pand). De eerste
+foto is de hoofdfoto; bezoekers zien de volledige galerij in het woningdetail.
+
+Elke woning en elk project staat automatisch **op Google Maps** (kaart op de
+kaartjes + routelink) op basis van het adres.
 
 **Online zetten:** dubbelklik **`Maak website-pakket.command`** — er verschijnt
 een map `website-online` met alles erin (website als `index.html`, vormgeving,

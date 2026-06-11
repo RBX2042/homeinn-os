@@ -157,6 +157,7 @@ function seedData() {
         purchase: { date: addDaysISO(t, -84), koopsom: 385000, otb: 30800, notaris: 1520, makelaar: 3850, overig: 950 },
         financing: { financierId: 'r6', bedrag: 300000, rentePct: 6.2, einddatum: addDaysISO(t, 290) },
         vasteLasten: 320, maandhuur: 0, huurder: '', m2: 148, kamers: 5,
+        fotos: ['fotos/kralingse-plaslaan-1.svg'],
         webOmschrijving: 'Karakteristieke eengezinswoning aan de Kralingse Plas, volledig gerenoveerd met uitbouw en energielabel A. Binnenkort in verkoop.',
         sale: null, dealId: 'd-oud1',
         docs: DEFAULT_DOCS.map((name, i) => ({ id: 'doc1' + i, name, done: i < 3 })),
@@ -170,6 +171,7 @@ function seedData() {
         purchase: { date: addDaysISO(t, -208), koopsom: 275000, otb: 28600, notaris: 1380, makelaar: 2750, overig: 600 },
         financing: { financierId: 'r6', bedrag: 220000, rentePct: 6.4, einddatum: addDaysISO(t, 150) },
         vasteLasten: 290, maandhuur: 0, huurder: '', m2: 92, kamers: 3,
+        fotos: ['fotos/laan-op-zuid-1.svg', 'fotos/laan-op-zuid-2.svg', 'fotos/laan-op-zuid-3.svg', 'fotos/laan-op-zuid-4.svg'],
         webOmschrijving: 'Volledig gerenoveerd 3-kamerappartement op de Kop van Zuid. Nieuwe installaties, warmtepomp, energielabel A en hoogwaardige afwerking — direct te betrekken.',
         sale: null, dealId: 'd-oud2',
         docs: DEFAULT_DOCS.map((name, i) => ({ id: 'doc2' + i, name, done: true })),
@@ -910,7 +912,7 @@ function renderPortfolio() {
   $('#portfolio-table').innerHTML = list.length ? list.map(p => {
     const fin = propertyFinance(p);
     return `<tr data-action="open-property" data-id="${p.id}">
-      <td><strong>${esc(p.address)}</strong><br><span class="sub">${esc(p.ref)} · ${esc(p.ptype)}${p.label ? ' · label ' + esc(p.label) : ''}</span></td>
+      <td>${p.fotos?.[0] ? `<img class="row-thumb" src="${esc(p.fotos[0])}" alt="" loading="lazy">` : ''}<strong>${esc(p.address)}</strong><br><span class="sub">${esc(p.ref)} · ${esc(p.ptype)}${p.label ? ' · label ' + esc(p.label) : ''}</span></td>
       <td>${statusBadge(p.status)}</td>
       <td>${fmtMoney(p.purchase?.koopsom)}<br><span class="sub">${fmtDate(p.purchase?.date)}</span></td>
       <td>${fmtMoney(fin.investering)}${fin.restBudget ? `<br><span class="sub">+ ${fmtMoneyK(fin.restBudget)} budget te gaan</span>` : ''}</td>
@@ -1051,6 +1053,30 @@ function renderPropertyDetail() {
         ${costs.length > 8 ? `<p class="hint">Laatste 8 van ${costs.length} — zie Kosten voor alles.</p>` : ''}
       </section>
     </div>
+    <section class="panel">
+      <div class="panel-head compact"><h2>Foto's voor de website</h2>
+        <span class="sub">${(p.fotos || []).length} foto's — de eerste is de hoofdfoto</span>
+      </div>
+      <div class="foto-grid">
+        ${(p.fotos || []).map((src, i) => `
+          <figure class="foto-thumb">
+            <img src="${esc(src)}" loading="lazy" alt="Foto ${i + 1}">
+            ${i === 0 ? '<span class="badge gold foto-hoofd-badge">Hoofdfoto</span>' : ''}
+            <div class="foto-acties">
+              ${i > 0 ? `<button class="icon-btn" data-action="foto-hoofd" data-id="${p.id}" data-index="${i}" title="Maak hoofdfoto">★</button>` : ''}
+              <button class="icon-btn" data-action="foto-del" data-id="${p.id}" data-index="${i}" title="Verwijderen">🗑</button>
+            </div>
+          </figure>`).join('') || '<p class="empty">Nog geen foto\'s — voeg ze hieronder toe.</p>'}
+      </div>
+      <form class="inline-form" data-form="add-foto" data-id="${p.id}">
+        <input name="url" placeholder="Foto-URL of pad (bijv. fotos/adres-1.jpg)…" required>
+        <button class="btn primary slim" type="submit">+</button>
+      </form>
+      <div class="head-actions">
+        <label class="btn secondary slim file-btn">Foto's toevoegen vanaf computer<input type="file" id="foto-upload" data-id="${p.id}" accept="image/*" multiple hidden></label>
+      </div>
+      <p class="hint">Tip: zet fotobestanden in de map <b>fotos</b> van de software en voeg ze toe als "fotos/bestandsnaam.jpg". Foto's vanaf de computer worden verkleind in de software opgeslagen (max. 8 per pand).</p>
+    </section>
     <section class="panel">
       <div class="panel-head compact"><h2>Locatie</h2>
         <a class="text-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address + ', ' + p.city)}">Open in Google Maps →</a>
@@ -1601,6 +1627,54 @@ function openPlanModal(id = null, presetDate = '', presetRef = '') {
   $('#plan-modal').showModal();
 }
 
+/* ---------- Foto's (website) ---------- */
+function handleFotoUpload(input) {
+  const p = propertyById(input.dataset.id);
+  if (!p) return;
+  p.fotos = p.fotos || [];
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  const verklein = file => new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const max = 1280;
+      const schaal = Math.min(1, max / Math.max(img.width, img.height, 1));
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(img.width * schaal));
+      c.height = Math.max(1, Math.round(img.height * schaal));
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL('image/jpeg', 0.72));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+  (async () => {
+    let toegevoegd = 0;
+    let mislukt = 0;
+    for (const file of files) {
+      if (p.fotos.length >= 8) { showToast('Maximaal 8 foto\'s per pand — verwijder er eerst een.'); break; }
+      const dataUrl = await verklein(file);
+      if (!dataUrl) { mislukt++; continue; }
+      p.fotos.push(dataUrl);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); // direct, mét quota-detectie
+        toegevoegd++;
+      } catch {
+        p.fotos.pop();
+        save();
+        showToast('Browseropslag vol — gebruik foto-URL\'s of de fotos-map in plaats van uploads.');
+        break;
+      }
+    }
+    input.value = '';
+    if (toegevoegd) renderCurrent();
+    if (toegevoegd && !mislukt) showToast(`${toegevoegd} foto${toegevoegd === 1 ? '' : '\'s'} toegevoegd.`);
+    else if (mislukt) showToast(`${toegevoegd ? toegevoegd + ' toegevoegd, ' : ''}${mislukt} bestand${mislukt === 1 ? '' : 'en'} kon${mislukt === 1 ? '' : 'den'} niet worden gelezen — gebruik JPG of PNG (geen HEIC).`);
+  })();
+}
+
 /* ---------- Opslaan vanuit modals ---------- */
 function handleModalSubmit(event) {
   const form = event.target;
@@ -1655,7 +1729,7 @@ function handleModalSubmit(event) {
         vasteLasten: Number(state.settings.vasteLasten) || 0, maandhuur: 0, huurder: '',
         sale: null, dealId: d.id,
         docs: DEFAULT_DOCS.map(name => ({ id: uid('doc'), name, done: false })),
-        viewings: [], offers: [], note: `Aangekocht via ${d.ref}. ${d.note || ''}`.trim()
+        viewings: [], offers: [], fotos: [], note: `Aangekocht via ${d.ref}. ${d.note || ''}`.trim()
       };
       state.properties.push(property);
       d.status = 'Aangekocht';
@@ -1696,7 +1770,7 @@ function handleModalSubmit(event) {
       Object.assign(p, base);
       p.sale = oldSale; // verkoopafronding alleen via sale-modal
     } else {
-      state.properties.push(Object.assign({ id: uid('pnd'), ref: nextRef('PND', state.properties), sale: null, dealId: '', docs: DEFAULT_DOCS.map(name => ({ id: uid('doc'), name, done: false })), viewings: [], offers: [] }, base));
+      state.properties.push(Object.assign({ id: uid('pnd'), ref: nextRef('PND', state.properties), sale: null, dealId: '', docs: DEFAULT_DOCS.map(name => ({ id: uid('doc'), name, done: false })), viewings: [], offers: [], fotos: [] }, base));
     }
     showToast(`Pand ${base.address} opgeslagen.`);
   }
@@ -1885,7 +1959,8 @@ function buildAanbodJson() {
       id: p.ref, adres: p.address, plaats: p.city, type: p.ptype, status: p.status,
       prijs: Number(p.vraagprijs) || 0, label: p.label || '',
       m2: Number(p.m2) || 0, kamers: Number(p.kamers) || 0,
-      omschrijving: p.webOmschrijving || ''
+      omschrijving: p.webOmschrijving || '',
+      fotos: p.fotos || []
     }));
   const verkocht = state.properties
     .filter(p => p.status === 'Verkocht')
@@ -1900,6 +1975,7 @@ function buildAanbodJson() {
       voortgang: phases.length ? Math.round(phases.filter(f => f.status === 'Klaar').length / phases.length * 100) : 0,
       start: pr.startDate || '', oplevering: pr.endDate || '',
       omschrijving: p.webOmschrijving || '', // bewust GEEN fallback op pr.note: dat is intern
+      fotos: p.fotos || [],
       updates: (pr.updates || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(u => ({ datum: u.date, tekst: u.text })),
       investering: pr.invest?.open ? {
         doelbedrag: Number(pr.invest.doelbedrag) || 0,
@@ -2088,6 +2164,18 @@ document.addEventListener('click', event => {
       break;
     }
     case 'del-task': state.tasks = state.tasks.filter(x => x.id !== id); rerender(); break;
+    case 'foto-del': {
+      const p = propertyById(id);
+      p.fotos = (p.fotos || []).filter((_, i) => i !== Number(el.dataset.index));
+      rerender();
+      break;
+    }
+    case 'foto-hoofd': {
+      const p = propertyById(id);
+      const i = Number(el.dataset.index);
+      if (p.fotos && p.fotos[i]) { p.fotos.unshift(p.fotos.splice(i, 1)[0]); rerender(); showToast('Hoofdfoto gewijzigd.'); }
+      break;
+    }
     case 'del-update': {
       const pr = projectById(id);
       pr.updates = (pr.updates || []).filter(u => u.id !== item); rerender();
@@ -2143,6 +2231,7 @@ document.addEventListener('click', event => {
 });
 
 document.addEventListener('change', event => {
+  if (event.target.id === 'foto-upload') { handleFotoUpload(event.target); return; }
   const el = event.target.closest('[data-action]');
   if (!el) return;
   const { action, id, item, phase } = el.dataset;
@@ -2211,6 +2300,11 @@ document.addEventListener('submit', event => {
     if (form.dataset.form === 'add-doc') {
       const p = propertyById(form.dataset.id);
       p.docs.push({ id: uid('doc'), name: String(data.get('name')).trim(), done: false });
+    }
+    if (form.dataset.form === 'add-foto') {
+      const p = propertyById(form.dataset.id);
+      p.fotos = p.fotos || [];
+      p.fotos.push(String(data.get('url')).trim());
     }
     if (form.dataset.form === 'add-update') {
       const pr = projectById(form.dataset.id);

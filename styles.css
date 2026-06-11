@@ -589,3 +589,12 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 
 /* ===== Google Maps embed ===== */
 .maps-embed{width:100%;height:280px;border:0;border-radius:10px;display:block;background:rgba(11,30,48,.06)}
+
+/* ===== Foto-beheer ===== */
+.foto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.foto-thumb{position:relative;margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:white}
+.foto-thumb img{width:100%;height:110px;object-fit:cover;display:block}
+.foto-acties{position:absolute;top:6px;right:6px;display:flex;gap:4px}
+.foto-hoofd-badge{position:absolute;left:6px;top:6px}
+.badge.gold{background:var(--gold);color:white}
+.row-thumb{width:46px;height:34px;object-fit:cover;border-radius:6px;margin-right:8px;vertical-align:middle}
