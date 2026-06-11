@@ -8,5 +8,6 @@ cp homeinn-public.css homeinn-public.js website-online/
 cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[],"verkocht":[]}' > website-online/aanbod.json
 cp -R assets website-online/assets
 cp -R fotos website-online/fotos 2>/dev/null || true
+cp -R fonts website-online/fonts 2>/dev/null || true
 echo "Klaar: upload de inhoud van 'website-online' naar je hosting."
 open website-online

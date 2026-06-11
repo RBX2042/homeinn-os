@@ -213,8 +213,49 @@ if (mobEl) {
   });
 }
 
+/* ===== Google Maps: pas laden na klik (privacy) ===== */
+function mapsKnop(mapsQ, titel) {
+  return '<button class="map-load" type="button" data-maps="' + mapsQ + '" data-titel="' + titel + '">' +
+    '<span class="map-load-icoon">📍</span><strong>Kaart tonen</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik</span></button>';
+}
+document.addEventListener('click', function (e) {
+  var btn = e.target && e.target.closest ? e.target.closest('.map-load') : null;
+  if (!btn) return;
+  var iframe = document.createElement('iframe');
+  iframe.className = btn.getAttribute('data-hoogte') === 'wd' ? 'wd-map' : 'card-map';
+  iframe.loading = 'lazy';
+  iframe.referrerPolicy = 'no-referrer-when-downgrade';
+  iframe.src = 'https://www.google.com/maps?q=' + btn.getAttribute('data-maps') + '&output=embed';
+  iframe.title = 'Kaart ' + (btn.getAttribute('data-titel') || '');
+  btn.replaceWith(iframe);
+});
+
 /* ===== Software-integratie: formulieren → HomeINN OS (Aanvragen) ===== */
 var INBOX_KEY = 'homeinn-inbox-v1';
+
+var LEAD_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/info@homeinn.nl';
+
+function stuurLeadDoor(type, data) {
+  try {
+    if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
+    fetch(LEAD_EMAIL_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject: 'Website-aanvraag: ' + (data.subject || type),
+        _template: 'table',
+        Type: type,
+        Naam: data.name || '',
+        Contact: data.contact || '',
+        Email: data.email || '',
+        Telefoon: data.phone || '',
+        Onderwerp: data.subject || '',
+        Bericht: data.message || '',
+        Portfolio: data.portfolio || ''
+      })
+    }).catch(function () { /* bezorging mag de bezoeker nooit hinderen */ });
+  } catch (err) { /* idem */ }
+}
 
 function saveLead(type, data) {
   try {
@@ -227,6 +268,7 @@ function saveLead(type, data) {
     list.push(data);
     localStorage.setItem(INBOX_KEY, JSON.stringify(list));
   } catch (err) { console.warn('Aanvraag kon niet worden opgeslagen:', err); }
+  stuurLeadDoor(type, data);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -296,7 +338,7 @@ function renderAanbod() {
         var fotos = Array.isArray(w.fotos) ? w.fotos : [];
         var visual = fotos.length
           ? '<div class="card-visual" data-woning="' + i + '"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="' + escHtml(fotos[0]) + '" alt="' + escHtml(w.adres) + '">' + (fotos.length > 1 ? '<span class="foto-count">' + fotos.length + ' foto\u2019s</span>' : '') + '</div>'
-          : '<iframe class="card-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(w.adres) + '"></iframe>';
+          : mapsKnop(mapsQ, escHtml(w.adres));
         return '<article class="blog-card rv in ' + (i === 1 ? 'd1' : i === 2 ? 'd2' : '') + '">' +
           visual + '<div class="blog-body">' +
           '<div class="proj-status' + (w.status === 'Onder bod' ? ' sold' : '') + '">' + escHtml(w.status || 'Te koop') + '</div>' +
@@ -355,7 +397,7 @@ function renderProjectenPublic() {
         var prFotos = Array.isArray(pr.fotos) ? pr.fotos : [];
         var prVisual = prFotos.length
           ? '<div class="card-visual"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="' + escHtml(prFotos[0]) + '" alt="' + escHtml(pr.adres) + '"></div>'
-          : '<iframe class="card-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(pr.adres) + '"></iframe>';
+          : mapsKnop(mapsQ, escHtml(pr.adres));
         return '<article class="blog-card rv in ' + (i === 1 ? 'd1' : i === 2 ? 'd2' : '') + '">' +
           prVisual +
           '<div class="blog-body">' +
@@ -419,7 +461,7 @@ function openWoningDetail(w) {
           '<button class="btn btn-primary" data-open-modal data-subject="Woningaanbod ontvangen" data-ref="' + escHtml((w.id || '') + ' — ' + (w.adres || '')) + '" data-wd-close>Plan een bezichtiging <span class="arr">→</span></button>' +
           '<a class="btn btn-outline-dark" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + mapsQ + '">Route & omgeving</a>' +
         '</div>' +
-        '<iframe class="wd-map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=' + mapsQ + '&output=embed" title="Kaart ' + escHtml(w.adres) + '"></iframe>' +
+        '<div class="wd-map-wrap">' + mapsKnop(mapsQ, escHtml(w.adres)).replace('class="map-load"', 'class="map-load" data-hoogte="wd"') + '</div>' +
       '</div>' +
     '</div>';
   box.classList.add('on');
@@ -453,4 +495,22 @@ document.addEventListener('click', function (e) {
 });
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') closeWoningDetail();
+});
+
+/* ===== Bedrijfsgegevens (footer) — vul in en publiceer ===== */
+var BEDRIJF = {
+  naam: '',   // bijv. 'HomeINN B.V.'
+  kvk: '',    // bijv. '12345678'
+  btw: '',    // bijv. 'NL123456789B01'
+  adres: ''   // bijv. 'Straatnaam 1, 3011 AA Rotterdam'
+};
+document.addEventListener('DOMContentLoaded', function () {
+  var el = document.getElementById('f-legal');
+  if (!el) return;
+  var delen = [];
+  if (BEDRIJF.naam) delen.push(BEDRIJF.naam);
+  if (BEDRIJF.adres) delen.push(BEDRIJF.adres);
+  if (BEDRIJF.kvk) delen.push('KvK ' + BEDRIJF.kvk);
+  if (BEDRIJF.btw) delen.push('Btw ' + BEDRIJF.btw);
+  if (delen.length) { el.textContent = delen.join(' · '); el.style.display = 'block'; }
 });

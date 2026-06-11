@@ -88,6 +88,7 @@ function seedData() {
   const t = todayISO();
   return {
     version: 3,
+    lastBackup: '',
     settings: {
       companyName: 'HomeINN', address: 'Rotterdam', email: 'info@homeinn.nl', phone: '[TELEFOON]',
       kvk: '[KVK-NUMMER]', btw: '[BTW-NUMMER]',
@@ -512,10 +513,16 @@ function buildSignals() {
     const som = openFacturen.reduce((sum, k) => sum + (Number(k.amount) || 0), 0);
     signals.push({ level: 'middel', text: `${openFacturen.length} factu${openFacturen.length === 1 ? 'ur' : 'ren'} te betalen (${fmtMoney(som)}).`, go: 'costs' });
   }
+  // Backup-discipline: alles staat in één browser
+  if (!state.lastBackup) {
+    signals.push({ level: 'middel', text: 'Je hebt nog nooit een backup gemaakt — alles staat in deze browser. Maak er nu een via Instellingen.', go: 'settings' });
+  } else if (daysBetween(state.lastBackup, t) > 14) {
+    signals.push({ level: 'hoog', text: `Laatste backup is ${daysBetween(state.lastBackup, t)} dagen oud — download een nieuwe via Instellingen.`, go: 'settings' });
+  }
   // Website-aanvragen
   const nieuweLeads = loadInbox().filter(l => !l.handled).length;
   if (nieuweLeads) {
-    signals.push({ level: 'hoog', text: `${nieuweLeads} nieuwe aanvra${nieuweLeads === 1 ? 'ag' : 'gen'} via de website — bekijk en volg op.`, go: 'inbox' });
+    signals.push({ level: 'hoog', text: `${nieuweLeads} nieuwe aanvra${nieuweLeads === 1 ? 'ag' : 'gen'} via de website (lokaal getest) — bekijk en volg op. Live aanvragen komen per e-mail binnen.`, go: 'inbox' });
   }
   // Taken
   state.tasks.filter(task => !task.done && task.due && task.due <= t).forEach(task => {
@@ -2001,6 +2008,8 @@ function publishAanbod() {
 }
 
 function downloadBackup() {
+  state.lastBackup = todayISO();
+  save();
   downloadFile(`homeinn-backup-${todayISO()}.json`, JSON.stringify(state, null, 2), 'application/json');
   showToast('Backup gedownload. Bewaar dit bestand veilig.');
 }

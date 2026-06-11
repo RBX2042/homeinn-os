@@ -714,3 +714,12 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .wd-acties{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1.6rem}
 .wd-map{width:100%;height:280px;border:0;display:block}
 @media(max-width:680px){.wd-kenmerken{grid-template-columns:1fr}.wd-bg{padding:2vh .6rem 4vh}}
+
+/* ===== Kaart-na-klik (privacy) ===== */
+.map-load{width:100%;height:190px;border:1px dashed rgba(11,30,48,.25);background:var(--cream2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;cursor:pointer;color:var(--ink3);font-family:inherit}
+.map-load:hover{background:var(--cream3)}
+.map-load-icoon{font-size:1.5rem}
+.map-load strong{font-size:.85rem;font-weight:600;color:var(--ink2)}
+.map-load-sub{font-size:.68rem;color:var(--ink4)}
+.map-load[data-hoogte="wd"]{height:280px}
+.wd-map-wrap{margin-top:.4rem}
