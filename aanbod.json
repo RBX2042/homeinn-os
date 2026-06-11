@@ -1,5 +1,5 @@
 {
-  "bijgewerkt": "2026-06-10",
+  "bijgewerkt": "2026-06-11",
   "aanbod": [
     {
       "id": "PND-2025-011",
@@ -12,6 +12,32 @@
       "m2": 92,
       "kamers": 3,
       "omschrijving": "Volledig gerenoveerd 3-kamerappartement op de Kop van Zuid. Nieuwe installaties, warmtepomp, energielabel A en hoogwaardige afwerking — direct te betrekken."
+    }
+  ],
+  "projecten": [
+    {
+      "id": "PRJ-2026-003",
+      "titel": "Volledige renovatie + tuinkamer",
+      "adres": "Kralingse Plaslaan 22",
+      "plaats": "Rotterdam",
+      "type": "Eengezinswoning",
+      "status": "Uitvoering",
+      "voortgang": 50,
+      "start": "2026-04-15",
+      "oplevering": "2026-07-14",
+      "omschrijving": "Karakteristieke eengezinswoning aan de Kralingse Plas, volledig gerenoveerd met uitbouw en energielabel A. Binnenkort in verkoop.",
+      "updates": [
+        { "datum": "2026-06-08", "tekst": "Afbouw in volle gang — stucwerk gereed, keukenplaatsing gepland." },
+        { "datum": "2026-05-27", "tekst": "Installaties gestart: warmtepomp en nieuwe groepenkast geplaatst." },
+        { "datum": "2026-05-01", "tekst": "Sloop en ruwbouw afgerond — het pand is wind- en waterdicht." }
+      ],
+      "investering": {
+        "doelbedrag": 150000,
+        "opgehaald": 50000,
+        "minInleg": 25000,
+        "rendementPct": 8,
+        "looptijd": "12 maanden"
+      }
     }
   ],
   "verkocht": [

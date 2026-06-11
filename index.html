@@ -265,10 +265,13 @@
               <h2>Ontwikkelprojecten</h2>
               <p>Renovatie en ontwikkeling per pand: budget, realisatie en voortgang.</p>
             </div>
+            <div class="head-actions">
+            <button class="btn secondary" id="publish-site-projects">Publiceer website (JSON)</button>
             <div class="segmented" id="project-filter">
               <button class="active" data-prfilter="actief">Actief</button>
               <button data-prfilter="all">Alles</button>
               <button data-prfilter="Afgerond">Afgerond</button>
+            </div>
             </div>
           </div>
           <div class="table-wrap">
@@ -339,7 +342,7 @@
             <h2>Te koop &amp; onder bod</h2>
             <p>Lopende verkoopdossiers met bezichtigingen en biedingen.</p>
           </div>
-          <button class="btn secondary" id="publish-aanbod">Publiceer aanbod (JSON)</button>
+          <button class="btn secondary" id="publish-aanbod">Publiceer website (JSON)</button>
         </div>
         <div class="table-wrap">
           <table>
@@ -707,6 +710,15 @@
         <label>Budget (€)<input name="budget" type="number" min="0" step="any" required></label>
         <label>Startdatum<input name="startDate" type="date"></label>
         <label>Opleverdatum (gepland)<input name="endDate" type="date"></label>
+      </div>
+      <h3 class="modal-section">Website &amp; investeren</h3>
+      <div class="form-grid">
+        <label class="check-label" style="margin:0"><input type="checkbox" name="publish"> Toon dit project op de website (volgen)</label>
+        <label class="check-label" style="margin:0"><input type="checkbox" name="investOpen"> Open voor investeerders (inkopen)</label>
+        <label>Doelbedrag investering (€)<input name="doelbedrag" type="number" min="0" step="any"></label>
+        <label>Minimale inleg (€)<input name="minInleg" type="number" min="0" step="any"></label>
+        <label>Verwacht rendement (% per jaar)<input name="rendementPct" type="number" min="0" step="any"></label>
+        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden"></label>
       </div>
       <label>Notitie<textarea name="note" rows="2"></textarea></label>
       <menu>

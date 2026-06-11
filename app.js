@@ -213,6 +213,14 @@ function seedData() {
         id: 'prj1', ref: 'PRJ-2026-003', name: 'Volledige renovatie + tuinkamer', propertyId: 'pnd1',
         status: 'Uitvoering', startDate: addDaysISO(t, -56), endDate: addDaysISO(t, 34), budget: 85000,
         note: 'Bouwbedrijf Vos hoofdaannemer. Oplevering richting half juli.',
+        publish: true,
+        updates: [
+          { id: 'u1', date: addDaysISO(t, -40), text: 'Sloop en ruwbouw afgerond — het pand is wind- en waterdicht.' },
+          { id: 'u2', date: addDaysISO(t, -14), text: 'Installaties gestart: warmtepomp en nieuwe groepenkast geplaatst.' },
+          { id: 'u3', date: addDaysISO(t, -2), text: 'Afbouw in volle gang — stucwerk gereed, keukenplaatsing gepland.' }
+        ],
+        invest: { open: true, doelbedrag: 150000, minInleg: 25000, rendementPct: 8, looptijd: '12 maanden' },
+        investeerders: [{ id: 'inv1', naam: 'J. Smits', bedrag: 50000, datum: addDaysISO(t, -35) }],
         phases: [
           { id: 'ph1', name: 'Voorbereiding', status: 'Klaar' },
           { id: 'ph2', name: 'Vergunning & ontwerp', status: 'Klaar' },
@@ -1042,7 +1050,13 @@ function renderPropertyDetail() {
         </table></div>
         ${costs.length > 8 ? `<p class="hint">Laatste 8 van ${costs.length} — zie Kosten voor alles.</p>` : ''}
       </section>
-    </div>`;
+    </div>
+    <section class="panel">
+      <div class="panel-head compact"><h2>Locatie</h2>
+        <a class="text-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address + ', ' + p.city)}">Open in Google Maps →</a>
+      </div>
+      <iframe class="maps-embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(p.address + ', ' + p.city)}&output=embed" title="Kaart ${esc(p.address)}"></iframe>
+    </section>`;
 }
 
 /* ---------- Ontwikkelprojecten ---------- */
@@ -1164,7 +1178,49 @@ function renderProjectDetail() {
           <td class="row-actions"><button class="icon-btn" data-action="edit-cost" data-id="${k.id}" title="Bewerken">✎</button>
           <button class="icon-btn" data-action="del-cost" data-id="${k.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(7, 'Nog geen kosten op dit project.')}</tbody>
       </table></div>
-    </section>`;
+    </section>
+    <div class="split detail-grid">
+      <section class="panel">
+        <div class="panel-head compact"><h2>Website-updates</h2>${pr.publish ? '<span class="badge green">Op de website</span>' : '<span class="badge gray">Niet gepubliceerd</span>'}</div>
+        <p class="hint">Korte voortgangsberichten voor volgers. Zet publicatie aan via Bewerken en klik daarna op "Publiceer website (JSON)".</p>
+        <div class="check-list">
+          ${(pr.updates || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(u => `
+            <div class="check-item">
+              <span class="badge gray">${fmtDate(u.date)}</span>
+              <span>${esc(u.text)}</span>
+              <button class="icon-btn" data-action="del-update" data-id="${pr.id}" data-item="${u.id}" title="Verwijderen">🗑</button>
+            </div>`).join('') || '<p class="empty">Nog geen updates.</p>'}
+        </div>
+        <form class="inline-form" data-form="add-update" data-id="${pr.id}">
+          <input name="text" placeholder="Nieuwe update… (bijv. dak gereed, installaties gestart)" required>
+          <button class="btn primary slim" type="submit">+</button>
+        </form>
+      </section>
+      <section class="panel">
+        <div class="panel-head compact"><h2>Investeerders</h2>${pr.invest?.open ? '<span class="badge green">Open voor inleg</span>' : '<span class="badge gray">Gesloten</span>'}</div>
+        ${(() => {
+          const doel = Number(pr.invest?.doelbedrag) || 0;
+          const opgehaald = (pr.investeerders || []).reduce((s, i) => s + (Number(i.bedrag) || 0), 0);
+          const pct = doel ? Math.min(100, Math.round(opgehaald / doel * 100)) : 0;
+          return `<div class="totals-box">
+            <div><dt>Opgehaald</dt><dd>${fmtMoney(opgehaald)}${doel ? ' van ' + fmtMoney(doel) + ' (' + pct + '%)' : ''}</dd></div>
+            ${doel ? `<div class="progress"><i style="width:${pct}%"></i></div>` : ''}
+            ${pr.invest?.open ? `<div><dt>Min. inleg · rendement · looptijd</dt><dd>${fmtMoney(pr.invest.minInleg)} · ${fmtNum(pr.invest.rendementPct, 1)}%/jr · ${esc(pr.invest.looptijd || '—')}</dd></div>` : ''}
+          </div>`;
+        })()}
+        <div class="table-wrap"><table>
+          <thead><tr><th>Naam</th><th>Inleg</th><th>Datum</th><th></th></tr></thead>
+          <tbody>${(pr.investeerders || []).map(i => `
+            <tr><td>${esc(i.naam)}</td><td><strong>${fmtMoney(i.bedrag)}</strong></td><td>${fmtDate(i.datum)}</td>
+            <td class="row-actions"><button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(4, 'Nog geen investeerders geregistreerd.')}</tbody>
+        </table></div>
+        <form class="inline-form" data-form="add-investor" data-id="${pr.id}">
+          <input name="naam" placeholder="Naam investeerder…" required>
+          <input name="bedrag" type="number" step="any" placeholder="€ inleg" required>
+          <button class="btn primary slim" type="submit">+</button>
+        </form>
+      </section>
+    </div>`;
 }
 
 /* ---------- Kosten ---------- */
@@ -1446,6 +1502,12 @@ function openProjectModal(id = null, presetPropertyId = '') {
   if (pr) {
     ['name', 'status', 'budget', 'startDate', 'endDate', 'note'].forEach(k => form.elements[k].value = pr[k] ?? '');
     form.elements.propertyId.value = pr.propertyId || '';
+    form.elements.publish.checked = !!pr.publish;
+    form.elements.investOpen.checked = !!pr.invest?.open;
+    form.elements.doelbedrag.value = pr.invest?.doelbedrag ?? '';
+    form.elements.minInleg.value = pr.invest?.minInleg ?? '';
+    form.elements.rendementPct.value = pr.invest?.rendementPct ?? '';
+    form.elements.looptijd.value = pr.invest?.looptijd ?? '';
   } else {
     form.elements.startDate.value = todayISO();
   }
@@ -1640,9 +1702,14 @@ function handleModalSubmit(event) {
   }
 
   if (formId === 'project-form') {
-    const base = { name: str('name'), propertyId: data.get('propertyId'), status: str('status'), budget: num('budget'), startDate: data.get('startDate') || '', endDate: data.get('endDate') || '', note: str('note') };
+    const base = {
+      name: str('name'), propertyId: data.get('propertyId'), status: str('status'), budget: num('budget'),
+      startDate: data.get('startDate') || '', endDate: data.get('endDate') || '', note: str('note'),
+      publish: !!data.get('publish'),
+      invest: { open: !!data.get('investOpen'), doelbedrag: num('doelbedrag'), minInleg: num('minInleg'), rendementPct: num('rendementPct'), looptijd: str('looptijd') }
+    };
     if (id) Object.assign(projectById(id), base);
-    else state.projects.push(Object.assign({ id: uid('prj'), ref: nextRef('PRJ', state.projects), phases: DEFAULT_PHASES.map(name => ({ id: uid('ph'), name, status: 'Te doen' })), opleverpunten: [] }, base));
+    else state.projects.push(Object.assign({ id: uid('prj'), ref: nextRef('PRJ', state.projects), phases: DEFAULT_PHASES.map(name => ({ id: uid('ph'), name, status: 'Te doen' })), opleverpunten: [], updates: [], investeerders: [] }, base));
     showToast(`Project "${base.name}" opgeslagen.`);
   }
 
@@ -1824,15 +1891,37 @@ function buildAanbodJson() {
     .filter(p => p.status === 'Verkocht')
     .slice(-6)
     .map(p => ({ adres: p.address, plaats: p.city, type: p.ptype, label: p.label || '' }));
-  return JSON.stringify({ bijgewerkt: todayISO(), aanbod, verkocht }, null, 2);
+  const projecten = state.projects.filter(pr => pr.publish).map(pr => {
+    const p = propertyById(pr.propertyId) || {};
+    const phases = pr.phases || [];
+    return {
+      id: pr.ref, titel: pr.name, adres: p.address || '', plaats: p.city || '', type: p.ptype || '',
+      status: pr.status,
+      voortgang: phases.length ? Math.round(phases.filter(f => f.status === 'Klaar').length / phases.length * 100) : 0,
+      start: pr.startDate || '', oplevering: pr.endDate || '',
+      omschrijving: p.webOmschrijving || '', // bewust GEEN fallback op pr.note: dat is intern
+      updates: (pr.updates || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(u => ({ datum: u.date, tekst: u.text })),
+      investering: pr.invest?.open ? {
+        doelbedrag: Number(pr.invest.doelbedrag) || 0,
+        opgehaald: (pr.investeerders || []).reduce((s, i) => s + (Number(i.bedrag) || 0), 0),
+        minInleg: Number(pr.invest.minInleg) || 0,
+        rendementPct: Number(pr.invest.rendementPct) || 0,
+        looptijd: pr.invest.looptijd || ''
+      } : null
+    };
+  });
+  return JSON.stringify({ bijgewerkt: todayISO(), aanbod, projecten, verkocht }, null, 2);
 }
 
 function publishAanbod() {
   const teKoop = state.properties.filter(p => p.status === 'Te koop' || p.status === 'Onder bod');
   const zonderInfo = teKoop.filter(p => !p.webOmschrijving || !Number(p.vraagprijs));
-  if (zonderInfo.length) showToast(`Tip: ${zonderInfo.map(p => p.address).join(', ')} mist nog een vraagprijs of website-omschrijving (Pand bewerken → Website-presentatie).`);
+  const projZonder = state.projects.filter(pr => pr.publish && !propertyById(pr.propertyId)?.webOmschrijving);
+  const tips = [...zonderInfo.map(p => p.address), ...projZonder.map(pr => pr.name)];
+  if (tips.length) showToast(`Tip: ${[...new Set(tips)].join(', ')} mist nog een vraagprijs of website-omschrijving (Pand bewerken → Website-presentatie).`);
   downloadFile('aanbod.json', buildAanbodJson(), 'application/json');
-  setTimeout(() => showToast(`aanbod.json gedownload met ${teKoop.length} woning${teKoop.length === 1 ? '' : 'en'}. Vervang het bestand in je software-map en op je hosting.`), zonderInfo.length ? 3700 : 0);
+  const pubProjecten = state.projects.filter(pr => pr.publish).length;
+  setTimeout(() => showToast(`aanbod.json gedownload: ${teKoop.length} woning${teKoop.length === 1 ? '' : 'en'} te koop + ${pubProjecten} project${pubProjecten === 1 ? '' : 'en'} om te volgen. Vervang het bestand in je software-map en op je hosting.`), zonderInfo.length ? 3700 : 0);
 }
 
 function downloadBackup() {
@@ -1999,6 +2088,16 @@ document.addEventListener('click', event => {
       break;
     }
     case 'del-task': state.tasks = state.tasks.filter(x => x.id !== id); rerender(); break;
+    case 'del-update': {
+      const pr = projectById(id);
+      pr.updates = (pr.updates || []).filter(u => u.id !== item); rerender();
+      break;
+    }
+    case 'del-investor': {
+      const pr = projectById(id);
+      if (confirmDel('Investeerder verwijderen uit de administratie?')) { pr.investeerders = (pr.investeerders || []).filter(i => i.id !== item); rerender(); }
+      break;
+    }
     // Aanvragen
     case 'inbox-to-deal': {
       const lead = loadInbox().find(l => l.id === id);
@@ -2113,6 +2212,16 @@ document.addEventListener('submit', event => {
       const p = propertyById(form.dataset.id);
       p.docs.push({ id: uid('doc'), name: String(data.get('name')).trim(), done: false });
     }
+    if (form.dataset.form === 'add-update') {
+      const pr = projectById(form.dataset.id);
+      pr.updates = pr.updates || [];
+      pr.updates.push({ id: uid('u'), date: todayISO(), text: String(data.get('text')).trim() });
+    }
+    if (form.dataset.form === 'add-investor') {
+      const pr = projectById(form.dataset.id);
+      pr.investeerders = pr.investeerders || [];
+      pr.investeerders.push({ id: uid('inv'), naam: String(data.get('naam')).trim(), bedrag: Number(data.get('bedrag')) || 0, datum: todayISO() });
+    }
     form.reset();
     rerender();
   }
@@ -2194,8 +2303,9 @@ function initStatic() {
     b.addEventListener('click', () => b.closest('dialog')?.close());
   });
 
-  // Aanbod publiceren
+  // Website publiceren
   $('#publish-aanbod').addEventListener('click', publishAanbod);
+  $('#publish-site-projects').addEventListener('click', publishAanbod);
 
   // Backup / herstel / reset
   $('#backup-btn').addEventListener('click', downloadBackup);

@@ -22,10 +22,9 @@
     <li><a href="#" onclick="go('home');return false" data-p="home">Home</a></li>
     <li><a href="#" onclick="go('verkopen');return false" data-p="verkopen">Pand verkopen</a></li>
     <li><a href="#" onclick="go('aanbod');return false" data-p="aanbod">Aanbod</a></li>
+    <li><a href="#" onclick="go('projecten');return false" data-p="projecten">Projecten</a></li>
     <li><a href="#" onclick="go('diensten');return false" data-p="diensten">Diensten</a></li>
-    <li><a href="#" onclick="go('tarieven');return false" data-p="tarieven">Tarieven</a></li>
     <li><a href="#" onclick="go('over');return false" data-p="over">Over ons</a></li>
-    <li><a href="#" onclick="go('blog');return false" data-p="blog">Blog</a></li>
     <li><a href="#" onclick="go('contact');return false" data-p="contact">Contact</a></li>
   </ul>
   <button class="nav-cta" onclick="openModal()">Gratis gesprek</button>
@@ -37,6 +36,7 @@
     <a href="#" onclick="go('home');return false">Home</a>
     <a href="#" onclick="go('verkopen');return false">Pand verkopen</a>
     <a href="#" onclick="go('aanbod');return false">Aanbod</a>
+    <a href="#" onclick="go('projecten');return false">Projecten</a>
     <a href="#" onclick="go('diensten');return false">Diensten</a>
     <a href="#" onclick="go('tarieven');return false">Tarieven</a>
     <a href="#" onclick="go('over');return false">Over ons</a>
@@ -130,7 +130,7 @@
   </div>
   <div class="values-grid four">
     <div class="val-card rv"><div class="val-eyebrow">01 — Aankoop</div><h3>Wij kopen uw pand. Direct.</h3><p>Woningen, appartementen en portiekpanden — in elke staat, ook verhuurd. Geen makelaarskosten, geen bezichtigingscircus: een onderbouwd voorstel binnen 48 uur en passeren op het moment dat ú kiest.</p><button class="pillar-cta" onclick="go('verkopen')">Pand verkopen →</button></div>
-    <div class="val-card rv d1"><div class="val-eyebrow">02 — Projectontwikkeling</div><h3>Van gedateerd naar instapklaar</h3><p>Volledige renovaties, herindelingen en verduurzaming naar energielabel A — met een vast team van aannemers en installateurs en strakke budget- en planningsbewaking.</p><button class="pillar-cta" onclick="go('diensten')">Onze aanpak →</button></div>
+    <div class="val-card rv d1"><div class="val-eyebrow">02 — Projectontwikkeling</div><h3>Van gedateerd naar instapklaar</h3><p>Volledige renovaties, herindelingen en verduurzaming naar energielabel A — met een vast team van aannemers en installateurs en strakke budget- en planningsbewaking.</p><button class="pillar-cta" onclick="go('projecten')">Volg onze projecten →</button></div>
     <div class="val-card rv d2"><div class="val-eyebrow">03 — Verkoop</div><h3>Gerenoveerd &amp; gekeurd aanbod</h3><p>Onze ontwikkelde woningen komen instapklaar op de markt: bouwkundig gekeurd, energiezuinig en zonder verrassingen achter de muren. Interesse in ons aanbod? Laat het ons weten.</p><button class="pillar-cta" onclick="go('aanbod')">Bekijk het aanbod →</button></div>
     <div class="val-card rv d3"><div class="val-eyebrow">04 — Vastgoedbeheer</div><h3>Rust voor eigenaren</h3><p>Niet verkopen maar verhuren? Wij beheren uw vastgoed met vaste pakketten, transparante tarieven en één aanspreekpunt — van huurincasso tot 24/7 storingslijn.</p><button class="pillar-cta" onclick="go('tarieven')">Beheerpakketten →</button></div>
   </div>
@@ -464,6 +464,30 @@
 
 <div class="cta-band"><div class="cta-inner rv"><h2>Eerder weten wat eraan komt? Schrijf u in voor het <em>aanbod.</em></h2><button class="btn btn-dark" onclick="openModal()">Houd mij op de hoogte <span class="arr">→</span></button></div></div>
 </div><!-- /aanbod -->
+
+
+<!-- ══════════════════════════════════════
+     PROJECTEN (volgen & investeren)
+══════════════════════════════════════ -->
+<div class="pg" id="pg-projecten">
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <span class="t-eyebrow rv" style="color:rgba(180,144,48,.7);display:block;margin-bottom:1.5rem">Projecten</span>
+    <h1 class="rv">Volg het werk.<br><em>Of doe mee.</em></h1>
+    <p class="rv d1">Wij ontwikkelen panden van aankoop tot verkoop — en u kijkt mee. Volg de voortgang per project, of koop u in en deel mee in het resultaat. Transparant, met locatie, planning en updates.</p>
+  </div>
+</div>
+
+<section class="blog-section">
+  <div class="blog-grid" id="projecten-grid">
+    <p class="aanbod-leeg">Projecten worden geladen…</p>
+  </div>
+  <p class="aanbod-sold-note" style="max-width:1320px;margin:2.5rem auto 0">Deelname in een project gebeurt op basis van een onderhandse overeenkomst en persoonlijke kennismaking. Genoemde rendementen zijn indicatief en geen garantie; dit is geen aanbieding van effecten. Vraag altijd de volledige projectinformatie op.</p>
+</section>
+
+<div class="cta-band"><div class="cta-inner rv"><h2>Meedoen in ons volgende <em>project?</em></h2><button class="btn btn-dark" onclick="openModal('Investeren in een project')">Plan een kennismaking <span class="arr">→</span></button></div></div>
+</div><!-- /projecten -->
 
 
 <!-- ══════════════════════════════════════
@@ -1064,6 +1088,7 @@
       <li><a href="#" onclick="go('verkopen');return false">Pand verkopen</a></li>
       <li><a href="#" onclick="go('diensten');return false">Projectontwikkeling</a></li>
       <li><a href="#" onclick="go('aanbod');return false">Woningaanbod</a></li>
+      <li><a href="#" onclick="go('projecten');return false">Projecten volgen &amp; investeren</a></li>
       <li><a href="#" onclick="go('tarieven');return false">Vastgoedbeheer &amp; tarieven</a></li>
     </ul></div>
     <div class="f-col"><h5>Werkgebied</h5><ul>
@@ -1075,6 +1100,7 @@
     </ul></div>
     <div class="f-col"><h5>HomeINN</h5><ul>
       <li><a href="#" onclick="go('over');return false">Over ons</a></li>
+      <li><a href="#" onclick="go('tarieven');return false">Tarieven</a></li>
       <li><a href="#" onclick="go('blog');return false">Blog</a></li>
       <li><a href="#" onclick="go('contact');return false">Contact</a></li>
       <li><a href="#" onclick="openModal();return false">Gratis gesprek</a></li>
@@ -1107,12 +1133,13 @@
           <input type="hidden" name="action" value="homeinn_submit_form">
           <input type="hidden" name="homeinn_form_type" value="meeting">
           <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="hidden" name="meeting_ref" value="">
           <div class="m2col">
             <div class="m-group"><label>Voornaam</label><input type="text" id="m-naam" name="meeting_name" placeholder="Uw naam" required></div>
             <div class="m-group"><label>Telefoon of e-mail</label><input type="text" id="m-contact" name="meeting_contact" placeholder="06… of e-mail" required></div>
           </div>
           <div class="m-group"><label>Aantal objecten</label><select name="meeting_portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
-          <div class="m-group"><label>Waar gaat het om?</label><select name="meeting_package"><option>Ik wil mijn pand verkopen</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Woningaanbod ontvangen</option><option>Ik wil advies</option></select></div>
+          <div class="m-group"><label>Waar gaat het om?</label><select name="meeting_package"><option>Ik wil mijn pand verkopen</option><option>Investeren in een project</option><option>Project volgen</option><option>Woningaanbod ontvangen</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Ik wil advies</option></select></div>
           <button class="m-submit" type="submit">Plan mijn gratis gesprek →</button>
           <p class="m-note">Uw aanvraag wordt veilig verwerkt en direct doorgestuurd naar het HomeINN-team.</p>
         </div>
