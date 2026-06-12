@@ -1,9 +1,10 @@
 /* HomeINN OS — service worker: app installeerbaar + offline bruikbaar.
    Bump CACHE bij elke release zodat oude bestanden worden vervangen. */
-const CACHE = 'homeinn-os-v7';
+const CACHE = 'homeinn-os-v13';
 const CORE = [
-  'portaal.html', 'app.js', 'styles.css',
+  'portaal.html', 'app.js', 'cloud.js', 'styles.css',
   'homeinn-public.html', 'homeinn-public.js', 'homeinn-public.css',
+  'investeerders.html', 'investeerders.js', 'huurders.html', 'huurders.js',
   'manifest.webmanifest', 'fonts/fonts.css',
   'assets/logo-light.png', 'assets/logo-dark.png', 'assets/favicon-512.png', 'assets/favicon-maskable-512.png'
 ];

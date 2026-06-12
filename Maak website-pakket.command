@@ -5,7 +5,12 @@ rm -rf website-online
 mkdir website-online
 cp homeinn-public.html website-online/index.html
 cp homeinn-public.css homeinn-public.js website-online/
+cp investeerders.html investeerders.js website-online/ 2>/dev/null || true
+cp huurders.html huurders.js website-online/ 2>/dev/null || true
 cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[],"verkocht":[]}' > website-online/aanbod.json
+cp sw.js website-online/ 2>/dev/null || true
+# Manifest meekopiëren maar start_url op de website-root (index.html) zetten i.p.v. het portaal
+sed 's#"start_url": "portaal.html"#"start_url": "index.html"#; s#"short_name": "HomeINN OS"#"short_name": "HomeINN"#' manifest.webmanifest > website-online/manifest.webmanifest
 cp -R assets website-online/assets
 cp -R fotos website-online/fotos 2>/dev/null || true
 cp -R fonts website-online/fonts 2>/dev/null || true

@@ -499,10 +499,10 @@ document.addEventListener('keydown', function (e) {
 
 /* ===== Bedrijfsgegevens (footer) — vul in en publiceer ===== */
 var BEDRIJF = {
-  naam: '',   // bijv. 'HomeINN B.V.'
-  kvk: '',    // bijv. '12345678'
-  btw: '',    // bijv. 'NL123456789B01'
-  adres: ''   // bijv. 'Straatnaam 1, 3011 AA Rotterdam'
+  naam: 'HomeINN B.V.',
+  kvk: '96713437',
+  btw: 'NL867727548B01',
+  adres: 'Rosestraat 1321, 3071 AL Rotterdam'
 };
 document.addEventListener('DOMContentLoaded', function () {
   var el = document.getElementById('f-legal');
@@ -513,4 +513,19 @@ document.addEventListener('DOMContentLoaded', function () {
   if (BEDRIJF.kvk) delen.push('KvK ' + BEDRIJF.kvk);
   if (BEDRIJF.btw) delen.push('Btw ' + BEDRIJF.btw);
   if (delen.length) { el.textContent = delen.join(' · '); el.style.display = 'block'; }
+});
+
+/* ===== PWA: installeerbaar + offline ===== */
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+
+/* ===== FAQ-accordion ===== */
+document.addEventListener('click', function (e) {
+  var q = e.target.closest ? e.target.closest('.faq-q') : null;
+  if (!q) return;
+  var item = q.parentElement;
+  var open = item.classList.contains('open');
+  item.parentElement.querySelectorAll('.faq-item.open').forEach(function (el) { el.classList.remove('open'); });
+  if (!open) item.classList.add('open');
 });

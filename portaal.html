@@ -5,14 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HomeINN OS | Vastgoedportaal</title>
   <meta name="description" content="HomeINN OS: portaal voor aankoop, projectontwikkeling en verkoop van vastgoed.">
-  <link rel="icon" href="assets/favicon-512.png">
+  <link rel="icon" href="assets/favicon-512.png?v=20260613">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0f1b2d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HomeINN OS">
+  <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260613">
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <aside class="sidebar">
     <a class="brand" href="#dashboard" aria-label="HomeINN OS">
-      <img src="assets/logo-light.png" alt="HomeINN">
+      <img src="assets/logo-light.png?v=20260613" alt="HomeINN">
       <span>OS</span>
     </a>
     <nav class="side-nav" aria-label="Hoofdnavigatie">
@@ -26,8 +32,13 @@
       <button class="nav-item" data-view="portfolio">Panden</button>
       <button class="nav-item" data-view="projects">Ontwikkelprojecten</button>
       <button class="nav-item" data-view="costs">Kosten</button>
-      <p class="nav-group">Verkoop</p>
+      <button class="nav-item" data-view="money">Geld-in &amp; huur</button>
+      <p class="nav-group">Verkoop &amp; verhuur</p>
       <button class="nav-item" data-view="sales">Verkoop</button>
+      <button class="nav-item" data-view="ads">Adverteren</button>
+      <p class="nav-group">Analyse</p>
+      <button class="nav-item" data-view="reports">Rapportage</button>
+      <button class="nav-item" data-view="finance">Financiering</button>
       <p class="nav-group">Organisatie</p>
       <button class="nav-item" data-view="planning">Planning</button>
       <button class="nav-item" data-view="relations">Relaties</button>
@@ -303,11 +314,14 @@
             <h2>Kosten &amp; verplichtingen</h2>
             <p>Alle ontwikkel- en pandkosten met status — zo bewaak je budget en betalingen.</p>
           </div>
-          <div class="segmented" id="cost-filter">
-            <button class="active" data-cfilter="all">Alles</button>
-            <button data-cfilter="Opdracht">Opdracht</button>
-            <button data-cfilter="Factuur ontvangen">Factuur ontvangen</button>
-            <button data-cfilter="Betaald">Betaald</button>
+          <div class="head-actions">
+            <button class="btn secondary slim" id="export-boekhouding">Boekhoud-export</button>
+            <div class="segmented" id="cost-filter">
+              <button class="active" data-cfilter="all">Alles</button>
+              <button data-cfilter="Opdracht">Opdracht</button>
+              <button data-cfilter="Factuur ontvangen">Factuur ontvangen</button>
+              <button data-cfilter="Betaald">Betaald</button>
+            </div>
           </div>
         </div>
         <div class="table-wrap">
@@ -383,6 +397,26 @@
           </table>
         </div>
       </div>
+    </section>
+
+    <!-- ===== Geld-in & huur ===== -->
+    <section class="view" id="money">
+      <div id="money-body"></div>
+    </section>
+
+    <!-- ===== Adverteren ===== -->
+    <section class="view" id="ads">
+      <div id="ads-body"></div>
+    </section>
+
+    <!-- ===== Rapportage ===== -->
+    <section class="view" id="reports">
+      <div id="report-body"></div>
+    </section>
+
+    <!-- ===== Financiering ===== -->
+    <section class="view" id="finance">
+      <div id="finance-body"></div>
     </section>
 
     <!-- ===== Planning ===== -->
@@ -479,6 +513,10 @@
           <p class="hint" id="storage-info"></p>
         </aside>
       </div>
+      <section class="panel" id="cloud-panel">
+        <div class="panel-head compact"><h2>Cloud &amp; samenwerking</h2><span class="sub">Synchroniseer naar de cloud zodat investeerders, team en huurders kunnen inloggen.</span></div>
+        <div id="cloud-body"></div>
+      </section>
     </section>
   </main>
 
@@ -678,6 +716,11 @@
       <div class="form-grid">
         <label>Maandhuur (€)<input name="maandhuur" type="number" min="0" step="any" value="0"></label>
         <label>Huurder<input name="huurder"></label>
+        <label>E-mail huurder (voor portaal)<input name="huurderEmail" type="email"></label>
+        <label>Ingangsdatum huur<input name="huurIngang" type="date"></label>
+        <label>Einddatum contract<input name="huurEind" type="date"></label>
+        <label>Waarborgsom (€)<input name="borg" type="number" min="0" step="any" value="0"></label>
+        <label>Jaarlijkse indexering (%)<input name="huurIndexPct" type="number" min="0" step="any" value="0"></label>
       </div>
       <label>Notitie<textarea name="note" rows="2"></textarea></label>
       <menu>
@@ -852,8 +895,135 @@
     </form>
   </dialog>
 
+  <dialog class="modal" id="ad-modal">
+    <form method="dialog" class="modal-card" id="ad-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Advertentie</p>
+      <h2 id="ad-modal-title">Advertentiekanaal toevoegen</h2>
+      <input type="hidden" name="propertyId">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Kanaal
+          <select name="kanaal">
+            <option>Funda</option>
+            <option>Marktplaats</option>
+            <option>Jaap</option>
+            <option>Pararius</option>
+            <option>Eigen website</option>
+            <option>Facebook</option>
+            <option>Instagram</option>
+            <option>LinkedIn</option>
+            <option>Anders</option>
+          </select>
+        </label>
+        <label>Doel
+          <select name="doel"><option>Verkoop</option><option>Verhuur</option></select>
+        </label>
+        <label>Status
+          <select name="status"><option>Concept</option><option>Geplaatst</option><option>Gepauzeerd</option><option>Verlopen</option></select>
+        </label>
+        <label>Geplaatst op<input name="datum" type="date"></label>
+        <label>Advertentiekosten (€)<input name="kosten" type="number" min="0" step="any" value="0"></label>
+        <label>Link naar advertentie<input name="url" type="url" placeholder="https://…"></label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal wide-modal" id="adtext-modal">
+    <div class="modal-card">
+      <button class="close" type="button" aria-label="Sluiten" data-close-adtext>×</button>
+      <p class="eyebrow">Advertentietekst</p>
+      <h2 id="adtext-title">Advertentietekst</h2>
+      <p class="hint">Drie kant-en-klare versies. Klik "Kopiëren" en plak in het kanaal van je keuze.</p>
+      <div id="adtext-body"></div>
+      <menu><button class="btn secondary" type="button" data-close-adtext>Sluiten</button></menu>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="insurance-modal">
+    <form method="dialog" class="modal-card" id="insurance-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Verzekering</p>
+      <h2 id="insurance-modal-title">Verzekering toevoegen</h2>
+      <input type="hidden" name="propertyId">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Type
+          <select name="type"><option>Opstalverzekering</option><option>Aansprakelijkheid</option><option>Leegstand</option><option>Bouw / CAR</option><option>Rechtsbijstand</option><option>Anders</option></select>
+        </label>
+        <label>Verzekeraar<input name="verzekeraar" placeholder="Bijv. Nationale-Nederlanden"></label>
+        <label>Polisnummer<input name="polis"></label>
+        <label>Premie (€/jaar)<input name="premie" type="number" min="0" step="any" value="0"></label>
+        <label>Ingangsdatum<input name="start" type="date"></label>
+        <label>Vervaldatum<input name="eind" type="date"></label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="invoice-modal">
+    <form method="dialog" class="modal-card" id="invoice-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Inkomende factuur / opbrengst</p>
+      <h2 id="invoice-modal-title">Factuur opstellen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Soort
+          <select name="soort"><option>Huur</option><option>Servicekosten</option><option>Verkoopopbrengst</option><option>Investeerdersrente</option><option>Overig</option></select>
+        </label>
+        <label>Pand<select name="propertyId"></select></label>
+        <label>Debiteur / aan<input name="debiteur" placeholder="Huurder, koper, investeerder…"></label>
+        <label>Omschrijving<input name="desc" required placeholder="Bijv. Huur juni 2026"></label>
+        <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
+        <label>Factuurdatum<input name="date" type="date" required></label>
+        <label>Vervaldatum<input name="due" type="date"></label>
+        <label>Status
+          <select name="status"><option>Concept</option><option>Verzonden</option><option>Betaald</option></select>
+        </label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="loan-modal">
+    <form method="dialog" class="modal-card" id="loan-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Financiering</p>
+      <h2 id="loan-modal-title">Lening toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Pand<select name="propertyId" required></select></label>
+        <label>Financier<select name="financierId"></select></label>
+        <label>Soort
+          <select name="soort"><option>Hypotheek</option><option>Bridge / overbrugging</option><option>Ontwikkelfinanciering</option><option>Onderhandse lening</option><option>Anders</option></select>
+        </label>
+        <label>Hoofdsom (€)<input name="bedrag" type="number" min="0" step="any" required></label>
+        <label>Rente (% per jaar)<input name="rentePct" type="number" min="0" step="any"></label>
+        <label>Maandelijkse aflossing (€)<input name="aflossing" type="number" min="0" step="any" value="0"></label>
+        <label>Startdatum<input name="start" type="date"></label>
+        <label>Einddatum / herziening<input name="eind" type="date"></label>
+      </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div id="print-area" aria-hidden="true"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="cloud.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

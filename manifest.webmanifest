@@ -10,7 +10,7 @@
   "theme_color": "#0f1b2d",
   "lang": "nl",
   "icons": [
-    { "src": "assets/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "assets/favicon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "assets/favicon-512.png?v=20260613", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/favicon-maskable-512.png?v=20260613", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

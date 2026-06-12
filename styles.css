@@ -598,3 +598,38 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .foto-hoofd-badge{position:absolute;left:6px;top:6px}
 .badge.gold{background:var(--gold);color:white}
 .row-thumb{width:46px;height:34px;object-fit:cover;border-radius:6px;margin-right:8px;vertical-align:middle}
+
+/* ===== Marktcheck-deeplinks ===== */
+.markt-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.markt-link{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--cream);text-decoration:none;transition:border-color .15s,transform .15s}
+.markt-link:hover{border-color:var(--gold);transform:translateY(-2px)}
+.markt-link strong{color:var(--navy);font-size:.95rem}
+.markt-link strong::after{content:" ↗";color:var(--gold);font-size:.8rem}
+.markt-link span{color:var(--muted);font-size:.78rem}
+
+/* ===== Rapportage ===== */
+.report-bars{display:flex;flex-direction:column;gap:12px}
+.report-bar{display:grid;grid-template-columns:160px 1fr auto;align-items:center;gap:12px}
+.report-bar .rb-label{font-size:.85rem;color:var(--navy);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.report-bar .rb-track{position:relative;height:22px;background:rgba(11,30,48,.06);border-radius:6px;overflow:hidden}
+.report-bar .rb-fill{position:absolute;inset:0 auto 0 0;background:var(--gold);border-radius:6px}
+.report-bar .rb-fill.neg{background:var(--red)}
+.report-bar .rb-val{font-variant-numeric:tabular-nums;font-weight:700;color:var(--navy);font-size:.85rem}
+.cashflow-table td.neg,.cashflow-table strong.neg{color:var(--red)}
+.report-note{font-size:.8rem;color:var(--muted);margin-top:6px}
+
+/* ===== Verhuur & onderhoud ===== */
+.maint-open{color:var(--red);font-weight:700}
+.maint-done{color:var(--green)}
+.link-toggle{border:0;background:transparent;cursor:pointer;font-weight:700;font-size:.82rem;padding:2px 0}
+
+/* ===== Adverteren ===== */
+.ad-card{margin-bottom:16px}
+.ad-card-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:12px}
+.ad-thumb{width:120px;height:84px;object-fit:cover;border-radius:10px;flex:0 0 auto;background:rgba(11,30,48,.06)}
+.ad-card-info{flex:1 1 auto;min-width:0}
+.ad-card-info h2{margin:0 0 4px;font-size:1.1rem}
+.adtext-block{margin-bottom:16px}
+.adtext-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.adtext-area{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:.88rem;line-height:1.5;background:var(--cream);color:var(--ink);resize:vertical}
+@media(max-width:640px){.ad-card-head{flex-wrap:wrap}.ad-thumb{width:100%;height:160px}}

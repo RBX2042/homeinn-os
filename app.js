@@ -163,6 +163,7 @@ function seedData() {
         sale: null, dealId: 'd-oud1',
         docs: DEFAULT_DOCS.map((name, i) => ({ id: 'doc1' + i, name, done: i < 3 })),
         viewings: [], offers: [],
+        verzekeringen: [{ id: 'vz1', type: 'Bouw / CAR', verzekeraar: 'Bouwgarant', polis: 'CAR-2026-0014', premie: 980, start: addDaysISO(t, -84), eind: addDaysISO(t, 281) }],
         note: 'Volledige renovatie, daarna verkoop. Taxatie na renovatie € 565k.'
       },
       {
@@ -181,6 +182,11 @@ function seedData() {
           { id: 'v2', date: addDaysISO(t, -4), name: 'B. Janssen', note: 'Direct geïnteresseerd, financiering rond' }
         ],
         offers: [{ id: 'o1', date: addDaysISO(t, -2), name: 'B. Janssen', amount: 392000, status: 'Ontvangen', note: 'Zonder voorbehoud' }],
+        advertenties: [
+          { id: 'ad1', kanaal: 'Funda', doel: 'Verkoop', status: 'Geplaatst', url: 'https://www.funda.nl/', datum: addDaysISO(t, -26), kosten: 595 },
+          { id: 'ad2', kanaal: 'Instagram', doel: 'Verkoop', status: 'Geplaatst', url: '', datum: addDaysISO(t, -24), kosten: 0 }
+        ],
+        verzekeringen: [{ id: 'vz2', type: 'Opstalverzekering', verzekeraar: 'Nationale-Nederlanden', polis: 'OP-88123', premie: 540, start: addDaysISO(t, -208), eind: addDaysISO(t, 157) }],
         note: 'Gerenoveerd opgeleverd. Strategie: vasthouden aan € 405k+.'
       },
       {
@@ -287,6 +293,15 @@ function seedData() {
       { id: 't2', title: 'Financieringsstukken Mathenesserweg naar Rijnmond VF', due: addDaysISO(t, 3), done: false },
       { id: 't3', title: 'Herfinanciering Bergweg 91A opstarten', due: addDaysISO(t, 7), done: false },
       { id: 't4', title: 'Bankgarantie Wolphaertsbocht geregeld', due: addDaysISO(t, -5), done: true }
+    ],
+    invoices: [
+      { id: 'f1', soort: 'Huur', propertyId: 'pnd3', debiteur: 'S. el Amrani', desc: 'Huur juni 2026', amount: 1450, date: addDaysISO(t, -11), due: addDaysISO(t, -4), status: 'Betaald' },
+      { id: 'f2', soort: 'Huur', propertyId: 'pnd3', debiteur: 'S. el Amrani', desc: 'Huur juli 2026', amount: 1450, date: addDaysISO(t, 19), due: addDaysISO(t, 26), status: 'Concept' }
+    ],
+    loans: [
+      { id: 'l1', propertyId: 'pnd1', financierId: 'r6', soort: 'Ontwikkelfinanciering', bedrag: 300000, rentePct: 6.2, aflossing: 0, start: addDaysISO(t, -84), eind: addDaysISO(t, 290) },
+      { id: 'l2', propertyId: 'pnd2', financierId: 'r6', soort: 'Bridge / overbrugging', bedrag: 220000, rentePct: 6.4, aflossing: 0, start: addDaysISO(t, -208), eind: addDaysISO(t, 150) },
+      { id: 'l3', propertyId: 'pnd3', financierId: 'r6', soort: 'Hypotheek', bedrag: 160000, rentePct: 5.9, aflossing: 450, start: addDaysISO(t, -300), eind: addDaysISO(t, 41) }
     ]
   };
 }
@@ -497,6 +512,22 @@ function buildSignals() {
       signals.push({ level: 'middel', text: `${p.address} heeft geen actief project — houdkosten lopen door (${fmtMoney(fin.renteMnd + fin.lastenMnd)}/mnd).`, go: 'pand:' + p.id });
     }
   });
+  // Verhuur: aflopende contracten en open onderhoud
+  state.properties.filter(p => p.status === 'Verhuurd').forEach(p => {
+    const dgn = p.huurEind ? daysBetween(t, p.huurEind) : null;
+    if (dgn !== null && dgn >= 0 && dgn <= 90)
+      signals.push({ level: 'middel', text: `Huurcontract ${p.address} loopt af op ${fmtDate(p.huurEind)} (${dgn} dgn) — verleng of herzie de huur.`, go: 'pand:' + p.id });
+    const open = (p.onderhoud || []).filter(o => o.status !== 'Afgehandeld').length;
+    if (open) signals.push({ level: 'middel', text: `${open} open onderhoudsverzoek${open === 1 ? '' : 'en'} op ${p.address} (verhuur).`, go: 'pand:' + p.id });
+  });
+  // Verzekeringen: aflopende polissen
+  state.properties.filter(p => p.status !== 'Verkocht').forEach(p => {
+    (p.verzekeringen || []).forEach(v => {
+      const dgn = v.eind ? daysBetween(t, v.eind) : null;
+      if (dgn !== null && dgn >= 0 && dgn <= 60)
+        signals.push({ level: 'middel', text: `${v.type} ${p.address} verloopt op ${fmtDate(v.eind)} (${dgn} dgn) — verleng de polis.`, go: 'pand:' + p.id });
+    });
+  });
   // Ontwikkeling
   state.projects.filter(pr => pr.status !== 'Afgerond').forEach(pr => {
     const actual = state.costs.filter(k => k.projectId === pr.id).reduce((sum, k) => sum + (Number(k.amount) || 0), 0);
@@ -535,7 +566,8 @@ function buildSignals() {
 /* ---------- Views & routing ---------- */
 const VIEWS = {
   landing: 'Website preview', dashboard: 'Dashboard', inbox: 'Aanvragen', deals: 'Aankoopkansen', calculator: 'Dealcalculator',
-  portfolio: 'Panden', projects: 'Ontwikkelprojecten', costs: 'Kosten', sales: 'Verkoop',
+  portfolio: 'Panden', projects: 'Ontwikkelprojecten', costs: 'Kosten', money: 'Geld-in & huur', sales: 'Verkoop',
+  ads: 'Adverteren', reports: 'Rapportage', finance: 'Financiering',
   planning: 'Planning', relations: 'Relaties', settings: 'Instellingen'
 };
 
@@ -548,6 +580,10 @@ const PRIMARY_ACTIONS = {
   projects: ['Nieuw project', () => openProjectModal()],
   costs: ['Nieuwe kostenpost', () => openCostModal()],
   sales: ['Bod registreren', () => { const p = state.properties.find(x => x.status === 'Te koop' || x.status === 'Onder bod'); p ? openOfferModal(p.id) : showToast('Zet eerst een pand te koop via Panden.'); }],
+  money: ['Factuur opstellen', () => openInvoiceModal()],
+  ads: ['Advertentie genereren', () => { const p = state.properties.find(x => x.status !== 'Verkocht'); p ? openAdTextModal(p.id) : showToast('Voeg eerst een pand toe.'); }],
+  finance: ['Lening toevoegen', () => openLoanModal()],
+  reports: ['Exporteer rapport', () => exportCurrentView()],
   planning: ['Planning toevoegen', () => openPlanModal()],
   relations: ['Nieuwe relatie', () => openContactModal()],
   settings: null, landing: null
@@ -593,7 +629,11 @@ function renderCurrent() {
     case 'portfolio': detailId.property ? renderPropertyDetail() : renderPortfolio(); break;
     case 'projects': detailId.project ? renderProjectDetail() : renderProjects(); break;
     case 'costs': renderCosts(); break;
+    case 'money': renderMoney(); break;
     case 'sales': renderSales(); break;
+    case 'ads': renderAds(); break;
+    case 'reports': renderReports(); break;
+    case 'finance': renderFinance(); break;
     case 'planning': renderPlanning(); break;
     case 'relations': renderRelations(); break;
     case 'settings': renderSettings(); break;
@@ -627,6 +667,7 @@ function statusBadge(status) {
     'Opdracht': 'blue', 'Factuur ontvangen': '', 'Betaald': 'green',
     'Uitgebracht': 'blue', 'Geaccepteerd': 'green', 'Afgewezen': 'red', 'Verlopen': 'red', 'Ontvangen': '',
     'Nieuw': '', 'Afgehandeld': 'gray', 'Gesprek': 'blue', 'Contact': 'gray',
+    'Concept': 'gray', 'Geplaatst': 'green', 'Gepauzeerd': 'blue', 'Verzonden': 'blue',
     'Makelaar': 'blue', 'Notaris-rel': 'gray', 'Aannemer': 'green', 'Financier': '', 'Koper/Verkoper': 'gray', 'Overig': 'gray'
   };
   return `<span class="badge ${map[status] ?? ''}">${esc(status)}</span>`;
@@ -796,6 +837,30 @@ function dealBreakdownHTML(c) {
     <div class="grand ${winstClass(c.winst)}"><dt>Verwachte winst</dt><dd>${fmtMoney(c.winst)} (${fmtNum(c.roi, 1)}% · ${fmtNum(c.roiEigen, 0)}% op eigen geld)</dd></div>`;
 }
 
+/* Marktcheck: directe deeplinks naar externe bronnen voor taxatie/onderzoek.
+   Geen API/keys nodig — opent de juiste tool, met adres voorzover die bron dat ondersteunt. */
+function marktLinksPanel(address, city) {
+  const q = encodeURIComponent([address, city].filter(Boolean).join(' '));
+  const links = [
+    ['Funda', `https://www.funda.nl/zoeken/koop?query=${q}`, 'Vergelijkbaar aanbod & vraagprijzen'],
+    ['Kadastrale kaart', `https://www.kadastralekaart.com/zoeken/${q}`, 'Perceel, oppervlakte & eigendom'],
+    ['WOZ-waardeloket', 'https://www.wozwaardeloket.nl/', 'Officiële WOZ-waarde'],
+    ['EP-online', 'https://www.ep-online.nl/', 'Geregistreerd energielabel'],
+    ['Walter', 'https://www.walterliving.com/', 'Gratis waarde-indicatie (AVM)'],
+    ['Google Maps', `https://www.google.com/maps/search/?api=1&query=${q}`, 'Straatbeeld & omgeving']
+  ];
+  return `
+    <section class="panel">
+      <div class="panel-head compact"><h2>Marktcheck &amp; taxatie</h2>
+        <span class="sub">Open externe bronnen voor ${esc(address || 'dit adres')}</span>
+      </div>
+      <p class="hint">Eén klik naar de juiste bron. Adres staat al klaar bij Funda, Kadaster en Maps; bij WOZ/EP-online/Walter zoek je het adres in de tool (die ondersteunen geen directe link).</p>
+      <div class="markt-links">
+        ${links.map(([t, u, dsc]) => `<a class="markt-link" target="_blank" rel="noopener" href="${u}"><strong>${t}</strong><span>${esc(dsc)}</span></a>`).join('')}
+      </div>
+    </section>`;
+}
+
 function renderDealDetail() {
   const d = dealById(detailId.deal);
   if (!d) { detailId.deal = null; renderDeals(); return; }
@@ -854,7 +919,8 @@ function renderDealDetail() {
         </table></div>
         <p class="hint">Geaccepteerd bod? Zet de status op "Onder voorbehoud" en rond de aankoop af via "Aangekocht →".</p>
       </section>
-    </div>`;
+    </div>
+    ${marktLinksPanel(d.address, d.city)}`;
 }
 
 /* ---------- Dealcalculator ---------- */
@@ -992,21 +1058,60 @@ function renderPropertyDetail() {
         </div>
       </section>
       <section class="panel">
-        <div class="panel-head compact"><h2>Documenten</h2></div>
+        <div class="panel-head compact"><h2>Documenten</h2>
+          <span class="sub">${(p.docs || []).filter(d => d.file || d.url).length} met bestand</span>
+        </div>
         <div class="check-list">
           ${(p.docs || []).map(doc => `
             <div class="check-item ${doc.done ? 'done' : ''}">
               <button class="task-check ${doc.done ? 'checked' : ''}" data-action="toggle-doc" data-id="${p.id}" data-item="${doc.id}" aria-label="Afvinken"></button>
               <span>${esc(doc.name)}</span>
+              ${(doc.file || doc.url) ? `<a class="text-btn doc-link" href="${esc(doc.file || doc.url)}" download="${esc(doc.name)}" target="_blank" rel="noopener">Bekijk ↗</a>` : ''}
               <button class="icon-btn" data-action="del-doc" data-id="${p.id}" data-item="${doc.id}" title="Verwijderen">🗑</button>
             </div>`).join('') || '<p class="empty">Geen documenten.</p>'}
         </div>
         <form class="inline-form" data-form="add-doc" data-id="${p.id}">
-          <input name="name" placeholder="Nieuw document…" required>
+          <input name="name" placeholder="Document (naam of pad/URL)…" required>
           <button class="btn primary slim" type="submit">+</button>
         </form>
+        <div class="head-actions">
+          <label class="btn secondary slim file-btn">Bestand(en) uploaden<input type="file" id="doc-upload" data-id="${p.id}" multiple hidden></label>
+        </div>
+        <p class="hint">Upload koopakte, taxatierapport, contract enz. (max 3 MB per bestand — grotere bestanden als pad bewaren: "docs/akte.pdf").</p>
       </section>
     </div>
+    ${(p.status === 'Verhuurd' || Number(p.maandhuur) > 0) ? `
+    <section class="panel">
+      <div class="panel-head compact"><h2>Verhuur &amp; beheer</h2>
+        <span class="sub">${esc(p.huurder || 'Geen huurder')} · ${fmtMoney(p.maandhuur)}/mnd</span>
+      </div>
+      <div class="split detail-grid">
+        <div class="totals-box">
+          <div><dt>Huurder</dt><dd>${esc(p.huurder || '—')}</dd></div>
+          <div><dt>Maandhuur</dt><dd>${fmtMoney(p.maandhuur)}</dd></div>
+          <div><dt>Ingangsdatum</dt><dd>${fmtDate(p.huurIngang)}</dd></div>
+          <div class="${p.huurEind && daysBetween(t, p.huurEind) <= 90 && daysBetween(t, p.huurEind) >= 0 ? 'alert' : ''}"><dt>Einddatum contract</dt><dd>${p.huurEind ? fmtDate(p.huurEind) : 'Onbepaalde tijd'}</dd></div>
+          <div><dt>Waarborgsom</dt><dd>${fmtMoney(p.borg)}</dd></div>
+          <div><dt>Jaarlijkse indexering</dt><dd>${fmtNum(p.huurIndexPct || 0, 1)}%${Number(p.huurIndexPct) > 0 ? ` → ${fmtMoney(Math.round((Number(p.maandhuur) || 0) * (1 + (Number(p.huurIndexPct) || 0) / 100)))}/mnd na indexatie` : ''}</dd></div>
+        </div>
+        <div>
+          <h3 class="table-title">Onderhoudsverzoeken (${(p.onderhoud || []).filter(o => o.status !== 'Afgehandeld').length} open)</h3>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Datum</th><th>Verzoek</th><th>Status</th><th></th></tr></thead>
+            <tbody>${(p.onderhoud || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(o => `
+              <tr><td>${fmtDate(o.date)}</td><td>${esc(o.desc)}</td>
+              <td><select class="row-status" data-action="maint-status" data-id="${p.id}" data-item="${o.id}">
+                ${['Open', 'In behandeling', 'Afgehandeld'].map(s => `<option ${o.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+              </select></td>
+              <td class="row-actions"><button class="icon-btn" data-action="del-maint" data-id="${p.id}" data-item="${o.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(4, 'Geen onderhoudsverzoeken.')}</tbody>
+          </table></div>
+          <form class="inline-form" data-form="add-maint" data-id="${p.id}">
+            <input name="desc" placeholder="Nieuw onderhoudsverzoek van huurder…" required>
+            <button class="btn primary slim" type="submit">+</button>
+          </form>
+        </div>
+      </div>
+    </section>` : ''}
     ${inVerkoop ? `
     <section class="panel">
       <div class="panel-head compact"><h2>Verkoopdossier</h2>
@@ -1084,6 +1189,20 @@ function renderPropertyDetail() {
       </div>
       <p class="hint">Tip: zet fotobestanden in de map <b>fotos</b> van de software en voeg ze toe als "fotos/bestandsnaam.jpg". Foto's vanaf de computer worden verkleind in de software opgeslagen (max. 8 per pand).</p>
     </section>
+    <section class="panel">
+      <div class="panel-head compact"><h2>Verzekeringen</h2>
+        <button class="btn secondary slim" data-action="ins-add" data-id="${p.id}">+ Verzekering</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Type</th><th>Verzekeraar</th><th>Polis</th><th>Premie/jaar</th><th>Vervalt</th><th></th></tr></thead>
+        <tbody>${(p.verzekeringen || []).map(v => `<tr>
+          <td><strong>${esc(v.type)}</strong></td><td>${esc(v.verzekeraar || '—')}</td><td>${esc(v.polis || '—')}</td><td>${fmtMoney(v.premie)}</td>
+          <td class="${v.eind && daysBetween(t, v.eind) >= 0 && daysBetween(t, v.eind) <= 60 ? 'alert' : ''}">${fmtDate(v.eind)}</td>
+          <td class="row-actions"><button class="icon-btn" data-action="ins-edit" data-id="${p.id}" data-item="${v.id}" title="Bewerken">✎</button>
+          <button class="icon-btn" data-action="ins-del" data-id="${p.id}" data-item="${v.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(6, 'Nog geen verzekeringen geregistreerd.')}</tbody>
+      </table></div>
+    </section>
+    ${marktLinksPanel(p.address, p.city)}
     <section class="panel">
       <div class="panel-head compact"><h2>Locatie</h2>
         <a class="text-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address + ', ' + p.city)}">Open in Google Maps →</a>
@@ -1241,19 +1360,53 @@ function renderProjectDetail() {
             ${pr.invest?.open ? `<div><dt>Min. inleg · rendement · looptijd</dt><dd>${fmtMoney(pr.invest.minInleg)} · ${fmtNum(pr.invest.rendementPct, 1)}%/jr · ${esc(pr.invest.looptijd || '—')}</dd></div>` : ''}
           </div>`;
         })()}
+        ${(() => {
+          const inv = pr.investeerders || [];
+          const geverifieerd = inv.filter(i => i.wwft).length;
+          const rPct = Number(pr.invest?.rendementPct) || 0;
+          return `<p class="hint">Wwft (anti-witwas): controleer en leg identiteit + herkomst van de inleg vast vóór je geld aanneemt. ${inv.length ? `<b>${geverifieerd}/${inv.length}</b> investeerders geverifieerd.` : ''} Haal je geld op via de website? Check de AFM-vrijstelling (prospectusplicht).</p>
         <div class="table-wrap"><table>
-          <thead><tr><th>Naam</th><th>Inleg</th><th>Datum</th><th></th></tr></thead>
-          <tbody>${(pr.investeerders || []).map(i => `
-            <tr><td>${esc(i.naam)}</td><td><strong>${fmtMoney(i.bedrag)}</strong></td><td>${fmtDate(i.datum)}</td>
-            <td class="row-actions"><button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(4, 'Nog geen investeerders geregistreerd.')}</tbody>
-        </table></div>
+          <thead><tr><th>Naam</th><th>Inleg</th><th>Rendement/jr</th><th>Datum</th><th>Wwft</th><th></th></tr></thead>
+          <tbody>${inv.map(i => `
+            <tr><td>${esc(i.naam)}</td><td><strong>${fmtMoney(i.bedrag)}</strong></td>
+            <td>${rPct ? fmtMoney(Math.round((Number(i.bedrag) || 0) * rPct / 100)) : '—'}</td>
+            <td>${fmtDate(i.datum)}</td>
+            <td><button class="link-toggle ${i.wwft ? 'maint-done' : 'maint-open'}" data-action="wwft-toggle" data-id="${pr.id}" data-item="${i.id}" title="Klik om te wisselen">${i.wwft ? '✔ Geverifieerd' : '⚠ Te doen'}</button></td>
+            <td class="row-actions"><button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(6, 'Nog geen investeerders geregistreerd.')}</tbody>
+        </table></div>`;
+        })()}
         <form class="inline-form" data-form="add-investor" data-id="${pr.id}">
           <input name="naam" placeholder="Naam investeerder…" required>
+          <input name="email" type="email" placeholder="E-mail (voor login portaal)">
           <input name="bedrag" type="number" step="any" placeholder="€ inleg" required>
           <button class="btn primary slim" type="submit">+</button>
         </form>
       </section>
-    </div>`;
+    </div>
+    <section class="panel">
+      <div class="panel-head compact"><h2>Voortgangsfoto's</h2>
+        <span class="sub">${(pr.fotos || []).length} foto's — getoond op de website (volgen) en in het investeerdersportaal</span>
+      </div>
+      <div class="foto-grid">
+        ${(pr.fotos || []).map((src, i) => `
+          <figure class="foto-thumb">
+            <img src="${esc(src)}" loading="lazy" alt="Projectfoto ${i + 1}">
+            ${i === 0 ? '<span class="badge gold foto-hoofd-badge">Hoofdfoto</span>' : ''}
+            <div class="foto-acties">
+              ${i > 0 ? `<button class="icon-btn" data-action="foto-hoofd" data-kind="project" data-id="${pr.id}" data-index="${i}" title="Maak hoofdfoto">★</button>` : ''}
+              <button class="icon-btn" data-action="foto-del" data-kind="project" data-id="${pr.id}" data-index="${i}" title="Verwijderen">🗑</button>
+            </div>
+          </figure>`).join('') || '<p class="empty">Nog geen voortgangsfoto\'s — voeg ze hieronder toe.</p>'}
+      </div>
+      <form class="inline-form" data-form="add-foto" data-kind="project" data-id="${pr.id}">
+        <input name="url" placeholder="Foto-URL of pad (bijv. fotos/project-1.jpg)…" required>
+        <button class="btn primary slim" type="submit">+</button>
+      </form>
+      <div class="head-actions">
+        <label class="btn secondary slim file-btn">Foto's toevoegen vanaf computer<input type="file" id="foto-upload" data-kind="project" data-id="${pr.id}" accept="image/*" multiple hidden></label>
+      </div>
+      <p class="hint">Voortgangsfoto's van de bouw/renovatie. Op de website 'projecten volgen' en in het investeerdersportaal worden deze getoond.</p>
+    </section>`;
 }
 
 /* ---------- Kosten ---------- */
@@ -1394,6 +1547,382 @@ function renderSettings() {
   });
   const bytes = (localStorage.getItem(STORAGE_KEY) || '').length;
   $('#storage-info').textContent = `Opslag in gebruik: ${(bytes / 1024).toFixed(1)} kB · ${state.properties.length} panden · ${state.deals.length} kansen · ${state.projects.length} projecten · ${state.costs.length} kostenposten.`;
+  renderCloudPanel();
+}
+
+function renderCloudPanel() {
+  const el = $('#cloud-body'); if (!el) return;
+  const st = (window.HCloud && HCloud.status()) || { ready: false };
+  if (!st.ready) {
+    el.innerHTML = `<p class="hint">De cloud-bibliotheek kon niet laden (mogelijk offline of geblokkeerd). De app werkt lokaal gewoon door — probeer het later opnieuw met internetverbinding.</p>`;
+    return;
+  }
+  if (!st.email) {
+    el.innerHTML = `
+      <p class="hint">Log in met je e-mail — je ontvangt een inloglink (geen wachtwoord). Daarna kun je je gegevens naar de cloud synchroniseren zodat portalen werken en je op meerdere apparaten kunt werken.</p>
+      <form class="inline-form" data-form="cloud-login">
+        <input name="email" type="email" placeholder="jouw@email.nl" required>
+        <button class="btn primary slim" type="submit">Stuur inloglink</button>
+      </form>`;
+    return;
+  }
+  const sync = st.lastSync ? `Laatste sync: ${fmtDateTime(st.lastSync)}.` : 'Nog niet gesynchroniseerd.';
+  el.innerHTML = `
+    <div class="totals-box">
+      <div><dt>Ingelogd als</dt><dd>${esc(st.email)}</dd></div>
+      <div><dt>Rol</dt><dd>${esc(st.role || '—')} ${st.staff ? '<span class="badge green">staff</span>' : '<span class="badge gray">extern</span>'}</dd></div>
+    </div>
+    ${st.staff ? `
+      <p class="hint">${sync} Bij synchroniseren gaan je panden, projecten, investeerders en projectupdates naar de cloud, zodat de portalen ze afgeschermd kunnen tonen.</p>
+      <div class="head-actions">
+        <button class="btn primary slim" data-action="cloud-sync">Synchroniseer nu</button>
+        <button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button>
+      </div>`
+    : `<p class="hint">Dit account heeft geen eigenaar/team-rol; synchroniseren is daarom niet beschikbaar. Een investeerder logt in op de portaal-pagina voor investeerders (volgt in Fase 3).</p>
+      <div class="head-actions"><button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button></div>`}`;
+}
+
+/* ---------- Rapportage ---------- */
+function reportData() {
+  const t = todayISO();
+  const jaar = String(new Date().getFullYear());
+  const inBezit = state.properties.filter(p => p.status !== 'Verkocht');
+  const verhuurd = inBezit.filter(p => Number(p.maandhuur) > 0);
+  const soldThisYear = state.properties.filter(p => p.status === 'Verkocht' && (p.sale?.date || '').startsWith(jaar));
+
+  const fins = inBezit.map(p => ({ p, f: propertyFinance(p) }));
+  const totaalGeinvesteerd = fins.reduce((s, x) => s + x.f.investVerwacht, 0);
+  const openFinanciering = inBezit.reduce((s, p) => s + (Number(p.financing?.bedrag) || 0), 0);
+  const pijplijnWinst = fins.reduce((s, x) => s + (x.f.winst || 0), 0);
+  const gerealiseerdWinst = soldThisYear.reduce((s, p) => s + (propertyFinance(p).winst || 0), 0);
+  const huurPerJaar = verhuurd.reduce((s, p) => s + (Number(p.maandhuur) || 0) * 12, 0);
+  const renteLastenMnd = fins.reduce((s, x) => s + x.f.renteMnd + x.f.lastenMnd, 0);
+  const eigenVermogenIngelegd = totaalGeinvesteerd - openFinanciering;
+
+  // Cashflow-forecast: 6 maanden vooruit
+  const now = new Date(t + 'T00:00:00');
+  const months = [];
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    const key = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+    const huurIn = Math.round(verhuurd.reduce((s, p) => s + (Number(p.maandhuur) || 0), 0));
+    const vasteUit = Math.round(renteLastenMnd);
+    const geplandUit = state.costs
+      .filter(k => k.status !== 'Betaald' && (k.date || '').startsWith(key))
+      .reduce((s, k) => s + (Number(k.amount) || 0), 0);
+    const events = [];
+    inBezit.forEach(p => { if ((p.financing?.einddatum || '').startsWith(key)) events.push(`Herfinanciering ${p.address}`); });
+    state.projects.filter(pr => pr.status !== 'Afgerond').forEach(pr => { if ((pr.endDate || '').startsWith(key)) events.push(`Oplevering ${propertyLabel(pr.propertyId)}`); });
+    months.push({ key, label: d.toLocaleDateString('nl-NL', { month: 'short', year: '2-digit' }), huurIn, vasteUit, geplandUit, netto: huurIn - vasteUit - geplandUit, events });
+  }
+  return { fins, totaalGeinvesteerd, openFinanciering, eigenVermogenIngelegd, pijplijnWinst, gerealiseerdWinst, huurPerJaar, renteLastenMnd, months, soldThisYear, jaar };
+}
+
+function renderReports() {
+  const r = reportData();
+  const bars = r.fins.slice().sort((a, b) => (b.f.winst || 0) - (a.f.winst || 0));
+  const maxAbs = Math.max(1, ...bars.map(x => Math.abs(x.f.winst || 0)));
+  $('#report-body').innerHTML = `
+    <div class="kpi-grid">
+      <article class="kpi"><span>Geïnvesteerd vermogen</span><strong>${fmtMoney(r.totaalGeinvesteerd)}</strong><small>waarvan ${fmtMoney(r.eigenVermogenIngelegd)} eigen geld</small></article>
+      <article class="kpi"><span>Openstaande financiering</span><strong>${fmtMoney(r.openFinanciering)}</strong><small>${fmtMoney(Math.round(r.renteLastenMnd))}/mnd rente + lasten</small></article>
+      <article class="kpi"><span>Verwachte winst (pijplijn)</span><strong class="${winstClass(r.pijplijnWinst)}">${fmtMoney(r.pijplijnWinst)}</strong><small>panden in bezit & te koop</small></article>
+      <article class="kpi"><span>Gerealiseerde winst ${r.jaar}</span><strong class="${winstClass(r.gerealiseerdWinst)}">${fmtMoney(r.gerealiseerdWinst)}</strong><small>${r.soldThisYear.length} pand${r.soldThisYear.length === 1 ? '' : 'en'} verkocht</small></article>
+      <article class="kpi"><span>Huurinkomsten / jaar</span><strong>${fmtMoney(r.huurPerJaar)}</strong><small>uit verhuurde panden</small></article>
+    </div>
+    <div class="split">
+      <section class="panel">
+        <div class="panel-head compact"><h2>Verwacht resultaat per pand</h2><span class="sub">winst verwacht / gerealiseerd</span></div>
+        <div class="report-bars">
+          ${bars.map(({ p, f }) => {
+            const w = f.winst || 0;
+            const pct = Math.round(Math.abs(w) / maxAbs * 100);
+            return `<div class="report-bar" data-action="open-property" data-id="${p.id}" style="cursor:pointer">
+              <span class="rb-label" title="${esc(p.address)}">${esc(p.address)}</span>
+              <span class="rb-track"><span class="rb-fill ${w < 0 ? 'neg' : ''}" style="width:${pct}%"></span></span>
+              <span class="rb-val ${winstClass(w)}">${fmtMoney(w)} · ${f.roi === null ? '—' : fmtNum(f.roi, 0) + '%'}</span>
+            </div>`;
+          }).join('') || '<p class="empty">Nog geen panden in bezit.</p>'}
+        </div>
+        <p class="report-note">ROI = winst gedeeld door totale investering (incl. resterend ontwikkelbudget). Klik een balk om het pand te openen.</p>
+      </section>
+      <section class="panel">
+        <div class="panel-head compact"><h2>Kapitaalverdeling</h2></div>
+        <div class="totals-box">
+          <div><dt>Aankoopwaarde portfolio</dt><dd>${fmtMoney(r.fins.reduce((s, x) => s + x.f.aankoop, 0))}</dd></div>
+          <div><dt>Ontwikkelkosten geboekt</dt><dd>${fmtMoney(r.fins.reduce((s, x) => s + x.f.ontwikkeld, 0))}</dd></div>
+          <div><dt>Resterend ontwikkelbudget</dt><dd>${fmtMoney(r.fins.reduce((s, x) => s + x.f.restBudget, 0))}</dd></div>
+          <div><dt>Houdkosten tot nu</dt><dd>${fmtMoney(r.fins.reduce((s, x) => s + x.f.houdkosten, 0))}</dd></div>
+          <div><dt>Openstaande financiering</dt><dd>${fmtMoney(r.openFinanciering)}</dd></div>
+          <div><dt>Eigen geld ingelegd</dt><dd><strong>${fmtMoney(r.eigenVermogenIngelegd)}</strong></dd></div>
+        </div>
+        <p class="report-note">Indicatief — toon dit overzicht aan je financier samen met de dealcalculaties.</p>
+      </section>
+    </div>
+    <section class="panel">
+      <div class="panel-head compact"><h2>Cashflow-prognose — 6 maanden</h2>
+        <span class="sub">huur in, rente + vaste lasten en geplande kosten uit</span>
+      </div>
+      <div class="table-wrap"><table class="cashflow-table">
+        <thead><tr><th>Maand</th><th>Huur in</th><th>Rente + lasten</th><th>Geplande kosten</th><th>Netto</th><th>Aandachtspunten</th></tr></thead>
+        <tbody>
+          ${r.months.map(m => `<tr>
+            <td><strong>${m.label}</strong></td>
+            <td>${m.huurIn ? fmtMoney(m.huurIn) : '—'}</td>
+            <td class="neg">−${fmtMoney(m.vasteUit)}</td>
+            <td class="${m.geplandUit ? 'neg' : ''}">${m.geplandUit ? '−' + fmtMoney(m.geplandUit) : '—'}</td>
+            <td><strong class="${m.netto < 0 ? 'neg' : ''}">${m.netto < 0 ? '−' + fmtMoney(Math.abs(m.netto)) : fmtMoney(m.netto)}</strong></td>
+            <td class="sub">${m.events.map(esc).join('<br>') || '—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>
+      <p class="report-note">Huur wordt constant verondersteld; verkoopopbrengsten zijn niet meegerekend (die zijn eenmalig en moment-afhankelijk). Geplande kosten = kostenposten met status Opdracht of Factuur ontvangen.</p>
+    </section>`;
+}
+
+/* ---------- Adverteren ---------- */
+function adKenmerken(p) {
+  const k = [];
+  if (p.ptype) k.push(p.ptype);
+  if (Number(p.m2)) k.push(p.m2 + ' m²');
+  if (Number(p.kamers)) k.push(p.kamers + ' kamers');
+  if (p.label) k.push('energielabel ' + p.label);
+  return k;
+}
+
+function adTextVariants(p) {
+  const verhuur = !Number(p.vraagprijs) && Number(p.maandhuur);
+  const prijs = verhuur ? fmtMoney(p.maandhuur) + ' p/m' : (Number(p.vraagprijs) ? fmtMoney(p.vraagprijs) + ' k.k.' : 'prijs op aanvraag');
+  const kenmerken = adKenmerken(p);
+  const oms = p.webOmschrijving || '';
+  const adres = p.address + ', ' + p.city;
+  const doel = verhuur ? 'TE HUUR' : 'TE KOOP';
+  const formeel = `${doel}: ${p.ptype} aan de ${adres}\n\n${oms}\n\nKenmerken: ${kenmerken.join(' · ')}\nPrijs: ${prijs}\n\nInteresse of een bezichtiging plannen? Neem contact op met HomeINN — ${state.settings.email || ''} ${state.settings.phone || ''}`.trim();
+  const marktplaats = `${p.ptype} ${doel.toLowerCase()} — ${adres}\n\n${oms}\n\n• ${kenmerken.join('\n• ')}\n• ${prijs}\n\nReageer via HomeINN voor een bezichtiging.`;
+  const social = `✨ ${doel} ✨ ${p.ptype} in ${p.city}\n${kenmerken.join(' · ')} · ${prijs}\n${oms ? oms.slice(0, 120) + (oms.length > 120 ? '…' : '') : ''}\n\n📩 Stuur een DM voor een bezichtiging! #${p.city.replace(/\s+/g, '')} #vastgoed #${verhuur ? 'tehuur' : 'tekoop'} #HomeINN`;
+  return [
+    { kanaal: 'Funda / formeel', tekst: formeel },
+    { kanaal: 'Marktplaats / Jaap', tekst: marktplaats },
+    { kanaal: 'Social (Instagram/Facebook)', tekst: social }
+  ];
+}
+
+function openAdTextModal(id) {
+  const p = propertyById(id);
+  if (!p) return;
+  $('#adtext-title').textContent = `Advertentietekst — ${p.address}`;
+  const variants = adTextVariants(p);
+  $('#adtext-body').innerHTML = variants.map((v, i) => `
+    <div class="adtext-block">
+      <div class="adtext-head"><strong>${esc(v.kanaal)}</strong><button class="btn secondary slim" type="button" data-action="copy-ad" data-idx="${i}">Kopiëren</button></div>
+      <textarea class="adtext-area" id="adtext-${i}" readonly rows="${Math.min(14, v.tekst.split('\n').length + 1)}">${esc(v.tekst)}</textarea>
+    </div>`).join('');
+  $('#adtext-modal').showModal();
+}
+
+function openAdModal(propertyId, id = null) {
+  const p = propertyById(propertyId);
+  if (!p) return;
+  const form = $('#ad-form');
+  form.reset();
+  form.elements.propertyId.value = propertyId;
+  form.elements.id.value = id || '';
+  $('#ad-modal-title').textContent = id ? 'Advertentiekanaal bewerken' : `Advertentiekanaal — ${p.address}`;
+  const a = id ? (p.advertenties || []).find(x => x.id === id) : null;
+  if (a) {
+    ['kanaal', 'doel', 'status', 'url'].forEach(k => form.elements[k].value = a[k] ?? '');
+    form.elements.datum.value = a.datum || '';
+    form.elements.kosten.value = a.kosten ?? 0;
+  } else {
+    form.elements.datum.value = todayISO();
+    form.elements.doel.value = Number(p.maandhuur) && !Number(p.vraagprijs) ? 'Verhuur' : 'Verkoop';
+  }
+  $('#ad-modal').showModal();
+}
+
+function renderAds() {
+  const panden = state.properties.filter(p => p.status !== 'Verkocht');
+  const totaalKanalen = panden.reduce((s, p) => s + (p.advertenties || []).filter(a => a.status === 'Geplaatst').length, 0);
+  const kosten = panden.reduce((s, p) => s + (p.advertenties || []).reduce((x, a) => x + (Number(a.kosten) || 0), 0), 0);
+  const inEtalage = panden.filter(p => (p.advertenties || []).length).length;
+  $('#ads-body').innerHTML = `
+    <div class="kpi-grid three">
+      <article class="kpi"><span>Panden in de etalage</span><strong>${inEtalage}/${panden.length}</strong></article>
+      <article class="kpi"><span>Actieve advertenties</span><strong>${totaalKanalen}</strong></article>
+      <article class="kpi"><span>Advertentiekosten</span><strong>${fmtMoney(kosten)}</strong></article>
+    </div>
+    ${panden.map(p => {
+      const ads = p.advertenties || [];
+      const foto = (p.fotos || [])[0];
+      return `<section class="panel ad-card">
+        <div class="ad-card-head">
+          ${foto ? `<img class="ad-thumb" src="${esc(foto)}" alt="" onerror="this.style.display='none'">` : ''}
+          <div class="ad-card-info">
+            <h2>${esc(p.address)}, ${esc(p.city)} ${statusBadge(p.status)}</h2>
+            <p class="sub">${esc(p.ptype)}${Number(p.m2) ? ' · ' + p.m2 + ' m²' : ''}${Number(p.kamers) ? ' · ' + p.kamers + ' kamers' : ''} · ${Number(p.vraagprijs) ? fmtMoney(p.vraagprijs) + ' k.k.' : (Number(p.maandhuur) ? fmtMoney(p.maandhuur) + ' p/m' : 'prijs op aanvraag')}</p>
+            ${!p.webOmschrijving ? '<p class="sub alert">Nog geen website-omschrijving — vul die in via Panden → Bewerken voor sterkere advertenties.</p>' : ''}
+          </div>
+          <div class="head-actions">
+            <button class="btn primary slim" data-action="open-adtext" data-id="${p.id}">Advertentietekst</button>
+            <button class="btn secondary slim" data-action="ad-add" data-id="${p.id}">+ Kanaal</button>
+          </div>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Kanaal</th><th>Doel</th><th>Status</th><th>Geplaatst</th><th>Kosten</th><th>Link</th><th></th></tr></thead>
+          <tbody>${ads.map(a => `<tr>
+            <td><strong>${esc(a.kanaal)}</strong></td><td>${esc(a.doel || '')}</td>
+            <td>${statusBadge(a.status)}</td><td>${fmtDate(a.datum)}</td><td>${fmtMoney(a.kosten)}</td>
+            <td>${a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener" class="text-btn">Open ↗</a>` : '—'}</td>
+            <td class="row-actions"><button class="icon-btn" data-action="ad-edit" data-id="${p.id}" data-item="${a.id}" title="Bewerken">✎</button>
+            <button class="icon-btn" data-action="ad-del" data-id="${p.id}" data-item="${a.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(7, 'Nog niet geadverteerd — klik op "+ Kanaal" of genereer eerst de advertentietekst.')}</tbody>
+        </table></div>
+      </section>`;
+    }).join('') || '<div class="panel"><p class="empty">Nog geen panden om te adverteren. Voeg eerst een pand toe.</p></div>'}`;
+}
+
+/* ---------- Geld-in: facturatie & huurincasso ---------- */
+function openInvoiceModal(id = null) {
+  if (!state.properties.length) { showToast('Voeg eerst een pand toe.'); return; }
+  const form = $('#invoice-form');
+  form.reset();
+  form.elements.id.value = id || '';
+  $('#invoice-modal-title').textContent = id ? 'Factuur bewerken' : 'Factuur opstellen';
+  const f = id ? state.invoices.find(x => x.id === id) : null;
+  fillSelect(form.elements.propertyId, state.properties, { empty: '— Algemeen —', selected: f?.propertyId || '' });
+  if (f) {
+    ['soort', 'debiteur', 'desc', 'amount', 'date', 'due', 'status'].forEach(k => form.elements[k].value = f[k] ?? '');
+  } else {
+    form.elements.date.value = todayISO();
+    form.elements.due.value = addDaysISO(todayISO(), 14);
+  }
+  $('#invoice-modal').showModal();
+}
+
+function renderMoney() {
+  const t = todayISO();
+  const jaar = String(new Date().getFullYear());
+  const inv = state.invoices.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const openstaand = inv.filter(f => f.status !== 'Betaald' && f.status !== 'Concept');
+  const achterstand = openstaand.filter(f => f.due && f.due < t);
+  const ontvangenJaar = inv.filter(f => f.status === 'Betaald' && (f.date || '').startsWith(jaar)).reduce((s, f) => s + (Number(f.amount) || 0), 0);
+  const huurPerMaand = state.properties.filter(p => Number(p.maandhuur) > 0 && p.status !== 'Verkocht').reduce((s, p) => s + (Number(p.maandhuur) || 0), 0);
+  $('#money-body').innerHTML = `
+    <div class="kpi-grid">
+      <article class="kpi"><span>Verwachte huur / maand</span><strong>${fmtMoney(huurPerMaand)}</strong><small>uit verhuurde panden</small></article>
+      <article class="kpi"><span>Ontvangen ${jaar}</span><strong>${fmtMoney(ontvangenJaar)}</strong></article>
+      <article class="kpi"><span>Openstaand</span><strong>${fmtMoney(openstaand.reduce((s, f) => s + (Number(f.amount) || 0), 0))}</strong><small>${openstaand.length} factu${openstaand.length === 1 ? 'ur' : 'ren'}</small></article>
+      <article class="kpi"><span>Huurachterstand</span><strong class="${achterstand.length ? 'alert' : ''}">${fmtMoney(achterstand.reduce((s, f) => s + (Number(f.amount) || 0), 0))}</strong><small>${achterstand.length} over vervaldatum</small></article>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Inkomende facturen &amp; huur</h2><p>Huurnota's, servicekosten, verkoopopbrengsten en rente-uitkeringen aan investeerders.</p></div>
+        <div class="head-actions">
+          <button class="btn secondary slim" id="gen-rent" data-action="gen-rent">Huurnota's deze maand</button>
+          <button class="btn primary slim" data-action="new-invoice">+ Factuur</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Datum</th><th>Soort</th><th>Pand</th><th>Aan</th><th>Omschrijving</th><th>Bedrag</th><th>Vervalt</th><th>Status</th><th></th></tr></thead>
+        <tbody>${inv.map(f => `<tr>
+          <td>${fmtDate(f.date)}</td><td>${esc(f.soort)}</td><td>${esc(propertyLabel(f.propertyId))}</td><td>${esc(f.debiteur || '—')}</td>
+          <td>${esc(f.desc)}</td><td><strong>${fmtMoney(f.amount)}</strong></td>
+          <td class="${f.status !== 'Betaald' && f.due && f.due < t ? 'alert' : ''}">${fmtDate(f.due)}</td>
+          <td><select class="row-status" data-action="invoice-status" data-id="${f.id}">
+            ${['Concept', 'Verzonden', 'Betaald'].map(s => `<option ${f.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+          </select></td>
+          <td class="row-actions"><button class="icon-btn" data-action="invoice-edit" data-id="${f.id}" title="Bewerken">✎</button>
+          <button class="icon-btn" data-action="invoice-del" data-id="${f.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(9, 'Nog geen facturen. Klik op "+ Factuur" of genereer de huurnota\'s.')}</tbody>
+      </table></div>
+      <p class="hint">Tip: "Huurnota's deze maand" maakt in één klik een factuur voor elk verhuurd pand (zonder dubbele nota voor dezelfde maand).</p>
+    </div>`;
+}
+
+function genRentInvoices() {
+  const t = todayISO();
+  const maand = t.slice(0, 7);
+  const verhuurd = state.properties.filter(p => Number(p.maandhuur) > 0 && p.status !== 'Verkocht');
+  let n = 0;
+  verhuurd.forEach(p => {
+    const bestaat = state.invoices.some(f => f.propertyId === p.id && f.soort === 'Huur' && (f.date || '').startsWith(maand));
+    if (bestaat) return;
+    state.invoices.push({
+      id: uid('f'), soort: 'Huur', propertyId: p.id, debiteur: p.huurder || '',
+      desc: `Huur ${new Date(t + 'T00:00:00').toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' })}`,
+      amount: Number(p.maandhuur) || 0, date: t, due: addDaysISO(t, 14), status: 'Verzonden'
+    });
+    n++;
+  });
+  if (n) { rerender(); showToast(`${n} huurnota('s) aangemaakt voor ${maand}.`); }
+  else showToast('Alle huurnota\'s voor deze maand bestaan al (of geen verhuurde panden).');
+}
+
+/* ---------- Verzekeringen ---------- */
+function openInsuranceModal(propertyId, id = null) {
+  const p = propertyById(propertyId);
+  if (!p) return;
+  const form = $('#insurance-form');
+  form.reset();
+  form.elements.propertyId.value = propertyId;
+  form.elements.id.value = id || '';
+  $('#insurance-modal-title').textContent = id ? 'Verzekering bewerken' : `Verzekering — ${p.address}`;
+  const v = id ? (p.verzekeringen || []).find(x => x.id === id) : null;
+  if (v) {
+    ['type', 'verzekeraar', 'polis', 'premie', 'start', 'eind'].forEach(k => form.elements[k].value = v[k] ?? '');
+  }
+  $('#insurance-modal').showModal();
+}
+
+/* ---------- Financiering ---------- */
+function openLoanModal(id = null) {
+  if (!state.properties.length) { showToast('Voeg eerst een pand toe.'); return; }
+  const form = $('#loan-form');
+  form.reset();
+  form.elements.id.value = id || '';
+  $('#loan-modal-title').textContent = id ? 'Lening bewerken' : 'Lening toevoegen';
+  const l = id ? state.loans.find(x => x.id === id) : null;
+  fillSelect(form.elements.propertyId, state.properties.filter(p => p.status !== 'Verkocht' || p.id === l?.propertyId), { selected: l?.propertyId || '' });
+  fillSelect(form.elements.financierId, state.contacts.filter(c => c.type === 'Financier'), { empty: '— Geen —', selected: l?.financierId || '' });
+  if (l) {
+    ['soort', 'bedrag', 'rentePct', 'aflossing', 'start', 'eind'].forEach(k => form.elements[k].value = l[k] ?? '');
+  } else {
+    form.elements.start.value = todayISO();
+  }
+  $('#loan-modal').showModal();
+}
+
+function renderFinance() {
+  const t = todayISO();
+  const loans = state.loans.slice().sort((a, b) => (a.eind || '9999').localeCompare(b.eind || '9999'));
+  const totaalSchuld = loans.reduce((s, l) => s + (Number(l.bedrag) || 0), 0);
+  const renteJaar = loans.reduce((s, l) => s + (Number(l.bedrag) || 0) * (Number(l.rentePct) || 0) / 100, 0);
+  const waarde = state.properties.filter(p => p.status !== 'Verkocht').reduce((s, p) => s + (Number(p.vraagprijs) || Number(p.taxatie) || 0), 0);
+  const ltv = waarde ? totaalSchuld / waarde * 100 : 0;
+  const binnenkort = loans.filter(l => l.eind && daysBetween(t, l.eind) >= 0 && daysBetween(t, l.eind) <= 90);
+  $('#finance-body').innerHTML = `
+    <div class="kpi-grid">
+      <article class="kpi"><span>Totale financiering</span><strong>${fmtMoney(totaalSchuld)}</strong><small>${loans.length} leningen</small></article>
+      <article class="kpi"><span>Rentelast / jaar</span><strong>${fmtMoney(Math.round(renteJaar))}</strong><small>${fmtMoney(Math.round(renteJaar / 12))}/mnd</small></article>
+      <article class="kpi"><span>Portfoliowaarde</span><strong>${fmtMoney(waarde)}</strong><small>vraag-/taxatiewaarde in bezit</small></article>
+      <article class="kpi"><span>Loan-to-value</span><strong class="${ltv > 80 ? 'alert' : ''}">${fmtNum(ltv, 0)}%</strong><small>schuld ÷ waarde</small></article>
+    </div>
+    ${binnenkort.length ? `<div class="panel"><div class="panel-head compact"><h2>Herfinancieringskalender</h2><span class="badge red">${binnenkort.length} binnen 90 dagen</span></div>
+      <div class="priority-list">${binnenkort.map(l => `<div class="priority-item middel" data-action="open-property" data-id="${l.propertyId}"><span>${esc(propertyLabel(l.propertyId))} — ${esc(l.soort)} (${fmtMoney(l.bedrag)}) vervalt ${fmtDate(l.eind)} (${daysBetween(t, l.eind)} dgn)</span></div>`).join('')}</div></div>` : ''}
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Leningen &amp; financiering</h2><p>Per pand: hoofdsom, rente, aflossing en herzieningsdatum.</p></div>
+        <button class="btn primary slim" data-action="new-loan">+ Lening</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Pand</th><th>Soort</th><th>Financier</th><th>Hoofdsom</th><th>Rente</th><th>Aflossing/mnd</th><th>Vervalt</th><th></th></tr></thead>
+        <tbody>${loans.map(l => `<tr>
+          <td><strong>${esc(propertyLabel(l.propertyId))}</strong></td><td>${esc(l.soort)}</td><td>${esc(contactName(l.financierId))}</td>
+          <td>${fmtMoney(l.bedrag)}</td><td>${fmtNum(l.rentePct, 1)}%</td><td>${fmtMoney(l.aflossing)}</td>
+          <td class="${l.eind && daysBetween(t, l.eind) <= 90 ? 'alert' : ''}">${fmtDate(l.eind)}</td>
+          <td class="row-actions"><button class="icon-btn" data-action="loan-edit" data-id="${l.id}" title="Bewerken">✎</button>
+          <button class="icon-btn" data-action="loan-del" data-id="${l.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(8, 'Nog geen leningen geregistreerd.')}</tbody>
+      </table></div>
+      <p class="hint">Dit overzicht staat los van het financieringsveld per pand; gebruik het voor portfolio-breed inzicht en je herfinancieringsplanning.</p>
+    </div>`;
 }
 
 /* ---------- Modals ---------- */
@@ -1503,7 +2032,7 @@ function openPropertyModal(id = null) {
     form.elements.status.disabled = true;
   }
   if (p) {
-    ['address', 'city', 'ptype', 'status', 'label', 'taxatie', 'taxatieDatum', 'vraagprijs', 'teKoopSinds', 'vasteLasten', 'maandhuur', 'huurder', 'note', 'm2', 'kamers', 'webOmschrijving'].forEach(k => form.elements[k].value = p[k] ?? '');
+    ['address', 'city', 'ptype', 'status', 'label', 'taxatie', 'taxatieDatum', 'vraagprijs', 'teKoopSinds', 'vasteLasten', 'maandhuur', 'huurder', 'note', 'm2', 'kamers', 'webOmschrijving', 'huurIngang', 'huurEind', 'borg', 'huurIndexPct', 'huurderEmail'].forEach(k => form.elements[k].value = p[k] ?? '');
     form.elements.purchaseDate.value = p.purchase?.date || '';
     form.elements.koopsom.value = p.purchase?.koopsom ?? '';
     form.elements.otb.value = p.purchase?.otb ?? 0;
@@ -1635,8 +2164,11 @@ function openPlanModal(id = null, presetDate = '', presetRef = '') {
 }
 
 /* ---------- Foto's (website) ---------- */
+// Foto's horen bij een pand óf een project (data-kind bepaalt welke)
+function fotoHolder(kind, id) { return kind === 'project' ? projectById(id) : propertyById(id); }
+
 function handleFotoUpload(input) {
-  const p = propertyById(input.dataset.id);
+  const p = fotoHolder(input.dataset.kind, input.dataset.id);
   if (!p) return;
   p.fotos = p.fotos || [];
   const files = Array.from(input.files || []);
@@ -1679,6 +2211,46 @@ function handleFotoUpload(input) {
     if (toegevoegd) renderCurrent();
     if (toegevoegd && !mislukt) showToast(`${toegevoegd} foto${toegevoegd === 1 ? '' : '\'s'} toegevoegd.`);
     else if (mislukt) showToast(`${toegevoegd ? toegevoegd + ' toegevoegd, ' : ''}${mislukt} bestand${mislukt === 1 ? '' : 'en'} kon${mislukt === 1 ? '' : 'den'} niet worden gelezen — gebruik JPG of PNG (geen HEIC).`);
+  })();
+}
+
+function handleDocUpload(input) {
+  const p = propertyById(input.dataset.id);
+  if (!p) return;
+  p.docs = p.docs || [];
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  const lees = file => new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+  (async () => {
+    let toegevoegd = 0, teGroot = 0, mislukt = 0;
+    for (const file of files) {
+      if (file.size > 3 * 1024 * 1024) { teGroot++; continue; } // browseropslag is beperkt
+      const dataUrl = await lees(file);
+      if (!dataUrl) { mislukt++; continue; }
+      const doc = { id: uid('doc'), name: file.name, file: dataUrl, done: true };
+      p.docs.push(doc);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        toegevoegd++;
+      } catch {
+        p.docs.pop();
+        save();
+        showToast('Browseropslag vol — bewaar grote documenten als bestandspad/URL i.p.v. upload.');
+        break;
+      }
+    }
+    input.value = '';
+    if (toegevoegd) renderCurrent();
+    const delen = [];
+    if (toegevoegd) delen.push(`${toegevoegd} document${toegevoegd === 1 ? '' : 'en'} toegevoegd`);
+    if (teGroot) delen.push(`${teGroot} te groot (max 3 MB — gebruik een bestandspad)`);
+    if (mislukt) delen.push(`${mislukt} mislukt`);
+    if (delen.length) showToast(delen.join(' · ') + '.');
   })();
 }
 
@@ -1768,7 +2340,9 @@ function handleModalSubmit(event) {
       purchase: { date: data.get('purchaseDate') || '', koopsom: num('koopsom'), otb: num('otb'), notaris: num('notarisK'), makelaar: num('makelaarK'), overig: num('overig') },
       financing: { financierId: data.get('financierId') || '', bedrag: num('finBedrag'), rentePct: num('finRente'), einddatum: data.get('finEind') || '' },
       vasteLasten: num('vasteLasten'), maandhuur: num('maandhuur'), huurder: str('huurder'), note: str('note'),
-      m2: num('m2'), kamers: num('kamers'), webOmschrijving: str('webOmschrijving')
+      m2: num('m2'), kamers: num('kamers'), webOmschrijving: str('webOmschrijving'),
+      huurIngang: data.get('huurIngang') || '', huurEind: data.get('huurEind') || '', borg: num('borg'), huurIndexPct: num('huurIndexPct'),
+      huurderEmail: str('huurderEmail')
     };
     if (base.status === 'Te koop' && !base.teKoopSinds) base.teKoopSinds = todayISO();
     if (id) {
@@ -1844,6 +2418,42 @@ function handleModalSubmit(event) {
     showToast('Planning opgeslagen.');
   }
 
+  if (formId === 'ad-form') {
+    const p = propertyById(data.get('propertyId'));
+    if (p) {
+      p.advertenties = p.advertenties || [];
+      const base = { kanaal: str('kanaal'), doel: str('doel'), status: str('status'), datum: data.get('datum') || '', kosten: num('kosten'), url: str('url') };
+      if (id) { const a = p.advertenties.find(x => x.id === id); if (a) Object.assign(a, base); }
+      else p.advertenties.push(Object.assign({ id: uid('ad') }, base));
+      showToast(`Advertentie (${base.kanaal}) opgeslagen voor ${p.address}.`);
+    }
+  }
+
+  if (formId === 'invoice-form') {
+    const base = { soort: str('soort'), propertyId: data.get('propertyId') || '', debiteur: str('debiteur'), desc: str('desc'), amount: num('amount'), date: data.get('date'), due: data.get('due') || '', status: str('status') };
+    if (id) Object.assign(state.invoices.find(x => x.id === id), base);
+    else state.invoices.push(Object.assign({ id: uid('f') }, base));
+    showToast('Factuur opgeslagen.');
+  }
+
+  if (formId === 'loan-form') {
+    const base = { propertyId: data.get('propertyId'), financierId: data.get('financierId') || '', soort: str('soort'), bedrag: num('bedrag'), rentePct: num('rentePct'), aflossing: num('aflossing'), start: data.get('start') || '', eind: data.get('eind') || '' };
+    if (id) Object.assign(state.loans.find(x => x.id === id), base);
+    else state.loans.push(Object.assign({ id: uid('l') }, base));
+    showToast('Lening opgeslagen.');
+  }
+
+  if (formId === 'insurance-form') {
+    const p = propertyById(data.get('propertyId'));
+    if (p) {
+      p.verzekeringen = p.verzekeringen || [];
+      const base = { type: str('type'), verzekeraar: str('verzekeraar'), polis: str('polis'), premie: num('premie'), start: data.get('start') || '', eind: data.get('eind') || '' };
+      if (id) { const v = p.verzekeringen.find(x => x.id === id); if (v) Object.assign(v, base); }
+      else p.verzekeringen.push(Object.assign({ id: uid('vz') }, base));
+      showToast(`Verzekering (${base.type}) opgeslagen.`);
+    }
+  }
+
   rerender();
 }
 
@@ -1853,7 +2463,7 @@ function buildCalcPrintDoc(title, subtitle, c) {
   return `
     <header class="doc-head">
       <div>
-        <img src="assets/logo-dark.png" alt="" class="doc-logo">
+        <img src="assets/logo-dark.png?v=20260613" alt="" class="doc-logo">
         <h1>INVESTERINGSCALCULATIE</h1>
         <p class="doc-number">${esc(title)} · ${fmtDate(todayISO())}</p>
       </div>
@@ -1950,12 +2560,75 @@ function exportCurrentView() {
       rows = [['Datum', 'Type', 'Naam', 'Contact', 'E-mail', 'Telefoon', 'Portfolio', 'Betreft', 'Bericht', 'Status']];
       loadInbox().forEach(l => rows.push([l.date, l.type, l.name, l.contact, l.email, l.phone, l.portfolio, l.subject, l.message, l.handled ? 'Afgehandeld' : 'Nieuw']));
       name = 'aanvragen'; break;
+    case 'money':
+      rows = [['Datum', 'Soort', 'Pand', 'Aan', 'Omschrijving', 'Bedrag', 'Vervaldatum', 'Status']];
+      state.invoices.slice().sort((a, b) => (a.date || '').localeCompare(b.date || '')).forEach(f => rows.push([f.date, f.soort, propertyLabel(f.propertyId), f.debiteur, f.desc, csvNum(f.amount), f.due, f.status]));
+      name = 'geld-in'; break;
+    case 'finance':
+      rows = [['Pand', 'Soort', 'Financier', 'Hoofdsom', 'Rente %', 'Aflossing/mnd', 'Startdatum', 'Vervaldatum']];
+      state.loans.forEach(l => rows.push([propertyLabel(l.propertyId), l.soort, contactName(l.financierId), csvNum(l.bedrag), csvNum(l.rentePct), csvNum(l.aflossing), l.start, l.eind]));
+      name = 'financiering'; break;
+    case 'ads':
+      rows = [['Pand', 'Kanaal', 'Doel', 'Status', 'Geplaatst', 'Kosten', 'Link']];
+      state.properties.forEach(p => (p.advertenties || []).forEach(a => rows.push([p.address, a.kanaal, a.doel, a.status, a.datum, csvNum(a.kosten), a.url])));
+      name = 'advertenties'; break;
+    case 'reports': {
+      const r = reportData();
+      rows = [['Rapportage HomeINN', t]];
+      rows.push([]);
+      rows.push(['Verwacht/gerealiseerd resultaat per pand']);
+      rows.push(['Pand', 'Status', 'Investering', 'Waarde/verkoop', 'Winst', 'ROI %']);
+      r.fins.forEach(({ p, f }) => rows.push([p.address, p.status, csvNum(f.investVerwacht), csvNum(f.waarde), f.winst === null ? '' : csvNum(f.winst), f.roi === null ? '' : csvNum(f.roi)]));
+      rows.push([]);
+      rows.push(['Cashflow-prognose 6 maanden']);
+      rows.push(['Maand', 'Huur in', 'Rente+lasten', 'Geplande kosten', 'Netto', 'Aandachtspunten']);
+      r.months.forEach(m => rows.push([m.label, csvNum(m.huurIn), csvNum(-m.vasteUit), csvNum(-m.geplandUit), csvNum(m.netto), m.events.join(' / ')]));
+      name = 'rapportage'; break;
+    }
     default:
       downloadBackup();
       return;
   }
   downloadFile(`homeinn-${name}-${t}.csv`, toCSV(rows), 'text/csv;charset=utf-8');
   showToast(`Export "${name}" gedownload als CSV.`);
+}
+
+/* Boekhoud-export: facturen (Factuur ontvangen + Betaald) klaar voor je boekhouder/boekhoudpakket.
+   Aanname: het ingevoerde bedrag is incl. 21% btw; excl. en btw worden teruggerekend. */
+const GROOTBOEK = {
+  'Aannemer': '4500 Onderhoud & renovatie',
+  'Installaties': '4510 Installaties',
+  'Materiaal': '4520 Materialen',
+  'Architect & advies': '4310 Advieskosten',
+  'Leges & vergunning': '4320 Leges & vergunningen',
+  'Styling & oplevering': '4530 Styling & oplevering',
+  'Overig': '4900 Diverse projectkosten'
+};
+
+function exportBoekhouding() {
+  const btwPct = 21;
+  const facturen = state.costs
+    .filter(k => k.status === 'Factuur ontvangen' || k.status === 'Betaald')
+    .slice()
+    .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  if (!facturen.length) { showToast('Nog geen facturen om te exporteren (status Factuur ontvangen of Betaald).'); return; }
+  const rows = [['Boekstukdatum', 'Boekstuknr', 'Leverancier', 'Omschrijving', 'Grootboek', 'Pand', 'Project', 'Bedrag excl. btw', `Btw ${btwPct}%`, 'Bedrag incl. btw', 'Status']];
+  let totExcl = 0, totBtw = 0, totIncl = 0;
+  facturen.forEach(k => {
+    const incl = Number(k.amount) || 0;
+    const excl = incl / (1 + btwPct / 100);
+    const btw = incl - excl;
+    totExcl += excl; totBtw += btw; totIncl += incl;
+    rows.push([
+      k.date, (k.id || '').toUpperCase(), contactName(k.contactId), k.desc,
+      GROOTBOEK[k.category] || k.category, propertyLabel(k.propertyId), projectById(k.projectId)?.name || '',
+      csvNum(excl), csvNum(btw), csvNum(incl), k.status
+    ]);
+  });
+  rows.push([]);
+  rows.push(['', '', '', '', '', '', 'TOTAAL', csvNum(totExcl), csvNum(totBtw), csvNum(totIncl), '']);
+  downloadFile(`homeinn-boekhouding-${todayISO()}.csv`, toCSV(rows), 'text/csv;charset=utf-8');
+  showToast(`Boekhoud-export: ${facturen.length} facturen · ${fmtMoney(Math.round(totIncl))} incl. btw. Btw teruggerekend op ${btwPct}% — controleer bij afwijkende tarieven (9%/btw-vrij).`);
 }
 
 /* Aanbod publiceren: panden Te koop / Onder bod → aanbod.json voor de website */
@@ -1982,7 +2655,7 @@ function buildAanbodJson() {
       voortgang: phases.length ? Math.round(phases.filter(f => f.status === 'Klaar').length / phases.length * 100) : 0,
       start: pr.startDate || '', oplevering: pr.endDate || '',
       omschrijving: p.webOmschrijving || '', // bewust GEEN fallback op pr.note: dat is intern
-      fotos: p.fotos || [],
+      fotos: (pr.fotos && pr.fotos.length) ? pr.fotos : (p.fotos || []),
       updates: (pr.updates || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(u => ({ datum: u.date, tekst: u.text })),
       investering: pr.invest?.open ? {
         doelbedrag: Number(pr.invest.doelbedrag) || 0,
@@ -2174,13 +2847,13 @@ document.addEventListener('click', event => {
     }
     case 'del-task': state.tasks = state.tasks.filter(x => x.id !== id); rerender(); break;
     case 'foto-del': {
-      const p = propertyById(id);
+      const p = fotoHolder(el.dataset.kind, id);
       p.fotos = (p.fotos || []).filter((_, i) => i !== Number(el.dataset.index));
       rerender();
       break;
     }
     case 'foto-hoofd': {
-      const p = propertyById(id);
+      const p = fotoHolder(el.dataset.kind, id);
       const i = Number(el.dataset.index);
       if (p.fotos && p.fotos[i]) { p.fotos.unshift(p.fotos.splice(i, 1)[0]); rerender(); showToast('Hoofdfoto gewijzigd.'); }
       break;
@@ -2190,11 +2863,71 @@ document.addEventListener('click', event => {
       pr.updates = (pr.updates || []).filter(u => u.id !== item); rerender();
       break;
     }
+    case 'del-maint': {
+      const p = propertyById(id);
+      p.onderhoud = (p.onderhoud || []).filter(o => o.id !== el.dataset.item);
+      rerender();
+      break;
+    }
+    case 'wwft-toggle': {
+      const pr = projectById(id);
+      const inv = (pr.investeerders || []).find(x => x.id === el.dataset.item);
+      if (inv) inv.wwft = !inv.wwft;
+      rerender();
+      break;
+    }
     case 'del-investor': {
       const pr = projectById(id);
       if (confirmDel('Investeerder verwijderen uit de administratie?')) { pr.investeerders = (pr.investeerders || []).filter(i => i.id !== item); rerender(); }
       break;
     }
+    // Adverteren
+    case 'open-adtext': openAdTextModal(id); break;
+    case 'ad-add': openAdModal(id); break;
+    case 'ad-edit': openAdModal(id, item); break;
+    case 'ad-del': {
+      const p = propertyById(id);
+      if (confirmDel('Advertentiekanaal verwijderen?')) { p.advertenties = (p.advertenties || []).filter(a => a.id !== item); rerender(); }
+      break;
+    }
+    case 'copy-ad': {
+      const ta = $('#adtext-' + el.dataset.idx);
+      if (ta) { ta.select(); ta.setSelectionRange(0, ta.value.length); try { navigator.clipboard.writeText(ta.value); } catch { document.execCommand('copy'); } showToast('Advertentietekst gekopieerd.'); }
+      break;
+    }
+    // Geld-in
+    case 'new-invoice': openInvoiceModal(); break;
+    case 'invoice-edit': openInvoiceModal(id); break;
+    case 'invoice-del':
+      if (confirmDel('Factuur verwijderen?')) { state.invoices = state.invoices.filter(f => f.id !== id); rerender(); }
+      break;
+    case 'gen-rent': genRentInvoices(); break;
+    // Financiering
+    case 'new-loan': openLoanModal(); break;
+    case 'loan-edit': openLoanModal(id); break;
+    case 'loan-del':
+      if (confirmDel('Lening verwijderen?')) { state.loans = state.loans.filter(l => l.id !== id); rerender(); }
+      break;
+    // Verzekeringen
+    case 'ins-add': openInsuranceModal(id); break;
+    case 'ins-edit': openInsuranceModal(id, item); break;
+    case 'ins-del': {
+      const p = propertyById(id);
+      if (confirmDel('Verzekering verwijderen?')) { p.verzekeringen = (p.verzekeringen || []).filter(v => v.id !== item); rerender(); }
+      break;
+    }
+    // Cloud
+    case 'cloud-sync': {
+      if (!window.HCloud) break;
+      showToast('Synchroniseren…');
+      HCloud.pushAll(state)
+        .then(r => showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders, ${r.updates} updates.`))
+        .catch(e => showToast('Sync mislukt: ' + (e.message || e)));
+      break;
+    }
+    case 'cloud-logout':
+      if (window.HCloud) HCloud.signOut().then(() => { if (currentView === 'settings') renderCloudPanel(); });
+      break;
     // Aanvragen
     case 'inbox-to-deal': {
       const lead = loadInbox().find(l => l.id === id);
@@ -2241,6 +2974,7 @@ document.addEventListener('click', event => {
 
 document.addEventListener('change', event => {
   if (event.target.id === 'foto-upload') { handleFotoUpload(event.target); return; }
+  if (event.target.id === 'doc-upload') { handleDocUpload(event.target); return; }
   const el = event.target.closest('[data-action]');
   if (!el) return;
   const { action, id, item, phase } = el.dataset;
@@ -2282,6 +3016,19 @@ document.addEventListener('change', event => {
       break;
     }
     case 'cost-status': state.costs.find(x => x.id === id).status = el.value; rerender(); break;
+    case 'maint-status': {
+      const p = propertyById(id);
+      const o = (p.onderhoud || []).find(x => x.id === el.dataset.item);
+      if (o) o.status = el.value;
+      rerender();
+      break;
+    }
+    case 'invoice-status': {
+      const f = state.invoices.find(x => x.id === id);
+      if (f) f.status = el.value;
+      rerender();
+      break;
+    }
     case 'phase-status': {
       const pr = projectById(id);
       pr.phases.find(x => x.id === phase).status = el.value;
@@ -2298,6 +3045,16 @@ document.addEventListener('submit', event => {
   if (form.dataset.form) {
     event.preventDefault();
     const data = new FormData(form);
+    if (form.dataset.form === 'cloud-login') {
+      const email = String(data.get('email') || '').trim();
+      if (email && window.HCloud) {
+        HCloud.signIn(email)
+          .then(() => showToast(`Inloglink verstuurd naar ${email} — open de link in je mail.`))
+          .catch(e => showToast('Inloggen mislukt: ' + (e.message || e)));
+      }
+      form.reset();
+      return;
+    }
     if (form.dataset.form === 'add-phase') {
       const pr = projectById(form.dataset.id);
       pr.phases.push({ id: uid('ph'), name: String(data.get('name')).trim(), status: 'Te doen' });
@@ -2308,12 +3065,21 @@ document.addEventListener('submit', event => {
     }
     if (form.dataset.form === 'add-doc') {
       const p = propertyById(form.dataset.id);
-      p.docs.push({ id: uid('doc'), name: String(data.get('name')).trim(), done: false });
+      const v = String(data.get('name')).trim();
+      const isPad = /^https?:\/\//i.test(v) || v.includes('/');
+      p.docs.push(isPad
+        ? { id: uid('doc'), name: v.split('/').pop() || v, url: v, done: true }
+        : { id: uid('doc'), name: v, done: false });
     }
     if (form.dataset.form === 'add-foto') {
-      const p = propertyById(form.dataset.id);
+      const p = fotoHolder(form.dataset.kind, form.dataset.id);
       p.fotos = p.fotos || [];
       p.fotos.push(String(data.get('url')).trim());
+    }
+    if (form.dataset.form === 'add-maint') {
+      const p = propertyById(form.dataset.id);
+      p.onderhoud = p.onderhoud || [];
+      p.onderhoud.push({ id: uid('mnt'), date: todayISO(), desc: String(data.get('desc')).trim(), status: 'Open' });
     }
     if (form.dataset.form === 'add-update') {
       const pr = projectById(form.dataset.id);
@@ -2323,7 +3089,7 @@ document.addEventListener('submit', event => {
     if (form.dataset.form === 'add-investor') {
       const pr = projectById(form.dataset.id);
       pr.investeerders = pr.investeerders || [];
-      pr.investeerders.push({ id: uid('inv'), naam: String(data.get('naam')).trim(), bedrag: Number(data.get('bedrag')) || 0, datum: todayISO() });
+      pr.investeerders.push({ id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, datum: todayISO() });
     }
     form.reset();
     rerender();
@@ -2406,6 +3172,12 @@ function initStatic() {
     b.addEventListener('click', () => b.closest('dialog')?.close());
   });
 
+  // Advertentietekst-modal sluiten
+  $$('[data-close-adtext]').forEach(b => b.addEventListener('click', () => $('#adtext-modal').close()));
+
+  // Boekhoud-export
+  $('#export-boekhouding').addEventListener('click', exportBoekhouding);
+
   // Website publiceren
   $('#publish-aanbod').addEventListener('click', publishAanbod);
   $('#publish-site-projects').addEventListener('click', publishAanbod);
@@ -2454,3 +3226,15 @@ function initStatic() {
 load();
 initStatic();
 applyHash();
+
+/* PWA: registreer de service worker zodat het portaal installeerbaar + offline bruikbaar is.
+   Alleen op http(s) — onder file:// werkt dit niet en hoeft het ook niet. */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+
+/* Cloud-laag (optioneel): init + paneel verversen bij in-/uitloggen. */
+if (window.HCloud) {
+  HCloud.onChange(() => { if (currentView === 'settings') renderCloudPanel(); });
+  HCloud.init();
+}
