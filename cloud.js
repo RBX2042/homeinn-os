@@ -207,6 +207,19 @@
       if (r.error) throw r.error;
     },
 
+    /* Berichten op een onderhoudsmelding (huurder ↔ operator). */
+    getMaintenanceMessages: async function (maintenanceId) {
+      var c = get(); if (!c) return [];
+      var r = await c.from('hios_maintenance_messages').select('*').eq('maintenance_id', maintenanceId).order('created_at', { ascending: true });
+      return (r && r.data) || [];
+    },
+    addMaintenanceMessage: async function (maintenanceId, body, authorType) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      var email = profile ? profile.email : null;
+      var r = await c.from('hios_maintenance_messages').insert({ maintenance_id: maintenanceId, author_type: authorType, author_email: email, body: body });
+      if (r.error) throw r.error;
+    },
+
     /* Stuur een contract ter ondertekening naar een portaal-gebruiker (op e-mail). */
     sendContract: async function (payload) {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');

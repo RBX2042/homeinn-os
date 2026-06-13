@@ -102,7 +102,7 @@
         '<h2 style="margin-top:22px;font-size:1rem">Jouw meldingen</h2>' +
         (maint.length
           ? '<table><thead><tr><th>Datum</th><th>Melding</th><th>Status</th></tr></thead><tbody>' +
-            maint.map(function (m) { return '<tr><td>' + fdate(m.created_at) + '</td><td>' + esc(m.descr) + (m._photoUrl ? '<br><a href="' + esc(m._photoUrl) + '" target="_blank" rel="noopener">📷 foto</a>' : '') + '</td><td>' + statusBadge(m.status) + '</td></tr>'; }).join('') +
+            maint.map(function (m) { return '<tr><td>' + fdate(m.created_at) + '</td><td>' + esc(m.descr) + (m._photoUrl ? '<br><a href="' + esc(m._photoUrl) + '" target="_blank" rel="noopener">📷 foto</a>' : '') + '<br><button class="msgbtn" type="button" data-mid="' + esc(m.id) + '" style="background:transparent;border:0;color:var(--gold);font:inherit;font-weight:700;cursor:pointer;padding:2px 0">💬 Berichten</button><div class="thread" id="th-' + esc(m.id) + '" style="display:none;margin-top:6px"></div></td><td>' + statusBadge(m.status) + '</td></tr>'; }).join('') +
             '</tbody></table>'
           : '<p class="empty">Nog geen meldingen.</p>') +
       '</div>' +
@@ -174,6 +174,34 @@
     var card = pb.closest('.card'); var doc = card ? card.querySelector('.contract-doc') : null;
     if (doc) printContractDoc(doc.innerHTML);
   });
+
+  // Onderhoud-berichten (huurder ↔ operator)
+  app.addEventListener('click', function (e) {
+    var mb = e.target.closest ? e.target.closest('.msgbtn') : null;
+    if (mb) { toggleThread(mb.getAttribute('data-mid')); return; }
+    var sb = e.target.closest ? e.target.closest('.thread-send') : null;
+    if (sb) { sendThreadMsg(sb.getAttribute('data-mid')); return; }
+  });
+  function toggleThread(mid) {
+    var el = document.getElementById('th-' + mid); if (!el) return;
+    if (el.style.display !== 'none') { el.style.display = 'none'; return; }
+    el.style.display = 'block'; el.innerHTML = '<p class="muted" style="font-size:.82rem">Laden…</p>';
+    client.from('hios_maintenance_messages').select('*').eq('maintenance_id', mid).order('created_at', { ascending: true }).then(function (r) {
+      var msgs = (r && r.data) || [];
+      el.innerHTML = (msgs.length ? msgs.map(function (m) { return '<div style="font-size:.82rem;margin:4px 0"><strong>' + (m.author_type === 'operator' ? 'HomeINN' : 'Jij') + '</strong>: ' + esc(m.body) + ' <span class="muted">' + fdate(m.created_at) + '</span></div>'; }).join('') : '<p class="muted" style="font-size:.82rem">Nog geen berichten.</p>')
+        + '<div style="display:flex;gap:6px;margin-top:6px"><input id="ti-' + mid + '" placeholder="Bericht aan HomeINN…" style="flex:1;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit"><button class="btn primary slim thread-send" type="button" data-mid="' + mid + '">Stuur</button></div>';
+    });
+  }
+  function sendThreadMsg(mid) {
+    var inp = document.getElementById('ti-' + mid); var body = inp ? inp.value.trim() : '';
+    if (!body) return;
+    client.from('hios_maintenance_messages').insert({ maintenance_id: mid, author_type: 'huurder', body: body }).then(function (r) {
+      if (r.error) { toast('Versturen mislukt: ' + r.error.message); return; }
+      if (client.functions) client.functions.invoke('notify', { body: { subject: 'Nieuw bericht van huurder op onderhoudsmelding', html: '<p>Een huurder reageerde op een onderhoudsmelding:</p><p>' + esc(body) + '</p>' } }).catch(function () { });
+      toast('Bericht verstuurd.');
+      var el = document.getElementById('th-' + mid); if (el) { el.style.display = 'none'; toggleThread(mid); }
+    });
+  }
 
   // Ondertekenen (gedelegeerd, één keer)
   app.addEventListener('click', function (e) {

@@ -2136,7 +2136,7 @@ function renderMaintenance() {
   })));
   (state.cloudMaintenance || []).forEach(m => items.push({
     bron: 'Huurdersportaal', pandId: m.localPropertyId, pand: m.address || propertyLabel(m.localPropertyId), date: (m.created_at || '').slice(0, 10), descr: m.descr, status: m.status,
-    statusSelect: `<select class="row-status" data-action="cloud-maint-status" data-id="${m.id}">${['Open', 'In behandeling', 'Afgehandeld'].map(s => `<option ${m.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>`,
+    statusSelect: `<select class="row-status" data-action="cloud-maint-status" data-id="${m.id}">${['Open', 'In behandeling', 'Afgehandeld'].map(s => `<option ${m.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select> <button class="icon-btn" data-action="maint-messages" data-id="${m.id}" title="Berichten met huurder">💬</button>`,
     foto: m.photoUrl ? ` · <a href="${esc(m.photoUrl)}" target="_blank" rel="noopener" class="text-btn">📷</a>` : ''
   }));
   items.sort((a, b) => {
@@ -2168,6 +2168,24 @@ function renderMaintenance() {
         </tr>`).join('') || emptyRow(5, 'Geen onderhoudsmeldingen. Eigen notities leg je vast bij een verhuurd pand; huurder-meldingen komen via het portaal binnen.')}</tbody>
       </table></div>
     </div>`;
+}
+
+let _currentMaint = null;
+function openMaintMessages(cloudId) {
+  if (!window.HCloud || !HCloud.status().staff) { showToast('Log in via Instellingen → Cloud om met de huurder te communiceren.'); return; }
+  const m = (state.cloudMaintenance || []).find(x => x.id === cloudId);
+  _currentMaint = { id: cloudId, email: (m && propertyById(m.localPropertyId)?.huurderEmail) || '' };
+  $('#maintmsg-title').textContent = m ? `Berichten — ${m.descr}` : 'Berichten';
+  $('#maintmsg-thread').innerHTML = '<p class="hint">Laden…</p>';
+  $('#maintmsg-modal').showModal();
+  loadMaintThread(cloudId);
+}
+function loadMaintThread(cloudId) {
+  HCloud.getMaintenanceMessages(cloudId).then(msgs => {
+    const el = $('#maintmsg-thread');
+    el.innerHTML = msgs.length ? `<div class="check-list">${msgs.map(m => `<div class="check-item"><span class="badge ${m.author_type === 'operator' ? 'green' : 'gray'}">${m.author_type === 'operator' ? 'HomeINN' : 'Huurder'}</span><span>${esc(m.body)}<br><span class="sub">${fmtDateTime(m.created_at)}</span></span></div>`).join('')}</div>` : '<p class="hint">Nog geen berichten. Stuur het eerste bericht hieronder.</p>';
+    el.scrollTop = el.scrollHeight;
+  }).catch(e => { $('#maintmsg-thread').innerHTML = `<p class="hint">Kon berichten niet laden: ${esc(e.message || e)}</p>`; });
 }
 
 function genRentInvoices() {
@@ -3739,6 +3757,7 @@ document.addEventListener('click', event => {
       break;
     }
     case 'export-investors': exportCurrentView(); break;
+    case 'maint-messages': openMaintMessages(id); break;
     case 'export-ical': exportPlanningAsIcal(); break;
     case 'export-audit': {
       const rows = [['Wanneer', 'Gebruiker', 'Actie', 'Onderdeel']];
@@ -4112,6 +4131,22 @@ function initStatic() {
 
   // Advertentietekst-modal sluiten
   $$('[data-close-adtext]').forEach(b => b.addEventListener('click', () => $('#adtext-modal').close()));
+
+  // Onderhoud-berichten
+  $$('[data-close-maintmsg]').forEach(b => b.addEventListener('click', () => $('#maintmsg-modal').close()));
+  $('#maintmsg-form').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!_currentMaint || !window.HCloud) return;
+    const body = e.target.elements.body.value.trim();
+    if (!body) return;
+    HCloud.addMaintenanceMessage(_currentMaint.id, body, 'operator')
+      .then(() => {
+        if (_currentMaint.email) HCloud.notify({ to: _currentMaint.email, subject: 'Reactie van HomeINN op je onderhoudsmelding', html: `<p>HomeINN heeft gereageerd op je onderhoudsmelding:</p><p>${esc(body)}</p><p>Log in op het huurdersportaal om te reageren.</p>` });
+        e.target.reset();
+        loadMaintThread(_currentMaint.id);
+      })
+      .catch(err => showToast('Versturen mislukt: ' + (err.message || err)));
+  });
 
   // Boekhoud-export
   $('#export-boekhouding').addEventListener('click', exportBoekhouding);
