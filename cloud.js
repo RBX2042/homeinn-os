@@ -156,6 +156,13 @@
       return profile ? profile.id : null;
     },
 
+    /* Verstuur een notificatie-e-mail via de 'notify' edge function (Resend).
+       Faalt stil als de cloud/Resend nog niet is geconfigureerd — breekt de app nooit. */
+    notify: function (payload) {
+      var c = get(); if (!c || !c.functions) return Promise.resolve();
+      return c.functions.invoke('notify', { body: payload }).catch(function () { });
+    },
+
     /* Haal de ondertekenstatus van verstuurde contracten op (voor terugkoppeling in het OS). */
     pullContracts: async function () {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');

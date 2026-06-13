@@ -3291,7 +3291,11 @@ document.addEventListener('click', event => {
       };
       showToast('Versturen…');
       HCloud.sendContract(payload)
-        .then(() => { c.status = 'Verstuurd'; save(); renderCurrent(); showToast(`Contract verstuurd naar ${email}. De wederpartij kan het in het portaal ondertekenen.`); })
+        .then(() => {
+          c.status = 'Verstuurd'; save(); renderCurrent();
+          HCloud.notify({ to: email, subject: `Je ${c.type.toLowerCase()} van HomeINN staat klaar`, html: `<p>Beste,</p><p>Er staat een ${esc(c.type.toLowerCase())} voor je klaar ter ondertekening. Log in op het HomeINN-portaal om deze te bekijken en digitaal te ondertekenen:</p><p><a href="${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html">Inloggen op het portaal</a></p><p>Met vriendelijke groet,<br>HomeINN</p>` });
+          showToast(`Contract verstuurd naar ${email}. De wederpartij kan het in het portaal ondertekenen.`);
+        })
         .catch(e => showToast('Versturen mislukt: ' + (e.message || e)));
       break;
     }

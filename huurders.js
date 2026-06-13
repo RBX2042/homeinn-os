@@ -134,6 +134,8 @@
     }
     var r = await client.from('hios_maintenance').insert({ property_id: pid.data, descr: descr, photo_path: photoPath });
     if (r.error) { toast('Melden mislukt: ' + r.error.message); return; }
+    // operator notificeren (stil falen als Resend nog niet is geconfigureerd)
+    if (client.functions) client.functions.invoke('notify', { body: { subject: 'Nieuwe onderhoudsmelding via het huurdersportaal', html: '<p>Een huurder heeft een onderhoudsmelding ingediend:</p><p><strong>' + esc(descr) + '</strong></p><p>Bekijk en handel af in HomeINN OS (Pand → Verhuur & beheer, na Synchroniseren).</p>' } }).catch(function () { });
     toast('Bedankt — je melding is doorgegeven aan HomeINN.');
     renderDashboard(user);
   }
