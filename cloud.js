@@ -91,6 +91,40 @@
       lastSync = new Date().toISOString();
       notify();
       return { panden: props.length, projecten: projs.length, investeerders: investors.length, updates: updates.length };
+    },
+
+    /* Haal de door huurders ingediende onderhoudsmeldingen (incl. foto) op uit de cloud. */
+    pullMaintenance: async function () {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      var st = window.HCloud.status();
+      if (!st.staff) throw new Error('Alleen een eigenaar/team-account kan meldingen ophalen.');
+      var r = await c.from('hios_maintenance')
+        .select('id, descr, status, created_at, photo_path, property:hios_properties(local_id, address)')
+        .order('created_at', { ascending: false });
+      if (r.error) throw r.error;
+      var rows = r.data || [];
+      var out = [];
+      for (var i = 0; i < rows.length; i++) {
+        var m = rows[i], photoUrl = null;
+        if (m.photo_path) {
+          var s = await c.storage.from('onderhoud').createSignedUrl(m.photo_path, 3600);
+          photoUrl = (s && s.data) ? s.data.signedUrl : null;
+        }
+        out.push({
+          id: m.id,
+          localPropertyId: m.property ? m.property.local_id : null,
+          address: m.property ? m.property.address : '',
+          descr: m.descr, status: m.status, created_at: m.created_at, photoUrl: photoUrl
+        });
+      }
+      return out;
+    },
+
+    /* Operator zet de status van een huurder-melding (huurder ziet dit terug in zijn portaal). */
+    setMaintenanceStatus: async function (id, status) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      var r = await c.from('hios_maintenance').update({ status: status }).eq('id', id);
+      if (r.error) throw r.error;
     }
   };
 })();

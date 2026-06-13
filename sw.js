@@ -1,6 +1,6 @@
 /* HomeINN OS — service worker: app installeerbaar + offline bruikbaar.
    Bump CACHE bij elke release zodat oude bestanden worden vervangen. */
-const CACHE = 'homeinn-os-v13';
+const CACHE = 'homeinn-os-v16';
 const CORE = [
   'portaal.html', 'app.js', 'cloud.js', 'styles.css',
   'homeinn-public.html', 'homeinn-public.js', 'homeinn-public.css',
@@ -39,6 +39,13 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Overige assets: cache eerst, anders netwerk (en bijwerken in cache).
+  // Code (JS/CSS): netwerk eerst + revalideren (no-cache), zodat nieuwe code altijd direct laadt;
+  // cache alleen als offline-fallback.
+  if (req.destination === 'script' || req.destination === 'style' || /\.(js|css)$/.test(url.pathname)) {
+    e.respondWith(fetch(req, { cache: 'no-cache' }).then(r => { caches.open(CACHE).then(c => c.put(req, r.clone())); return r; }).catch(() => caches.match(req)));
+    return;
+  }
+
+  // Overige assets (afbeeldingen, fonts): cache eerst, anders netwerk (en bijwerken in cache).
   e.respondWith(caches.match(req).then(m => m || fetch(req).then(r => { caches.open(CACHE).then(c => c.put(req, r.clone())); return r; }).catch(() => m)));
 });

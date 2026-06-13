@@ -302,7 +302,8 @@ function seedData() {
       { id: 'l1', propertyId: 'pnd1', financierId: 'r6', soort: 'Ontwikkelfinanciering', bedrag: 300000, rentePct: 6.2, aflossing: 0, start: addDaysISO(t, -84), eind: addDaysISO(t, 290) },
       { id: 'l2', propertyId: 'pnd2', financierId: 'r6', soort: 'Bridge / overbrugging', bedrag: 220000, rentePct: 6.4, aflossing: 0, start: addDaysISO(t, -208), eind: addDaysISO(t, 150) },
       { id: 'l3', propertyId: 'pnd3', financierId: 'r6', soort: 'Hypotheek', bedrag: 160000, rentePct: 5.9, aflossing: 450, start: addDaysISO(t, -300), eind: addDaysISO(t, 41) }
-    ]
+    ],
+    cloudMaintenance: [] // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
   };
 }
 
@@ -519,6 +520,10 @@ function buildSignals() {
       signals.push({ level: 'middel', text: `Huurcontract ${p.address} loopt af op ${fmtDate(p.huurEind)} (${dgn} dgn) — verleng of herzie de huur.`, go: 'pand:' + p.id });
     const open = (p.onderhoud || []).filter(o => o.status !== 'Afgehandeld').length;
     if (open) signals.push({ level: 'middel', text: `${open} open onderhoudsverzoek${open === 1 ? '' : 'en'} op ${p.address} (verhuur).`, go: 'pand:' + p.id });
+  });
+  // Huurder-meldingen via het portaal (uit de cloud opgehaald)
+  (state.cloudMaintenance || []).filter(m => m.status === 'Open').forEach(m => {
+    signals.push({ level: 'hoog', text: `Nieuwe melding via huurdersportaal${m.address ? ' (' + m.address + ')' : ''}: ${m.descr}`, go: m.localPropertyId ? 'pand:' + m.localPropertyId : 'dashboard' });
   });
   // Verzekeringen: aflopende polissen
   state.properties.filter(p => p.status !== 'Verkocht').forEach(p => {
@@ -1106,9 +1111,24 @@ function renderPropertyDetail() {
               <td class="row-actions"><button class="icon-btn" data-action="del-maint" data-id="${p.id}" data-item="${o.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(4, 'Geen onderhoudsverzoeken.')}</tbody>
           </table></div>
           <form class="inline-form" data-form="add-maint" data-id="${p.id}">
-            <input name="desc" placeholder="Nieuw onderhoudsverzoek van huurder…" required>
+            <input name="desc" placeholder="Eigen notitie / onderhoudsverzoek…" required>
             <button class="btn primary slim" type="submit">+</button>
           </form>
+          ${(() => {
+            const cm = (state.cloudMaintenance || []).filter(m => m.localPropertyId === p.id);
+            if (!cm.length) return '<p class="hint" style="margin-top:10px">Meldingen die de huurder via het portaal instuurt verschijnen hier na "Synchroniseer nu" (Instellingen → Cloud).</p>';
+            return `<h3 class="table-title" style="margin-top:16px">Via huurdersportaal (${cm.filter(m => m.status !== 'Afgehandeld').length} open)</h3>
+            <div class="table-wrap"><table>
+              <thead><tr><th>Datum</th><th>Melding</th><th>Status</th></tr></thead>
+              <tbody>${cm.map(m => `
+                <tr><td>${fmtDateTime(m.created_at)}</td>
+                <td>${esc(m.descr)}${m.photoUrl ? ` · <a href="${esc(m.photoUrl)}" target="_blank" rel="noopener" class="text-btn">📷 foto</a>` : ''}</td>
+                <td><select class="row-status" data-action="cloud-maint-status" data-id="${m.id}">
+                  ${['Open', 'In behandeling', 'Afgehandeld'].map(s => `<option ${m.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                </select></td></tr>`).join('')}</tbody>
+            </table></div>
+            <p class="hint">Wijzig je de status, dan ziet de huurder dat direct terug in zijn portaal.</p>`;
+          })()}
         </div>
       </div>
     </section>` : ''}
@@ -1573,7 +1593,7 @@ function renderCloudPanel() {
       <div><dt>Rol</dt><dd>${esc(st.role || '—')} ${st.staff ? '<span class="badge green">staff</span>' : '<span class="badge gray">extern</span>'}</dd></div>
     </div>
     ${st.staff ? `
-      <p class="hint">${sync} Bij synchroniseren gaan je panden, projecten, investeerders en projectupdates naar de cloud, zodat de portalen ze afgeschermd kunnen tonen.</p>
+      <p class="hint">${sync} Synchroniseren stuurt je panden, projecten, investeerders en updates naar de cloud (voor de portalen) én haalt nieuwe huurder-meldingen (incl. foto) terug naar je portaal.</p>
       <div class="head-actions">
         <button class="btn primary slim" data-action="cloud-sync">Synchroniseer nu</button>
         <button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button>
@@ -2921,7 +2941,13 @@ document.addEventListener('click', event => {
       if (!window.HCloud) break;
       showToast('Synchroniseren…');
       HCloud.pushAll(state)
-        .then(r => showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders, ${r.updates} updates.`))
+        .then(r => HCloud.pullMaintenance().then(m => {
+          state.cloudMaintenance = m;
+          save();
+          renderCurrent();
+          const open = m.filter(x => x.status === 'Open').length;
+          showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders. ${m.length} huurder-melding${m.length === 1 ? '' : 'en'} opgehaald${open ? ` (${open} open)` : ''}.`);
+        }))
         .catch(e => showToast('Sync mislukt: ' + (e.message || e)));
       break;
     }
@@ -3027,6 +3053,18 @@ document.addEventListener('change', event => {
       const f = state.invoices.find(x => x.id === id);
       if (f) f.status = el.value;
       rerender();
+      break;
+    }
+    case 'cloud-maint-status': {
+      const m = (state.cloudMaintenance || []).find(x => x.id === id);
+      const nieuw = el.value;
+      if (m) m.status = nieuw; // optimistisch
+      save();
+      if (window.HCloud) {
+        HCloud.setMaintenanceStatus(id, nieuw)
+          .then(() => showToast('Status bijgewerkt — de huurder ziet dit in zijn portaal.'))
+          .catch(e => { showToast('Bijwerken in cloud mislukt: ' + (e.message || e)); });
+      }
       break;
     }
     case 'phase-status': {
@@ -3230,7 +3268,17 @@ applyHash();
 /* PWA: registreer de service worker zodat het portaal installeerbaar + offline bruikbaar is.
    Alleen op http(s) — onder file:// werkt dit niet en hoeft het ook niet. */
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  // Zodra een nieuwe service worker de controle overneemt: één keer automatisch herladen,
+  // zodat nieuwe code/logo's meteen verschijnen (voorkomt het "twee keer verversen"-gedoe).
+  let _swRefreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (_swRefreshing) return;
+    _swRefreshing = true;
+    location.reload();
+  });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => { try { reg.update(); } catch (e) {} }).catch(() => {});
+  });
 }
 
 /* Cloud-laag (optioneel): init + paneel verversen bij in-/uitloggen. */
