@@ -112,9 +112,65 @@
       });
       if (payouts.length) { var r5 = await c.from('hios_investor_payouts').upsert(payouts, { onConflict: 'local_id' }); if (r5.error) throw r5.error; }
 
+      // Pand-id-map (lokaal → cloud-uuid) voor onderliggende financiele/operationele rijen
+      var cprop = await c.from('hios_properties').select('id,local_id');
+      if (cprop.error) throw cprop.error;
+      var propid = {}; (cprop.data || []).forEach(function (r) { propid[r.local_id] = r.id; });
+
+      async function upsertSet(table, rows) {
+        if (!rows.length) return 0;
+        var rr = await c.from(table).upsert(rows, { onConflict: 'local_id' });
+        if (rr.error) throw rr.error;
+        return rows.length;
+      }
+
+      // Financiele tabellen
+      var nDeals = await upsertSet('hios_deals', (state.deals || []).map(function (d) {
+        return { local_id: d.id, ref: d.ref, address: d.address, city: d.city, ptype: d.ptype, status: d.status, vraagprijs: Number(d.vraagprijs) || 0, verkoper_email: d.verkoperEmail || null, data: d };
+      }));
+      var nCosts = await upsertSet('hios_costs', (state.costs || []).map(function (k) {
+        return { local_id: k.id, property_id: propid[k.propertyId] || null, project_id: pid[k.projectId] || null, descr: k.desc, category: k.category, amount: Number(k.amount) || 0, btw_pct: (k.btwPct === 0 || k.btwPct) ? Number(k.btwPct) : 21, date: k.date || null, status: k.status, data: k };
+      }));
+      var nInv = await upsertSet('hios_invoices', (state.invoices || []).map(function (f) {
+        return { local_id: f.id, property_id: propid[f.propertyId] || null, soort: f.soort, debiteur: f.debiteur || null, descr: f.desc, amount: Number(f.amount) || 0, date: f.date || null, due: f.due || null, status: f.status, data: f };
+      }));
+      var nLoans = await upsertSet('hios_loans', (state.loans || []).map(function (l) {
+        return { local_id: l.id, property_id: propid[l.propertyId] || null, financier_id: l.financierId || null, soort: l.soort, bedrag: Number(l.bedrag) || 0, rente_pct: Number(l.rentePct) || 0, aflossing: Number(l.aflossing) || 0, start: l.start || null, eind: l.eind || null, data: l };
+      }));
+      // Operationele tabellen
+      var nContacts = await upsertSet('hios_contacts', (state.contacts || []).map(function (x) {
+        return { local_id: x.id, type: x.type, name: x.name, contact: x.contact || null, email: x.email || null, phone: x.phone || null, address: x.address || null, note: x.note || null, data: x };
+      }));
+      var nPlan = await upsertSet('hios_planning', (state.planning || []).map(function (pl) {
+        return { local_id: pl.id, property_id: null, date: pl.date || null, type: pl.type, title: pl.title, who: pl.who || null, ref: pl.ref || null, data: pl };
+      }));
+      var nCamp = await upsertSet('hios_campaigns', (state.campaigns || []).map(function (cm) {
+        return { local_id: cm.id, datum: cm.datum || null, onderwerp: cm.onderwerp, aantal: Number(cm.aantal) || 0, resultaat: cm.resultaat || null, data: cm };
+      }));
+      var nTasks = await upsertSet('hios_tasks', (state.tasks || []).map(function (tk) {
+        return { local_id: tk.id, property_id: propid[tk.propertyId] || null, project_id: pid[tk.projectId] || null, assignee_email: tk.assigneeEmail || null, title: tk.title, due: tk.due || null, done: !!tk.done, data: tk };
+      }));
+      // Documenten: pand-docs (staff-backup, internal) + project-docs gedeeld met investeerders (van het gekoppelde pand)
+      var docs = [];
+      (state.properties || []).forEach(function (p) {
+        (p.docs || []).forEach(function (d) {
+          docs.push({ local_id: d.id, scope: 'property', ref_id: propid[p.id] || null, name: d.name, url: d.url || null, file: d.file || null, visibility: 'internal' });
+        });
+      });
+      (state.projects || []).filter(function (pr) { return pr.publish; }).forEach(function (pr) {
+        var cpid = pid[pr.id]; if (!cpid) return;
+        var p = (state.properties || []).find(function (x) { return x.id === pr.propertyId; });
+        if (!p) return;
+        (p.docs || []).filter(function (d) { return d.file || d.url; }).forEach(function (d) {
+          docs.push({ local_id: 'prj:' + pr.id + ':' + d.id, scope: 'project', ref_id: cpid, name: d.name, url: d.url || null, file: d.file || null, visibility: 'shared' });
+        });
+      });
+      var nDocs = await upsertSet('hios_documents', docs);
+
       lastSync = new Date().toISOString();
       notify();
-      return { panden: props.length, projecten: projs.length, investeerders: investors.length, updates: updates.length };
+      var overig = nDeals + nCosts + nInv + nLoans + nContacts + nPlan + nCamp + nTasks + nDocs;
+      return { panden: props.length, projecten: projs.length, investeerders: investors.length, updates: updates.length, overig: overig };
     },
 
     /* Haal de door huurders ingediende onderhoudsmeldingen (incl. foto) op uit de cloud. */

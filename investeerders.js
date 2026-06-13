@@ -129,7 +129,7 @@
             myPayouts.map(function (p) { return '<tr><td>' + fdate(p.date) + '</td><td>' + esc(p.kind) + '</td><td>' + money(p.amount) + '</td><td>' + (p.status === 'Uitbetaald' ? '<span class="badge green">Uitbetaald</span>' : '<span class="badge">Gepland</span>') + '</td></tr>'; }).join('') +
             '</tbody></table>') : '') +
           (projDocs.length ? subblock('Documenten',
-            '<ul class="timeline">' + projDocs.map(function (doc) { return '<li><a href="' + esc(doc.url) + '" target="_blank" rel="noopener">' + esc(doc.name || 'Document') + ' ↗</a></li>'; }).join('') + '</ul>') : '') +
+            '<ul class="timeline">' + projDocs.map(function (doc) { return '<li><a href="' + esc(doc.url || doc.file) + '" download="' + esc(doc.name || 'document') + '" target="_blank" rel="noopener">' + esc(doc.name || 'Document') + ' ↗</a></li>'; }).join('') + '</ul>') : '') +
         '</div>';
     });
 

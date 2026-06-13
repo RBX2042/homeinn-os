@@ -3504,7 +3504,7 @@ document.addEventListener('click', event => {
           save();
           renderCurrent();
           const open = m.filter(x => x.status === 'Open').length;
-          showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders. ${m.length} melding${m.length === 1 ? '' : 'en'}${open ? ` (${open} open)` : ''}${getekend ? `, ${getekend} contract(en) ondertekend` : ''}.`);
+          showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders, ${r.overig || 0} overige records. ${m.length} melding${m.length === 1 ? '' : 'en'}${open ? ` (${open} open)` : ''}${getekend ? `, ${getekend} contract(en) ondertekend` : ''}.`);
         }))
         .catch(e => showToast('Sync mislukt: ' + (e.message || e)));
       break;
