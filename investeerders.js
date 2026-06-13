@@ -18,6 +18,13 @@
   var toastTimer = null;
   function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 4200); }
 
+  function printContractDoc(html) {
+    var w = window.open('', '_blank');
+    if (!w) { toast('Sta pop-ups toe om te downloaden/printen.'); return; }
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>HomeINN contract</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#111;max-width:800px;margin:24px auto;padding:0 18px;line-height:1.5}h1{font-size:20px;color:#0b1e30}h2{font-size:14px;color:#0b1e30;margin:14px 0 4px}img{max-width:140px;height:auto}table{width:100%;border-collapse:collapse}.doc-sign{display:flex;gap:40px;margin-top:34px}.doc-sign>div{flex:1}.doc-sign .line{border-top:1px solid #555;margin-top:42px;padding-top:4px;color:#666;font-size:12px}</style></head><body>' + html + '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},150);}</scr' + 'ipt></body></html>');
+    w.document.close();
+  }
+
   function renderUnavailable() {
     who.innerHTML = '';
     app.innerHTML = '<div class="card login-card"><p class="eyebrow">Even niet bereikbaar</p><h1>Portaal niet beschikbaar</h1><p class="muted">Er kon geen verbinding met de server worden gemaakt. Probeer het later opnieuw of neem contact op met HomeINN.</p></div>';
@@ -139,6 +146,7 @@
         '<p class="eyebrow">' + esc(c.type || 'Contract') + (c.ref ? ' · ' + esc(c.ref) : '') + '</p>' +
         '<h2>Ter ondertekening</h2>' +
         '<div class="contract-doc">' + (c.body_html || '<p class="muted">Geen inhoud.</p>') + '</div>' +
+        '<button class="printbtn" type="button" style="margin:8px 0;background:transparent;border:1px solid var(--line);border-radius:9px;padding:9px 15px;font:inherit;font-weight:700;color:var(--navy);cursor:pointer">Download / print</button>' +
         (signed
           ? '<p class="muted">✔ Digitaal ondertekend op ' + fdate(c.signed_at) + (c.signed_name ? ' door ' + esc(c.signed_name) : '') + '.</p>'
           : '<label>Volledige naam (geldt als digitale handtekening)</label>' +
@@ -147,6 +155,14 @@
         '</div>';
     }).join('');
   }
+
+  // Contract downloaden/printen (gedelegeerd)
+  app.addEventListener('click', function (e) {
+    var pb = e.target.closest ? e.target.closest('.printbtn') : null;
+    if (!pb) return;
+    var card = pb.closest('.card'); var doc = card ? card.querySelector('.contract-doc') : null;
+    if (doc) printContractDoc(doc.innerHTML);
+  });
 
   // Ondertekenen (gedelegeerd, één keer)
   app.addEventListener('click', function (e) {

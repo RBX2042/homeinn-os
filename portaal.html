@@ -831,7 +831,10 @@
           </select>
         </label>
         <label>Omschrijving<input name="desc" required placeholder="Bijv. badkamer compleet"></label>
-        <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
+        <label>Bedrag incl. btw (€)<input name="amount" type="number" min="0" step="any" required></label>
+        <label>Btw-tarief
+          <select name="btwPct"><option value="21">21%</option><option value="9">9%</option><option value="0">0% / vrijgesteld</option></select>
+        </label>
         <label>Datum<input name="date" type="date" required></label>
         <label>Status
           <select name="status">

@@ -1122,7 +1122,7 @@ function renderPropertyDetail() {
           <button class="btn primary slim" type="submit">+</button>
         </form>
         <div class="head-actions">
-          <label class="btn secondary slim file-btn">Bestand(en) uploaden<input type="file" id="doc-upload" data-id="${p.id}" multiple hidden></label>
+          <label class="btn secondary slim file-btn">Bestand(en) uploaden<input type="file" id="doc-upload" data-id="${p.id}" accept="application/pdf,.doc,.docx,.xls,.xlsx,image/jpeg,image/png,image/webp,text/plain" multiple hidden></label>
         </div>
         <p class="hint">Upload koopakte, taxatierapport, contract enz. (max 3 MB per bestand — grotere bestanden als pad bewaren: "docs/akte.pdf").</p>
       </section>
@@ -1453,7 +1453,7 @@ function renderProjectDetail() {
           <tbody>${inv.map(i => {
             const uitbetaald = (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald').reduce((s, u) => s + (Number(u.amount) || 0), 0);
             return `<tr><td>${esc(i.naam)}<br><span class="sub">${fmtDate(i.datum)}</span></td><td><strong>${fmtMoney(i.bedrag)}</strong></td>
-            <td>${rPct ? fmtMoney(Math.round((Number(i.bedrag) || 0) * rPct / 100)) : '—'}</td>
+            <td>${fmtMoney(Math.round((Number(i.bedrag) || 0) * (rPct || 0) / 100))}</td>
             <td>${fmtMoney(uitbetaald)}${(i.uitkeringen || []).length ? `<br><span class="sub">${(i.uitkeringen || []).length} uitkering(en)</span>` : ''}</td>
             <td><button class="link-toggle ${i.wwft ? 'maint-done' : 'maint-open'}" data-action="wwft-toggle" data-id="${pr.id}" data-item="${i.id}" title="Klik om te wisselen">${i.wwft ? '✔ Geverifieerd' : '⚠ Te doen'}</button></td>
             <td class="row-actions"><button class="icon-btn" data-action="add-payout" data-id="${pr.id}" data-item="${i.id}" title="Uitkering registreren">€+</button>
@@ -2513,6 +2513,7 @@ function openCostModal(id = null, preset = {}) {
   fillSelect(form.elements.contactId, state.contacts.filter(c => c.type !== 'Koper/Verkoper'), { empty: '— Geen / divers —', selected: k?.contactId || '' });
   if (k) {
     ['desc', 'category', 'amount', 'date', 'status'].forEach(key => form.elements[key].value = k[key] ?? '');
+    form.elements.btwPct.value = (k.btwPct === 0 || k.btwPct) ? k.btwPct : 21;
   } else {
     form.elements.date.value = todayISO();
     if (preset.projectId) {
@@ -2648,9 +2649,13 @@ function handleDocUpload(input) {
     reader.onerror = () => resolve(null);
     reader.readAsDataURL(file);
   });
+  const TOEGESTAAN = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain',
+    'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
   (async () => {
-    let toegevoegd = 0, teGroot = 0, mislukt = 0;
+    let toegevoegd = 0, teGroot = 0, mislukt = 0, verkeerdType = 0;
     for (const file of files) {
+      if (file.type && TOEGESTAAN.indexOf(file.type) === -1) { verkeerdType++; continue; }
       if (file.size > 3 * 1024 * 1024) { teGroot++; continue; } // browseropslag is beperkt
       const dataUrl = await lees(file);
       if (!dataUrl) { mislukt++; continue; }
@@ -2671,6 +2676,7 @@ function handleDocUpload(input) {
     const delen = [];
     if (toegevoegd) delen.push(`${toegevoegd} document${toegevoegd === 1 ? '' : 'en'} toegevoegd`);
     if (teGroot) delen.push(`${teGroot} te groot (max 3 MB — gebruik een bestandspad)`);
+    if (verkeerdType) delen.push(`${verkeerdType} geweigerd (alleen PDF, afbeelding, Office of tekst)`);
     if (mislukt) delen.push(`${mislukt} mislukt`);
     if (delen.length) showToast(delen.join(' · ') + '.');
   })();
@@ -2793,7 +2799,7 @@ function handleModalSubmit(event) {
   }
 
   if (formId === 'cost-form') {
-    const base = { propertyId: data.get('propertyId'), projectId: data.get('projectId') || '', contactId: data.get('contactId') || '', desc: str('desc'), category: str('category'), amount: num('amount'), date: data.get('date'), status: str('status') };
+    const base = { propertyId: data.get('propertyId'), projectId: data.get('projectId') || '', contactId: data.get('contactId') || '', desc: str('desc'), category: str('category'), amount: num('amount'), btwPct: num('btwPct'), date: data.get('date'), status: str('status') };
     if (base.projectId) {
       const pr = projectById(base.projectId);
       if (pr) base.propertyId = pr.propertyId; // kosten volgen het pand van het project
@@ -3076,29 +3082,29 @@ const GROOTBOEK = {
 };
 
 function exportBoekhouding() {
-  const btwPct = 21;
   const facturen = state.costs
     .filter(k => k.status === 'Factuur ontvangen' || k.status === 'Betaald')
     .slice()
     .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   if (!facturen.length) { showToast('Nog geen facturen om te exporteren (status Factuur ontvangen of Betaald).'); return; }
-  const rows = [['Boekstukdatum', 'Boekstuknr', 'Leverancier', 'Omschrijving', 'Grootboek', 'Pand', 'Project', 'Bedrag excl. btw', `Btw ${btwPct}%`, 'Bedrag incl. btw', 'Status']];
+  const rows = [['Boekstukdatum', 'Boekstuknr', 'Leverancier', 'Omschrijving', 'Grootboek', 'Pand', 'Project', 'Bedrag excl. btw', 'Btw-tarief', 'Btw-bedrag', 'Bedrag incl. btw', 'Status']];
   let totExcl = 0, totBtw = 0, totIncl = 0;
   facturen.forEach(k => {
+    const pct = (k.btwPct === 0 || k.btwPct) ? Number(k.btwPct) : 21; // standaard 21% voor bestaande posten
     const incl = Number(k.amount) || 0;
-    const excl = incl / (1 + btwPct / 100);
+    const excl = pct ? incl / (1 + pct / 100) : incl;
     const btw = incl - excl;
     totExcl += excl; totBtw += btw; totIncl += incl;
     rows.push([
       k.date, (k.id || '').toUpperCase(), contactName(k.contactId), k.desc,
       GROOTBOEK[k.category] || k.category, propertyLabel(k.propertyId), projectById(k.projectId)?.name || '',
-      csvNum(excl), csvNum(btw), csvNum(incl), k.status
+      csvNum(excl), pct + '%', csvNum(btw), csvNum(incl), k.status
     ]);
   });
   rows.push([]);
-  rows.push(['', '', '', '', '', '', 'TOTAAL', csvNum(totExcl), csvNum(totBtw), csvNum(totIncl), '']);
+  rows.push(['', '', '', '', '', '', 'TOTAAL', csvNum(totExcl), '', csvNum(totBtw), csvNum(totIncl), '']);
   downloadFile(`homeinn-boekhouding-${todayISO()}.csv`, toCSV(rows), 'text/csv;charset=utf-8');
-  showToast(`Boekhoud-export: ${facturen.length} facturen · ${fmtMoney(Math.round(totIncl))} incl. btw. Btw teruggerekend op ${btwPct}% — controleer bij afwijkende tarieven (9%/btw-vrij).`);
+  showToast(`Boekhoud-export: ${facturen.length} facturen · ${fmtMoney(Math.round(totIncl))} incl. btw, btw per regel teruggerekend op het ingestelde tarief.`);
 }
 
 /* Aanbod publiceren: panden Te koop / Onder bod → aanbod.json voor de website */
@@ -3443,7 +3449,7 @@ document.addEventListener('click', event => {
       break;
     }
     // Team & toegang
-    case 'team-refresh': renderTeamPanel(); break;
+    case 'team-refresh': showToast('Team laden…'); renderTeamPanel(); break;
     // Cloud
     case 'cloud-sync': {
       if (!window.HCloud) break;
@@ -3573,7 +3579,9 @@ document.addEventListener('change', event => {
     }
     case 'offer-status': {
       const p = propertyById(id);
-      const o = p.offers.find(x => x.id === item);
+      if (!p) return;
+      const o = (p.offers || []).find(x => x.id === item);
+      if (!o) return;
       o.status = el.value;
       if (el.value === 'Geaccepteerd' && p.status === 'Te koop') {
         p.status = 'Onder bod';
@@ -3582,7 +3590,7 @@ document.addEventListener('change', event => {
       rerender();
       break;
     }
-    case 'cost-status': state.costs.find(x => x.id === id).status = el.value; rerender(); break;
+    case 'cost-status': { const k = state.costs.find(x => x.id === id); if (k) k.status = el.value; rerender(); break; }
     case 'maint-status': {
       const p = propertyById(id);
       const o = (p.onderhoud || []).find(x => x.id === el.dataset.item);
