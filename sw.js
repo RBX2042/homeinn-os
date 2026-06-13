@@ -1,6 +1,6 @@
 /* HomeINN OS — service worker: app installeerbaar + offline bruikbaar.
    Bump CACHE bij elke release zodat oude bestanden worden vervangen. */
-const CACHE = 'homeinn-os-v34';
+const CACHE = 'homeinn-os-v35';
 const CORE = [
   'portaal.html', 'app.js', 'cloud.js', 'styles.css',
   'homeinn-public.html', 'homeinn-public.js', 'homeinn-public.css',

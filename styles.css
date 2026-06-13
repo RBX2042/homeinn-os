@@ -355,18 +355,20 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 
 .phase-list { display: grid; gap: 8px; margin-bottom: 6px; }
 .phase {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 10px;
-  align-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: white;
   padding: 9px 12px;
 }
+.phase-head { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; }
 .phase.done { opacity: .65; }
-.phase.done strong { text-decoration: line-through; }
+.phase.done .phase-head strong { text-decoration: line-through; }
 .phase select { padding: 6px 8px; font-size: .82rem; }
+.phase-tasks { margin: 8px 0 4px; display: grid; gap: 4px; }
+.phase-task { display: flex; align-items: center; gap: 8px; font-size: .85rem; }
+.phase-task.done span { text-decoration: line-through; color: var(--muted); }
+.phase-task span { flex: 1; }
+.slim-form { margin-top: 6px; }
 
 .check-list { display: grid; gap: 8px; margin-bottom: 6px; }
 .check-item {

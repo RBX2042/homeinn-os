@@ -559,6 +559,28 @@
   </main>
 
   <!-- ===== Modals ===== -->
+  <dialog class="modal" id="activity-modal">
+    <form method="dialog" class="modal-card" id="activity-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Activiteit</p>
+      <h2 id="activity-modal-title">Contactmoment vastleggen</h2>
+      <input type="hidden" name="contactId">
+      <div id="activity-history"></div>
+      <div class="form-grid">
+        <label>Soort
+          <select name="type"><option>Telefoon</option><option>E-mail</option><option>Afspraak</option><option>Notitie</option><option>Bod/onderhandeling</option></select>
+        </label>
+        <label>Datum<input name="date" type="date"></label>
+        <label>Vervolgactie op<input name="nextFollowUp" type="date"></label>
+      </div>
+      <label>Wat is er besproken?<textarea name="description" rows="2" required placeholder="Korte samenvatting…"></textarea></label>
+      <menu>
+        <button class="btn secondary" value="cancel">Sluiten</button>
+        <button class="btn primary" value="save">Vastleggen</button>
+      </menu>
+    </form>
+  </dialog>
+
   <dialog class="modal" id="contact-modal">
     <form method="dialog" class="modal-card" id="contact-form">
       <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>

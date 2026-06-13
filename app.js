@@ -562,6 +562,14 @@ function buildSignals() {
     const som = openFacturen.reduce((sum, k) => sum + (Number(k.amount) || 0), 0);
     signals.push({ level: 'middel', text: `${openFacturen.length} factu${openFacturen.length === 1 ? 'ur' : 'ren'} te betalen (${fmtMoney(som)}).`, go: 'costs' });
   }
+  // CRM: openstaande vervolgacties
+  state.contacts.forEach(c => {
+    const acts = (c.activities || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    const laatste = acts[0];
+    if (laatste && laatste.nextFollowUp && laatste.nextFollowUp <= t) {
+      signals.push({ level: 'middel', text: `Vervolgactie voor ${c.name} (afgesproken op ${fmtDate(laatste.nextFollowUp)}): ${esc((laatste.description || '').slice(0, 50))}`, go: 'relations' });
+    }
+  });
   // Huurachterstand: onbetaalde uitgaande facturen over de vervaldatum
   const teLaat = (state.invoices || []).filter(f => f.status !== 'Betaald' && f.status !== 'Concept' && f.due && f.due < t);
   teLaat.forEach(f => {
@@ -1379,14 +1387,28 @@ function renderProjectDetail() {
       <section class="panel">
         <div class="panel-head compact"><h2>Fases</h2></div>
         <div class="phase-list">
-          ${phases.map(ph => `
-            <div class="phase ${ph.status === 'Klaar' ? 'done' : ''}">
-              <strong>${esc(ph.name)}</strong>
-              <select data-action="phase-status" data-id="${pr.id}" data-phase="${ph.id}">
-                ${['Te doen', 'Bezig', 'Klaar'].map(s => `<option ${ph.status === s ? 'selected' : ''}>${s}</option>`).join('')}
-              </select>
-              <button class="icon-btn" data-action="del-phase" data-id="${pr.id}" data-phase="${ph.id}" title="Fase verwijderen">🗑</button>
-            </div>`).join('')}
+          ${phases.map(ph => {
+            const tasks = ph.tasks || [];
+            const done = tasks.filter(x => x.done).length;
+            return `<div class="phase ${ph.status === 'Klaar' ? 'done' : ''}">
+              <div class="phase-head">
+                <strong>${esc(ph.name)}${tasks.length ? ` <span class="sub">(${done}/${tasks.length})</span>` : ''}</strong>
+                <select data-action="phase-status" data-id="${pr.id}" data-phase="${ph.id}">
+                  ${['Te doen', 'Bezig', 'Klaar'].map(s => `<option ${ph.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                </select>
+                <button class="icon-btn" data-action="del-phase" data-id="${pr.id}" data-phase="${ph.id}" title="Fase verwijderen">🗑</button>
+              </div>
+              ${tasks.length ? `<div class="phase-tasks">${tasks.map(tk => `<div class="phase-task ${tk.done ? 'done' : ''}">
+                <button class="task-check ${tk.done ? 'checked' : ''}" data-action="toggle-phase-task" data-id="${pr.id}" data-phase="${ph.id}" data-item="${tk.id}" aria-label="Afvinken"></button>
+                <span>${esc(tk.title)}</span>
+                <button class="icon-btn" data-action="del-phase-task" data-id="${pr.id}" data-phase="${ph.id}" data-item="${tk.id}" title="Verwijderen">🗑</button>
+              </div>`).join('')}</div>` : ''}
+              <form class="inline-form slim-form" data-form="add-phase-task" data-id="${pr.id}" data-phase="${ph.id}">
+                <input name="title" placeholder="+ taak voor deze fase…" required>
+                <button class="btn primary slim" type="submit">+</button>
+              </form>
+            </div>`;
+          }).join('')}
         </div>
         <form class="inline-form" data-form="add-phase" data-id="${pr.id}">
           <input name="name" placeholder="Nieuwe fase…" required>
@@ -1650,8 +1672,13 @@ function renderRelations() {
       <td>${esc(c.contact || '')}</td>
       <td>${c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : ''}</td>
       <td>${esc(c.phone || '')}</td>
-      <td class="sub">${esc(c.note || '')}</td>
+      <td class="sub">${(() => {
+        const acts = (c.activities || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+        if (acts.length) return `<strong>${acts.length}×</strong> contact · laatst ${fmtDate(acts[0].date)}: ${esc((acts[0].description || '').slice(0, 40))}${(acts[0].description || '').length > 40 ? '…' : ''}`;
+        return esc(c.note || '—');
+      })()}</td>
       <td class="row-actions">
+        <button class="icon-btn" data-action="log-activity" data-id="${c.id}" title="Contactmoment vastleggen">💬</button>
         <button class="icon-btn" data-action="edit-contact" data-id="${c.id}" title="Bewerken">✎</button>
         <button class="icon-btn" data-action="del-contact" data-id="${c.id}" title="Verwijderen">🗑</button>
       </td>
@@ -2534,6 +2561,20 @@ function fillRefSelect(select, selected = '') {
   select.innerHTML = html;
 }
 
+function openActivityModal(contactId) {
+  const c = contactById(contactId); if (!c) return;
+  const form = $('#activity-form');
+  form.reset();
+  form.elements.contactId.value = contactId;
+  form.elements.date.value = todayISO();
+  $('#activity-modal-title').textContent = `Contactmoment — ${c.name}`;
+  const acts = (c.activities || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  $('#activity-history').innerHTML = acts.length
+    ? `<div class="check-list" style="max-height:170px;overflow:auto;margin-bottom:10px">${acts.map(a => `<div class="check-item"><span class="badge gray">${fmtDate(a.date)}</span><span><strong>${esc(a.type)}</strong> — ${esc(a.description)}${a.nextFollowUp ? ` · <span class="alert">vervolg ${fmtDate(a.nextFollowUp)}</span>` : ''}</span></div>`).join('')}</div>`
+    : '<p class="hint">Nog geen contactmomenten vastgelegd.</p>';
+  $('#activity-modal').showModal();
+}
+
 function openContactModal(id = null) {
   const form = $('#contact-form');
   form.reset();
@@ -2863,6 +2904,15 @@ function handleModalSubmit(event) {
   const id = data.get('id');
   const str = key => String(data.get(key) || '').trim();
   const num = key => Number(data.get(key)) || 0;
+
+  if (formId === 'activity-form') {
+    const c = contactById(data.get('contactId'));
+    if (c) {
+      c.activities = c.activities || [];
+      c.activities.push({ id: uid('act'), type: str('type'), date: data.get('date') || todayISO(), description: str('description'), nextFollowUp: data.get('nextFollowUp') || '' });
+      showToast('Contactmoment vastgelegd.');
+    }
+  }
 
   if (formId === 'contact-form') {
     const obj = { id: id || uid('r'), type: str('type'), name: str('name'), contact: str('contact'), email: str('email'), phone: str('phone'), address: str('address'), note: str('note') };
@@ -3493,6 +3543,19 @@ document.addEventListener('click', event => {
       pr.phases = pr.phases.filter(x => x.id !== phase); rerender();
       break;
     }
+    case 'toggle-phase-task': {
+      const pr = projectById(id);
+      const ph = pr && (pr.phases || []).find(x => x.id === phase);
+      const tk = ph && (ph.tasks || []).find(x => x.id === item);
+      if (tk) { tk.done = !tk.done; rerender(); }
+      break;
+    }
+    case 'del-phase-task': {
+      const pr = projectById(id);
+      const ph = pr && (pr.phases || []).find(x => x.id === phase);
+      if (ph) { ph.tasks = (ph.tasks || []).filter(x => x.id !== item); rerender(); }
+      break;
+    }
     case 'toggle-oplever': {
       const pr = projectById(id);
       const o = pr.opleverpunten.find(x => x.id === item);
@@ -3513,6 +3576,7 @@ document.addEventListener('click', event => {
     case 'edit-plan': openPlanModal(id); break;
     case 'add-plan': openPlanModal(null, date); break;
     // Relaties
+    case 'log-activity': openActivityModal(id); break;
     case 'edit-contact': openContactModal(id); break;
     case 'del-contact': {
       const c = contactById(id);
@@ -3893,6 +3957,11 @@ document.addEventListener('submit', event => {
     if (form.dataset.form === 'add-phase') {
       const pr = projectById(form.dataset.id);
       pr.phases.push({ id: uid('ph'), name: String(data.get('name')).trim(), status: 'Te doen' });
+    }
+    if (form.dataset.form === 'add-phase-task') {
+      const pr = projectById(form.dataset.id);
+      const ph = pr && (pr.phases || []).find(x => x.id === form.dataset.phase);
+      if (ph) { ph.tasks = ph.tasks || []; ph.tasks.push({ id: uid('pt'), title: String(data.get('title')).trim(), done: false }); }
     }
     if (form.dataset.form === 'add-oplever') {
       const pr = projectById(form.dataset.id);
