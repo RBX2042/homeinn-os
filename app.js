@@ -1589,6 +1589,29 @@ function renderSales() {
 }
 
 /* ---------- Planning ---------- */
+// Geeft de planning-items die op een dag vallen, inclusief herhalingen (virtueel, niet opgeslagen).
+function planningOnDay(day) {
+  const out = [];
+  state.planning.forEach(pl => {
+    if (!pl.recurrence) { if (pl.date === day) out.push(pl); return; }
+    if (day < pl.date) return;
+    if (pl.recurrenceEnd && day > pl.recurrenceEnd) return;
+    if (pl.recurrence === 'weekly' || pl.recurrence === 'biweekly') {
+      const step = pl.recurrence === 'weekly' ? 7 : 14;
+      const diff = daysBetween(pl.date, day);
+      if (diff >= 0 && diff % step === 0) out.push(pl);
+    } else if (pl.recurrence === 'monthly' || pl.recurrence === 'quarterly') {
+      const a = new Date(pl.date + 'T12:00:00'), b = new Date(day + 'T12:00:00');
+      if (b.getDate() === a.getDate()) {
+        const months = (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+        const mstep = pl.recurrence === 'monthly' ? 1 : 3;
+        if (months >= 0 && months % mstep === 0) out.push(pl);
+      }
+    }
+  });
+  return out;
+}
+
 function renderPlanning() {
   const start = weekStartISO(weekOffset);
   const t = todayISO();
@@ -1601,14 +1624,14 @@ function renderPlanning() {
   $('#week-title').textContent = `Week ${weekNr} · ${fmtDate(start)} t/m ${fmtDate(days[6])}`;
   const typeBadge = { Bezichtiging: 'blue', Notaris: 'green', Aannemer: '', Taxatie: 'gray', Oplevering: 'green', Afspraak: 'gray' };
   $('#week-grid').innerHTML = days.map(day => {
-    const items = state.planning.filter(pl => pl.date === day);
+    const items = planningOnDay(day);
     return `<div class="day-col ${day === t ? 'today' : ''}">
       <header><strong>${fmtDayLabel(day)}</strong>
         <button class="icon-btn" data-action="add-plan" data-date="${day}" title="Toevoegen">+</button>
       </header>
       ${items.map(pl => `
         <article class="plan-card" data-action="edit-plan" data-id="${pl.id}">
-          <span class="badge ${typeBadge[pl.type] ?? ''}">${esc(pl.type)}</span>
+          <span class="badge ${typeBadge[pl.type] ?? ''}">${esc(pl.type)}${pl.recurrence ? ' ↻' : ''}</span>
           <strong>${esc(pl.title)}</strong>
           <span class="sub">${esc(pl.who || '')}${pl.ref ? ' · ' + esc(refLabel(pl.ref)) : ''}</span>
         </article>`).join('') || '<p class="empty small">—</p>'}
@@ -1801,7 +1824,39 @@ function renderReports() {
         </tbody>
       </table></div>
       <p class="report-note">Huur wordt constant verondersteld; verkoopopbrengsten zijn niet meegerekend (die zijn eenmalig en moment-afhankelijk). Geplande kosten = kostenposten met status Opdracht of Factuur ontvangen.</p>
-    </section>`;
+    </section>
+    ${renderAdMetricsPanel()}`;
+}
+
+/* Advertentie-effectiviteit per kanaal (incl. verkochte panden) */
+function renderAdMetricsPanel() {
+  const perKanaal = {};
+  state.properties.forEach(p => {
+    const verkocht = p.status === 'Verkocht';
+    (p.advertenties || []).forEach(a => {
+      const k = a.kanaal || 'Onbekend';
+      const e = perKanaal[k] || (perKanaal[k] = { kanaal: k, aantal: 0, kosten: 0, opVerkocht: 0 });
+      e.aantal++; e.kosten += Number(a.kosten) || 0;
+      if (verkocht) e.opVerkocht++;
+    });
+  });
+  const rows = Object.values(perKanaal).sort((a, b) => b.kosten - a.kosten);
+  if (!rows.length) return '';
+  const totKosten = rows.reduce((s, e) => s + e.kosten, 0);
+  const verkochtMetAds = state.properties.filter(p => p.status === 'Verkocht' && (p.advertenties || []).length).length;
+  return `<section class="panel">
+    <div class="panel-head compact"><h2>Advertentie-effectiviteit</h2>
+      <span class="sub">totaal ${fmtMoney(totKosten)} · ${verkochtMetAds} verkocht ná adverteren</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Kanaal</th><th>Advertenties</th><th>Kosten</th><th>Op verkochte panden</th><th>Gem. kosten/advertentie</th></tr></thead>
+      <tbody>${rows.map(e => `<tr>
+        <td><strong>${esc(e.kanaal)}</strong></td><td>${e.aantal}</td><td>${fmtMoney(e.kosten)}</td>
+        <td>${e.opVerkocht}</td><td>${fmtMoney(Math.round(e.kosten / e.aantal))}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+    <p class="report-note">Inzicht in welk kanaal het meeste oplevert. Advertentiekosten van verkochte panden blijven meegerekend.</p>
+  </section>`;
 }
 
 /* ---------- Investeerders-overzicht ---------- */
@@ -2696,7 +2751,7 @@ function openPlanModal(id = null, presetDate = '', presetRef = '') {
   const pl = id ? state.planning.find(x => x.id === id) : null;
   fillRefSelect(form.elements.ref, pl?.ref || presetRef);
   if (pl) {
-    ['date', 'type', 'title', 'who'].forEach(k => form.elements[k].value = pl[k] ?? '');
+    ['date', 'type', 'title', 'who', 'recurrence', 'recurrenceEnd'].forEach(k => form.elements[k].value = pl[k] ?? '');
   } else {
     form.elements.date.value = presetDate || todayISO();
   }
@@ -2959,7 +3014,7 @@ function handleModalSubmit(event) {
   }
 
   if (formId === 'plan-form') {
-    const base = { date: data.get('date'), type: str('type'), title: str('title'), who: str('who'), ref: data.get('ref') || '' };
+    const base = { date: data.get('date'), type: str('type'), title: str('title'), who: str('who'), ref: data.get('ref') || '', recurrence: data.get('recurrence') || '', recurrenceEnd: data.get('recurrenceEnd') || '' };
     if (id) Object.assign(state.planning.find(x => x.id === id), base);
     else state.planning.push(Object.assign({ id: uid('pl') }, base));
     showToast('Planning opgeslagen.');
@@ -3232,6 +3287,30 @@ function exportBoekhouding() {
   rows.push(['', '', '', '', '', '', 'TOTAAL', csvNum(totExcl), '', csvNum(totBtw), csvNum(totIncl), '']);
   downloadFile(`homeinn-boekhouding-${todayISO()}.csv`, toCSV(rows), 'text/csv;charset=utf-8');
   showToast(`Boekhoud-export: ${facturen.length} facturen · ${fmtMoney(Math.round(totIncl))} incl. btw, btw per regel teruggerekend op het ingestelde tarief.`);
+}
+
+/* Planning exporteren als iCal (.ics) — importeerbaar in Google/Outlook/Apple Agenda. */
+function exportPlanningAsIcal() {
+  const icalEsc = s => String(s || '').replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+  const freq = { weekly: 'FREQ=WEEKLY', biweekly: 'FREQ=WEEKLY;INTERVAL=2', monthly: 'FREQ=MONTHLY', quarterly: 'FREQ=MONTHLY;INTERVAL=3' };
+  const stamp = todayISO().replace(/-/g, '') + 'T000000Z';
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//HomeINN OS//NL', 'CALSCALE:GREGORIAN'];
+  state.planning.forEach(pl => {
+    const d = (pl.date || '').replace(/-/g, '');
+    if (!d) return;
+    ics.push('BEGIN:VEVENT', 'UID:' + pl.id + '@homeinn-os', 'DTSTAMP:' + stamp, 'DTSTART;VALUE=DATE:' + d, 'SUMMARY:' + icalEsc(pl.type + ': ' + pl.title));
+    const desc = [pl.who, pl.ref ? refLabel(pl.ref) : ''].filter(Boolean).join(' · ');
+    if (desc) ics.push('DESCRIPTION:' + icalEsc(desc));
+    if (pl.recurrence && freq[pl.recurrence]) {
+      let rrule = 'RRULE:' + freq[pl.recurrence];
+      if (pl.recurrenceEnd) rrule += ';UNTIL=' + pl.recurrenceEnd.replace(/-/g, '');
+      ics.push(rrule);
+    }
+    ics.push('END:VEVENT');
+  });
+  ics.push('END:VCALENDAR');
+  downloadFile('homeinn-planning.ics', ics.join('\r\n'), 'text/calendar;charset=utf-8');
+  showToast('Agenda geëxporteerd (.ics) — importeer in Google, Outlook of Apple Agenda.');
 }
 
 /* Aanbod publiceren: panden Te koop / Onder bod → aanbod.json voor de website */
@@ -3573,6 +3652,7 @@ document.addEventListener('click', event => {
       break;
     }
     case 'export-investors': exportCurrentView(); break;
+    case 'export-ical': exportPlanningAsIcal(); break;
     // Mailing
     case 'send-mailing': {
       const audiences = $$('.mail-aud:checked').map(c => c.value);

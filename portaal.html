@@ -461,6 +461,7 @@
             <button class="btn secondary slim" id="week-prev">← Vorige</button>
             <button class="btn secondary slim" id="week-today">Vandaag</button>
             <button class="btn secondary slim" id="week-next">Volgende →</button>
+            <button class="btn secondary slim" data-action="export-ical">Agenda (iCal)</button>
           </div>
         </div>
         <div class="week-grid" id="week-grid"></div>
@@ -942,6 +943,10 @@
         <label>Omschrijving<input name="title" required placeholder="Bijv. bezichtiging Noordsingel 84"></label>
         <label>Wie<input name="who" placeholder="Eigen / makelaar / aannemer"></label>
         <label>Betreft<select name="ref"></select></label>
+        <label>Herhaling
+          <select name="recurrence"><option value="">Eenmalig</option><option value="weekly">Wekelijks</option><option value="biweekly">Tweewekelijks</option><option value="monthly">Maandelijks</option><option value="quarterly">Per kwartaal</option></select>
+        </label>
+        <label>Herhalen t/m<input name="recurrenceEnd" type="date"></label>
       </div>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
