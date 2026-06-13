@@ -943,6 +943,30 @@ function renderDealDetail() {
         <p class="hint">Geaccepteerd bod? Zet de status op "Onder voorbehoud" en rond de aankoop af via "Aangekocht →".</p>
       </section>
     </div>
+    <section class="panel">
+      <div class="panel-head compact"><h2>Foto's</h2>
+        <span class="sub">${(d.fotos || []).length} foto's — gaan mee naar het pand bij aankoop</span>
+      </div>
+      <div class="foto-grid">
+        ${(d.fotos || []).map((src, i) => `
+          <figure class="foto-thumb">
+            <img src="${esc(src)}" loading="lazy" alt="Foto ${i + 1}">
+            ${i === 0 ? '<span class="badge gold foto-hoofd-badge">Hoofdfoto</span>' : ''}
+            <div class="foto-acties">
+              ${i > 0 ? `<button class="icon-btn" data-action="foto-hoofd" data-kind="deal" data-id="${d.id}" data-index="${i}" title="Maak hoofdfoto">★</button>` : ''}
+              <button class="icon-btn" data-action="foto-del" data-kind="deal" data-id="${d.id}" data-index="${i}" title="Verwijderen">🗑</button>
+            </div>
+          </figure>`).join('') || '<p class="empty">Nog geen foto\'s — voeg ze hieronder toe (bijv. van de bezichtiging).</p>'}
+      </div>
+      <form class="inline-form" data-form="add-foto" data-kind="deal" data-id="${d.id}">
+        <input name="url" placeholder="Foto-URL of pad (bijv. fotos/adres-1.jpg)…" required>
+        <button class="btn primary slim" type="submit">+</button>
+      </form>
+      <div class="head-actions">
+        <label class="btn secondary slim file-btn">Foto's toevoegen vanaf computer<input type="file" id="foto-upload" data-kind="deal" data-id="${d.id}" accept="image/*" multiple hidden></label>
+      </div>
+      <p class="hint">Handig bij bezichtigingen. Bij "Aangekocht →" gaan deze foto's automatisch mee naar het pand in je portfolio.</p>
+    </section>
     ${marktLinksPanel(d.address, d.city)}`;
 }
 
@@ -2560,7 +2584,7 @@ function openPlanModal(id = null, presetDate = '', presetRef = '') {
 
 /* ---------- Foto's (website) ---------- */
 // Foto's horen bij een pand óf een project (data-kind bepaalt welke)
-function fotoHolder(kind, id) { return kind === 'project' ? projectById(id) : propertyById(id); }
+function fotoHolder(kind, id) { return kind === 'project' ? projectById(id) : kind === 'deal' ? dealById(id) : propertyById(id); }
 
 function handleFotoUpload(input) {
   const p = fotoHolder(input.dataset.kind, input.dataset.id);
@@ -2703,7 +2727,7 @@ function handleModalSubmit(event) {
         vasteLasten: Number(state.settings.vasteLasten) || 0, maandhuur: 0, huurder: '',
         sale: null, dealId: d.id,
         docs: DEFAULT_DOCS.map(name => ({ id: uid('doc'), name, done: false })),
-        viewings: [], offers: [], fotos: [], note: `Aangekocht via ${d.ref}. ${d.note || ''}`.trim()
+        viewings: [], offers: [], fotos: (d.fotos || []).slice(), note: `Aangekocht via ${d.ref}. ${d.note || ''}`.trim()
       };
       state.properties.push(property);
       d.status = 'Aangekocht';
