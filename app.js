@@ -562,6 +562,12 @@ function buildSignals() {
     const som = openFacturen.reduce((sum, k) => sum + (Number(k.amount) || 0), 0);
     signals.push({ level: 'middel', text: `${openFacturen.length} factu${openFacturen.length === 1 ? 'ur' : 'ren'} te betalen (${fmtMoney(som)}).`, go: 'costs' });
   }
+  // Huurachterstand: onbetaalde uitgaande facturen over de vervaldatum
+  const teLaat = (state.invoices || []).filter(f => f.status !== 'Betaald' && f.status !== 'Concept' && f.due && f.due < t);
+  teLaat.forEach(f => {
+    const dgn = daysBetween(f.due, t);
+    signals.push({ level: 'hoog', text: `Huurachterstand: ${fmtMoney(f.amount)} van ${esc(f.debiteur || propertyLabel(f.propertyId))} — ${dgn} dagen over vervaldatum (${esc(f.desc)}).`, go: 'money' });
+  });
   // Backup-discipline: alles staat in één browser
   if (!state.lastBackup) {
     signals.push({ level: 'middel', text: 'Je hebt nog nooit een backup gemaakt — alles staat in deze browser. Maak er nu een via Instellingen.', go: 'settings' });
@@ -1942,9 +1948,9 @@ function renderMoney() {
           <td>${esc(f.desc)}</td><td><strong>${fmtMoney(f.amount)}</strong></td>
           <td class="${f.status !== 'Betaald' && f.due && f.due < t ? 'alert' : ''}">${fmtDate(f.due)}</td>
           <td><select class="row-status" data-action="invoice-status" data-id="${f.id}">
-            ${['Concept', 'Verzonden', 'Betaald'].map(s => `<option ${f.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+            ${['Concept', 'Verzonden', 'Herinnering verzonden', 'Aanmaning 1', 'Aanmaning 2', 'Betaald'].map(s => `<option ${f.status === s ? 'selected' : ''}>${s}</option>`).join('')}
           </select></td>
-          <td class="row-actions"><button class="icon-btn" data-action="invoice-edit" data-id="${f.id}" title="Bewerken">✎</button>
+          <td class="row-actions">${(f.status !== 'Betaald' && f.status !== 'Concept' && f.due && f.due < t) ? `<button class="icon-btn" data-action="invoice-reminder" data-id="${f.id}" title="Herinnering versturen">📧</button>` : ''}<button class="icon-btn" data-action="invoice-edit" data-id="${f.id}" title="Bewerken">✎</button>
           <button class="icon-btn" data-action="invoice-del" data-id="${f.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(9, 'Nog geen facturen. Klik op "+ Factuur" of genereer de huurnota\'s.')}</tbody>
       </table></div>
       <p class="hint">Tip: "Huurnota's deze maand" maakt in één klik een factuur voor elk verhuurd pand (zonder dubbele nota voor dezelfde maand).</p>
@@ -2881,6 +2887,9 @@ function handleModalSubmit(event) {
       const base = { kind: str('kind'), amount: num('amount'), date: data.get('date'), status: str('status'), note: str('note') };
       if (id) { const u = inv.uitkeringen.find(x => x.id === id); if (u) Object.assign(u, base); }
       else inv.uitkeringen.push(Object.assign({ id: uid('pay') }, base));
+      if (!id && base.status === 'Uitbetaald' && inv.email && window.HCloud) {
+        HCloud.notify({ to: inv.email, subject: `Uitkering van HomeINN — ${pr.name}`, html: `<p>Beste ${esc(inv.naam)},</p><p>Er is een uitkering geregistreerd voor je investering in <strong>${esc(pr.name)}</strong>:</p><p>${esc(base.kind)} · <strong>${fmtMoney(base.amount)}</strong> · ${fmtDate(base.date)}</p><p>Bekijk je overzicht in het investeerdersportaal.</p><p>Met vriendelijke groet,<br>HomeINN</p>` });
+      }
       showToast('Uitkering opgeslagen.');
     }
   }
@@ -3379,6 +3388,25 @@ document.addEventListener('click', event => {
       if (confirmDel('Factuur verwijderen?')) { state.invoices = state.invoices.filter(f => f.id !== id); rerender(); }
       break;
     case 'gen-rent': genRentInvoices(); break;
+    case 'invoice-reminder': {
+      const f = state.invoices.find(x => x.id === id);
+      if (!f) break;
+      const p = propertyById(f.propertyId);
+      const email = (p && p.huurderEmail) || '';
+      const niveau = f.status === 'Herinnering verzonden' ? 'Aanmaning 1' : (f.status === 'Aanmaning 1' ? 'Aanmaning 2' : 'Herinnering verzonden');
+      const dgn = f.due ? daysBetween(f.due, todayISO()) : 0;
+      if (email && window.HCloud) {
+        HCloud.notify({ to: email, subject: `${niveau} — openstaande betaling HomeINN`, html: `<p>Beste ${esc(f.debiteur || '')},</p><p>Onze administratie laat zien dat de volgende betaling nog openstaat:</p><p><strong>${esc(f.desc)}</strong><br>Bedrag: <strong>${fmtMoney(f.amount)}</strong><br>Vervaldatum: ${fmtDate(f.due)} (${dgn} dagen geleden)</p><p>Wij verzoeken u vriendelijk het bedrag zo spoedig mogelijk te voldoen. Heeft u al betaald? Dan kunt u deze ${niveau.toLowerCase()} als niet verzonden beschouwen.</p><p>Met vriendelijke groet,<br>HomeINN</p>` });
+        f.status = niveau;
+        rerender();
+        showToast(`${niveau} verstuurd naar ${email}.`);
+      } else {
+        f.status = niveau;
+        rerender();
+        showToast(`Status op "${niveau}" gezet. Geen e-mail van de huurder bekend (vul die in bij het pand) — verstuur de herinnering handmatig.`);
+      }
+      break;
+    }
     // Financiering
     case 'new-loan': openLoanModal(); break;
     case 'loan-edit': openLoanModal(id); break;
@@ -3454,17 +3482,25 @@ document.addEventListener('click', event => {
     case 'cloud-sync': {
       if (!window.HCloud) break;
       showToast('Synchroniseren…');
+      const vorigeMeldingIds = new Set((state.cloudMaintenance || []).map(x => x.id));
       HCloud.pushAll(state)
         .then(r => Promise.all([HCloud.pullMaintenance(), HCloud.pullContracts()]).then(([m, contracts]) => {
           state.cloudMaintenance = m;
-          // ondertekenstatus terugkoppelen naar lokale contracten
+          // ondertekenstatus terugkoppelen naar lokale contracten + operator mailen
           let getekend = 0;
+          const opEmail = state.settings.email;
           (contracts || []).forEach(cc => {
             const local = state.contracten.find(x => x.id === cc.local_id);
             if (local && cc.status === 'Getekend' && local.status !== 'Getekend') {
               local.status = 'Getekend'; local.signedAt = cc.signed_at; local.signedName = cc.signed_name; getekend++;
+              if (opEmail && window.HCloud) HCloud.notify({ to: opEmail, subject: `Contract ondertekend: ${local.ref || ''} (${local.type})`, html: `<p>Het contract <strong>${esc(local.type)}</strong>${local.ref ? ' (' + esc(local.ref) + ')' : ''} is digitaal ondertekend door <strong>${esc(cc.signed_name || '—')}</strong> op ${fmtDate(cc.signed_at)}.</p>` });
             }
           });
+          // nieuwe huurder-meldingen → operator mailen (samengevat)
+          const nieuweMeldingen = m.filter(x => x.status === 'Open' && !vorigeMeldingIds.has(x.id));
+          if (nieuweMeldingen.length && opEmail && window.HCloud) {
+            HCloud.notify({ to: opEmail, subject: `${nieuweMeldingen.length} nieuwe onderhoudsmelding${nieuweMeldingen.length === 1 ? '' : 'en'} via het huurdersportaal`, html: `<p>Er ${nieuweMeldingen.length === 1 ? 'is' : 'zijn'} ${nieuweMeldingen.length} nieuwe melding${nieuweMeldingen.length === 1 ? '' : 'en'} binnengekomen:</p><ul>${nieuweMeldingen.map(x => `<li>${esc(x.address || '')}: ${esc(x.descr)}</li>`).join('')}</ul><p>Bekijk en handel af in HomeINN OS.</p>` });
+          }
           save();
           renderCurrent();
           const open = m.filter(x => x.status === 'Open').length;
@@ -3689,7 +3725,11 @@ document.addEventListener('submit', event => {
     if (form.dataset.form === 'add-investor') {
       const pr = projectById(form.dataset.id);
       pr.investeerders = pr.investeerders || [];
-      pr.investeerders.push({ id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, datum: todayISO() });
+      const nieuweInv = { id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, datum: todayISO() };
+      pr.investeerders.push(nieuweInv);
+      if (nieuweInv.email && window.HCloud) {
+        HCloud.notify({ to: nieuweInv.email, subject: 'Welkom als investeerder bij HomeINN', html: `<p>Beste ${esc(nieuweInv.naam)},</p><p>Je investering van <strong>${fmtMoney(nieuweInv.bedrag)}</strong> in het project <strong>${esc(pr.name)}</strong> is geregistreerd. Welkom!</p><p>Volg je investering, rendement en projectupdates in je persoonlijke portaal — log in met dit e-mailadres (je ontvangt een beveiligde inloglink, geen wachtwoord nodig):</p><p><a href="${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html">Inloggen op het HomeINN-portaal</a></p><p>Met vriendelijke groet,<br>HomeINN</p>` });
+      }
     }
     form.reset();
     rerender();
