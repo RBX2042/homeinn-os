@@ -626,6 +626,15 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .maint-done{color:var(--green)}
 .link-toggle{border:0;background:transparent;cursor:pointer;font-weight:700;font-size:.82rem;padding:2px 0}
 
+/* ===== Beheerportaal-gate ===== */
+#portal-gate{position:fixed;inset:0;z-index:1000;background:rgba(11,30,48,.94);display:flex;align-items:center;justify-content:center;padding:24px}
+#portal-gate[hidden]{display:none}
+#portal-gate .gate-card{background:var(--panel);border-radius:18px;max-width:430px;width:100%;padding:34px 30px;text-align:center;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+#portal-gate .gate-logo{height:40px;margin-bottom:16px}
+#portal-gate h2{margin:4px 0 8px}
+#portal-gate p{color:var(--muted);margin:0 0 18px}
+#portal-gate .btn{display:block;width:100%;margin-top:10px;text-decoration:none;text-align:center}
+
 /* ===== Adverteren ===== */
 .ad-card{margin-bottom:16px}
 .ad-card-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:12px}

@@ -39,6 +39,7 @@
       <p class="nav-group">Analyse</p>
       <button class="nav-item" data-view="reports">Rapportage</button>
       <button class="nav-item" data-view="finance">Financiering</button>
+      <button class="nav-item" data-view="liquidity">Liquiditeit</button>
       <p class="nav-group">Organisatie</p>
       <button class="nav-item" data-view="planning">Planning</button>
       <button class="nav-item" data-view="relations">Relaties</button>
@@ -418,6 +419,11 @@
     <!-- ===== Financiering ===== -->
     <section class="view" id="finance">
       <div id="finance-body"></div>
+    </section>
+
+    <!-- ===== Liquiditeit ===== -->
+    <section class="view" id="liquidity">
+      <div id="liquidity-body"></div>
     </section>
 
     <!-- ===== Contracten ===== -->
@@ -1069,6 +1075,38 @@
       </menu>
     </form>
   </dialog>
+
+  <dialog class="modal" id="account-modal">
+    <form method="dialog" class="modal-card" id="account-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Rekening</p>
+      <h2 id="account-modal-title">Rekening toevoegen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Naam<input name="naam" required placeholder="Bijv. Zakelijke rekening"></label>
+        <label>Type
+          <select name="type"><option>Zakelijk</option><option>Spaar</option><option>Krediet</option><option>Kas</option><option>Overig</option></select>
+        </label>
+        <label>Huidig saldo (€)<input name="saldo" type="number" step="any" required></label>
+      </div>
+      <p class="hint">Werk het saldo regelmatig bij (uit je bankomgeving). Een live bankkoppeling (PSD2) is een latere uitbreiding.</p>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <div id="portal-gate" hidden>
+    <div class="gate-card">
+      <img src="assets/logo-dark.png?v=20260613" alt="HomeINN" class="gate-logo">
+      <p class="eyebrow">Beheerportaal</p>
+      <h2 id="gate-title">Inloggen vereist</h2>
+      <p id="gate-msg">Log in als eigenaar of teamlid om met de cloud te werken en dit beheerportaal te beschermen.</p>
+      <a class="btn primary" href="inloggen.html">Inloggen</a>
+      <button class="btn secondary" id="gate-local" type="button">Lokaal verdergaan zonder cloud</button>
+    </div>
+  </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div id="print-area" aria-hidden="true"></div>

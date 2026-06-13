@@ -304,6 +304,10 @@ function seedData() {
       { id: 'l3', propertyId: 'pnd3', financierId: 'r6', soort: 'Hypotheek', bedrag: 160000, rentePct: 5.9, aflossing: 450, start: addDaysISO(t, -300), eind: addDaysISO(t, 41) }
     ],
     cloudMaintenance: [], // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
+    accounts: [
+      { id: 'acc1', naam: 'Zakelijke rekening', type: 'Zakelijk', saldo: 84500, updatedAt: addDaysISO(t, -2) },
+      { id: 'acc2', naam: 'Spaarrekening (buffer)', type: 'Spaar', saldo: 120000, updatedAt: addDaysISO(t, -2) }
+    ],
     contracten: [
       {
         id: 'c1', ref: 'CON-2026-001', type: 'Huurovereenkomst', propertyId: 'pnd3', projectId: '', contactId: '',
@@ -580,7 +584,7 @@ function buildSignals() {
 const VIEWS = {
   landing: 'Website preview', dashboard: 'Dashboard', inbox: 'Aanvragen', deals: 'Aankoopkansen', calculator: 'Dealcalculator',
   portfolio: 'Panden', projects: 'Ontwikkelprojecten', costs: 'Kosten', money: 'Geld-in & huur', sales: 'Verkoop',
-  ads: 'Adverteren', reports: 'Rapportage', finance: 'Financiering',
+  ads: 'Adverteren', reports: 'Rapportage', finance: 'Financiering', liquidity: 'Liquiditeit',
   planning: 'Planning', relations: 'Relaties', contracts: 'Contracten', settings: 'Instellingen'
 };
 
@@ -596,6 +600,7 @@ const PRIMARY_ACTIONS = {
   money: ['Factuur opstellen', () => openInvoiceModal()],
   ads: ['Advertentie genereren', () => { const p = state.properties.find(x => x.status !== 'Verkocht'); p ? openAdTextModal(p.id) : showToast('Voeg eerst een pand toe.'); }],
   finance: ['Lening toevoegen', () => openLoanModal()],
+  liquidity: ['Rekening toevoegen', () => openAccountModal()],
   reports: ['Exporteer rapport', () => exportCurrentView()],
   planning: ['Planning toevoegen', () => openPlanModal()],
   relations: ['Nieuwe relatie', () => openContactModal()],
@@ -648,6 +653,7 @@ function renderCurrent() {
     case 'ads': renderAds(); break;
     case 'reports': renderReports(); break;
     case 'finance': renderFinance(); break;
+    case 'liquidity': renderLiquidity(); break;
     case 'contracts': renderContracts(); break;
     case 'planning': renderPlanning(); break;
     case 'relations': renderRelations(); break;
@@ -1955,6 +1961,82 @@ function renderFinance() {
     </div>`;
 }
 
+/* ---------- Liquiditeit ---------- */
+function openAccountModal(id = null) {
+  const form = $('#account-form');
+  form.reset();
+  form.elements.id.value = id || '';
+  $('#account-modal-title').textContent = id ? 'Rekening bewerken' : 'Rekening toevoegen';
+  const a = id ? (state.accounts || []).find(x => x.id === id) : null;
+  if (a) ['naam', 'type', 'saldo'].forEach(k => form.elements[k].value = a[k] ?? '');
+  $('#account-modal').showModal();
+}
+
+function renderLiquidity() {
+  const accounts = state.accounts || [];
+  const totaal = accounts.reduce((s, a) => s + (Number(a.saldo) || 0), 0);
+  const buffer = accounts.filter(a => a.type === 'Spaar').reduce((s, a) => s + (Number(a.saldo) || 0), 0);
+  const r = reportData();
+  const aflossingMnd = state.loans.reduce((s, l) => s + (Number(l.aflossing) || 0), 0);
+  let bal = totaal;
+  const proj = r.months.map(m => {
+    const net = m.huurIn - m.vasteUit - m.geplandUit - aflossingMnd;
+    bal += net;
+    return { label: m.label, huurIn: m.huurIn, uit: m.vasteUit + m.geplandUit + aflossingMnd, net, balance: bal, events: m.events };
+  });
+  const laagste = Math.min(totaal, ...proj.map(p => p.balance));
+  const vasteUitMnd = Math.round(r.renteLastenMnd) + aflossingMnd;
+  $('#liquidity-body').innerHTML = `
+    <div class="kpi-grid">
+      <article class="kpi"><span>Totaal banksaldo</span><strong>${fmtMoney(totaal)}</strong><small>${accounts.length} rekening${accounts.length === 1 ? '' : 'en'}</small></article>
+      <article class="kpi"><span>Waarvan buffer (spaar)</span><strong>${fmtMoney(buffer)}</strong></article>
+      <article class="kpi"><span>Vaste uitgaven / maand</span><strong>${fmtMoney(vasteUitMnd)}</strong><small>rente, lasten &amp; aflossing</small></article>
+      <article class="kpi"><span>Laagste prognose (6 mnd)</span><strong class="${laagste < 0 ? 'alert' : ''}">${fmtMoney(laagste)}</strong><small>${laagste < 0 ? 'tekort verwacht — actie nodig' : 'blijft positief'}</small></article>
+    </div>
+    <div class="split">
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2>Bankrekeningen</h2><p>Werk het saldo regelmatig bij uit je bankomgeving.</p></div>
+          <button class="btn primary slim" data-action="new-account">+ Rekening</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Rekening</th><th>Type</th><th>Saldo</th><th>Bijgewerkt</th><th></th></tr></thead>
+          <tbody>${accounts.map(a => `<tr>
+            <td><strong>${esc(a.naam)}</strong></td><td>${esc(a.type)}</td>
+            <td class="${Number(a.saldo) < 0 ? 'alert' : ''}">${fmtMoney(a.saldo)}</td><td class="sub">${fmtDate(a.updatedAt)}</td>
+            <td class="row-actions"><button class="icon-btn" data-action="edit-account" data-id="${a.id}" title="Saldo bijwerken / bewerken">✎</button>
+            <button class="icon-btn" data-action="del-account" data-id="${a.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(5, 'Nog geen rekeningen. Voeg je zakelijke rekening toe.')}</tbody>
+          <tfoot><tr><td><strong>Totaal</strong></td><td></td><td><strong>${fmtMoney(totaal)}</strong></td><td colspan="2"></td></tr></tfoot>
+        </table></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head compact"><h2>Liquiditeitspositie</h2></div>
+        <div class="totals-box">
+          <div><dt>Nu beschikbaar</dt><dd><strong>${fmtMoney(totaal)}</strong></dd></div>
+          <div><dt>Verwacht over 3 maanden</dt><dd class="${(proj[2] ? proj[2].balance : totaal) < 0 ? 'alert' : ''}">${fmtMoney(proj[2] ? proj[2].balance : totaal)}</dd></div>
+          <div><dt>Verwacht over 6 maanden</dt><dd class="${(proj[5] ? proj[5].balance : totaal) < 0 ? 'alert' : ''}">${fmtMoney(proj[5] ? proj[5].balance : totaal)}</dd></div>
+          <div><dt>Maandelijkse huurinkomsten</dt><dd>${fmtMoney(r.months[0] ? r.months[0].huurIn : 0)}</dd></div>
+        </div>
+        <p class="report-note">Prognose = huidig saldo + verwachte huur − (rente, vaste lasten, aflossing en geplande kosten). Verkoopopbrengsten zijn niet meegerekend (eenmalig).</p>
+      </section>
+    </div>
+    <section class="panel">
+      <div class="panel-head compact"><h2>Saldoprognose — 6 maanden</h2><span class="sub">doorlopend banksaldo</span></div>
+      <div class="table-wrap"><table class="cashflow-table">
+        <thead><tr><th>Maand</th><th>Huur in</th><th>Uit (rente/lasten/aflossing/kosten)</th><th>Netto</th><th>Verwacht saldo</th><th>Aandachtspunten</th></tr></thead>
+        <tbody>${proj.map(p => `<tr>
+          <td><strong>${p.label}</strong></td>
+          <td>${p.huurIn ? fmtMoney(p.huurIn) : '—'}</td>
+          <td class="neg">−${fmtMoney(p.uit)}</td>
+          <td><strong class="${p.net < 0 ? 'neg' : ''}">${p.net < 0 ? '−' + fmtMoney(Math.abs(p.net)) : fmtMoney(p.net)}</strong></td>
+          <td><strong class="${p.balance < 0 ? 'neg' : ''}">${fmtMoney(p.balance)}</strong></td>
+          <td class="sub">${p.events.map(esc).join('<br>') || '—'}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+      <p class="report-note">Loopt het verwachte saldo richting nul of negatief? Plan een herfinanciering, versnel een verkoop of stel kosten uit.</p>
+    </section>`;
+}
+
 /* ---------- Contracten ---------- */
 const CONTRACT_TYPES = ['Koopovereenkomst', 'Huurovereenkomst', 'Investeringsovereenkomst', 'Aannemingsovereenkomst'];
 
@@ -2629,6 +2711,13 @@ function handleModalSubmit(event) {
     showToast('Lening opgeslagen.');
   }
 
+  if (formId === 'account-form') {
+    const base = { naam: str('naam'), type: str('type'), saldo: num('saldo'), updatedAt: todayISO() };
+    if (id) Object.assign(state.accounts.find(x => x.id === id), base);
+    else state.accounts.push(Object.assign({ id: uid('acc') }, base));
+    showToast(`Rekening "${base.naam}" opgeslagen.`);
+  }
+
   if (formId === 'contract-form') {
     const base = {
       type: str('type'), positie: str('positie'), propertyId: data.get('propertyId') || '', projectId: data.get('projectId') || '',
@@ -2770,6 +2859,17 @@ function exportCurrentView() {
       rows = [['Pand', 'Kanaal', 'Doel', 'Status', 'Geplaatst', 'Kosten', 'Link']];
       state.properties.forEach(p => (p.advertenties || []).forEach(a => rows.push([p.address, a.kanaal, a.doel, a.status, a.datum, csvNum(a.kosten), a.url])));
       name = 'advertenties'; break;
+    case 'liquidity': {
+      rows = [['Rekening', 'Type', 'Saldo', 'Bijgewerkt']];
+      state.accounts.forEach(a => rows.push([a.naam, a.type, csvNum(a.saldo), a.updatedAt]));
+      rows.push([]);
+      rows.push(['Saldoprognose 6 maanden']);
+      rows.push(['Maand', 'Huur in', 'Uit', 'Netto', 'Verwacht saldo']);
+      const lr = reportData(); const afl = state.loans.reduce((s, l) => s + (Number(l.aflossing) || 0), 0);
+      let lb = state.accounts.reduce((s, a) => s + (Number(a.saldo) || 0), 0);
+      lr.months.forEach(m => { const uit = m.vasteUit + m.geplandUit + afl; const net = m.huurIn - uit; lb += net; rows.push([m.label, csvNum(m.huurIn), csvNum(-uit), csvNum(net), csvNum(lb)]); });
+      name = 'liquiditeit'; break;
+    }
     case 'contracts':
       rows = [['Referentie', 'Datum', 'Type', 'Betreft', 'Wederpartij', 'Bedrag', 'Looptijd', 'Status']];
       state.contracten.forEach(c => rows.push([c.ref, c.datum, c.type, propertyLabel(c.propertyId) || projectById(c.projectId)?.name || '', (contactById(c.contactId)?.name) || c.partijNaam, csvNum(c.bedrag), c.looptijd, c.status]));
@@ -3118,6 +3218,12 @@ document.addEventListener('click', event => {
       if (confirmDel('Verzekering verwijderen?')) { p.verzekeringen = (p.verzekeringen || []).filter(v => v.id !== item); rerender(); }
       break;
     }
+    // Liquiditeit
+    case 'new-account': openAccountModal(); break;
+    case 'edit-account': openAccountModal(id); break;
+    case 'del-account':
+      if (confirmDel('Rekening verwijderen?')) { state.accounts = state.accounts.filter(a => a.id !== id); rerender(); }
+      break;
     // Contracten
     case 'new-contract': openContractModal(); break;
     case 'edit-contract': openContractModal(id); break;
@@ -3500,8 +3606,31 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   });
 }
 
+/* Beheerportaal-gate: vraag login (eigenaar/team) tenzij de gebruiker bewust lokaal werkt.
+   Sluit niemand buiten — "lokaal verdergaan" is altijd mogelijk en wordt onthouden. */
+function updatePortalGate() {
+  const gate = $('#portal-gate');
+  if (!gate) return;
+  const local = localStorage.getItem('hios-portal-local') === '1';
+  const st = window.HCloud ? HCloud.status() : { ready: false };
+  if (!st.ready || local || st.staff) { gate.hidden = true; return; }
+  $('#gate-title').textContent = st.email ? 'Geen toegang tot het beheerportaal' : 'Inloggen vereist';
+  $('#gate-msg').textContent = st.email
+    ? `Je bent ingelogd als ${st.email}, maar dit account heeft geen beheerrechten. Log in met een eigenaar-/teamaccount of ga lokaal verder.`
+    : 'Log in als eigenaar of teamlid om met de cloud te werken en dit beheerportaal te beschermen.';
+  gate.hidden = false;
+}
+
+const _gateLocalBtn = $('#gate-local');
+if (_gateLocalBtn) _gateLocalBtn.addEventListener('click', () => {
+  localStorage.setItem('hios-portal-local', '1');
+  $('#portal-gate').hidden = true;
+});
+
 /* Cloud-laag (optioneel): init + paneel verversen bij in-/uitloggen. */
 if (window.HCloud) {
-  HCloud.onChange(() => { if (currentView === 'settings') renderCloudPanel(); });
+  HCloud.onChange(() => { if (currentView === 'settings') renderCloudPanel(); updatePortalGate(); });
   HCloud.init();
+} else {
+  updatePortalGate();
 }
