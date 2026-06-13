@@ -22,19 +22,33 @@
       '<p class="eyebrow">HomeINN portaal</p><h1>Inloggen</h1>' +
       (sent
         ? '<p class="intro">We hebben je een inloglink gemaild. Open die link op dit apparaat om in te loggen.</p><div class="status" id="status"></div>'
-        : '<p class="intro">Vul je e-mailadres in — je ontvangt een beveiligde inloglink (geen wachtwoord).</p>' +
+        : '<p class="intro">Beheerders loggen in met e-mail + wachtwoord. Investeerders, huurders en kopers kunnen ook een inloglink gebruiken (laat het wachtwoord dan leeg).</p>' +
           '<form id="f"><label for="email">E-mailadres</label><input id="email" type="email" required placeholder="jouw@email.nl" autocomplete="email">' +
-          '<button class="btn primary" type="submit">Stuur inloglink</button></form><div class="status" id="status"></div>') +
+          '<label for="pw">Wachtwoord <span class="muted" style="font-weight:400">(optioneel)</span></label><input id="pw" type="password" placeholder="••••••••" autocomplete="current-password">' +
+          '<button class="btn primary" type="submit">Inloggen</button>' +
+          '<button class="btn secondary" type="button" id="magic">Stuur inloglink (zonder wachtwoord)</button></form><div class="status" id="status"></div>') +
       '<p class="foot"><a href="homeinn-public.html">← terug naar de website</a></p>';
     var f = document.getElementById('f');
+    function fail(err) { var s = document.getElementById('status'); if (s) s.textContent = 'Inloggen mislukt: ' + (err.message || err); }
+    function sendMagic() {
+      var email = document.getElementById('email').value.trim();
+      if (!email) { fail({ message: 'vul eerst je e-mailadres in' }); return; }
+      client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: location.origin + location.pathname } })
+        .then(function (r) { if (r.error) throw r.error; renderLogin(true); }).catch(fail);
+    }
     if (f) f.addEventListener('submit', function (e) {
       e.preventDefault();
       var email = document.getElementById('email').value.trim();
+      var pw = document.getElementById('pw').value;
       if (!email) return;
-      client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: location.origin + location.pathname } })
-        .then(function (r) { if (r.error) throw r.error; renderLogin(true); })
-        .catch(function (err) { document.getElementById('status').textContent = 'Inloggen mislukt: ' + (err.message || err); });
+      if (!pw) { sendMagic(); return; } // geen wachtwoord → inloglink
+      document.getElementById('status').textContent = 'Bezig met inloggen…';
+      client.auth.signInWithPassword({ email: email, password: pw })
+        .then(function (r) { if (r.error) throw r.error; /* onAuthStateChange stuurt door */ })
+        .catch(fail);
     });
+    var mg = document.getElementById('magic');
+    if (mg) mg.addEventListener('click', sendMagic);
   }
 
   function renderChooser(email, opts) {

@@ -20,8 +20,9 @@
 
   async function loadProfile() {
     var c = get(); if (!c) return null;
-    var res = await c.auth.getUser();
-    var user = res && res.data ? res.data.user : null;
+    // getSession leest de opgeslagen sessie (betrouwbaar bij paginalading); getUser is netwerk-validatie.
+    var res = await c.auth.getSession();
+    var user = res && res.data && res.data.session ? res.data.session.user : null;
     if (!user) { profile = null; return null; }
     var pr = await c.from('hios_profiles').select('*').eq('id', user.id).maybeSingle();
     profile = (pr && pr.data) ? pr.data : { id: user.id, email: user.email, role: 'investeerder' };
@@ -44,6 +45,14 @@
       var c = get(); if (!c) { notify(); return; }
       c.auth.onAuthStateChange(async function () { await loadProfile(); notify(); });
       await loadProfile(); notify();
+      // Robuustheid: staat er een sessie-token maar nog geen profiel (race bij laden),
+      // probeer dan kort opnieuw zodat de ingelogde gebruiker betrouwbaar wordt herkend.
+      var hasToken = false;
+      try { hasToken = Object.keys(localStorage).some(function (k) { return /^sb-.*-auth-token$/.test(k); }); } catch (e) {}
+      for (var i = 0; i < 4 && !profile && hasToken; i++) {
+        await new Promise(function (r) { setTimeout(r, 400); });
+        await loadProfile(); notify();
+      }
     },
     signIn: async function (email) {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar (geen verbinding?).');
