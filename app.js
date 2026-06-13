@@ -305,6 +305,7 @@ function seedData() {
     ],
     cloudMaintenance: [], // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
     campaigns: [], // verzonden mailings (nieuwsbrief)
+    audit: [], // wijzigingshistorie (wie/wat/wanneer)
     accounts: [
       { id: 'acc1', naam: 'Zakelijke rekening', type: 'Zakelijk', saldo: 84500, updatedAt: addDaysISO(t, -2) },
       { id: 'acc2', naam: 'Spaarrekening (buffer)', type: 'Spaar', saldo: 120000, updatedAt: addDaysISO(t, -2) }
@@ -682,6 +683,14 @@ function renderCurrent() {
 }
 
 function rerender() { save(); renderCurrent(); }
+
+/* Audit-trail: wie wijzigde wat, wanneer. */
+function logAudit(action, detail) {
+  state.audit = state.audit || [];
+  state.audit.unshift({ id: uid('au'), ts: new Date().toISOString(), user: (window.HCloud && HCloud.status().email) || 'lokaal', action, detail });
+  if (state.audit.length > 800) state.audit.length = 800;
+}
+const FORM_LABEL = { 'deal-form': 'aankoopkans', 'property-form': 'pand', 'project-form': 'project', 'cost-form': 'kostenpost', 'invoice-form': 'factuur', 'loan-form': 'lening', 'account-form': 'rekening', 'contact-form': 'relatie', 'plan-form': 'planning', 'contract-form': 'contract', 'sale-form': 'verkoop', 'acquire-form': 'aankoop', 'payout-form': 'uitkering', 'insurance-form': 'verzekering', 'ad-form': 'advertentie' };
 
 function goTo(target) {
   $('#search-results').hidden = true;
@@ -1695,6 +1704,17 @@ function renderSettings() {
   $('#storage-info').textContent = `Opslag in gebruik: ${(bytes / 1024).toFixed(1)} kB · ${state.properties.length} panden · ${state.deals.length} kansen · ${state.projects.length} projecten · ${state.costs.length} kostenposten.`;
   renderCloudPanel();
   renderTeamPanel();
+  renderAuditPanel();
+}
+
+function renderAuditPanel() {
+  const body = $('#audit-body'); if (!body) return;
+  const list = (state.audit || []).slice(0, 60);
+  body.innerHTML = `<p class="hint">De laatste wijzigingen in je administratie (wie, wat, wanneer). Handig voor verantwoording bij meerdere gebruikers.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Wanneer</th><th>Gebruiker</th><th>Actie</th><th>Onderdeel</th></tr></thead>
+      <tbody>${list.map(a => `<tr><td>${fmtDateTime(a.ts)}</td><td>${esc(a.user)}</td><td>${esc(a.action)}</td><td>${esc(a.detail)}</td></tr>`).join('') || emptyRow(4, 'Nog geen wijzigingen vastgelegd.')}</tbody>
+    </table></div>${(state.audit || []).length > 60 ? `<p class="hint">Laatste 60 van ${state.audit.length} — exporteer voor de volledige historie.</p>` : ''}`;
 }
 
 function renderTeamPanel() {
@@ -2974,6 +2994,7 @@ function handleModalSubmit(event) {
         toastMsg += ` Ontwikkelproject aangemaakt met budget ${fmtMoney(d.calc.verbouwing)}.`;
       }
       save();
+      logAudit('aangekocht', `${d.address} → portfolio`);
       showToast(toastMsg);
       setView('portfolio', 'property', property.id);
       return;
@@ -3057,6 +3078,7 @@ function handleModalSubmit(event) {
       (p.offers || []).forEach(o => { if (o.status === 'Ontvangen') o.status = 'Afgewezen'; });
       const fin = propertyFinance(p);
       save();
+      logAudit('verkocht', `${p.address} voor ${fmtMoney(p.sale.verkoopprijs)}`);
       showToast(`${p.address} verkocht voor ${fmtMoney(p.sale.verkoopprijs)} — winst ${fmtMoney(fin.winst)} (${fmtNum(fin.roi, 1)}% ROI).`);
       setView('sales');
       return;
@@ -3140,6 +3162,7 @@ function handleModalSubmit(event) {
     }
   }
 
+  if (FORM_LABEL[formId]) logAudit(id ? 'bijgewerkt' : 'aangemaakt', FORM_LABEL[formId]);
   rerender();
 }
 
@@ -3717,6 +3740,13 @@ document.addEventListener('click', event => {
     }
     case 'export-investors': exportCurrentView(); break;
     case 'export-ical': exportPlanningAsIcal(); break;
+    case 'export-audit': {
+      const rows = [['Wanneer', 'Gebruiker', 'Actie', 'Onderdeel']];
+      (state.audit || []).forEach(a => rows.push([a.ts, a.user, a.action, a.detail]));
+      downloadFile(`homeinn-wijzigingshistorie-${todayISO()}.csv`, toCSV(rows), 'text/csv;charset=utf-8');
+      showToast('Wijzigingshistorie geëxporteerd.');
+      break;
+    }
     // Mailing
     case 'send-mailing': {
       const audiences = $$('.mail-aud:checked').map(c => c.value);
@@ -4176,6 +4206,20 @@ if (_gateLocalBtn) _gateLocalBtn.addEventListener('click', () => {
 if (window.HCloud) {
   HCloud.onChange(() => { if (currentView === 'settings') renderCloudPanel(); updatePortalGate(); });
   HCloud.init();
+  // Real-time: pollt ondertekenstatus terwijl je in de Contracten-view bent
+  setInterval(() => {
+    if (currentView !== 'contracts' || !HCloud.status().staff) return;
+    HCloud.pullContracts().then(contracts => {
+      let changed = 0;
+      (contracts || []).forEach(cc => {
+        const local = state.contracten.find(x => x.id === cc.local_id);
+        if (local && cc.status === 'Getekend' && local.status !== 'Getekend') {
+          local.status = 'Getekend'; local.signedAt = cc.signed_at; local.signedName = cc.signed_name; changed++;
+        }
+      });
+      if (changed) { save(); renderCurrent(); showToast(`${changed} contract(en) zojuist digitaal ondertekend.`); }
+    }).catch(() => {});
+  }, 45000);
 } else {
   updatePortalGate();
 }
