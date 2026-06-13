@@ -1238,6 +1238,27 @@ function renderPropertyDetail() {
           <button class="icon-btn" data-action="ins-del" data-id="${p.id}" data-item="${v.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(6, 'Nog geen verzekeringen geregistreerd.')}</tbody>
       </table></div>
     </section>
+    ${(Number(p.vveBijdrage) || Number(p.vveReserve) || p.mjopDatum || p.doelLabel || p.subsidieType || p.verduurzaming) ? `
+    <div class="split detail-grid">
+      ${(Number(p.vveBijdrage) || Number(p.vveReserve) || p.mjopDatum) ? `
+      <section class="panel">
+        <div class="panel-head compact"><h2>VvE</h2></div>
+        <div class="totals-box">
+          <div><dt>Maandbijdrage</dt><dd>${fmtMoney(p.vveBijdrage)}</dd></div>
+          <div><dt>Reservefonds (aandeel)</dt><dd>${fmtMoney(p.vveReserve)}</dd></div>
+          <div class="${p.mjopDatum && daysBetween(t, p.mjopDatum) < 0 ? 'alert' : ''}"><dt>MJOP geldig tot</dt><dd>${fmtDate(p.mjopDatum)}</dd></div>
+        </div>
+      </section>` : ''}
+      ${(p.doelLabel || p.subsidieType || p.verduurzaming || Number(p.subsidieBedrag)) ? `
+      <section class="panel">
+        <div class="panel-head compact"><h2>Verduurzaming &amp; subsidie</h2></div>
+        <div class="totals-box">
+          <div><dt>Energielabel</dt><dd>${p.label ? esc(p.label) : '—'}${p.doelLabel ? ` → doel <strong>${esc(p.doelLabel)}</strong>` : ''}</dd></div>
+          ${p.subsidieType ? `<div><dt>Subsidie</dt><dd>${esc(p.subsidieType)}${Number(p.subsidieBedrag) ? ' · ' + fmtMoney(p.subsidieBedrag) : ''}</dd></div>` : ''}
+          ${p.verduurzaming ? `<div><dt>Maatregelen</dt><dd>${esc(p.verduurzaming)}</dd></div>` : ''}
+        </div>
+      </section>` : ''}
+    </div>` : ''}
     ${marktLinksPanel(p.address, p.city)}
     <section class="panel">
       <div class="panel-head compact"><h2>Locatie</h2>
@@ -1584,6 +1605,31 @@ function renderSettings() {
   const bytes = (localStorage.getItem(STORAGE_KEY) || '').length;
   $('#storage-info').textContent = `Opslag in gebruik: ${(bytes / 1024).toFixed(1)} kB · ${state.properties.length} panden · ${state.deals.length} kansen · ${state.projects.length} projecten · ${state.costs.length} kostenposten.`;
   renderCloudPanel();
+  renderTeamPanel();
+}
+
+function renderTeamPanel() {
+  const panel = $('#team-panel'), body = $('#team-body');
+  if (!panel || !body) return;
+  const st = (window.HCloud && HCloud.status()) || { ready: false };
+  if (!st.staff) { panel.hidden = true; return; }
+  panel.hidden = false;
+  if (!body.innerHTML) body.innerHTML = '<p class="hint">Laden…</p>';
+  HCloud.listProfiles().then(list => {
+    const myId = HCloud.myId();
+    body.innerHTML = `<div class="table-wrap"><table>
+      <thead><tr><th>E-mail</th><th>Naam</th><th>Rol</th></tr></thead>
+      <tbody>${list.map(p => `<tr>
+        <td>${esc(p.email)}${p.id === myId ? ' <span class="badge gold">jij</span>' : ''}</td>
+        <td>${esc(p.full_name || '—')}</td>
+        <td>${p.id === myId
+          ? esc(p.role || '—') + ' <span class="sub">(eigen rol — laat een ander account dit wijzigen)</span>'
+          : `<select class="row-status" data-action="set-role" data-id="${p.id}">
+              ${['eigenaar', 'team', 'investeerder', 'huurder'].map(r => `<option ${p.role === r ? 'selected' : ''}>${r}</option>`).join('')}
+            </select>`}</td>
+      </tr>`).join('') || emptyRow(3, 'Nog geen gebruikers — zodra iemand inlogt verschijnt die hier.')}</tbody>
+    </table></div>`;
+  }).catch(e => { body.innerHTML = `<p class="hint">Kon gebruikers niet laden: ${esc(e.message || e)}</p>`; });
 }
 
 function renderCloudPanel() {
@@ -2300,7 +2346,7 @@ function openPropertyModal(id = null) {
     form.elements.status.disabled = true;
   }
   if (p) {
-    ['address', 'city', 'ptype', 'status', 'label', 'taxatie', 'taxatieDatum', 'vraagprijs', 'teKoopSinds', 'vasteLasten', 'maandhuur', 'huurder', 'note', 'm2', 'kamers', 'webOmschrijving', 'huurIngang', 'huurEind', 'borg', 'huurIndexPct', 'huurderEmail'].forEach(k => form.elements[k].value = p[k] ?? '');
+    ['address', 'city', 'ptype', 'status', 'label', 'taxatie', 'taxatieDatum', 'vraagprijs', 'teKoopSinds', 'vasteLasten', 'maandhuur', 'huurder', 'note', 'm2', 'kamers', 'webOmschrijving', 'huurIngang', 'huurEind', 'borg', 'huurIndexPct', 'huurderEmail', 'vveBijdrage', 'vveReserve', 'mjopDatum', 'doelLabel', 'subsidieType', 'subsidieBedrag', 'verduurzaming'].forEach(k => form.elements[k].value = p[k] ?? '');
     form.elements.purchaseDate.value = p.purchase?.date || '';
     form.elements.koopsom.value = p.purchase?.koopsom ?? '';
     form.elements.otb.value = p.purchase?.otb ?? 0;
@@ -2610,7 +2656,9 @@ function handleModalSubmit(event) {
       vasteLasten: num('vasteLasten'), maandhuur: num('maandhuur'), huurder: str('huurder'), note: str('note'),
       m2: num('m2'), kamers: num('kamers'), webOmschrijving: str('webOmschrijving'),
       huurIngang: data.get('huurIngang') || '', huurEind: data.get('huurEind') || '', borg: num('borg'), huurIndexPct: num('huurIndexPct'),
-      huurderEmail: str('huurderEmail')
+      huurderEmail: str('huurderEmail'),
+      vveBijdrage: num('vveBijdrage'), vveReserve: num('vveReserve'), mjopDatum: data.get('mjopDatum') || '',
+      doelLabel: data.get('doelLabel') || '', subsidieType: str('subsidieType'), subsidieBedrag: num('subsidieBedrag'), verduurzaming: str('verduurzaming')
     };
     if (base.status === 'Te koop' && !base.teKoopSinds) base.teKoopSinds = todayISO();
     if (id) {
@@ -3247,6 +3295,8 @@ document.addEventListener('click', event => {
         .catch(e => showToast('Versturen mislukt: ' + (e.message || e)));
       break;
     }
+    // Team & toegang
+    case 'team-refresh': renderTeamPanel(); break;
     // Cloud
     case 'cloud-sync': {
       if (!window.HCloud) break;
@@ -3378,6 +3428,13 @@ document.addEventListener('change', event => {
       const c = state.contracten.find(x => x.id === id);
       if (c) c.status = el.value;
       rerender();
+      break;
+    }
+    case 'set-role': {
+      const role = el.value;
+      if (window.HCloud) HCloud.setRole(id, role)
+        .then(() => showToast(`Rol bijgewerkt naar ${role}.`))
+        .catch(e => showToast('Rol wijzigen mislukt: ' + (e.message || e)));
       break;
     }
     case 'cloud-maint-status': {

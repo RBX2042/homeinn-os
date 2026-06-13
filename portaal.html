@@ -529,6 +529,13 @@
         <div class="panel-head compact"><h2>Cloud &amp; samenwerking</h2><span class="sub">Synchroniseer naar de cloud zodat investeerders, team en huurders kunnen inloggen.</span></div>
         <div id="cloud-body"></div>
       </section>
+      <section class="panel" id="team-panel" hidden>
+        <div class="panel-head compact"><h2>Team &amp; toegang</h2>
+          <button class="btn secondary slim" data-action="team-refresh">Vernieuwen</button>
+        </div>
+        <p class="hint">Beheer wie toegang heeft en met welke rol. <b>Eigenaar/team</b> kan het beheerportaal in; <b>investeerder/huurder</b> ziet alleen het eigen portaal. Iemand verschijnt hier zodra die één keer is ingelogd via inloggen.html.</p>
+        <div id="team-body"></div>
+      </section>
     </section>
   </main>
 
@@ -734,6 +741,21 @@
         <label>Waarborgsom (€)<input name="borg" type="number" min="0" step="any" value="0"></label>
         <label>Jaarlijkse indexering (%)<input name="huurIndexPct" type="number" min="0" step="any" value="0"></label>
       </div>
+      <h3 class="modal-section">VvE (bij appartementen)</h3>
+      <div class="form-grid">
+        <label>VvE-bijdrage (€/mnd)<input name="vveBijdrage" type="number" min="0" step="any" value="0"></label>
+        <label>Reservefonds aandeel (€)<input name="vveReserve" type="number" min="0" step="any" value="0"></label>
+        <label>MJOP geldig tot<input name="mjopDatum" type="date"></label>
+      </div>
+      <h3 class="modal-section">Verduurzaming &amp; subsidie</h3>
+      <div class="form-grid">
+        <label>Doel-energielabel
+          <select name="doelLabel"><option value="">—</option><option>A++++</option><option>A+++</option><option>A++</option><option>A+</option><option>A</option><option>B</option><option>C</option></select>
+        </label>
+        <label>Subsidie / regeling<input name="subsidieType" placeholder="Bijv. ISDE warmtepomp"></label>
+        <label>Subsidiebedrag (€)<input name="subsidieBedrag" type="number" min="0" step="any" value="0"></label>
+      </div>
+      <label>Verduurzamingsmaatregelen<textarea name="verduurzaming" rows="2" placeholder="Bijv. warmtepomp, dak- en gevelisolatie, HR++ glas, zonnepanelen"></textarea></label>
       <label>Notitie<textarea name="note" rows="2"></textarea></label>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>

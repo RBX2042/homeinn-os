@@ -137,6 +137,25 @@
       if (r.error) throw r.error;
     },
 
+    /* Team & toegang: profielen (gebruikers) lezen en rollen beheren (staff-only via RLS). */
+    listProfiles: async function () {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      if (!window.HCloud.status().staff) throw new Error('Alleen een eigenaar/team-account kan gebruikers beheren.');
+      var r = await c.from('hios_profiles').select('id, email, full_name, role').order('email', { ascending: true });
+      if (r.error) throw r.error;
+      return r.data || [];
+    },
+    setRole: async function (profileId, role) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      if (!window.HCloud.status().staff) throw new Error('Geen rechten.');
+      var r = await c.from('hios_profiles').update({ role: role }).eq('id', profileId);
+      if (r.error) throw r.error;
+    },
+    myId: function () {
+      // id van de ingelogde gebruiker (best-effort, via het geladen profiel)
+      return profile ? profile.id : null;
+    },
+
     /* Haal de ondertekenstatus van verstuurde contracten op (voor terugkoppeling in het OS). */
     pullContracts: async function () {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
