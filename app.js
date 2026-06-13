@@ -2612,7 +2612,7 @@ function openDealModal(id = null, preset = {}) {
   form.elements.status.querySelectorAll('option[data-extra]').forEach(o => o.remove());
   if (d && !DEAL_STAGES.includes(d.status)) form.elements.status.insertAdjacentHTML('beforeend', `<option data-extra>${esc(d.status)}</option>`);
   if (d) {
-    ['address', 'city', 'ptype', 'status', 'vraagprijs', 'viewingDate', 'source', 'note'].forEach(k => form.elements[k].value = d[k] ?? '');
+    ['address', 'city', 'ptype', 'status', 'vraagprijs', 'viewingDate', 'source', 'note', 'verkoperEmail'].forEach(k => form.elements[k].value = d[k] ?? '');
     ['koopsom', 'verbouwing', 'verkoopprijs', 'maanden'].forEach(k => form.elements[k].value = d.calc?.[k] ?? '');
   } else {
     Object.entries(preset).forEach(([k, v]) => { if (form.elements[k]) form.elements[k].value = v; });
@@ -2926,7 +2926,7 @@ function handleModalSubmit(event) {
       address: str('address'), city: str('city'), ptype: str('ptype'),
       status: str('status') || oud?.status || 'Lead',
       vraagprijs: num('vraagprijs'), makelaarId: data.get('makelaarId') || '', viewingDate: data.get('viewingDate') || '',
-      source: str('source'), note: str('note'),
+      source: str('source'), note: str('note'), verkoperEmail: str('verkoperEmail'),
       calc: Object.assign({}, oud?.calc, { koopsom: num('koopsom'), verbouwing: num('verbouwing'), verkoopprijs: num('verkoopprijs'), maanden: num('maanden') || 9 })
     };
     if (id) Object.assign(dealById(id), base);

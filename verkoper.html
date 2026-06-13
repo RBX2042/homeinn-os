@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HomeINN — Verkopersportaal</title>
+  <meta name="description" content="Beveiligd portaal voor wie zijn pand aan HomeINN verkoopt: volg je dossier en ons voorstel.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/favicon-512.png?v=20260613">
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <style>
+    :root{--navy:#0b1e30;--gold:#b49030;--gold-2:#cca94a;--cream:#f5f2ec;--ink:#0c0b09;--muted:#6f756f;--line:rgba(12,11,9,.12);--panel:#fffdf8;--red:#b03a3a;--green:#1e6a42;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
+    a{color:var(--gold)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;background:var(--navy);color:#fff}
+    .topbar .brand{display:flex;align-items:center;gap:10px}
+    .topbar img{height:30px}.topbar .brand span{font-weight:700;letter-spacing:.04em}
+    .topbar .who{display:flex;align-items:center;gap:14px;font-size:.9rem;color:#dfe5ea}
+    .btn{border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
+    .btn.primary{background:var(--gold);color:#fff}.btn.primary:hover{background:var(--gold-2)}
+    .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}.btn.slim{padding:7px 13px;font-size:.85rem}
+    main{max-width:760px;margin:0 auto;padding:28px 20px 60px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 22px 55px rgba(11,30,48,.08);margin-bottom:20px}
+    .login-card{max-width:440px;margin:8vh auto 0}
+    h1{font-size:1.5rem;margin:0 0 6px;color:var(--navy)}h2{font-size:1.15rem;margin:0 0 4px;color:var(--navy)}
+    .eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;color:var(--gold);font-weight:700;margin:0 0 8px}
+    .muted{color:var(--muted)}
+    label{display:block;font-weight:600;font-size:.85rem;color:var(--navy);margin:14px 0 6px}
+    input[type=email]{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+    table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+    th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+    .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.74rem;font-weight:700;background:rgba(180,144,48,.16);color:var(--gold)}
+    .steps{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap}
+    .step{flex:1;min-width:70px;text-align:center;font-size:.72rem;padding:7px 4px;border-radius:8px;background:rgba(11,30,48,.06);color:var(--muted)}
+    .step.active{background:var(--gold);color:#fff;font-weight:700}.step.done{background:rgba(30,106,66,.16);color:var(--green)}
+    .empty{color:var(--muted);font-style:italic}
+    .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw}.toast.show{opacity:1}
+    .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="homeinn-public.html"><img src="assets/logo-light.png?v=20260613" alt="HomeINN"><span>Verkopers</span></a>
+    <div class="who" id="who"></div>
+  </header>
+  <main id="app"><div class="card login-card"><p class="muted">Laden…</p></div></main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="verkoper.js"></script>
+</body>
+</html>

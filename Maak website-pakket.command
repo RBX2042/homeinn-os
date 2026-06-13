@@ -10,6 +10,7 @@ cp inloggen.html inloggen.js website-online/ 2>/dev/null || true
 cp investeerders.html investeerders.js website-online/ 2>/dev/null || true
 cp huurders.html huurders.js website-online/ 2>/dev/null || true
 cp kopers.html kopers.js website-online/ 2>/dev/null || true
+cp verkoper.html verkoper.js website-online/ 2>/dev/null || true
 # Beheerportaal (back-end) meeleveren zodat de login-router werkt
 cp portaal.html app.js styles.css cloud.js website-online/ 2>/dev/null || true
 cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[],"verkocht":[]}' > website-online/aanbod.json
