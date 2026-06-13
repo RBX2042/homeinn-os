@@ -303,7 +303,15 @@ function seedData() {
       { id: 'l2', propertyId: 'pnd2', financierId: 'r6', soort: 'Bridge / overbrugging', bedrag: 220000, rentePct: 6.4, aflossing: 0, start: addDaysISO(t, -208), eind: addDaysISO(t, 150) },
       { id: 'l3', propertyId: 'pnd3', financierId: 'r6', soort: 'Hypotheek', bedrag: 160000, rentePct: 5.9, aflossing: 450, start: addDaysISO(t, -300), eind: addDaysISO(t, 41) }
     ],
-    cloudMaintenance: [] // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
+    cloudMaintenance: [], // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
+    contracten: [
+      {
+        id: 'c1', ref: 'CON-2026-001', type: 'Huurovereenkomst', propertyId: 'pnd3', projectId: '', contactId: '',
+        partijNaam: 'S. el Amrani', partijAdres: 'Bergweg 91A, Rotterdam', positie: 'HomeINN verhuurt',
+        bedrag: 1450, datum: addDaysISO(t, -300), ingangsdatum: addDaysISO(t, -298), looptijd: '12 maanden', rendementPct: 0,
+        note: 'Waarborgsom € 2.900. Jaarlijkse indexering conform CBS.', status: 'Getekend', createdAt: addDaysISO(t, -300)
+      }
+    ]
   };
 }
 
@@ -573,7 +581,7 @@ const VIEWS = {
   landing: 'Website preview', dashboard: 'Dashboard', inbox: 'Aanvragen', deals: 'Aankoopkansen', calculator: 'Dealcalculator',
   portfolio: 'Panden', projects: 'Ontwikkelprojecten', costs: 'Kosten', money: 'Geld-in & huur', sales: 'Verkoop',
   ads: 'Adverteren', reports: 'Rapportage', finance: 'Financiering',
-  planning: 'Planning', relations: 'Relaties', settings: 'Instellingen'
+  planning: 'Planning', relations: 'Relaties', contracts: 'Contracten', settings: 'Instellingen'
 };
 
 const PRIMARY_ACTIONS = {
@@ -591,6 +599,7 @@ const PRIMARY_ACTIONS = {
   reports: ['Exporteer rapport', () => exportCurrentView()],
   planning: ['Planning toevoegen', () => openPlanModal()],
   relations: ['Nieuwe relatie', () => openContactModal()],
+  contracts: ['Nieuw contract', () => openContractModal()],
   settings: null, landing: null
 };
 
@@ -639,6 +648,7 @@ function renderCurrent() {
     case 'ads': renderAds(); break;
     case 'reports': renderReports(); break;
     case 'finance': renderFinance(); break;
+    case 'contracts': renderContracts(); break;
     case 'planning': renderPlanning(); break;
     case 'relations': renderRelations(); break;
     case 'settings': renderSettings(); break;
@@ -1945,6 +1955,161 @@ function renderFinance() {
     </div>`;
 }
 
+/* ---------- Contracten ---------- */
+const CONTRACT_TYPES = ['Koopovereenkomst', 'Huurovereenkomst', 'Investeringsovereenkomst', 'Aannemingsovereenkomst'];
+
+function contractParties(c) {
+  const b = state.settings;
+  const homeinn = { naam: b.companyName || 'HomeINN', adres: b.address || '', kvk: b.kvk || '', btw: b.btw || '' };
+  const rel = contactById(c.contactId);
+  const ander = { naam: (rel && rel.name) || c.partijNaam || '[Wederpartij]', adres: (rel && rel.address) || c.partijAdres || '' };
+  let aRol, bRol;
+  if (c.type === 'Koopovereenkomst') { const verkoopt = c.positie !== 'HomeINN koopt'; aRol = verkoopt ? 'Verkoper' : 'Koper'; bRol = verkoopt ? 'Koper' : 'Verkoper'; }
+  else if (c.type === 'Huurovereenkomst') { aRol = 'Verhuurder'; bRol = 'Huurder'; }
+  else if (c.type === 'Investeringsovereenkomst') { aRol = 'Onderneming'; bRol = 'Investeerder'; }
+  else { aRol = 'Opdrachtgever'; bRol = 'Aannemer'; }
+  return { homeinn, ander, aRol, bRol };
+}
+
+function contractClauses(c, ctx) {
+  const bedrag = Number(c.bedrag) || 0;
+  const onderwerp = ctx.onderwerp;
+  const lever = c.ingangsdatum ? fmtDate(c.ingangsdatum) : 'nader overeen te komen';
+  const recht = 'Op deze overeenkomst is Nederlands recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter te Rotterdam.';
+  const bijz = esc(c.note || 'Geen aanvullende bepalingen.');
+  if (c.type === 'Koopovereenkomst') return [
+    { kop: 'Verkoop en koop', tekst: `Verkoper verkoopt aan Koper, gelijk Koper koopt van Verkoper, het registergoed: <strong>${esc(onderwerp)}</strong>, met alle daarbij behorende rechten en verplichtingen.` },
+    { kop: 'Koopsom', tekst: `De koopsom bedraagt <strong>${fmtMoney(bedrag)}</strong> kosten koper. Betaling vindt plaats via de notaris bij het passeren van de leveringsakte.` },
+    { kop: 'Levering', tekst: `De juridische levering geschiedt bij notariële akte op of omstreeks ${lever}, ten overstaan van een door Koper aan te wijzen notaris.` },
+    { kop: 'Ontbindende voorwaarden', tekst: `Koper kan deze overeenkomst ontbinden indien hij niet uiterlijk op de overeengekomen datum financiering verkrijgt, dan wel bij een ongunstige bouwkundige keuring.` },
+    { kop: 'Waarborg', tekst: `Tot zekerheid stelt Koper binnen de wettelijke termijn een waarborgsom of bankgarantie ter grootte van 10% van de koopsom.` },
+    { kop: 'Bijzondere bepalingen', tekst: bijz },
+    { kop: 'Toepasselijk recht', tekst: recht }
+  ];
+  if (c.type === 'Huurovereenkomst') return [
+    { kop: 'Het gehuurde', tekst: `Verhuurder verhuurt aan Huurder de woonruimte: <strong>${esc(onderwerp)}</strong>, uitsluitend bestemd om te worden gebruikt als woonruimte.` },
+    { kop: 'Duur', tekst: `De huurovereenkomst gaat in op ${lever} en is aangegaan voor ${esc(c.looptijd || 'onbepaalde tijd')}.` },
+    { kop: 'Huurprijs', tekst: `De huurprijs bedraagt <strong>${fmtMoney(bedrag)}</strong> per maand, bij vooruitbetaling te voldoen vóór de eerste van elke maand.` },
+    { kop: 'Indexering', tekst: `De huurprijs wordt jaarlijks aangepast conform de consumentenprijsindex (CBS), voor het eerst één jaar na ingangsdatum.` },
+    { kop: 'Waarborgsom & onderhoud', tekst: `Huurder voldoet een waarborgsom en is gehouden het gehuurde als een goed huurder te gebruiken en klein onderhoud voor eigen rekening te nemen.` },
+    { kop: 'Bijzondere bepalingen', tekst: bijz },
+    { kop: 'Toepasselijk recht', tekst: recht }
+  ];
+  if (c.type === 'Investeringsovereenkomst') return [
+    { kop: 'De investering', tekst: `Investeerder verstrekt aan de Onderneming een bedrag van <strong>${fmtMoney(bedrag)}</strong> ten behoeve van ${esc(onderwerp)}.` },
+    { kop: 'Rendement', tekst: `De Onderneming vergoedt over de inleg een rendement van <strong>${fmtNum(Number(c.rendementPct) || 0, 1)}% per jaar</strong>, jaarlijks uit te keren.` },
+    { kop: 'Looptijd & terugbetaling', tekst: `De looptijd bedraagt ${esc(c.looptijd || 'nader overeen te komen')}. Aan het einde van de looptijd wordt de hoofdsom terugbetaald.` },
+    { kop: 'Risico', tekst: `Investeerder is ermee bekend dat aan investeren in vastgoed risico's verbonden zijn en dat rendement noch hoofdsom gegarandeerd zijn. De inleg dient als achtergestelde financiering.` },
+    { kop: 'Identiteit & Wwft', tekst: `Partijen voldoen aan de toepasselijke regelgeving, waaronder identificatie conform de Wwft.` },
+    { kop: 'Bijzondere bepalingen', tekst: bijz },
+    { kop: 'Toepasselijk recht', tekst: recht }
+  ];
+  return [
+    { kop: 'Het werk', tekst: `Opdrachtgever draagt aan Aannemer op, die aanneemt, de uitvoering van het werk aan: <strong>${esc(onderwerp)}</strong>, conform de bij partijen bekende omschrijving.` },
+    { kop: 'Aanneemsom', tekst: `De aanneemsom bedraagt <strong>${fmtMoney(bedrag)}</strong>, exclusief btw, tenzij anders vermeld.` },
+    { kop: 'Planning en oplevering', tekst: `Het werk vangt aan op ${lever} en wordt opgeleverd binnen ${esc(c.looptijd || 'de overeengekomen termijn')}.` },
+    { kop: 'Meer- en minderwerk', tekst: `Wijzigingen worden uitsluitend schriftelijk overeengekomen en als meer- of minderwerk verrekend.` },
+    { kop: 'Betaling in termijnen', tekst: `Betaling vindt plaats in termijnen naar rato van de voortgang, na goedkeuring door Opdrachtgever.` },
+    { kop: 'Garantie en oplevering', tekst: `Aannemer staat in voor deugdelijke uitvoering en verleent garantie conform de geldende normen. Oplevering geschiedt met een proces-verbaal van opnamepunten.` },
+    { kop: 'Bijzondere bepalingen', tekst: bijz },
+    { kop: 'Toepasselijk recht', tekst: recht }
+  ];
+}
+
+function buildContractDoc(c) {
+  const { homeinn, ander, aRol, bRol } = contractParties(c);
+  const pand = propertyById(c.propertyId);
+  const project = projectById(c.projectId);
+  const onderwerp = pand ? `${pand.address}, ${pand.city}` : (project ? project.name : (c.type === 'Investeringsovereenkomst' ? 'de onderneming HomeINN' : 'het in deze overeenkomst omschreven object'));
+  const clauses = contractClauses(c, { onderwerp });
+  return `
+    <header class="doc-head">
+      <div>
+        <img src="assets/logo-dark.png?v=20260613" alt="" class="doc-logo">
+        <h1>${esc(c.type.toUpperCase())}</h1>
+        <p class="doc-number">${esc(c.ref)} · ${fmtDate(c.datum || todayISO())}</p>
+      </div>
+      <div class="doc-company">
+        <strong>${esc(homeinn.naam)}</strong><br>${esc(homeinn.adres)}<br>
+        KvK ${esc(homeinn.kvk)}${homeinn.btw ? ` · ${esc(homeinn.btw)}` : ''}
+      </div>
+    </header>
+    <p class="doc-note"><strong>De ondergetekenden:</strong><br>
+      1. <strong>${esc(homeinn.naam)}</strong>, gevestigd te ${esc(homeinn.adres || '—')}, KvK ${esc(homeinn.kvk || '—')}, hierna "<strong>${aRol}</strong>";<br>
+      2. <strong>${esc(ander.naam)}</strong>${ander.adres ? `, ${esc(ander.adres)}` : ''}, hierna "<strong>${bRol}</strong>";<br>
+      komen het volgende overeen:</p>
+    <div class="doc-body">
+      ${clauses.map((cl, i) => `<h2>Artikel ${i + 1} — ${esc(cl.kop)}</h2><p>${cl.tekst}</p>`).join('')}
+    </div>
+    <div class="doc-sign">
+      <div><strong>${aRol}</strong><br>${esc(homeinn.naam)}<div class="line">Naam &amp; handtekening · datum</div></div>
+      <div><strong>${bRol}</strong><br>${esc(ander.naam)}<div class="line">Naam &amp; handtekening · datum</div></div>
+    </div>
+    <footer class="doc-footer">Opgesteld met HomeINN OS. Dit is een concept-modelovereenkomst — laat deze vóór ondertekening controleren door een jurist of notaris. Aan dit document kunnen geen rechten worden ontleend.</footer>`;
+}
+
+function printContract(id) {
+  const c = state.contracten.find(x => x.id === id);
+  if (!c) return;
+  $('#print-area').innerHTML = buildContractDoc(c);
+  window.print();
+}
+
+function openContractModal(id = null) {
+  const form = $('#contract-form');
+  form.reset();
+  form.elements.id.value = id || '';
+  $('#contract-modal-title').textContent = id ? 'Contract bewerken' : `Contract opstellen (${nextRef('CON', state.contracten)})`;
+  const c = id ? state.contracten.find(x => x.id === id) : null;
+  fillSelect(form.elements.propertyId, state.properties, { empty: '— Geen pand —', selected: c?.propertyId || '' });
+  fillSelect(form.elements.projectId, state.projects, { empty: '— Geen project —', selected: c?.projectId || '' });
+  fillSelect(form.elements.contactId, state.contacts, { empty: '— Geen / handmatig —', selected: c?.contactId || '' });
+  if (c) {
+    ['type', 'positie', 'partijNaam', 'partijAdres', 'bedrag', 'datum', 'ingangsdatum', 'looptijd', 'rendementPct', 'note'].forEach(k => form.elements[k].value = c[k] ?? '');
+  } else {
+    form.elements.datum.value = todayISO();
+  }
+  $('#contract-modal').showModal();
+}
+
+function renderContracts() {
+  const list = state.contracten.slice().sort((a, b) => (b.datum || '').localeCompare(a.datum || ''));
+  const getekend = list.filter(c => c.status === 'Getekend').length;
+  $('#contracts-body').innerHTML = `
+    <div class="kpi-grid three">
+      <article class="kpi"><span>Contracten</span><strong>${list.length}</strong></article>
+      <article class="kpi"><span>Getekend</span><strong>${getekend}</strong></article>
+      <article class="kpi"><span>In behandeling</span><strong>${list.length - getekend}</strong></article>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Contracten &amp; overeenkomsten</h2><p>Genereer koop-, huur-, investerings- en aannemingsovereenkomsten uit je eigen gegevens. Bekijk/print met handtekeningblokken.</p></div>
+        <button class="btn primary slim" data-action="new-contract">+ Nieuw contract</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Datum</th><th>Type</th><th>Betreft</th><th>Wederpartij</th><th>Bedrag</th><th>Status</th><th></th></tr></thead>
+        <tbody>${list.map(c => {
+          const pand = propertyById(c.propertyId);
+          const project = projectById(c.projectId);
+          const betreft = pand ? pand.address : (project ? project.name : '—');
+          const partij = (contactById(c.contactId)?.name) || c.partijNaam || '—';
+          return `<tr>
+            <td>${fmtDate(c.datum)}</td><td><strong>${esc(c.type)}</strong><br><span class="sub">${esc(c.ref)}</span></td>
+            <td>${esc(betreft)}</td><td>${esc(partij)}</td><td>${fmtMoney(c.bedrag)}</td>
+            <td><select class="row-status" data-action="contract-status" data-id="${c.id}">
+              ${['Concept', 'Verstuurd', 'Getekend'].map(s => `<option ${c.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+            </select></td>
+            <td class="row-actions">
+              <button class="btn secondary slim" data-action="print-contract" data-id="${c.id}">Bekijk / print</button>
+              <button class="icon-btn" data-action="edit-contract" data-id="${c.id}" title="Bewerken">✎</button>
+              <button class="icon-btn" data-action="del-contract" data-id="${c.id}" title="Verwijderen">🗑</button>
+            </td></tr>`;
+        }).join('') || emptyRow(7, 'Nog geen contracten. Klik op "+ Nieuw contract".')}</tbody>
+      </table></div>
+      <p class="hint">Tip: kies een pand/project en een wederpartij uit je relaties — dan vult HomeINN OS de partijgegevens automatisch in. Laat elk contract vóór ondertekening juridisch controleren.</p>
+    </div>`;
+}
+
 /* ---------- Modals ---------- */
 function fillSelect(select, items, { empty = null, selected = '' } = {}) {
   select.innerHTML = (empty !== null ? `<option value="">${esc(empty)}</option>` : '') +
@@ -2463,6 +2628,18 @@ function handleModalSubmit(event) {
     showToast('Lening opgeslagen.');
   }
 
+  if (formId === 'contract-form') {
+    const base = {
+      type: str('type'), positie: str('positie'), propertyId: data.get('propertyId') || '', projectId: data.get('projectId') || '',
+      contactId: data.get('contactId') || '', partijNaam: str('partijNaam'), partijAdres: str('partijAdres'),
+      bedrag: num('bedrag'), datum: data.get('datum') || todayISO(), ingangsdatum: data.get('ingangsdatum') || '',
+      looptijd: str('looptijd'), rendementPct: num('rendementPct'), note: str('note')
+    };
+    if (id) Object.assign(state.contracten.find(x => x.id === id), base);
+    else state.contracten.push(Object.assign({ id: uid('c'), ref: nextRef('CON', state.contracten), status: 'Concept', createdAt: todayISO() }, base));
+    showToast(`${base.type} opgeslagen.`);
+  }
+
   if (formId === 'insurance-form') {
     const p = propertyById(data.get('propertyId'));
     if (p) {
@@ -2592,6 +2769,10 @@ function exportCurrentView() {
       rows = [['Pand', 'Kanaal', 'Doel', 'Status', 'Geplaatst', 'Kosten', 'Link']];
       state.properties.forEach(p => (p.advertenties || []).forEach(a => rows.push([p.address, a.kanaal, a.doel, a.status, a.datum, csvNum(a.kosten), a.url])));
       name = 'advertenties'; break;
+    case 'contracts':
+      rows = [['Referentie', 'Datum', 'Type', 'Betreft', 'Wederpartij', 'Bedrag', 'Looptijd', 'Status']];
+      state.contracten.forEach(c => rows.push([c.ref, c.datum, c.type, propertyLabel(c.propertyId) || projectById(c.projectId)?.name || '', (contactById(c.contactId)?.name) || c.partijNaam, csvNum(c.bedrag), c.looptijd, c.status]));
+      name = 'contracten'; break;
     case 'reports': {
       const r = reportData();
       rows = [['Rapportage HomeINN', t]];
@@ -2936,6 +3117,13 @@ document.addEventListener('click', event => {
       if (confirmDel('Verzekering verwijderen?')) { p.verzekeringen = (p.verzekeringen || []).filter(v => v.id !== item); rerender(); }
       break;
     }
+    // Contracten
+    case 'new-contract': openContractModal(); break;
+    case 'edit-contract': openContractModal(id); break;
+    case 'print-contract': printContract(id); break;
+    case 'del-contract':
+      if (confirmDel('Contract verwijderen?')) { state.contracten = state.contracten.filter(c => c.id !== id); rerender(); }
+      break;
     // Cloud
     case 'cloud-sync': {
       if (!window.HCloud) break;
@@ -3052,6 +3240,12 @@ document.addEventListener('change', event => {
     case 'invoice-status': {
       const f = state.invoices.find(x => x.id === id);
       if (f) f.status = el.value;
+      rerender();
+      break;
+    }
+    case 'contract-status': {
+      const c = state.contracten.find(x => x.id === id);
+      if (c) c.status = el.value;
       rerender();
       break;
     }

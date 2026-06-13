@@ -42,6 +42,7 @@
       <p class="nav-group">Organisatie</p>
       <button class="nav-item" data-view="planning">Planning</button>
       <button class="nav-item" data-view="relations">Relaties</button>
+      <button class="nav-item" data-view="contracts">Contracten</button>
       <p class="nav-group">Overig</p>
       <button class="nav-item" data-view="landing">Website preview</button>
       <button class="nav-item" data-view="settings">Instellingen</button>
@@ -417,6 +418,11 @@
     <!-- ===== Financiering ===== -->
     <section class="view" id="finance">
       <div id="finance-body"></div>
+    </section>
+
+    <!-- ===== Contracten ===== -->
+    <section class="view" id="contracts">
+      <div id="contracts-body"></div>
     </section>
 
     <!-- ===== Planning ===== -->
@@ -1013,6 +1019,49 @@
         <label>Startdatum<input name="start" type="date"></label>
         <label>Einddatum / herziening<input name="eind" type="date"></label>
       </div>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal wide-modal" id="contract-modal">
+    <form method="dialog" class="modal-card" id="contract-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Contract</p>
+      <h2 id="contract-modal-title">Contract opstellen</h2>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Type
+          <select name="type">
+            <option>Koopovereenkomst</option>
+            <option>Huurovereenkomst</option>
+            <option>Investeringsovereenkomst</option>
+            <option>Aannemingsovereenkomst</option>
+          </select>
+        </label>
+        <label>HomeINN's positie
+          <select name="positie">
+            <option>HomeINN verkoopt</option>
+            <option>HomeINN koopt</option>
+            <option>HomeINN verhuurt</option>
+            <option>HomeINN ontvangt investering</option>
+            <option>HomeINN geeft opdracht</option>
+          </select>
+        </label>
+        <label>Pand (optioneel)<select name="propertyId"></select></label>
+        <label>Project (optioneel)<select name="projectId"></select></label>
+        <label>Wederpartij uit relaties<select name="contactId"></select></label>
+        <label>Wederpartij (naam, indien geen relatie)<input name="partijNaam"></label>
+        <label>Adres wederpartij<input name="partijAdres"></label>
+        <label>Bedrag (€) — koopsom / maandhuur / inleg / aanneemsom<input name="bedrag" type="number" min="0" step="any"></label>
+        <label>Contractdatum<input name="datum" type="date"></label>
+        <label>Ingangs-/leverdatum<input name="ingangsdatum" type="date"></label>
+        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden / onbepaalde tijd"></label>
+        <label>Rendement (% p/j, investering)<input name="rendementPct" type="number" min="0" step="any"></label>
+      </div>
+      <label>Bijzondere bepalingen<textarea name="note" rows="2" placeholder="Ontbindende voorwaarden, waarborgsom, opleverpunten…"></textarea></label>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
         <button class="btn primary" value="save">Opslaan</button>

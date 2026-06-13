@@ -489,6 +489,9 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
   .doc-totals td { padding: 1.5mm 0 1.5mm 10mm; text-align: right; border: 0; }
   .doc-totals .grand td { border-top: 1.5px solid #0b1e30; font-weight: 700; font-size: 14px; }
   .doc-note { margin: 6mm 0; line-height: 1.6; }
+  .doc-body { line-height: 1.6; }
+  .doc-body h2 { font-family: Georgia, serif; font-size: 13px; color: #0b1e30; margin: 6mm 0 1.5mm; }
+  .doc-body p { margin: 0 0 3mm; text-align: justify; }
   .doc-sign { display: flex; gap: 16mm; margin-top: 14mm; }
   .doc-sign > div { flex: 1; }
   .doc-sign .line { border-top: 1px solid #555; margin-top: 16mm; padding-top: 2mm; color: #777; }
