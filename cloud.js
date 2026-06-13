@@ -178,6 +178,21 @@
       return c.functions.invoke('notify', { body: payload }).catch(function () { });
     },
 
+    /* Volledige werkstaat naar de cloud back-uppen / terughalen (staff-only, gedeelde 'main'-rij). */
+    saveState: async function (stateObj) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      if (!window.HCloud.status().staff) throw new Error('Log in als eigenaar/team.');
+      var r = await c.from('hios_state').upsert({ id: 'main', data: stateObj, updated_at: new Date().toISOString(), updated_by: profile ? profile.id : null }, { onConflict: 'id' });
+      if (r.error) throw r.error;
+    },
+    loadState: async function () {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      if (!window.HCloud.status().staff) throw new Error('Log in als eigenaar/team.');
+      var r = await c.from('hios_state').select('data, updated_at').eq('id', 'main').maybeSingle();
+      if (r.error) throw r.error;
+      return r.data; // { data, updated_at } of null
+    },
+
     /* Bulk-mailing (nieuwsbrief) via de 'broadcast' edge function (staff-only). */
     broadcast: async function (payload) {
       var c = get(); if (!c || !c.functions) throw new Error('Cloud niet beschikbaar.');

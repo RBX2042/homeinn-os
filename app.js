@@ -1687,8 +1687,11 @@ function renderCloudPanel() {
       <p class="hint">${sync} Synchroniseren stuurt je panden, projecten, investeerders en updates naar de cloud (voor de portalen) én haalt nieuwe huurder-meldingen (incl. foto) terug naar je portaal.</p>
       <div class="head-actions">
         <button class="btn primary slim" data-action="cloud-sync">Synchroniseer nu</button>
+        <button class="btn secondary slim" data-action="cloud-backup">Backup naar cloud</button>
+        <button class="btn secondary slim" data-action="cloud-restore">Herstel van cloud</button>
         <button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button>
-      </div>`
+      </div>
+      <p class="hint">"Backup naar cloud" bewaart je volledige werkstaat (multi-device). "Herstel van cloud" haalt 'm terug op een ander apparaat — dat overschrijft je lokale gegevens, dus vraagt eerst bevestiging.</p>`
     : `<p class="hint">Dit account heeft geen eigenaar/team-rol; synchroniseren is daarom niet beschikbaar. Een investeerder logt in op de portaal-pagina voor investeerders (volgt in Fase 3).</p>
       <div class="head-actions"><button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button></div>`}`;
 }
@@ -3464,6 +3467,31 @@ document.addEventListener('click', event => {
         .catch(e => showToast('Sync mislukt: ' + (e.message || e)));
       break;
     }
+    case 'cloud-backup':
+      if (window.HCloud) {
+        showToast('Backup naar cloud…');
+        HCloud.saveState(state).then(() => showToast('Volledige werkstaat geback-upt naar de cloud.')).catch(e => showToast('Backup mislukt: ' + (e.message || e)));
+      }
+      break;
+    case 'cloud-restore':
+      if (window.HCloud) {
+        HCloud.loadState().then(res => {
+          if (!res || !res.data) { showToast('Nog geen cloud-backup gevonden.'); return; }
+          if (!confirmDel(`Cloud-backup van ${fmtDateTime(res.updated_at)} herstellen? Dit overschrijft je huidige lokale gegevens.`)) return;
+          const vorige = state;
+          try {
+            state = sanitizeState(res.data);
+            renderCurrent(); // bewijs dat het rendert…
+            save();          // …dan pas persisteren
+            showToast('Cloud-backup hersteld.');
+          } catch (err) {
+            console.error('Cloud-herstel mislukt, teruggedraaid:', err);
+            state = vorige; renderCurrent();
+            showToast('Cloud-backup kon niet worden geladen — niets gewijzigd.');
+          }
+        }).catch(e => showToast('Herstel mislukt: ' + (e.message || e)));
+      }
+      break;
     case 'cloud-logout':
       if (window.HCloud) HCloud.signOut().then(() => { if (currentView === 'settings') renderCloudPanel(); });
       break;
