@@ -590,8 +590,8 @@ function buildSignals() {
 /* ---------- Views & routing ---------- */
 const VIEWS = {
   landing: 'Website preview', dashboard: 'Dashboard', inbox: 'Aanvragen', deals: 'Aankoopkansen', calculator: 'Dealcalculator',
-  portfolio: 'Panden', projects: 'Ontwikkelprojecten', costs: 'Kosten', money: 'Geld-in & huur', sales: 'Verkoop',
-  ads: 'Adverteren', reports: 'Rapportage', finance: 'Financiering', liquidity: 'Liquiditeit',
+  portfolio: 'Panden', projects: 'Ontwikkelprojecten', costs: 'Kosten', money: 'Geld-in & huur', maintenance: 'Onderhoud & meldingen', sales: 'Verkoop',
+  ads: 'Adverteren', reports: 'Rapportage', investors: 'Investeerders', finance: 'Financiering', liquidity: 'Liquiditeit',
   planning: 'Planning', relations: 'Relaties', mailing: 'Mailing', contracts: 'Contracten', settings: 'Instellingen'
 };
 
@@ -605,10 +605,12 @@ const PRIMARY_ACTIONS = {
   costs: ['Nieuwe kostenpost', () => openCostModal()],
   sales: ['Bod registreren', () => { const p = state.properties.find(x => x.status === 'Te koop' || x.status === 'Onder bod'); p ? openOfferModal(p.id) : showToast('Zet eerst een pand te koop via Panden.'); }],
   money: ['Factuur opstellen', () => openInvoiceModal()],
+  maintenance: ['Synchroniseer cloud', () => { const b = document.querySelector('[data-action="cloud-sync"]'); b ? b.click() : setView('settings'); }],
   ads: ['Advertentie genereren', () => { const p = state.properties.find(x => x.status !== 'Verkocht'); p ? openAdTextModal(p.id) : showToast('Voeg eerst een pand toe.'); }],
   finance: ['Lening toevoegen', () => openLoanModal()],
   liquidity: ['Rekening toevoegen', () => openAccountModal()],
   reports: ['Exporteer rapport', () => exportCurrentView()],
+  investors: ['Exporteer ledger', () => exportCurrentView()],
   planning: ['Planning toevoegen', () => openPlanModal()],
   relations: ['Nieuwe relatie', () => openContactModal()],
   contracts: ['Nieuw contract', () => openContractModal()],
@@ -656,9 +658,11 @@ function renderCurrent() {
     case 'projects': detailId.project ? renderProjectDetail() : renderProjects(); break;
     case 'costs': renderCosts(); break;
     case 'money': renderMoney(); break;
+    case 'maintenance': renderMaintenance(); break;
     case 'sales': renderSales(); break;
     case 'ads': renderAds(); break;
     case 'reports': renderReports(); break;
+    case 'investors': renderInvestorReports(); break;
     case 'finance': renderFinance(); break;
     case 'liquidity': renderLiquidity(); break;
     case 'mailing': renderMailing(); break;
@@ -1800,6 +1804,69 @@ function renderReports() {
     </section>`;
 }
 
+/* ---------- Investeerders-overzicht ---------- */
+function investorReportData() {
+  const map = {}; // key = email||naam → geaggregeerde investeerder
+  state.projects.forEach(pr => {
+    const rPct = Number(pr.invest?.rendementPct) || 0;
+    (pr.investeerders || []).forEach(i => {
+      const key = (i.email || i.naam || '').toLowerCase().trim() || i.id;
+      const e = map[key] || (map[key] = { naam: i.naam, email: i.email || '', inleg: 0, gewogenRendement: 0, verwachtJaar: 0, uitbetaaldPerJaar: {}, wwft: true, projecten: [] });
+      const bedrag = Number(i.bedrag) || 0;
+      e.inleg += bedrag;
+      e.gewogenRendement += bedrag * rPct;
+      e.verwachtJaar += bedrag * rPct / 100;
+      if (!i.wwft) e.wwft = false;
+      e.projecten.push({ project: pr.name, bedrag, rPct, datum: i.datum, uitkeringen: i.uitkeringen || [] });
+      (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald').forEach(u => {
+        const jr = (u.date || '').slice(0, 4) || '—';
+        e.uitbetaaldPerJaar[jr] = (e.uitbetaaldPerJaar[jr] || 0) + (Number(u.amount) || 0);
+      });
+    });
+  });
+  const list = Object.values(map).map(e => {
+    e.rendementPct = e.inleg ? e.gewogenRendement / e.inleg : 0;
+    e.uitbetaaldTotaal = Object.values(e.uitbetaaldPerJaar).reduce((s, v) => s + v, 0);
+    return e;
+  }).sort((a, b) => b.inleg - a.inleg);
+  return list;
+}
+
+function renderInvestorReports() {
+  const list = investorReportData();
+  const jaar = new Date().getFullYear();
+  const jaren = [jaar - 2, jaar - 1, jaar].map(String);
+  const totInleg = list.reduce((s, e) => s + e.inleg, 0);
+  const totVerwacht = list.reduce((s, e) => s + e.verwachtJaar, 0);
+  const totUitbetaaldYtd = list.reduce((s, e) => s + (e.uitbetaaldPerJaar[String(jaar)] || 0), 0);
+  $('#investors-body').innerHTML = `
+    <div class="kpi-grid">
+      <article class="kpi"><span>Totaal opgehaald</span><strong>${fmtMoney(totInleg)}</strong><small>${list.length} investeerder${list.length === 1 ? '' : 's'}</small></article>
+      <article class="kpi"><span>Verwacht rendement / jaar</span><strong>${fmtMoney(Math.round(totVerwacht))}</strong></article>
+      <article class="kpi"><span>Uitbetaald ${jaar}</span><strong>${fmtMoney(totUitbetaaldYtd)}</strong></article>
+      <article class="kpi"><span>Wwft-geverifieerd</span><strong>${list.filter(e => e.wwft).length}/${list.length}</strong></article>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Investeerders-roster</h2><p>Alle investeerders over alle projecten, met inleg, rendement en uitkeringen per jaar.</p></div>
+        <button class="btn primary slim" data-action="export-investors">Exporteer ledger</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Investeerder</th><th>Inleg</th><th>Rendement</th><th>Verwacht/jr</th>${jaren.map(j => `<th>Uitbetaald ${j}</th>`).join('')}<th>Wwft</th></tr></thead>
+        <tbody>${list.map(e => `<tr>
+          <td><strong>${esc(e.naam)}</strong>${e.email ? `<br><span class="sub">${esc(e.email)}</span>` : ''}<br><span class="sub">${e.projecten.length} project${e.projecten.length === 1 ? '' : 'en'}</span></td>
+          <td><strong>${fmtMoney(e.inleg)}</strong></td>
+          <td>${fmtNum(e.rendementPct, 1)}%</td>
+          <td>${fmtMoney(Math.round(e.verwachtJaar))}</td>
+          ${jaren.map(j => `<td>${e.uitbetaaldPerJaar[j] ? fmtMoney(e.uitbetaaldPerJaar[j]) : '—'}</td>`).join('')}
+          <td>${e.wwft ? '<span class="badge green">✔</span>' : '<span class="badge red">⚠</span>'}</td>
+        </tr>`).join('') || emptyRow(4 + jaren.length, 'Nog geen investeerders. Voeg ze toe bij een ontwikkelproject.')}</tbody>
+        <tfoot><tr><td><strong>Totaal</strong></td><td><strong>${fmtMoney(totInleg)}</strong></td><td></td><td><strong>${fmtMoney(Math.round(totVerwacht))}</strong></td>${jaren.map(j => `<td><strong>${fmtMoney(list.reduce((s, e) => s + (e.uitbetaaldPerJaar[j] || 0), 0))}</strong></td>`).join('')}<td></td></tr></tfoot>
+      </table></div>
+      <p class="report-note">Investeerders worden samengevoegd op e-mailadres (of naam). Rendement is gewogen naar inleg. Uitbetaald = uitkeringen met status "Uitbetaald" in dat jaar.</p>
+    </div>`;
+}
+
 /* ---------- Adverteren ---------- */
 function adKenmerken(p) {
   const k = [];
@@ -1954,6 +2021,50 @@ function renderMoney() {
           <button class="icon-btn" data-action="invoice-del" data-id="${f.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(9, 'Nog geen facturen. Klik op "+ Factuur" of genereer de huurnota\'s.')}</tbody>
       </table></div>
       <p class="hint">Tip: "Huurnota's deze maand" maakt in één klik een factuur voor elk verhuurd pand (zonder dubbele nota voor dezelfde maand).</p>
+    </div>`;
+}
+
+function renderMaintenance() {
+  const t = todayISO();
+  const items = [];
+  state.properties.forEach(p => (p.onderhoud || []).forEach(o => items.push({
+    bron: 'Eigen notitie', pandId: p.id, pand: p.address, date: o.date, descr: o.desc, status: o.status,
+    statusSelect: `<select class="row-status" data-action="maint-status" data-id="${p.id}" data-item="${o.id}">${['Open', 'In behandeling', 'Afgehandeld'].map(s => `<option ${o.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>`,
+    foto: ''
+  })));
+  (state.cloudMaintenance || []).forEach(m => items.push({
+    bron: 'Huurdersportaal', pandId: m.localPropertyId, pand: m.address || propertyLabel(m.localPropertyId), date: (m.created_at || '').slice(0, 10), descr: m.descr, status: m.status,
+    statusSelect: `<select class="row-status" data-action="cloud-maint-status" data-id="${m.id}">${['Open', 'In behandeling', 'Afgehandeld'].map(s => `<option ${m.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>`,
+    foto: m.photoUrl ? ` · <a href="${esc(m.photoUrl)}" target="_blank" rel="noopener" class="text-btn">📷</a>` : ''
+  }));
+  items.sort((a, b) => {
+    const rank = s => s === 'Open' ? 0 : s === 'In behandeling' ? 1 : 2;
+    return rank(a.status) - rank(b.status) || (b.date || '').localeCompare(a.date || '');
+  });
+  const open = items.filter(i => i.status === 'Open').length;
+  const bezig = items.filter(i => i.status === 'In behandeling').length;
+  const klaar = items.filter(i => i.status === 'Afgehandeld').length;
+  $('#maintenance-body').innerHTML = `
+    <div class="kpi-grid three">
+      <article class="kpi"><span>Open</span><strong class="${open ? 'alert' : ''}">${open}</strong></article>
+      <article class="kpi"><span>In behandeling</span><strong>${bezig}</strong></article>
+      <article class="kpi"><span>Afgehandeld</span><strong>${klaar}</strong></article>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Onderhoud &amp; meldingen — hele portefeuille</h2><p>Eigen notities én meldingen die huurders via het portaal insturen. Klik "Synchroniseer cloud" voor de nieuwste portaal-meldingen.</p></div>
+        <button class="btn secondary slim" data-action="cloud-sync">Synchroniseer cloud</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Datum</th><th>Pand</th><th>Melding</th><th>Bron</th><th>Status</th></tr></thead>
+        <tbody>${items.map(i => `<tr>
+          <td>${fmtDate(i.date)}${i.date && daysBetween(i.date, t) >= 0 && i.status === 'Open' ? `<br><span class="sub">${daysBetween(i.date, t)} dgn open</span>` : ''}</td>
+          <td>${i.pandId ? `<a class="text-btn" data-action="open-property" data-id="${i.pandId}">${esc(i.pand)}</a>` : esc(i.pand)}</td>
+          <td>${esc(i.descr)}${i.foto}</td>
+          <td><span class="badge ${i.bron === 'Huurdersportaal' ? 'blue' : 'gray'}">${i.bron}</span></td>
+          <td>${i.statusSelect}</td>
+        </tr>`).join('') || emptyRow(5, 'Geen onderhoudsmeldingen. Eigen notities leg je vast bij een verhuurd pand; huurder-meldingen komen via het portaal binnen.')}</tbody>
+      </table></div>
     </div>`;
 }
 
@@ -3053,6 +3164,13 @@ function exportCurrentView() {
       lr.months.forEach(m => { const uit = m.vasteUit + m.geplandUit + afl; const net = m.huurIn - uit; lb += net; rows.push([m.label, csvNum(m.huurIn), csvNum(-uit), csvNum(net), csvNum(lb)]); });
       name = 'liquiditeit'; break;
     }
+    case 'investors': {
+      const inv = investorReportData();
+      const jr = new Date().getFullYear();
+      rows = [['Investeerder', 'E-mail', 'Totaal inleg', 'Rendement %', 'Verwacht per jaar', `Uitbetaald ${jr - 2}`, `Uitbetaald ${jr - 1}`, `Uitbetaald ${jr}`, 'Totaal uitbetaald', 'Wwft', 'Projecten']];
+      inv.forEach(e => rows.push([e.naam, e.email, csvNum(e.inleg), csvNum(e.rendementPct), csvNum(e.verwachtJaar), csvNum(e.uitbetaaldPerJaar[jr - 2] || 0), csvNum(e.uitbetaaldPerJaar[jr - 1] || 0), csvNum(e.uitbetaaldPerJaar[jr] || 0), csvNum(e.uitbetaaldTotaal), e.wwft ? 'ja' : 'nee', e.projecten.map(p => p.project).join(' / ')]));
+      name = 'investeerders-ledger'; break;
+    }
     case 'contracts':
       rows = [['Referentie', 'Datum', 'Type', 'Betreft', 'Wederpartij', 'Bedrag', 'Looptijd', 'Status']];
       state.contracten.forEach(c => rows.push([c.ref, c.datum, c.type, propertyLabel(c.propertyId) || projectById(c.projectId)?.name || '', (contactById(c.contactId)?.name) || c.partijNaam, csvNum(c.bedrag), c.looptijd, c.status]));
@@ -3454,6 +3572,7 @@ document.addEventListener('click', event => {
         .catch(e => showToast('Versturen mislukt: ' + (e.message || e)));
       break;
     }
+    case 'export-investors': exportCurrentView(); break;
     // Mailing
     case 'send-mailing': {
       const audiences = $$('.mail-aud:checked').map(c => c.value);
