@@ -88,6 +88,21 @@
       if (investors.length) { var r3 = await c.from('hios_investors').upsert(investors, { onConflict: 'local_id' }); if (r3.error) throw r3.error; }
       if (updates.length) { var r4 = await c.from('hios_project_updates').upsert(updates, { onConflict: 'local_id' }); if (r4.error) throw r4.error; }
 
+      // Uitkeringen: koppel lokale investeerder-id → cloud-uuid, dan upsert
+      var ci = await c.from('hios_investors').select('id,local_id');
+      if (ci.error) throw ci.error;
+      var iid = {}; (ci.data || []).forEach(function (r) { iid[r.local_id] = r.id; });
+      var payouts = [];
+      state.projects.forEach(function (pr) {
+        (pr.investeerders || []).forEach(function (i) {
+          var ciid = iid[i.id]; if (!ciid) return;
+          (i.uitkeringen || []).forEach(function (u) {
+            payouts.push({ local_id: u.id, investor_id: ciid, date: u.date || null, amount: Number(u.amount) || 0, kind: u.kind || 'overig', status: u.status || 'Gepland', note: u.note || null });
+          });
+        });
+      });
+      if (payouts.length) { var r5 = await c.from('hios_investor_payouts').upsert(payouts, { onConflict: 'local_id' }); if (r5.error) throw r5.error; }
+
       lastSync = new Date().toISOString();
       notify();
       return { panden: props.length, projecten: projs.length, investeerders: investors.length, updates: updates.length };
@@ -161,6 +176,15 @@
     notify: function (payload) {
       var c = get(); if (!c || !c.functions) return Promise.resolve();
       return c.functions.invoke('notify', { body: payload }).catch(function () { });
+    },
+
+    /* Bulk-mailing (nieuwsbrief) via de 'broadcast' edge function (staff-only). */
+    broadcast: async function (payload) {
+      var c = get(); if (!c || !c.functions) throw new Error('Cloud niet beschikbaar.');
+      if (!window.HCloud.status().staff) throw new Error('Log in als eigenaar/team om te mailen.');
+      var r = await c.functions.invoke('broadcast', { body: payload });
+      if (r.error) throw r.error;
+      return r.data;
     },
 
     /* Haal de ondertekenstatus van verstuurde contracten op (voor terugkoppeling in het OS). */

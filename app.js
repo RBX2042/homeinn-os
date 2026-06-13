@@ -304,6 +304,7 @@ function seedData() {
       { id: 'l3', propertyId: 'pnd3', financierId: 'r6', soort: 'Hypotheek', bedrag: 160000, rentePct: 5.9, aflossing: 450, start: addDaysISO(t, -300), eind: addDaysISO(t, 41) }
     ],
     cloudMaintenance: [], // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
+    campaigns: [], // verzonden mailings (nieuwsbrief)
     accounts: [
       { id: 'acc1', naam: 'Zakelijke rekening', type: 'Zakelijk', saldo: 84500, updatedAt: addDaysISO(t, -2) },
       { id: 'acc2', naam: 'Spaarrekening (buffer)', type: 'Spaar', saldo: 120000, updatedAt: addDaysISO(t, -2) }
@@ -585,7 +586,7 @@ const VIEWS = {
   landing: 'Website preview', dashboard: 'Dashboard', inbox: 'Aanvragen', deals: 'Aankoopkansen', calculator: 'Dealcalculator',
   portfolio: 'Panden', projects: 'Ontwikkelprojecten', costs: 'Kosten', money: 'Geld-in & huur', sales: 'Verkoop',
   ads: 'Adverteren', reports: 'Rapportage', finance: 'Financiering', liquidity: 'Liquiditeit',
-  planning: 'Planning', relations: 'Relaties', contracts: 'Contracten', settings: 'Instellingen'
+  planning: 'Planning', relations: 'Relaties', mailing: 'Mailing', contracts: 'Contracten', settings: 'Instellingen'
 };
 
 const PRIMARY_ACTIONS = {
@@ -654,6 +655,7 @@ function renderCurrent() {
     case 'reports': renderReports(); break;
     case 'finance': renderFinance(); break;
     case 'liquidity': renderLiquidity(); break;
+    case 'mailing': renderMailing(); break;
     case 'contracts': renderContracts(); break;
     case 'planning': renderPlanning(); break;
     case 'relations': renderRelations(); break;
@@ -1423,13 +1425,16 @@ function renderProjectDetail() {
           const rPct = Number(pr.invest?.rendementPct) || 0;
           return `<p class="hint">Wwft (anti-witwas): controleer en leg identiteit + herkomst van de inleg vast vóór je geld aanneemt. ${inv.length ? `<b>${geverifieerd}/${inv.length}</b> investeerders geverifieerd.` : ''} Haal je geld op via de website? Check de AFM-vrijstelling (prospectusplicht).</p>
         <div class="table-wrap"><table>
-          <thead><tr><th>Naam</th><th>Inleg</th><th>Rendement/jr</th><th>Datum</th><th>Wwft</th><th></th></tr></thead>
-          <tbody>${inv.map(i => `
-            <tr><td>${esc(i.naam)}</td><td><strong>${fmtMoney(i.bedrag)}</strong></td>
+          <thead><tr><th>Naam</th><th>Inleg</th><th>Rendement/jr</th><th>Uitgekeerd</th><th>Wwft</th><th></th></tr></thead>
+          <tbody>${inv.map(i => {
+            const uitbetaald = (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald').reduce((s, u) => s + (Number(u.amount) || 0), 0);
+            return `<tr><td>${esc(i.naam)}<br><span class="sub">${fmtDate(i.datum)}</span></td><td><strong>${fmtMoney(i.bedrag)}</strong></td>
             <td>${rPct ? fmtMoney(Math.round((Number(i.bedrag) || 0) * rPct / 100)) : '—'}</td>
-            <td>${fmtDate(i.datum)}</td>
+            <td>${fmtMoney(uitbetaald)}${(i.uitkeringen || []).length ? `<br><span class="sub">${(i.uitkeringen || []).length} uitkering(en)</span>` : ''}</td>
             <td><button class="link-toggle ${i.wwft ? 'maint-done' : 'maint-open'}" data-action="wwft-toggle" data-id="${pr.id}" data-item="${i.id}" title="Klik om te wisselen">${i.wwft ? '✔ Geverifieerd' : '⚠ Te doen'}</button></td>
-            <td class="row-actions"><button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(6, 'Nog geen investeerders geregistreerd.')}</tbody>
+            <td class="row-actions"><button class="icon-btn" data-action="add-payout" data-id="${pr.id}" data-item="${i.id}" title="Uitkering registreren">€+</button>
+            <button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>`;
+          }).join('') || emptyRow(6, 'Nog geen investeerders geregistreerd.')}</tbody>
         </table></div>`;
         })()}
         <form class="inline-form" data-form="add-investor" data-id="${pr.id}">
@@ -2007,6 +2012,23 @@ function renderFinance() {
     </div>`;
 }
 
+/* ---------- Investeerders-uitkeringen ---------- */
+function openPayoutModal(projectId, investorId, id = null) {
+  const pr = projectById(projectId);
+  const inv = pr && (pr.investeerders || []).find(x => x.id === investorId);
+  if (!inv) return;
+  const form = $('#payout-form');
+  form.reset();
+  form.elements.projectId.value = projectId;
+  form.elements.investorId.value = investorId;
+  form.elements.id.value = id || '';
+  $('#payout-modal-title').textContent = id ? 'Uitkering bewerken' : `Uitkering — ${inv.naam}`;
+  const u = id ? (inv.uitkeringen || []).find(x => x.id === id) : null;
+  if (u) ['kind', 'amount', 'date', 'status', 'note'].forEach(k => form.elements[k].value = u[k] ?? '');
+  else form.elements.date.value = todayISO();
+  $('#payout-modal').showModal();
+}
+
 /* ---------- Liquiditeit ---------- */
 function openAccountModal(id = null) {
   const form = $('#account-form');
@@ -2081,6 +2103,65 @@ function renderLiquidity() {
       </table></div>
       <p class="report-note">Loopt het verwachte saldo richting nul of negatief? Plan een herfinanciering, versnel een verkoop of stel kosten uit.</p>
     </section>`;
+}
+
+/* ---------- Mailing / nieuwsbrief ---------- */
+function mailingAudienceEmails(audiences) {
+  const out = [];
+  if (audiences.includes('investeerders')) state.projects.forEach(p => (p.investeerders || []).forEach(i => { if (i.email) out.push(i.email); }));
+  if (audiences.includes('relaties')) state.contacts.forEach(c => { if (c.email) out.push(c.email); });
+  if (audiences.includes('leads')) loadInbox().forEach(l => { if (l.email) out.push(l.email); });
+  return [...new Set(out.map(e => String(e).trim().toLowerCase()).filter(e => /.+@.+\..+/.test(e)))];
+}
+
+function mailingHtml(body) {
+  const s = state.settings;
+  const para = esc(body).trim().split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+  return `<div style="font-family:Arial,sans-serif;color:#222;max-width:600px;margin:auto">
+    ${para}
+    <hr style="border:none;border-top:1px solid #ddd;margin:24px 0">
+    <p style="font-size:12px;color:#888">${esc(s.companyName || 'HomeINN')} · ${esc(s.address || 'Rotterdam')}${s.email ? ' · ' + esc(s.email) : ''}<br>
+    Je ontvangt deze e-mail omdat je relatie bent van HomeINN. Geen mails meer ontvangen? Antwoord met "afmelden".</p>
+  </div>`;
+}
+
+function renderMailing() {
+  const counts = {
+    investeerders: mailingAudienceEmails(['investeerders']).length,
+    relaties: mailingAudienceEmails(['relaties']).length,
+    leads: mailingAudienceEmails(['leads']).length
+  };
+  const st = (window.HCloud && HCloud.status()) || { ready: false };
+  const camps = (state.campaigns || []).slice();
+  $('#mailing-body').innerHTML = `
+    ${!st.staff ? '<div class="panel"><p class="hint" style="margin:0">Log in als eigenaar/team (Instellingen → Cloud) om mailings te versturen. Je kunt hier alvast opstellen.</p></div>' : ''}
+    <div class="split">
+      <section class="panel">
+        <div class="panel-head compact"><h2>Nieuwe mailing</h2></div>
+        <p class="hint">Stuur een nieuwsbrief of update. Elke ontvanger krijgt een persoonlijke e-mail (geen zichtbare adressen van anderen).</p>
+        <div class="form-grid">
+          <label class="check-label" style="margin:0"><input type="checkbox" class="mail-aud" value="investeerders" checked> Investeerders (${counts.investeerders})</label>
+          <label class="check-label" style="margin:0"><input type="checkbox" class="mail-aud" value="relaties"> Relaties (${counts.relaties})</label>
+          <label class="check-label" style="margin:0"><input type="checkbox" class="mail-aud" value="leads"> Website-leads (${counts.leads})</label>
+        </div>
+        <label style="display:block;margin-top:10px">Onderwerp<input id="mail-subject" placeholder="Bijv. HomeINN update — voortgang projecten" style="width:100%"></label>
+        <label style="display:block;margin-top:10px">Bericht<textarea id="mail-body" rows="8" placeholder="Beste,&#10;&#10;..." style="width:100%"></textarea></label>
+        <div class="head-actions" style="margin-top:12px">
+          <button class="btn primary" data-action="send-mailing">Verstuur mailing</button>
+          <span class="sub" id="mail-count"></span>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head compact"><h2>Verzonden mailings</h2></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Datum</th><th>Onderwerp</th><th>Doelgroep</th><th>Aantal</th><th>Resultaat</th></tr></thead>
+          <tbody>${camps.map(c => `<tr>
+            <td>${fmtDate(c.datum)}</td><td>${esc(c.onderwerp)}</td><td class="sub">${esc((c.audience || []).join(', '))}</td>
+            <td>${c.aantal}</td><td>${esc(c.resultaat || c.status || '—')}</td></tr>`).join('') || emptyRow(5, 'Nog geen mailings verzonden.')}</tbody>
+        </table></div>
+        <p class="report-note">AVG: stuur commerciële mail alleen naar ontvangers die daarvoor toestemming gaven. Investeerders/relaties met een lopende relatie mag je informeren.</p>
+      </section>
+    </div>`;
 }
 
 /* ---------- Contracten ---------- */
@@ -2759,6 +2840,18 @@ function handleModalSubmit(event) {
     showToast('Lening opgeslagen.');
   }
 
+  if (formId === 'payout-form') {
+    const pr = projectById(data.get('projectId'));
+    const inv = pr && (pr.investeerders || []).find(x => x.id === data.get('investorId'));
+    if (inv) {
+      inv.uitkeringen = inv.uitkeringen || [];
+      const base = { kind: str('kind'), amount: num('amount'), date: data.get('date'), status: str('status'), note: str('note') };
+      if (id) { const u = inv.uitkeringen.find(x => x.id === id); if (u) Object.assign(u, base); }
+      else inv.uitkeringen.push(Object.assign({ id: uid('pay') }, base));
+      showToast('Uitkering opgeslagen.');
+    }
+  }
+
   if (formId === 'account-form') {
     const base = { naam: str('naam'), type: str('type'), saldo: num('saldo'), updatedAt: todayISO() };
     if (id) Object.assign(state.accounts.find(x => x.id === id), base);
@@ -3219,6 +3312,7 @@ document.addEventListener('click', event => {
       rerender();
       break;
     }
+    case 'add-payout': openPayoutModal(id, item); break;
     case 'wwft-toggle': {
       const pr = projectById(id);
       const inv = (pr.investeerders || []).find(x => x.id === el.dataset.item);
@@ -3297,6 +3391,28 @@ document.addEventListener('click', event => {
           showToast(`Contract verstuurd naar ${email}. De wederpartij kan het in het portaal ondertekenen.`);
         })
         .catch(e => showToast('Versturen mislukt: ' + (e.message || e)));
+      break;
+    }
+    // Mailing
+    case 'send-mailing': {
+      const audiences = $$('.mail-aud:checked').map(c => c.value);
+      const subject = ($('#mail-subject').value || '').trim();
+      const bodyTxt = ($('#mail-body').value || '').trim();
+      if (!audiences.length) { showToast('Kies minstens één doelgroep.'); break; }
+      if (!subject || !bodyTxt) { showToast('Vul onderwerp en bericht in.'); break; }
+      const recipients = mailingAudienceEmails(audiences);
+      if (!recipients.length) { showToast('Geen e-mailadressen in deze doelgroep(en).'); break; }
+      if (!window.HCloud || !HCloud.status().staff) { showToast('Log in als eigenaar/team om te versturen (Instellingen → Cloud).'); break; }
+      if (!confirmDel(`Mailing "${subject}" versturen naar ${recipients.length} ontvanger(s)?`)) break;
+      showToast('Versturen…');
+      HCloud.broadcast({ subject, html: mailingHtml(bodyTxt), recipients })
+        .then(res => {
+          const resultaat = res && res.skipped ? 'Resend niet ingesteld' : (res ? `${res.sent || 0} verzonden${res.failed ? ', ' + res.failed + ' mislukt' : ''}` : 'verstuurd');
+          state.campaigns.unshift({ id: uid('camp'), datum: todayISO(), onderwerp: subject, audience: audiences, aantal: recipients.length, resultaat });
+          save(); renderCurrent();
+          showToast(res && res.skipped ? 'Resend-key nog niet ingesteld — niets verzonden (zie Instellingen).' : `Mailing verstuurd: ${resultaat}.`);
+        })
+        .catch(e => showToast('Mailing mislukt: ' + (e.message || e)));
       break;
     }
     // Team & toegang

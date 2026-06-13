@@ -43,6 +43,7 @@
       <p class="nav-group">Organisatie</p>
       <button class="nav-item" data-view="planning">Planning</button>
       <button class="nav-item" data-view="relations">Relaties</button>
+      <button class="nav-item" data-view="mailing">Mailing</button>
       <button class="nav-item" data-view="contracts">Contracten</button>
       <p class="nav-group">Overig</p>
       <button class="nav-item" data-view="landing">Website preview</button>
@@ -424,6 +425,11 @@
     <!-- ===== Liquiditeit ===== -->
     <section class="view" id="liquidity">
       <div id="liquidity-body"></div>
+    </section>
+
+    <!-- ===== Mailing / nieuwsbrief ===== -->
+    <section class="view" id="mailing">
+      <div id="mailing-body"></div>
     </section>
 
     <!-- ===== Contracten ===== -->
@@ -1091,6 +1097,33 @@
         <label>Rendement (% p/j, investering)<input name="rendementPct" type="number" min="0" step="any"></label>
       </div>
       <label>Bijzondere bepalingen<textarea name="note" rows="2" placeholder="Ontbindende voorwaarden, waarborgsom, opleverpunten…"></textarea></label>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="payout-modal">
+    <form method="dialog" class="modal-card" id="payout-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Uitkering</p>
+      <h2 id="payout-modal-title">Uitkering registreren</h2>
+      <input type="hidden" name="projectId">
+      <input type="hidden" name="investorId">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Soort
+          <select name="kind"><option value="rente">Rente</option><option value="aflossing">Aflossing</option><option value="overig">Overig</option></select>
+        </label>
+        <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
+        <label>Datum<input name="date" type="date" required></label>
+        <label>Status
+          <select name="status"><option>Gepland</option><option>Uitbetaald</option></select>
+        </label>
+      </div>
+      <label>Notitie<input name="note" placeholder="Bijv. rente Q2 2026"></label>
+      <p class="hint">Verschijnt na "Synchroniseer nu" in het portaal van de investeerder.</p>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
         <button class="btn primary" value="save">Opslaan</button>
