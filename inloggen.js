@@ -42,6 +42,7 @@
     if (opts.staff) buttons += '<a class="btn primary" href="portaal.html">Beheerportaal</a>';
     if (opts.investeerder) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="investeerders.html">Investeerdersportaal</a>';
     if (opts.huurder) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="huurders.html">Huurdersportaal</a>';
+    if (opts.koper) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="kopers.html">Kopersportaal</a>';
     if (!buttons) buttons = '<p class="intro">Aan dit account (' + esc(email) + ') is nog geen portaal gekoppeld. Neem contact op met HomeINN.</p>';
     card.innerHTML = brand() + '<p class="eyebrow">Welkom</p><h1>Kies je portaal</h1>' +
       '<p class="intro">Je bent ingelogd als ' + esc(email) + '.</p><div class="chooser">' + buttons + '</div>' +
@@ -57,14 +58,20 @@
     var role = (prof && prof.data) ? prof.data.role : null;
     var staff = role === 'eigenaar' || role === 'team';
     if (staff) { go('portaal.html'); return; }
-    // anders: kijken of er investeringen en/of een huurwoning aan hangen
+    // anders: kijken of er investeringen, een huurwoning en/of een koopdossier aan hangen
     var inv = await client.from('hios_investors').select('id').limit(1);
     var hasInv = !!(inv && inv.data && inv.data.length);
     var ten = await client.rpc('hios_my_tenancy');
     var hasTen = !!(ten && ten.data && ten.data.length);
-    if (hasInv && !hasTen) { go('investeerders.html'); return; }
-    if (hasTen && !hasInv) { go('huurders.html'); return; }
-    renderChooser(user.email, { staff: false, investeerder: hasInv, huurder: hasTen });
+    var con = await client.from('hios_contracts').select('id').limit(1);
+    var hasKoper = !!(con && con.data && con.data.length);
+    var count = (hasInv ? 1 : 0) + (hasTen ? 1 : 0) + (hasKoper ? 1 : 0);
+    if (count === 1) {
+      if (hasInv) { go('investeerders.html'); return; }
+      if (hasTen) { go('huurders.html'); return; }
+      if (hasKoper) { go('kopers.html'); return; }
+    }
+    renderChooser(user.email, { staff: false, investeerder: hasInv, huurder: hasTen, koper: hasKoper });
   }
 
   async function boot() {
