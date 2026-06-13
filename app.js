@@ -622,6 +622,7 @@ const PRIMARY_ACTIONS = {
   investors: ['Exporteer ledger', () => exportCurrentView()],
   planning: ['Planning toevoegen', () => openPlanModal()],
   relations: ['Nieuwe relatie', () => openContactModal()],
+  mailing: ['Nieuwe mailing', () => { const s = $('#mail-subject'); if (s) { s.focus(); s.scrollIntoView({ block: 'center' }); } }],
   contracts: ['Nieuw contract', () => openContractModal()],
   settings: null, landing: null
 };
@@ -807,7 +808,7 @@ function renderDashboard() {
   // Planning deze week
   const weekEnd = addDaysISO(weekStartISO(0), 6);
   const week = state.planning.filter(pl => pl.date >= weekStartISO(0) && pl.date <= weekEnd)
-    .sort((a, b) => a.date.localeCompare(b.date));
+    .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   $('#today-plan').innerHTML = week.length ? week.map(pl => `
     <article class="priority">
       <strong>${pl.date === t ? '<span class="badge green">Vandaag</span> ' : ''}${esc(pl.title)}</strong>
@@ -1941,7 +1942,8 @@ function renderInvestorReports() {
   const totInleg = list.reduce((s, e) => s + e.inleg, 0);
   const totVerwacht = list.reduce((s, e) => s + e.verwachtJaar, 0);
   const totUitbetaaldYtd = list.reduce((s, e) => s + (e.uitbetaaldPerJaar[String(jaar)] || 0), 0);
-  $('#investors-body').innerHTML = `
+  const body = $('#investors-body'); if (!body) return;
+  body.innerHTML = `
     <div class="kpi-grid">
       <article class="kpi"><span>Totaal opgehaald</span><strong>${fmtMoney(totInleg)}</strong><small>${list.length} investeerder${list.length === 1 ? '' : 's'}</small></article>
       <article class="kpi"><span>Verwacht rendement / jaar</span><strong>${fmtMoney(Math.round(totVerwacht))}</strong></article>
@@ -2146,7 +2148,8 @@ function renderMaintenance() {
   const open = items.filter(i => i.status === 'Open').length;
   const bezig = items.filter(i => i.status === 'In behandeling').length;
   const klaar = items.filter(i => i.status === 'Afgehandeld').length;
-  $('#maintenance-body').innerHTML = `
+  const body = $('#maintenance-body'); if (!body) return;
+  body.innerHTML = `
     <div class="kpi-grid three">
       <article class="kpi"><span>Open</span><strong class="${open ? 'alert' : ''}">${open}</strong></article>
       <article class="kpi"><span>In behandeling</span><strong>${bezig}</strong></article>
@@ -3277,7 +3280,7 @@ function exportCurrentView() {
       name = 'kosten'; break;
     case 'planning':
       rows = [['Datum', 'Type', 'Omschrijving', 'Wie', 'Betreft']];
-      state.planning.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(pl => rows.push([pl.date, pl.type, pl.title, pl.who, refLabel(pl.ref)]));
+      state.planning.slice().sort((a, b) => (a.date || '').localeCompare(b.date || '')).forEach(pl => rows.push([pl.date, pl.type, pl.title, pl.who, refLabel(pl.ref)]));
       name = 'planning'; break;
     case 'relations':
       rows = [['Naam', 'Type', 'Contactpersoon', 'Email', 'Telefoon', 'Adres', 'Notitie']];
@@ -3533,6 +3536,7 @@ document.addEventListener('click', event => {
     case 'edit-property': openPropertyModal(id); break;
     case 'del-property': {
       const p = propertyById(id);
+      if (!p) break;
       const linked = state.projects.some(pr => pr.propertyId === id) || state.costs.some(k => k.propertyId === id);
       if (linked) { showToast(`${p.address} heeft gekoppelde projecten of kosten — verwijder die eerst.`); break; }
       if (confirmDel(`Pand "${p.address}" verwijderen?`)) { state.properties = state.properties.filter(x => x.id !== id); rerender(); showToast('Pand verwijderd.'); }
@@ -3540,13 +3544,15 @@ document.addEventListener('click', event => {
     }
     case 'toggle-doc': {
       const p = propertyById(id);
-      const doc = p.docs.find(x => x.id === item);
-      doc.done = !doc.done; rerender();
+      if (!p) break;
+      const doc = (p.docs || []).find(x => x.id === item);
+      if (doc) { doc.done = !doc.done; rerender(); }
       break;
     }
     case 'del-doc': {
       const p = propertyById(id);
-      p.docs = p.docs.filter(x => x.id !== item); rerender();
+      if (!p) break;
+      p.docs = (p.docs || []).filter(x => x.id !== item); rerender();
       break;
     }
     case 'new-project-for': openProjectModal(null, id); break;
@@ -3556,11 +3562,13 @@ document.addEventListener('click', event => {
     case 'offer-for': openOfferModal(id); break;
     case 'del-offer': {
       const p = propertyById(id);
+      if (!p) break;
       p.offers = (p.offers || []).filter(o => o.id !== item); rerender();
       break;
     }
     case 'del-viewing': {
       const p = propertyById(id);
+      if (!p) break;
       p.viewings = (p.viewings || []).filter(v => v.id !== item); rerender();
       break;
     }
@@ -3571,6 +3579,7 @@ document.addEventListener('click', event => {
     case 'edit-project': openProjectModal(id); break;
     case 'del-project': {
       const pr = projectById(id);
+      if (!pr) break;
       if (confirmDel(`Project "${pr.name}" verwijderen? Gekoppelde kosten blijven op het pand staan.`)) {
         state.costs.forEach(k => { if (k.projectId === id) k.projectId = ''; });
         state.projects = state.projects.filter(x => x.id !== id);
@@ -3581,7 +3590,8 @@ document.addEventListener('click', event => {
     }
     case 'del-phase': {
       const pr = projectById(id);
-      pr.phases = pr.phases.filter(x => x.id !== phase); rerender();
+      if (!pr) break;
+      pr.phases = (pr.phases || []).filter(x => x.id !== phase); rerender();
       break;
     }
     case 'toggle-phase-task': {
@@ -3599,13 +3609,15 @@ document.addEventListener('click', event => {
     }
     case 'toggle-oplever': {
       const pr = projectById(id);
-      const o = pr.opleverpunten.find(x => x.id === item);
-      o.done = !o.done; rerender();
+      if (!pr) break;
+      const o = (pr.opleverpunten || []).find(x => x.id === item);
+      if (o) { o.done = !o.done; rerender(); }
       break;
     }
     case 'del-oplever': {
       const pr = projectById(id);
-      pr.opleverpunten = pr.opleverpunten.filter(x => x.id !== item); rerender();
+      if (!pr) break;
+      pr.opleverpunten = (pr.opleverpunten || []).filter(x => x.id !== item); rerender();
       break;
     }
     // Kosten
@@ -3621,6 +3633,7 @@ document.addEventListener('click', event => {
     case 'edit-contact': openContactModal(id); break;
     case 'del-contact': {
       const c = contactById(id);
+      if (!c) break;
       const used = state.deals.some(d => d.makelaarId === id) || state.costs.some(k => k.contactId === id) || state.properties.some(p => p.financing?.financierId === id);
       if (used) { showToast(`${c.name} is gekoppeld aan kansen, panden of kosten en kan niet worden verwijderd.`); break; }
       if (confirmDel(`Relatie "${c.name}" verwijderen?`)) { state.contacts = state.contacts.filter(x => x.id !== id); rerender(); showToast('Relatie verwijderd.'); }
@@ -3629,24 +3642,27 @@ document.addEventListener('click', event => {
     // Taken & navigatie
     case 'toggle-task': {
       const task = state.tasks.find(x => x.id === id);
-      task.done = !task.done; rerender();
+      if (task) { task.done = !task.done; rerender(); }
       break;
     }
     case 'del-task': state.tasks = state.tasks.filter(x => x.id !== id); rerender(); break;
     case 'foto-del': {
       const p = fotoHolder(el.dataset.kind, id);
+      if (!p) break;
       p.fotos = (p.fotos || []).filter((_, i) => i !== Number(el.dataset.index));
       rerender();
       break;
     }
     case 'foto-hoofd': {
       const p = fotoHolder(el.dataset.kind, id);
+      if (!p) break;
       const i = Number(el.dataset.index);
       if (p.fotos && p.fotos[i]) { p.fotos.unshift(p.fotos.splice(i, 1)[0]); rerender(); showToast('Hoofdfoto gewijzigd.'); }
       break;
     }
     case 'del-update': {
       const pr = projectById(id);
+      if (!pr) break;
       pr.updates = (pr.updates || []).filter(u => u.id !== item); rerender();
       break;
     }
@@ -3902,13 +3918,16 @@ document.addEventListener('change', event => {
   switch (action) {
     case 'deal-status': {
       const d = dealById(id);
+      if (!d) return;
       d.status = el.value; rerender();
       if (el.value === 'Notaris') showToast('Plan de passeerafspraak in de planning en regel de bankgarantie.');
       break;
     }
     case 'bid-status': {
       const d = dealById(id);
-      const b = d.biedingen.find(x => x.id === item);
+      if (!d) return;
+      const b = (d.biedingen || []).find(x => x.id === item);
+      if (!b) return;
       b.status = el.value;
       if (el.value === 'Geaccepteerd' && DEAL_STAGES.includes(d.status)) {
         d.status = 'Onder voorbehoud';
@@ -3919,6 +3938,7 @@ document.addEventListener('change', event => {
     }
     case 'property-status': {
       const p = propertyById(id);
+      if (!p) return;
       p.status = el.value;
       if (el.value === 'Te koop' && !p.teKoopSinds) p.teKoopSinds = todayISO();
       if (el.value === 'Te koop' && !p.label) showToast('Let op: energielabel is wettelijk verplicht bij verkoop.');
@@ -3941,6 +3961,7 @@ document.addEventListener('change', event => {
     case 'cost-status': { const k = state.costs.find(x => x.id === id); if (k) k.status = el.value; rerender(); break; }
     case 'maint-status': {
       const p = propertyById(id);
+      if (!p) return;
       const o = (p.onderhoud || []).find(x => x.id === el.dataset.item);
       if (o) o.status = el.value;
       rerender();
@@ -3979,7 +4000,9 @@ document.addEventListener('change', event => {
     }
     case 'phase-status': {
       const pr = projectById(id);
-      pr.phases.find(x => x.id === phase).status = el.value;
+      if (!pr || !pr.phases) return;
+      const ph = pr.phases.find(x => x.id === phase);
+      if (ph) ph.status = el.value;
       rerender();
       break;
     }
@@ -4005,6 +4028,7 @@ document.addEventListener('submit', event => {
     }
     if (form.dataset.form === 'add-phase') {
       const pr = projectById(form.dataset.id);
+      if (!pr) return;
       pr.phases.push({ id: uid('ph'), name: String(data.get('name')).trim(), status: 'Te doen' });
     }
     if (form.dataset.form === 'add-phase-task') {
@@ -4014,10 +4038,12 @@ document.addEventListener('submit', event => {
     }
     if (form.dataset.form === 'add-oplever') {
       const pr = projectById(form.dataset.id);
+      if (!pr) return;
       pr.opleverpunten.push({ id: uid('op'), desc: String(data.get('desc')).trim(), done: false });
     }
     if (form.dataset.form === 'add-doc') {
       const p = propertyById(form.dataset.id);
+      if (!p) return;
       const v = String(data.get('name')).trim();
       const isPad = /^https?:\/\//i.test(v) || v.includes('/');
       p.docs.push(isPad
@@ -4026,23 +4052,27 @@ document.addEventListener('submit', event => {
     }
     if (form.dataset.form === 'add-foto') {
       const p = fotoHolder(form.dataset.kind, form.dataset.id);
+      if (!p) return;
       p.fotos = p.fotos || [];
       p.fotos.push(String(data.get('url')).trim());
     }
     if (form.dataset.form === 'add-maint') {
       const p = propertyById(form.dataset.id);
+      if (!p) return;
       p.onderhoud = p.onderhoud || [];
       p.onderhoud.push({ id: uid('mnt'), date: todayISO(), desc: String(data.get('desc')).trim(), status: 'Open' });
     }
     if (form.dataset.form === 'add-update') {
       const pr = projectById(form.dataset.id);
+      if (!pr) return;
       pr.updates = pr.updates || [];
       pr.updates.push({ id: uid('u'), date: todayISO(), text: String(data.get('text')).trim() });
     }
     if (form.dataset.form === 'add-investor') {
       const pr = projectById(form.dataset.id);
+      if (!pr) return;
       pr.investeerders = pr.investeerders || [];
-      const nieuweInv = { id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, datum: todayISO() };
+      const nieuweInv = { id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, wwft: false, datum: todayISO() };
       pr.investeerders.push(nieuweInv);
       if (nieuweInv.email && window.HCloud) {
         HCloud.notify({ to: nieuweInv.email, subject: 'Welkom als investeerder bij HomeINN', html: `<p>Beste ${esc(nieuweInv.naam)},</p><p>Je investering van <strong>${fmtMoney(nieuweInv.bedrag)}</strong> in het project <strong>${esc(pr.name)}</strong> is geregistreerd. Welkom!</p><p>Volg je investering, rendement en projectupdates in je persoonlijke portaal — log in met dit e-mailadres (je ontvangt een beveiligde inloglink, geen wachtwoord nodig):</p><p><a href="${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html">Inloggen op het HomeINN-portaal</a></p><p>Met vriendelijke groet,<br>HomeINN</p>` });
