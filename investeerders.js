@@ -67,11 +67,15 @@
     var updates = (updRes && updRes.data) || [];
     var docRes = await client.from('hios_documents').select('*');
     var documents = (docRes && docRes.data) || [];
+    var contRes = await client.from('hios_contracts').select('*').order('created_at', { ascending: false });
+    var contracts = (contRes && contRes.data) || [];
+    var contractsHtml = contractsSection(contracts);
 
     if (!investments.length) {
       app.innerHTML =
-        '<div class="card"><p class="eyebrow">Welkom</p><h1>Nog geen investeringen</h1>' +
-        '<p class="muted">Aan dit account zijn nog geen investeringen gekoppeld. Zodra HomeINN je inleg registreert met dit e-mailadres (' + esc(user.email) + ') verschijnt die hier automatisch. Vragen? Neem contact op met HomeINN.</p></div>';
+        '<div class="card"><p class="eyebrow">Welkom</p><h1>' + (contracts.length ? 'Je documenten' : 'Nog geen investeringen') + '</h1>' +
+        '<p class="muted">' + (contracts.length ? 'Hieronder vind je je contract(en) ter ondertekening.' : 'Aan dit account zijn nog geen investeringen gekoppeld. Zodra HomeINN je inleg registreert met dit e-mailadres (' + esc(user.email) + ') verschijnt die hier automatisch.') + '</p></div>' +
+        contractsHtml;
       return;
     }
 
@@ -122,9 +126,43 @@
         '</div>';
     });
 
+    html += contractsHtml;
     html += '<p class="foot">Bedragen zijn indicatief. Aan dit overzicht kunnen geen rechten worden ontleend. © HomeINN · Rotterdam</p>';
     app.innerHTML = html;
   }
+
+  function contractsSection(contracts) {
+    if (!contracts || !contracts.length) return '';
+    return contracts.map(function (c) {
+      var signed = c.status === 'Getekend';
+      return '<div class="card">' +
+        '<p class="eyebrow">' + esc(c.type || 'Contract') + (c.ref ? ' · ' + esc(c.ref) : '') + '</p>' +
+        '<h2>Ter ondertekening</h2>' +
+        '<div class="contract-doc">' + (c.body_html || '<p class="muted">Geen inhoud.</p>') + '</div>' +
+        (signed
+          ? '<p class="muted">✔ Digitaal ondertekend op ' + fdate(c.signed_at) + (c.signed_name ? ' door ' + esc(c.signed_name) : '') + '.</p>'
+          : '<label>Volledige naam (geldt als digitale handtekening)</label>' +
+            '<input type="text" class="signname" placeholder="Voor- en achternaam">' +
+            '<button class="btn primary signbtn" data-id="' + esc(c.id) + '" style="margin-top:10px">Akkoord &amp; digitaal ondertekenen</button>') +
+        '</div>';
+    }).join('');
+  }
+
+  // Ondertekenen (gedelegeerd, één keer)
+  app.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.signbtn') : null;
+    if (!btn) return;
+    var id = btn.getAttribute('data-id');
+    var nameInput = btn.parentElement.querySelector('.signname');
+    var name = nameInput ? nameInput.value.trim() : '';
+    if (!name) { toast('Vul je volledige naam in om te ondertekenen.'); return; }
+    btn.disabled = true;
+    client.rpc('hios_sign_contract', { p_id: id, p_name: name }).then(function (r) {
+      if (r.error) throw r.error;
+      if (r.data === true) { toast('Ondertekend — bedankt!'); boot(); }
+      else { toast('Ondertekenen lukte niet (al getekend of niet voor jou bestemd).'); btn.disabled = false; }
+    }).catch(function (err) { toast('Fout bij ondertekenen: ' + (err.message || err)); btn.disabled = false; });
+  });
 
   function kpi(label, val) { return '<div class="kpi"><span>' + esc(label) + '</span><strong>' + val + '</strong></div>'; }
   function row(label, val) { return '<tr><td class="muted">' + esc(label) + '</td><td>' + val + '</td></tr>'; }

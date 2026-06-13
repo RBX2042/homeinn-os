@@ -125,6 +125,26 @@
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
       var r = await c.from('hios_maintenance').update({ status: status }).eq('id', id);
       if (r.error) throw r.error;
+    },
+
+    /* Stuur een contract ter ondertekening naar een portaal-gebruiker (op e-mail). */
+    sendContract: async function (payload) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      var st = window.HCloud.status();
+      if (!st.staff) throw new Error('Alleen een eigenaar/team-account mag contracten versturen.');
+      if (!payload.party_email) throw new Error('Vul eerst een e-mailadres van de wederpartij in.');
+      var r = await c.from('hios_contracts').upsert(payload, { onConflict: 'local_id' });
+      if (r.error) throw r.error;
+    },
+
+    /* Haal de ondertekenstatus van verstuurde contracten op (voor terugkoppeling in het OS). */
+    pullContracts: async function () {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      var st = window.HCloud.status();
+      if (!st.staff) return [];
+      var r = await c.from('hios_contracts').select('local_id, status, signed_at, signed_name, party_email');
+      if (r.error) throw r.error;
+      return r.data || [];
     }
   };
 })();

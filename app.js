@@ -2065,7 +2065,7 @@ function openContractModal(id = null) {
   fillSelect(form.elements.projectId, state.projects, { empty: '— Geen project —', selected: c?.projectId || '' });
   fillSelect(form.elements.contactId, state.contacts, { empty: '— Geen / handmatig —', selected: c?.contactId || '' });
   if (c) {
-    ['type', 'positie', 'partijNaam', 'partijAdres', 'bedrag', 'datum', 'ingangsdatum', 'looptijd', 'rendementPct', 'note'].forEach(k => form.elements[k].value = c[k] ?? '');
+    ['type', 'positie', 'partijNaam', 'partijAdres', 'partijEmail', 'bedrag', 'datum', 'ingangsdatum', 'looptijd', 'rendementPct', 'note'].forEach(k => form.elements[k].value = c[k] ?? '');
   } else {
     form.elements.datum.value = todayISO();
   }
@@ -2098,9 +2098,10 @@ function renderContracts() {
             <td>${esc(betreft)}</td><td>${esc(partij)}</td><td>${fmtMoney(c.bedrag)}</td>
             <td><select class="row-status" data-action="contract-status" data-id="${c.id}">
               ${['Concept', 'Verstuurd', 'Getekend'].map(s => `<option ${c.status === s ? 'selected' : ''}>${s}</option>`).join('')}
-            </select></td>
+            </select>${c.signedAt ? `<br><span class="sub maint-done">✔ digitaal getekend ${fmtDate(c.signedAt)}${c.signedName ? ' · ' + esc(c.signedName) : ''}</span>` : ''}</td>
             <td class="row-actions">
               <button class="btn secondary slim" data-action="print-contract" data-id="${c.id}">Bekijk / print</button>
+              <button class="btn secondary slim" data-action="send-contract" data-id="${c.id}">Verstuur ter ondertekening</button>
               <button class="icon-btn" data-action="edit-contract" data-id="${c.id}" title="Bewerken">✎</button>
               <button class="icon-btn" data-action="del-contract" data-id="${c.id}" title="Verwijderen">🗑</button>
             </td></tr>`;
@@ -2631,7 +2632,7 @@ function handleModalSubmit(event) {
   if (formId === 'contract-form') {
     const base = {
       type: str('type'), positie: str('positie'), propertyId: data.get('propertyId') || '', projectId: data.get('projectId') || '',
-      contactId: data.get('contactId') || '', partijNaam: str('partijNaam'), partijAdres: str('partijAdres'),
+      contactId: data.get('contactId') || '', partijNaam: str('partijNaam'), partijAdres: str('partijAdres'), partijEmail: str('partijEmail'),
       bedrag: num('bedrag'), datum: data.get('datum') || todayISO(), ingangsdatum: data.get('ingangsdatum') || '',
       looptijd: str('looptijd'), rendementPct: num('rendementPct'), note: str('note')
     };
@@ -3124,17 +3125,41 @@ document.addEventListener('click', event => {
     case 'del-contract':
       if (confirmDel('Contract verwijderen?')) { state.contracten = state.contracten.filter(c => c.id !== id); rerender(); }
       break;
+    case 'send-contract': {
+      const c = state.contracten.find(x => x.id === id);
+      if (!c) break;
+      if (!window.HCloud || !HCloud.status().ready) { showToast('Cloud niet beschikbaar — log eerst in via Instellingen → Cloud.'); break; }
+      const email = c.partijEmail || (contactById(c.contactId)?.email) || '';
+      if (!email) { showToast('Vul eerst een e-mail van de wederpartij in (Contract bewerken).'); break; }
+      const payload = {
+        local_id: c.id, type: c.type, ref: c.ref, party_email: email,
+        amount: Number(c.bedrag) || 0, body_html: buildContractDoc(c), status: 'Verstuurd'
+      };
+      showToast('Versturen…');
+      HCloud.sendContract(payload)
+        .then(() => { c.status = 'Verstuurd'; save(); renderCurrent(); showToast(`Contract verstuurd naar ${email}. De wederpartij kan het in het portaal ondertekenen.`); })
+        .catch(e => showToast('Versturen mislukt: ' + (e.message || e)));
+      break;
+    }
     // Cloud
     case 'cloud-sync': {
       if (!window.HCloud) break;
       showToast('Synchroniseren…');
       HCloud.pushAll(state)
-        .then(r => HCloud.pullMaintenance().then(m => {
+        .then(r => Promise.all([HCloud.pullMaintenance(), HCloud.pullContracts()]).then(([m, contracts]) => {
           state.cloudMaintenance = m;
+          // ondertekenstatus terugkoppelen naar lokale contracten
+          let getekend = 0;
+          (contracts || []).forEach(cc => {
+            const local = state.contracten.find(x => x.id === cc.local_id);
+            if (local && cc.status === 'Getekend' && local.status !== 'Getekend') {
+              local.status = 'Getekend'; local.signedAt = cc.signed_at; local.signedName = cc.signed_name; getekend++;
+            }
+          });
           save();
           renderCurrent();
           const open = m.filter(x => x.status === 'Open').length;
-          showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders. ${m.length} huurder-melding${m.length === 1 ? '' : 'en'} opgehaald${open ? ` (${open} open)` : ''}.`);
+          showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders. ${m.length} melding${m.length === 1 ? '' : 'en'}${open ? ` (${open} open)` : ''}${getekend ? `, ${getekend} contract(en) ondertekend` : ''}.`);
         }))
         .catch(e => showToast('Sync mislukt: ' + (e.message || e)));
       break;
