@@ -2501,7 +2501,7 @@ function buildContractDoc(c) {
   return `
     <header class="doc-head">
       <div>
-        <img src="assets/logo-dark.png?v=20260613" alt="" class="doc-logo">
+        <img src="assets/logo-dark.png?v=20260614" alt="" class="doc-logo">
         <h1>${esc(c.type.toUpperCase())}</h1>
         <p class="doc-number">${esc(c.ref)} · ${fmtDate(c.datum || todayISO())}</p>
       </div>
@@ -3193,7 +3193,7 @@ function buildCalcPrintDoc(title, subtitle, c) {
   return `
     <header class="doc-head">
       <div>
-        <img src="assets/logo-dark.png?v=20260613" alt="" class="doc-logo">
+        <img src="assets/logo-dark.png?v=20260614" alt="" class="doc-logo">
         <h1>INVESTERINGSCALCULATIE</h1>
         <p class="doc-number">${esc(title)} · ${fmtDate(todayISO())}</p>
       </div>

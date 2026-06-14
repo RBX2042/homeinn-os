@@ -10,7 +10,7 @@
     : null;
 
   function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function brand() { return '<div class="brand"><img src="assets/logo-dark.png?v=20260613" alt="HomeINN"></div>'; }
+  function brand() { return '<div class="brand"><img src="assets/logo-dark.png?v=20260614" alt="HomeINN"></div>'; }
   function go(url) { location.replace(url); }
 
   function renderUnavailable() {
