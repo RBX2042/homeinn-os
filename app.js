@@ -849,7 +849,7 @@ function renderDashboard() {
   const max = Math.max(...bars.map(b => b.value), 1);
   $('#invest-chart').innerHTML = bars.length ? bars.map(b => `
     <span style="--h:${Math.max(10, Math.round(b.value / max * 100))}%" title="${esc(b.full)} (${esc(b.status)}): ${fmtMoney(b.value)}">
-      <em>${fmtMoneyK(b.value)}</em>${esc(b.label)}
+      <em>${fmtMoneyK(b.value)}</em><i>${esc(b.label)}</i>
     </span>`).join('') : '<p class="empty">Nog geen panden in bezit.</p>';
 
   // Actielijst

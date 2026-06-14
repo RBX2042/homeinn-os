@@ -14,7 +14,7 @@
   <meta name="apple-mobile-web-app-title" content="HomeINN OS">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260614">
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260627">
 </head>
 <body>
   <aside class="sidebar">
@@ -178,7 +178,7 @@
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Referentie</th><th>Adres</th><th>Vraagprijs</th><th>Resultaat</th><th></th></tr></thead>
+              <thead><tr><th>Referentie</th><th>Adres</th><th class="num">Vraagprijs</th><th class="num">Resultaat</th><th></th></tr></thead>
               <tbody id="deal-archive"></tbody>
             </table>
           </div>
@@ -253,7 +253,7 @@
             </div>
           </div>
           <div class="table-wrap">
-            <table>
+            <table class="ledger">
               <thead>
                 <tr>
                   <th>Pand</th>
@@ -299,9 +299,9 @@
                   <th>Project</th>
                   <th>Pand</th>
                   <th>Status</th>
-                  <th>Budget</th>
-                  <th>Realisatie</th>
-                  <th>Verschil</th>
+                  <th class="num">Budget</th>
+                  <th class="num">Realisatie</th>
+                  <th class="num">Verschil</th>
                   <th>Voortgang</th>
                   <th></th>
                 </tr>
@@ -342,7 +342,7 @@
                 <th>Leverancier</th>
                 <th>Omschrijving</th>
                 <th>Categorie</th>
-                <th>Bedrag</th>
+                <th class="num">Bedrag</th>
                 <th>Status</th>
                 <th></th>
               </tr>
@@ -371,11 +371,11 @@
               <tr>
                 <th>Pand</th>
                 <th>Status</th>
-                <th>Vraagprijs</th>
-                <th>Dagen te koop</th>
-                <th>Bezichtigingen</th>
-                <th>Hoogste bod</th>
-                <th>Verwachte winst</th>
+                <th class="num">Vraagprijs</th>
+                <th class="num">Dagen te koop</th>
+                <th class="num">Bezichtigingen</th>
+                <th class="num">Hoogste bod</th>
+                <th class="num">Verwachte winst</th>
                 <th></th>
               </tr>
             </thead>
@@ -395,9 +395,9 @@
                 <th>Pand</th>
                 <th>Aangekocht</th>
                 <th>Verkocht</th>
-                <th>Investering</th>
-                <th>Opbrengst</th>
-                <th>Winst</th>
+                <th class="num">Investering</th>
+                <th class="num">Opbrengst</th>
+                <th class="num">Winst</th>
                 <th>ROI</th>
                 <th>Bezitsduur</th>
               </tr>
@@ -1273,7 +1273,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div id="print-area" aria-hidden="true"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js"></script>
-  <script src="app.js"></script>
+  <script src="cloud.js?v=20260623"></script>
+  <script src="app.js?v=20260623"></script>
 </body>
 </html>

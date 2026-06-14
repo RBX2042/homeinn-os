@@ -1,18 +1,20 @@
 :root {
-  --navy: #0b1e30;
-  --navy-2: #102b43;
-  --gold: #b49030;
-  --gold-2: #cca94a;
-  --cream: #f5f2ec;
-  --ink: #0c0b09;
-  --muted: #6f756f;
-  --line: rgba(12, 11, 9, .1);
-  --panel: #fffdf8;
-  --red: #b03a3a;
-  --green: #1e6a42;
-  --shadow: 0 22px 55px rgba(11, 30, 48, .12);
-  color-scheme: light;
+  --navy:#0b1e30; --navy2:#102840; --navy3:#183450;
+  --gold:#b49030; --gold2:#cca94a; --gold3:#e8c96a; --gold-ink:#7d6418;
+  --cream:#f5f2ec; --cream2:#ece7de; --cream3:#ddd7cb;
+  --ink:#0c0b09; --muted:#6f756f; --panel:#fffdf8;
+  --line:rgba(12,11,9,.1); --hair:rgba(180,144,48,.22); --hair-strong:rgba(180,144,48,.5);
+  --red:#b03a3a; --green:#1e6a42;
+  --radius:7px; --radius-lg:10px;
+  --ease:cubic-bezier(.25,.46,.45,.94); --ease-out:cubic-bezier(0,0,.2,1);
+  --t-fast:.16s var(--ease); --t:.24s var(--ease);
+  --elev-1:0 1px 2px rgba(11,30,48,.05); --elev-2:0 18px 48px rgba(11,30,48,.07);
+  /* legacy-aliassen — bestaande selectors blijven werken */
+  --gold-2:var(--gold2); --navy-2:var(--navy2);
+  --shadow:0 22px 55px rgba(11,30,48,.12);
+  color-scheme:light;
 }
+body{accent-color:var(--gold);}
 
 * { box-sizing: border-box; }
 
@@ -617,8 +619,8 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .report-bar{display:grid;grid-template-columns:160px 1fr auto;align-items:center;gap:12px}
 .report-bar .rb-label{font-size:.85rem;color:var(--navy);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .report-bar .rb-track{position:relative;height:22px;background:rgba(11,30,48,.06);border-radius:6px;overflow:hidden}
-.report-bar .rb-fill{position:absolute;inset:0 auto 0 0;background:var(--gold);border-radius:6px}
-.report-bar .rb-fill.neg{background:var(--red)}
+.report-bar .rb-fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--gold),var(--gold-2));border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.report-bar .rb-fill.neg{background:linear-gradient(90deg,#9c3636,var(--red))}
 .report-bar .rb-val{font-variant-numeric:tabular-nums;font-weight:700;color:var(--navy);font-size:.85rem}
 .cashflow-table td.neg,.cashflow-table strong.neg{color:var(--red)}
 .report-note{font-size:.8rem;color:var(--muted);margin-top:6px}
@@ -758,3 +760,139 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .cc-preview-table th,.cc-preview-table td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
 .cc-preview-table th:last-child,.cc-preview-table td:last-child{text-align:right}
 #capitalcall-preview:empty{display:none}
+
+/* ════════════════════════════════════════════════════════════════════
+   $100M POLISH-LAAG — editorial uplift, één merk met de publicsite.
+   Cormorant-cijfers · gouden haarlijnen · gedeelde motion · a11y.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Fix: [hidden] hoort altijd te verbergen (class-display overrulede 't, bv. lege zoek-dropdown) ── */
+[hidden]{display:none!important}
+
+/* ── Motion op de bestaande chrome (gedeelde --ease-taal) ── */
+.nav-item{transition:color var(--t-fast),background var(--t-fast)}
+.kpi,.panel,.signal,.lead-card,.markt-link,.phase{transition:border-color var(--t),box-shadow var(--t),transform var(--t)}
+.btn,.icon-btn,.segmented button,.text-btn,.badge,tbody tr[data-action]{transition:background var(--t-fast),color var(--t-fast),border-color var(--t-fast),box-shadow var(--t-fast),transform var(--t-fast)}
+.search input,select,input,textarea{transition:border-color var(--t-fast),box-shadow var(--t-fast),background var(--t-fast)}
+
+/* ── Editorial typografie: koppen lichter, hero-cijfers in serif ── */
+h1{font-weight:400;letter-spacing:-.015em;line-height:1.02}
+.panel-head h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:1.5rem;letter-spacing:-.005em;color:var(--navy)}
+.panel-head.compact h2{font-family:Outfit,system-ui,sans-serif;font-weight:600;font-size:1.1rem;letter-spacing:0}
+.panel-head:not(.compact) > div:first-child::before{content:"";display:block;width:32px;height:1px;background:var(--gold);margin-bottom:12px}
+.mini-label,.eyebrow,.modal-section{letter-spacing:.2em;font-size:.66rem;font-weight:600;color:var(--gold)}
+
+/* hero-cijfers → Cormorant 400/600 + tabular (NOOIT 500: font laadt 300/400/600) */
+.kpi strong{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:2.15rem;line-height:1;letter-spacing:-.01em;color:var(--navy);font-variant-numeric:tabular-nums;margin:6px 0 4px}
+.kpi.small strong{font-size:1.55rem}
+.kpi span{font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kpi small{color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.sidebar-card strong{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:1.55rem;color:var(--gold-2)}
+.calc-headline{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(2.4rem,3.4vw,3.2rem);line-height:1.04;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.scen-col strong,.breakeven-box strong,.hold-grid strong,.detail-title{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;letter-spacing:-.005em}
+.scen-col strong,.breakeven-box strong,.hold-grid strong{font-size:1.5rem}
+td,th,tfoot td,.totals-box dd,.totals-box dt,.report-bar .rb-val,.scen-sub,.kpi small{font-variant-numeric:tabular-nums}
+tfoot td strong,.totals-box .grand dd{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:1.18rem}
+
+/* ── Knop-taal: navy-op-goud + signatuur shine-sweep (= publicsite) ── */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;border-radius:var(--radius)}
+.btn.slim{font-size:.72rem}
+.btn.primary{background:var(--gold);color:var(--navy)}
+.btn.primary:hover{background:var(--gold2)}
+.btn.primary::before{content:"";position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);transform:translateX(-180%);transition:transform .6s var(--ease);pointer-events:none}
+.btn.primary:hover::before{transform:translateX(320%)}
+.btn.secondary{background:rgba(255,255,255,.72);color:var(--navy);border-color:var(--line)}
+.btn.secondary:hover{background:#fff;border-color:rgba(180,144,48,.4)}
+.btn:active{transform:translateY(1px)}
+.text-btn{letter-spacing:.02em}
+
+/* ── Balkgrafiek: verfijnde navy-staaf met gouden topkap (was massief goud) ── */
+.chart{height:300px;align-items:end;gap:18px;padding:34px 4px 30px;position:relative;border-bottom:1px solid var(--line)}
+.chart span{height:var(--h);min-height:6px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#17324d,#0b1e30);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);display:block;padding:0;color:transparent;transform-origin:bottom;transition:filter var(--t),transform var(--t-fast)}
+.chart span::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:4px 4px 0 0}
+.chart span:hover{filter:brightness(1.16);transform:scaleY(1.015)}
+.chart span em{top:-26px;font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:1.1rem;color:var(--navy);font-variant-numeric:tabular-nums}
+.chart span i{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);font-style:normal;font-size:.7rem;letter-spacing:.01em;color:var(--muted);white-space:nowrap}
+
+/* ── Sidebar: goud active-accent i.p.v. wit-waas ── */
+.nav-item{position:relative}
+.nav-item:hover:not(.active){background:rgba(255,255,255,.07);color:#fff}
+.nav-item.active{color:#fff;background:rgba(204,169,74,.14)}
+.nav-item.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--gold2)}
+.nav-group{letter-spacing:.2em;font-size:.6rem}
+.brand span{letter-spacing:.14em;font-size:.72rem}
+
+/* ── KPI- & panel-elevatie: lichter + gouden top-hairline + hover-lift ── */
+.kpi,.panel{box-shadow:var(--elev-2);border-color:rgba(12,11,9,.07)}
+.kpi{position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));opacity:0;transition:opacity var(--t)}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(11,30,48,.12);border-color:rgba(180,144,48,.3)}
+.kpi:hover::before{opacity:1}
+
+/* ── Tabellen: premium ledger ── */
+th{color:var(--gold-ink);font-size:.68rem;letter-spacing:.13em;font-weight:600;border-bottom:1px solid var(--hair)}
+th,td{padding:13px 12px}
+td.num,th.num{text-align:right}
+td.num{font-weight:600;color:var(--navy)}
+tbody tr[data-action]:hover td{background:rgba(180,144,48,.06)}
+tbody tr[data-action]:hover td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+tfoot td{border-top:1px solid rgba(11,30,48,.25)}
+
+/* ── Badges & segmented: editorial pills ── */
+.badge{gap:6px;padding:4px 10px;font-size:.7rem;font-weight:600;letter-spacing:.02em;border:1px solid rgba(180,144,48,.24);background:rgba(180,144,48,.1);color:#765a12}
+.badge.green{background:rgba(30,106,66,.1);color:var(--green);border-color:rgba(30,106,66,.24)}
+.badge.red{background:rgba(176,58,58,.1);color:#963535;border-color:rgba(176,58,58,.24)}
+.badge.blue{background:rgba(11,30,48,.07);color:var(--navy);border-color:rgba(11,30,48,.16)}
+.badge.gray{background:rgba(111,117,111,.12);color:var(--muted);border-color:rgba(111,117,111,.2)}
+.badge.gold{border-color:transparent}
+.segmented button{font-weight:600}
+.segmented button:hover:not(.active){color:var(--navy)}
+.segmented button.active{box-shadow:0 1px 2px rgba(11,30,48,.06),0 4px 12px rgba(11,30,48,.07)}
+
+/* ── Actielijst: gouden gradient-accentbalk + hover-lift ── */
+.signal{position:relative;overflow:hidden;border-radius:var(--radius-lg);padding:13px 14px}
+.signal.hoog,.signal.middel{border-left:1px solid var(--line)}
+.signal::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}
+.signal.hoog::before{background:linear-gradient(180deg,#c44,#b03a3a)}
+.signal.middel::before{background:linear-gradient(180deg,var(--gold2),var(--gold))}
+.signal:hover{border-color:rgba(180,144,48,.45);box-shadow:0 10px 24px rgba(11,30,48,.07);transform:translateY(-1px)}
+
+/* ── Gouden focus-ring (a11y) — zichtbaar voor toetsenbordgebruikers ── */
+:where(.btn,.icon-btn,.text-btn,.segmented button,[data-action],.lead-card,.signal,.markt-link):focus-visible{outline:none;box-shadow:0 0 0 2px var(--panel),0 0 0 4px rgba(180,144,48,.6)}
+.nav-item:focus-visible{outline:none;box-shadow:0 0 0 2px var(--navy),0 0 0 4px rgba(204,169,74,.7)}
+a:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+
+/* ── Subtiele view-fade bij navigeren (premium 'settle', geen layout-shift) ── */
+@keyframes viewIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.view.active{animation:viewIn .32s var(--ease) both}
+#landing.active{animation:none}
+
+/* ── Ledger-tabel: bedragkolommen rechts uitgelijnd (premium ledger-gevoel) ── */
+.ledger td:nth-child(3),.ledger td:nth-child(4),.ledger td:nth-child(5),.ledger td:nth-child(6),
+.ledger th:nth-child(3),.ledger th:nth-child(4),.ledger th:nth-child(5),.ledger th:nth-child(6){text-align:right;font-variant-numeric:tabular-nums}
+.ledger td:nth-child(4),.ledger td:nth-child(6){color:var(--navy)}
+/* Overige financiële tabellen: bedragkolommen rechts (headers dragen al .num) */
+#deal-archive td:nth-child(3),#deal-archive td:nth-child(4),
+#projects-table td:nth-child(4),#projects-table td:nth-child(5),#projects-table td:nth-child(6),
+#costs-table td:nth-child(6),
+#sales-active-table td:nth-child(3),#sales-active-table td:nth-child(4),#sales-active-table td:nth-child(5),#sales-active-table td:nth-child(6),#sales-active-table td:nth-child(7),
+#sales-sold-table td:nth-child(4),#sales-sold-table td:nth-child(5),#sales-sold-table td:nth-child(6){text-align:right;font-variant-numeric:tabular-nums}
+/* Gegenereerde financiële tabellen (#X-body): headers + cellen rechts */
+#money-body th:nth-child(6),#money-body td:nth-child(6),
+#finance-body th:nth-child(4),#finance-body td:nth-child(4),#finance-body th:nth-child(5),#finance-body td:nth-child(5),#finance-body th:nth-child(6),#finance-body td:nth-child(6),
+#contracts-body th:nth-child(5),#contracts-body td:nth-child(5){text-align:right;font-variant-numeric:tabular-nums}
+/* Investeerders-roster: alle numerieke kolommen rechts (Inleg/IRR/Multiple/Verwacht/Uitbetaald-jaren + totaalregel);
+   kolom 1 (naam) + laatste (Wwft) blijven links. > direct-child scoping mijdt de geneste .cashflow-table in uitklaprijen. */
+.investor-table > thead > tr > th:nth-child(n+2):not(:last-child),
+.investor-table > tbody > tr > td:nth-child(n+2):not(:last-child),
+.investor-table > tfoot > tr > td:nth-child(n+2):not(:last-child){text-align:right;font-variant-numeric:tabular-nums}
+
+/* ── Reduced-motion guard (verplicht zodra we motion toevoegen) — als laatste ── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+
+/* ── Horizontale nav (≤1100): goud-accent als onderlijn i.p.v. zijbalk ── */
+@media (max-width:1100px){
+  .nav-item.active::before{left:8px;right:8px;top:auto;bottom:0;width:auto;height:2px;border-radius:2px 2px 0 0}
+}

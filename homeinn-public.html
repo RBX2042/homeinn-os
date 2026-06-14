@@ -21,15 +21,137 @@
   <meta name="twitter:description" content="HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt of beheert ze. Voorstel binnen 48 uur.">
   <meta name="twitter:image" content="https://home-inn.nl/assets/favicon-512.png">
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260612">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260623">
 </head>
 <body>
 <div id="cur"><div id="cur-dot"></div></div>
 <div id="cur-ring"><div id="cur-ring-inner"></div></div>
 
+<!-- ═══ ICOON-SPRITE (line-art, currentColor, herbruikbaar via <use>) ═══ -->
+<svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Aankoop — woning met sleutelgat (eigendom) -->
+    <symbol id="ic-aankoop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3.5 11 L12 4 L20.5 11"/><path d="M6 10.2 V20 H18 V10.2"/>
+      <circle cx="12" cy="13.7" r="1.5"/><path d="M12 15.2 V18"/>
+    </symbol>
+    <!-- Ontwikkeling — bouwhelm (renovatie/ontwikkeling) -->
+    <symbol id="ic-ontwikkeling" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3.5 16 a8.5 8.5 0 0 1 17 0"/><path d="M2.4 16.2 H21.6"/>
+      <path d="M9.5 8.4 V6.7 a1 1 0 0 1 1-1 H13.5 a1 1 0 0 1 1 1 V8.4"/><path d="M12 8.2 V5.5"/>
+    </symbol>
+    <!-- Verkoop — prijskaartje -->
+    <symbol id="ic-verkoop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13.6 3 H20 a1 1 0 0 1 1 1 V10.4 a2 2 0 0 1 -.6 1.4 l-8.4 8.4 a1.8 1.8 0 0 1 -2.5 0 l-5.7 -5.7 a1.8 1.8 0 0 1 0 -2.5 l8.4 -8.4 A2 2 0 0 1 13.6 3 Z"/>
+      <circle cx="16.6" cy="7.4" r="1.25"/>
+    </symbol>
+    <!-- Beheer — schild met vink (bescherming/beheer) -->
+    <symbol id="ic-beheer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3 L19 5.8 V11 c0 4.9 -3.4 7.9 -7 9.4 C8.4 18.9 5 15.9 5 11 V5.8 Z"/>
+      <path d="M9 11.7 l2.1 2.1 4 -4.5"/>
+    </symbol>
+    <!-- Klok (48 uur / responstijd) -->
+    <symbol id="ic-klok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.4"/><path d="M12 7.3 V12 L15.3 13.9"/>
+    </symbol>
+    <!-- Euro (geen kosten / tarief) -->
+    <symbol id="ic-euro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.4"/><path d="M15.4 8.6 a4 4 0 1 0 0 6.8"/><path d="M7.3 11 H13.2"/><path d="M7.3 13.2 H12"/>
+    </symbol>
+    <!-- Sleutel -->
+    <symbol id="ic-sleutel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8" cy="8" r="3.4"/><path d="M10.4 10.4 L19 19"/><path d="M16.4 16.4 L18.4 14.4"/><path d="M18.4 18.4 L20.1 16.7"/>
+    </symbol>
+    <!-- Document / contract -->
+    <symbol id="ic-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 3 H14 L18 7 V21 H7 Z"/><path d="M14 3 V7 H18"/><path d="M9.5 12 H15.5"/><path d="M9.5 15 H15.5"/><path d="M9.5 18 H13"/>
+    </symbol>
+    <!-- Slot (privacy) -->
+    <symbol id="ic-slot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6.6 10.6 H17.4 a1.4 1.4 0 0 1 1.4 1.4 V18.6 a1.4 1.4 0 0 1 -1.4 1.4 H6.6 a1.4 1.4 0 0 1 -1.4 -1.4 V12 a1.4 1.4 0 0 1 1.4 -1.4 Z"/>
+      <path d="M8.6 10.6 V8 a3.4 3.4 0 0 1 6.8 0 V10.6"/><circle cx="12" cy="14.4" r="1.1"/><path d="M12 15.5 V16.9"/>
+    </symbol>
+    <!-- Blad (verduurzaming / label A) -->
+    <symbol id="ic-blad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 19 C5 11 11 5 19 5 C19 13 13 19 5 19 Z"/><path d="M9 15 C12 12 15 9.5 16.5 7.5"/>
+    </symbol>
+    <!-- Locatiepin -->
+    <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/>
+    </symbol>
+    <!-- Grafiek (rendement / rapportage) -->
+    <symbol id="ic-grafiek" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 5 V19 H19"/><path d="M7.5 15 L11 11 L13.8 13 L18 7.6"/><path d="M18 7.6 H15.4"/><path d="M18 7.6 V10.2"/>
+    </symbol>
+    <!-- Schaal (eerlijk vergeleken) -->
+    <symbol id="ic-schaal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4 V20"/><path d="M7 20 H17"/><path d="M5 8 H19"/><path d="M12 5.5 L5 8 L7.3 12.5 a3 3 0 0 1 -4.6 0 Z"/><path d="M12 5.5 L19 8 L16.7 12.5 a3 3 0 0 0 4.6 0 Z"/>
+    </symbol>
+    <!-- Gereedschap (technisch beheer/onderhoud) -->
+    <symbol id="ic-tools" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14.2 6.6 a3.6 3.6 0 0 0 4.6 4.6 l-6.4 6.4 a2 2 0 0 1 -2.8 -2.8 Z"/><path d="M6.5 6.5 l3.4 3.4"/><path d="M5 5 l1.8 .4 .4 1.8 -1.2 1.2 -1.8 -.4 -.4 -1.8 Z"/>
+    </symbol>
+    <!-- Gesprek / kennismaking -->
+    <symbol id="ic-gesprek" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 6.5 a1.5 1.5 0 0 1 1.5 -1.5 H14 a1.5 1.5 0 0 1 1.5 1.5 V12 a1.5 1.5 0 0 1 -1.5 1.5 H8 L4.5 16.5 V13.5 H5.5 a1.5 1.5 0 0 1 -1.5 -1.5 Z"/>
+      <path d="M17 8.5 h1.5 A1.5 1.5 0 0 1 20 10 V15.5 a1.5 1.5 0 0 1 -1.5 1.5 H17.5 L20 19.5"/>
+    </symbol>
+    <!-- Familie / portefeuille (meerdere objecten) -->
+    <symbol id="ic-stapel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 9 L9 6 L14 9 V13 H4 Z"/><path d="M11 12.5 L16 9.5 L21 12.5 V18 H11 Z"/>
+    </symbol>
+    <!-- Oog-uit / discretie (geen Funda) -->
+    <symbol id="ic-discreet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12 C6.5 7.8 9.6 6 12 6 C14.4 6 17.5 7.8 20 12"/><path d="M4 12 C6.5 16.2 9.6 18 12 18 C14.4 18 17.5 16.2 20 12"/><circle cx="12" cy="12" r="2.4"/><path d="M5 5 L19 19"/>
+    </symbol>
+
+    <!-- Architecturale scènes voor blog/recent werk (kleuren ingebakken voor navy-bg) -->
+    <symbol id="ill-skyline" viewBox="0 0 400 240">
+      <g fill="none" stroke="rgba(214,178,90,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M40 240 V150 H58 V140 H76 V130 H94 V140 H112 V150 H130 V240"/>
+        <path d="M130 240 V146 L162 118 L194 146 V240"/>
+        <path d="M194 240 V150 Q194 127 224 125 Q254 127 254 150 V240"/>
+        <path d="M254 240 V138 H320 V240"/>
+        <path d="M320 240 V158 H362 V240"/>
+      </g>
+      <g fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1">
+        <path d="M58 172 H112 M58 196 H112 M58 219 H112 M85 162 V232"/>
+        <path d="M146 176 H178 M146 200 H178 M162 164 V232"/>
+        <path d="M210 166 H238 M210 190 H238 M210 214 H238"/>
+        <path d="M268 158 H306 M268 182 H306 M268 206 H306 M287 150 V232"/>
+        <path d="M332 178 H350 M332 202 H350"/>
+      </g>
+    </symbol>
+    <symbol id="ill-block" viewBox="0 0 400 240">
+      <g fill="none" stroke="rgba(214,178,90,.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M64 240 V66 H150 V240"/>
+        <path d="M150 240 V118 H230 V240"/>
+        <path d="M230 240 V162 H300 V240"/>
+        <path d="M332 240 V52"/><path d="M300 72 H378"/><path d="M332 52 L356 72 M332 52 L314 72"/><path d="M362 72 V92"/>
+      </g>
+      <g fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1">
+        <path d="M64 96 H150 M64 122 H150 M64 148 H150 M64 174 H150 M64 200 H150 M64 226 H150 M93 74 V240 M121 74 V240"/>
+        <path d="M150 144 H230 M150 170 H230 M150 196 H230 M150 222 H230 M190 126 V240"/>
+        <path d="M230 188 H300 M230 214 H300 M265 170 V240"/>
+      </g>
+    </symbol>
+    <symbol id="ill-renovatie" viewBox="0 0 400 240">
+      <g fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1" stroke-linecap="round">
+        <path d="M96 240 V112 M304 240 V112"/><path d="M96 112 H304 M96 156 H304 M96 200 H304"/>
+        <path d="M96 200 L160 156 M240 156 L304 200"/>
+      </g>
+      <g fill="none" stroke="rgba(214,178,90,.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M126 240 V150 L200 96 L274 150 V240"/><path d="M126 150 H274"/>
+        <path d="M185 240 V198 H215 V240"/>
+        <path d="M150 172 H176 V198 H150 Z"/><path d="M224 172 H250 V198 H224 Z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
 <!-- ═══ NAV ═══ -->
 <header id="nav">
-  <a class="nav-logo" href="#" onclick="go('home');return false"><img src="assets/logo-light.png?v=20260614" alt="HomeINN" class="nav-logo-img"></a>
+  <a class="nav-logo" href="#" onclick="go('home');return false"><img src="assets/logo-light.png?v=20260615" alt="HomeINN" class="nav-logo-img" width="170" height="58"></a>
   <ul class="nav-links">
     <li><a href="#" onclick="go('home');return false" data-p="home">Home</a></li>
     <li><a href="#" onclick="go('verkopen');return false" data-p="verkopen">Pand verkopen</a></li>
@@ -43,6 +165,7 @@
   <button class="nav-cta" onclick="openModal()">Gratis gesprek</button>
   <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" onclick="toggleMob()"><span></span><span></span><span></span></button>
 </header>
+<div id="scrollbar"></div>
 
 <div id="mob">
   <nav>
@@ -73,16 +196,45 @@
 
 <section class="hero">
   <div class="hero-bg"></div>
-  <div class="hero-geo">
-    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <line x1="0" y1="900" x2="720" y2="0" stroke="white" stroke-width=".6"/>
-      <line x1="240" y1="900" x2="960" y2="0" stroke="white" stroke-width=".6"/>
-      <line x1="1440" y1="0" x2="720" y2="900" stroke="white" stroke-width=".6"/>
-      <circle cx="720" cy="450" r="380" fill="none" stroke="white" stroke-width=".5"/>
-      <circle cx="720" cy="450" r="560" fill="none" stroke="white" stroke-width=".35"/>
+  <div class="hero-glow"></div>
+  <div class="hero-bridge" aria-hidden="true">
+    <svg viewBox="0 0 1200 760" preserveAspectRatio="xMaxYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- dek-verloop: onzichtbaar boven de tekst/knoppen (links), zichtbaar onder de brug, vloeit weg vóór de schermrand -->
+        <linearGradient id="hb-deckfade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".46" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".52" stop-color="#fff" stop-opacity=".45"/>
+          <stop offset=".9" stop-color="#fff" stop-opacity=".45"/>
+          <stop offset=".98" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- brugdek: vloeiend ingebed, geen doorlopende streep meer -->
+      <line class="hb-deck" x1="0" y1="600" x2="1200" y2="600"/>
+      <!-- De Zwaan: dichte hoofdwaaier (echte brug heeft 16 voorstays) + 2 achterstays -->
+      <g class="hb-cables">
+        <!-- hoofdwaaier: dichte fan vanaf de gebogen nek → lange overspanning (links); hoog aangrijpend = ver reikend -->
+        <line class="hb-cable" pathLength="1" x1="862" y1="320" x2="760" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="873" y1="306" x2="702" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="885" y1="292" x2="644" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="896" y1="279" x2="586" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="907" y1="265" x2="528" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="918" y1="251" x2="470" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="930" y1="237" x2="412" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="941" y1="223" x2="354" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="952" y1="209" x2="296" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="963" y1="195" x2="238" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="975" y1="181" x2="180" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="986" y1="168" x2="122" y2="600"/>
+        <!-- 2 achterstays → één achteranker op de korte zijde (rechts) -->
+        <line class="hb-cable" pathLength="1" x1="984" y1="168" x2="1150" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="962" y1="201" x2="1150" y2="600"/>
+      </g>
+      <!-- De Zwaan: kaarsrechte schacht 'recht omhoog' → knik op ~3/5 → nek helt fors ACHTEROVER (van de overspanning af) naar de vrije kop -->
+      <path class="hb-pylon" d="M850 600 L850 335 L1000 150"/>
+      <line class="hb-pier" x1="850" y1="600" x2="850" y2="656"/>
     </svg>
   </div>
-  <div class="hero-glow"></div>
   <div class="hero-grain"></div>
   <div class="hero-content">
     <div class="hero-copy">
@@ -90,7 +242,7 @@
         <div class="hero-pill-dot"></div>
         <span>Aankoop · Ontwikkeling · Verkoop · Beheer — Rotterdam e.o.</span>
       </div>
-      <h1>Van aankoop<br>tot oplevering.<br>Met <em>HomeINN.</em></h1>
+      <h1><span class="hl">Van aankoop</span><span class="hl">tot oplevering.</span><span class="hl">Met <em>HomeINN.</em></span></h1>
       <p class="hero-sub">HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt of beheert ze daarna. Eén partner voor de hele vastgoedcyclus — met eigen kapitaal, een vast uitvoeringsteam en diepe Rotterdamse marktkennis.</p>
       <div class="hero-actions">
         <button class="btn btn-primary" onclick="go('verkopen')">Verkoop uw pand aan ons <span class="arr">→</span></button>
@@ -135,27 +287,53 @@
 
 <section class="jstats-band">
   <div class="jstats-inner">
-    <div class="jstat rv"><div class="jstat-val">2007</div><div class="jstat-lbl">Actief in vastgoed sinds</div></div>
-    <div class="jstat rv d1"><div class="jstat-val">25+</div><div class="jstat-lbl">Panden aangekocht, ontwikkeld of verkocht</div></div>
-    <div class="jstat rv d2"><div class="jstat-val">€ 4 mln+</div><div class="jstat-lbl">Aan gerealiseerde verkopen</div></div>
-    <div class="jstat rv d3"><div class="jstat-val">1.000 m²+</div><div class="jstat-lbl">Woonoppervlak in actief beheer</div></div>
+    <div class="jstat rv"><div class="jstat-val" data-count="2007" data-from="1990">2007</div><div class="jstat-lbl">Actief in vastgoed sinds</div></div>
+    <div class="jstat rv d1"><div class="jstat-val" data-count="25" data-suffix="+">25+</div><div class="jstat-lbl">Panden aangekocht, ontwikkeld of verkocht</div></div>
+    <div class="jstat rv d2"><div class="jstat-val" data-count="4" data-prefix="€ " data-suffix=" mln+">€ 4 mln+</div><div class="jstat-lbl">Aan gerealiseerde verkopen</div></div>
+    <div class="jstat rv d3"><div class="jstat-val" data-count="1000" data-suffix=" m²+" data-sep="1">1.000 m²+</div><div class="jstat-lbl">Woonoppervlak in actief beheer</div></div>
   </div>
 </section>
 
 
 <!-- PIJLERS -->
 <section class="values-section section-sm">
-  <div style="max-width:1320px;margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem)">
-    <div class="proc-head">
-      <span class="t-eyebrow rv">Wat wij doen</span>
-      <h2 class="rv">Vier disciplines.<br><em>Eén huis.</em></h2>
+  <div class="cyclus-wrap rv">
+    <div class="cyclus-copy">
+      <span class="t-eyebrow">Wat wij doen</span>
+      <div class="rule"></div>
+      <h2>Vier disciplines.<br>Eén <em>doorlopende cyclus.</em></h2>
+      <p>De meeste partijen pakken één schakel: de makelaar bemiddelt, de beheerder administreert, de ontwikkelaar bouwt. HomeINN doorloopt de héle cyclus zelf — met eigen kapitaal en één vast team. Elke fase voedt de volgende.</p>
+      <ul class="cyclus-legend">
+        <li><span class="cl-n">01</span><span><b>Aankoop</b> — wij kopen uw pand direct, in elke staat.</span></li>
+        <li><span class="cl-n">02</span><span><b>Ontwikkeling</b> — renovatie en verduurzaming naar label A.</span></li>
+        <li><span class="cl-n">03</span><span><b>Verkoop</b> — instapklaar, gekeurd en energiezuinig opgeleverd.</span></li>
+        <li><span class="cl-n">04</span><span><b>Beheer</b> — óf we beheren het alsof het ons eigen pand is.</span></li>
+      </ul>
+    </div>
+    <div class="cyclus-stage" role="img" aria-label="De vastgoedcyclus van HomeINN: aankoop, ontwikkeling, verkoop en beheer als één doorlopende cyclus">
+      <svg class="cyclus-ring-svg" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="cr-ring" cx="50" cy="50" r="42"/>
+        <circle class="cr-ring-dash" cx="50" cy="50" r="33"/>
+        <path class="cr-arrow" d="M-1.4 -1.9 L1.2 0 L-1.4 1.9 Z" transform="translate(79.7 79.7) rotate(135)"/>
+        <path class="cr-arrow" d="M-1.4 -1.9 L1.2 0 L-1.4 1.9 Z" transform="translate(20.3 79.7) rotate(225)"/>
+        <path class="cr-arrow" d="M-1.4 -1.9 L1.2 0 L-1.4 1.9 Z" transform="translate(20.3 20.3) rotate(315)"/>
+        <path class="cr-arrow" d="M-1.4 -1.9 L1.2 0 L-1.4 1.9 Z" transform="translate(79.7 20.3) rotate(45)"/>
+      </svg>
+      <div class="cyclus-ctr">
+        <span class="cc-eyebrow">HomeINN</span>
+        <span class="cc-word">Eén <em>huis</em></span>
+      </div>
+      <div class="cyc-node cn-top"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">01</span><span class="cyc-name">Aankoop</span></div></div>
+      <div class="cyc-node cn-right"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">02</span><span class="cyc-name">Ontwikkeling</span></div></div>
+      <div class="cyc-node cn-bottom"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-verkoop"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">03</span><span class="cyc-name">Verkoop</span></div></div>
+      <div class="cyc-node cn-left"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-beheer"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">04</span><span class="cyc-name">Beheer</span></div></div>
     </div>
   </div>
-  <div class="values-grid four">
-    <div class="val-card rv"><div class="val-eyebrow">01 — Aankoop</div><h3>Wij kopen uw pand. Direct.</h3><p>Woningen, appartementen en portiekpanden — in elke staat, ook verhuurd. Geen makelaarskosten, geen bezichtigingscircus: een onderbouwd voorstel binnen 48 uur en passeren op het moment dat ú kiest.</p><button class="pillar-cta" onclick="go('verkopen')">Pand verkopen →</button></div>
-    <div class="val-card rv d1"><div class="val-eyebrow">02 — Projectontwikkeling</div><h3>Van gedateerd naar instapklaar</h3><p>Volledige renovaties, herindelingen en verduurzaming naar energielabel A — met een vast team van aannemers en installateurs en strakke budget- en planningsbewaking.</p><button class="pillar-cta" onclick="go('projecten')">Volg onze projecten →</button></div>
-    <div class="val-card rv d2"><div class="val-eyebrow">03 — Verkoop</div><h3>Gerenoveerd &amp; gekeurd aanbod</h3><p>Onze ontwikkelde woningen komen instapklaar op de markt: bouwkundig gekeurd, energiezuinig en zonder verrassingen achter de muren. Interesse in ons aanbod? Laat het ons weten.</p><button class="pillar-cta" onclick="go('aanbod')">Bekijk het aanbod →</button></div>
-    <div class="val-card rv d3"><div class="val-eyebrow">04 — Vastgoedbeheer</div><h3>Rust voor eigenaren</h3><p>Niet verkopen maar verhuren? Wij beheren uw vastgoed met vaste pakketten, transparante tarieven en één aanspreekpunt — van huurincasso tot 24/7 storingslijn.</p><button class="pillar-cta" onclick="go('tarieven')">Beheerpakketten →</button></div>
+  <div class="values-grid four rv-stagger">
+    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></div><div class="val-eyebrow">01 — Aankoop</div><h3>Wij kopen uw pand. Direct.</h3><p>Woningen, appartementen en portiekpanden — in elke staat, ook verhuurd. Geen makelaarskosten, geen bezichtigingscircus: een onderbouwd voorstel binnen 48 uur en passeren op het moment dat ú kiest.</p><button class="pillar-cta" onclick="go('verkopen')">Pand verkopen →</button></div>
+    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></div><div class="val-eyebrow">02 — Projectontwikkeling</div><h3>Van gedateerd naar instapklaar</h3><p>Volledige renovaties, herindelingen en verduurzaming naar energielabel A — met een vast team van aannemers en installateurs en strakke budget- en planningsbewaking.</p><button class="pillar-cta" onclick="go('projecten')">Volg onze projecten →</button></div>
+    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-verkoop"/></svg></div><div class="val-eyebrow">03 — Verkoop</div><h3>Gerenoveerd &amp; gekeurd aanbod</h3><p>Onze ontwikkelde woningen komen instapklaar op de markt: bouwkundig gekeurd, energiezuinig en zonder verrassingen achter de muren. Interesse in ons aanbod? Laat het ons weten.</p><button class="pillar-cta" onclick="go('aanbod')">Bekijk het aanbod →</button></div>
+    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-beheer"/></svg></div><div class="val-eyebrow">04 — Vastgoedbeheer</div><h3>Rust voor eigenaren</h3><p>Niet verkopen maar verhuren? Wij beheren uw vastgoed met vaste pakketten, transparante tarieven en één aanspreekpunt — van huurincasso tot 24/7 storingslijn.</p><button class="pillar-cta" onclick="go('tarieven')">Beheerpakketten →</button></div>
   </div>
 </section>
 
@@ -194,10 +372,10 @@
       <h2 class="rv">Van aankoop tot <em>oplevering.</em></h2>
     </div>
   </div>
-  <div class="blog-grid">
-    <article class="blog-card rv"><div class="blog-img"></div><div class="blog-body"><div class="proj-status sold">Verkocht</div><h3>Schiekade — Rotterdam-Noord</h3><p>Aangekocht, volledig gerenoveerd en binnen acht maanden verkocht. Van gedateerd appartement naar energiezuinige stadswoning.</p></div></article>
-    <article class="blog-card rv d1"><div class="blog-img alt"></div><div class="blog-body"><div class="proj-status">Te koop</div><h3>Laan op Zuid — Kop van Zuid</h3><p>Compleet vernieuwd appartement met energielabel A: nieuwe installaties, warmtepomp en hoogwaardige afwerking.</p></div></article>
-    <article class="blog-card rv d2"><div class="blog-img"></div><div class="blog-body"><div class="proj-status">In ontwikkeling</div><h3>Kralingse Plaslaan — Kralingen</h3><p>Volledige renovatie met uitbouw en verduurzaming. Oplevering zomer 2026 — interesse? Meld u aan voor ons aanbod.</p></div></article>
+  <div class="blog-grid rv-stagger">
+    <article class="blog-card"><div class="blog-img"><svg class="blog-art" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#ill-skyline"/></svg></div><div class="blog-body"><div class="proj-status sold">Verkocht</div><h3>Schiekade — Rotterdam-Noord</h3><p>Aangekocht, volledig gerenoveerd en binnen acht maanden verkocht. Van gedateerd appartement naar energiezuinige stadswoning.</p></div></article>
+    <article class="blog-card"><div class="blog-img alt"><svg class="blog-art" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#ill-block"/></svg></div><div class="blog-body"><div class="proj-status">Te koop</div><h3>Laan op Zuid — Kop van Zuid</h3><p>Compleet vernieuwd appartement met energielabel A: nieuwe installaties, warmtepomp en hoogwaardige afwerking.</p></div></article>
+    <article class="blog-card"><div class="blog-img"><svg class="blog-art" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#ill-renovatie"/></svg></div><div class="blog-body"><div class="proj-status">In ontwikkeling</div><h3>Kralingse Plaslaan — Kralingen</h3><p>Volledige renovatie met uitbouw en verduurzaming. Oplevering zomer 2026 — interesse? Meld u aan voor ons aanbod.</p></div></article>
   </div>
   <div style="max-width:1320px;margin:2.5rem auto 0"><button class="btn btn-outline-dark rv" onclick="go('aanbod')">Bekijk het actuele aanbod <span class="arr">→</span></button></div>
 </section>
@@ -489,12 +667,12 @@
     </div>
   </div>
   <div class="values-grid">
-    <div class="val-card rv"><div class="val-eyebrow">Verhuurd pand</div><h3>Huurder blijft gewoon zitten</h3><p>Een verhuurde woning verkopen op de vrije markt is lastig. Wij kopen juist graag in verhuurde staat — de huurovereenkomst nemen wij volledig over.</p></div>
-    <div class="val-card rv d1"><div class="val-eyebrow">Erfenis of scheiding</div><h3>Snel en discreet duidelijkheid</h3><p>Bij een nalatenschap of scheiding wilt u geen maandenlang traject. Eén aanspreekpunt, een vast bedrag en een passeerdatum die past bij uw situatie.</p></div>
-    <div class="val-card rv d2"><div class="val-eyebrow">Achterstallig onderhoud</div><h3>U hoeft niets op te knappen</h3><p>Gedateerde keuken, oude leidingen, funderingszorgen? Renoveren is ons vak. Wij kopen in elke staat — zonder aftrekposten achteraf.</p></div>
-    <div class="val-card rv"><div class="val-eyebrow">Portefeuille afbouwen</div><h3>Meerdere panden in één keer</h3><p>Stoppen met verhuren door nieuwe regelgeving of box 3? Wij nemen complete portefeuilles over, in één transactie en met één notarisafspraak.</p></div>
-    <div class="val-card rv d1"><div class="val-eyebrow">Kapitaal vrijmaken</div><h3>Zekerheid zonder voorbehoud</h3><p>Geen wachten op de hypotheek van een koper. Wij kopen met eigen middelen, dus de verkoop loopt nooit stuk op financiering.</p></div>
-    <div class="val-card rv d2"><div class="val-eyebrow">Privacy</div><h3>Geen borden, geen Funda</h3><p>Uw verkoop blijft buiten de openbaarheid. Geen dertig kijkers door uw huis, geen foto's online — één opname en klaar.</p></div>
+    <div class="val-card rv"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-doc"/></svg></div><div class="val-eyebrow">Verhuurd pand</div><h3>Huurder blijft gewoon zitten</h3><p>Een verhuurde woning verkopen op de vrije markt is lastig. Wij kopen juist graag in verhuurde staat — de huurovereenkomst nemen wij volledig over.</p></div>
+    <div class="val-card rv d1"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-schaal"/></svg></div><div class="val-eyebrow">Erfenis of scheiding</div><h3>Snel en discreet duidelijkheid</h3><p>Bij een nalatenschap of scheiding wilt u geen maandenlang traject. Eén aanspreekpunt, een vast bedrag en een passeerdatum die past bij uw situatie.</p></div>
+    <div class="val-card rv d2"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-tools"/></svg></div><div class="val-eyebrow">Achterstallig onderhoud</div><h3>U hoeft niets op te knappen</h3><p>Gedateerde keuken, oude leidingen, funderingszorgen? Renoveren is ons vak. Wij kopen in elke staat — zonder aftrekposten achteraf.</p></div>
+    <div class="val-card rv"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-stapel"/></svg></div><div class="val-eyebrow">Portefeuille afbouwen</div><h3>Meerdere panden in één keer</h3><p>Stoppen met verhuren door nieuwe regelgeving of box 3? Wij nemen complete portefeuilles over, in één transactie en met één notarisafspraak.</p></div>
+    <div class="val-card rv d1"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-euro"/></svg></div><div class="val-eyebrow">Kapitaal vrijmaken</div><h3>Zekerheid zonder voorbehoud</h3><p>Geen wachten op de hypotheek van een koper. Wij kopen met eigen middelen, dus de verkoop loopt nooit stuk op financiering.</p></div>
+    <div class="val-card rv d2"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-discreet"/></svg></div><div class="val-eyebrow">Privacy</div><h3>Geen borden, geen Funda</h3><p>Uw verkoop blijft buiten de openbaarheid. Geen dertig kijkers door uw huis, geen foto's online — één opname en klaar.</p></div>
   </div>
 </section>
 
@@ -617,10 +795,10 @@
 
 <div class="pakketten-bg">
   <div class="values-grid four" style="max-width:1320px;margin:0 auto 4rem">
-    <div class="val-card rv"><div class="val-eyebrow">01 — Aankoop</div><h3>Directe aankoop van uw pand</h3><p>In elke staat, ook verhuurd. Onderbouwd voorstel binnen 48 uur, eigen kapitaal, geen kosten voor u.</p><button class="pillar-cta" onclick="go('verkopen')">Lees meer →</button></div>
-    <div class="val-card rv d1"><div class="val-eyebrow">02 — Projectontwikkeling</div><h3>Renovatie &amp; verduurzaming</h3><p>Volledige renovaties en herindelingen met vast uitvoeringsteam, strak budget en planning — tot en met energielabel A.</p></div>
-    <div class="val-card rv d2"><div class="val-eyebrow">03 — Verkoop</div><h3>Instapklaar woningaanbod</h3><p>Onze ontwikkelde woningen: bouwkundig gekeurd, energiezuinig en direct te betrekken. Meld u aan voor het aanbod.</p><button class="pillar-cta" onclick="go('aanbod')">Bekijk het aanbod →</button></div>
-    <div class="val-card rv d3"><div class="val-eyebrow">04 — Beheer</div><h3>Vastgoedbeheer in drie pakketten</h3><p>Voor eigenaren die verhuren: van administratief beheer tot strategisch partnerschap. Zie de pakketten hieronder.</p></div>
+    <div class="val-card rv"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></div><div class="val-eyebrow">01 — Aankoop</div><h3>Directe aankoop van uw pand</h3><p>In elke staat, ook verhuurd. Onderbouwd voorstel binnen 48 uur, eigen kapitaal, geen kosten voor u.</p><button class="pillar-cta" onclick="go('verkopen')">Lees meer →</button></div>
+    <div class="val-card rv d1"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></div><div class="val-eyebrow">02 — Projectontwikkeling</div><h3>Renovatie &amp; verduurzaming</h3><p>Volledige renovaties en herindelingen met vast uitvoeringsteam, strak budget en planning — tot en met energielabel A.</p></div>
+    <div class="val-card rv d2"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-verkoop"/></svg></div><div class="val-eyebrow">03 — Verkoop</div><h3>Instapklaar woningaanbod</h3><p>Onze ontwikkelde woningen: bouwkundig gekeurd, energiezuinig en direct te betrekken. Meld u aan voor het aanbod.</p><button class="pillar-cta" onclick="go('aanbod')">Bekijk het aanbod →</button></div>
+    <div class="val-card rv d3"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-beheer"/></svg></div><div class="val-eyebrow">04 — Beheer</div><h3>Vastgoedbeheer in drie pakketten</h3><p>Voor eigenaren die verhuren: van administratief beheer tot strategisch partnerschap. Zie de pakketten hieronder.</p></div>
   </div>
   <div class="pk-grid" style="max-width:1320px;margin:0 auto">
     <div class="pk rv">
@@ -882,9 +1060,12 @@
     </div>
 
     <!-- MINIMUM FEE TOELICHTING -->
-    <div style="background:var(--gold-light);border-left:3px solid var(--gold);padding:2rem 2.5rem;margin:0 0 4rem" class="rv">
+    <div style="background:var(--gold-light);border-left:3px solid var(--gold);padding:2rem 2.5rem;margin:0 0 4rem;display:flex;gap:1.5rem;align-items:flex-start" class="rv">
+      <div class="card-ico hi-ico" style="width:34px;height:34px;margin:.2rem 0 0"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-schaal"/></svg></div>
+      <div>
       <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:300;color:var(--ink2);margin-bottom:.75rem">Hoe werkt het minimumtarief?</h3>
       <p style="font-size:.875rem;font-weight:300;line-height:1.85;color:var(--ink3);max-width:720px">Bij een kale huur van € 1.200,- per maand geldt voor Pakket 2: 8% = € 96,-. Omdat dit lager is dan het minimumtarief van € 135,-, geldt het minimumtarief. Zodra de huurprijs boven € 1.688,- per maand uitkomt, wordt het percentage hoger dan het minimumtarief en geldt het percentage. U betaalt altijd het hoogste van de twee — maar nooit beide tegelijk. Dit is altijd transparant zichtbaar in uw portaal.</p>
+      </div>
     </div>
 
     <!-- AANVULLENDE TARIEVEN -->
@@ -932,12 +1113,12 @@
 
 <section class="values-section section-sm">
   <div class="values-grid">
-    <div class="val-card rv"><div class="val-eyebrow">01 — Transparantie</div><h3>Geen kleine lettertjes</h3><p>Vaste percentages, een heldere minimumfee en maandelijks inzicht in elk eurocent. U weet altijd precies wat HomeINN kost en wat het oplevert.</p></div>
-    <div class="val-card rv d1"><div class="val-eyebrow">02 — Betrouwbaarheid</div><h3>Afspraken zijn heilig</h3><p>Eén vaste contactpersoon die uw object kent. Altijd bereikbaar. Geen callcenter, geen wachtrijen, geen excuses. Wat wij beloven, doen wij.</p></div>
-    <div class="val-card rv d2"><div class="val-eyebrow">03 — Resultaat</div><h3>Uw succes is ons succes</h3><p>Bij Performance Partner verdienen wij mee op wat u extra verdient. Dat is geen toeval — het is de kern van hoe wij onze diensten hebben ontworpen.</p></div>
-    <div class="val-card rv"><div class="val-eyebrow">04 — Lokale kennis</div><h3>Rotterdam door en door</h3><p>Wij kennen de huurprijzen per wijk, de gevolgen van de Wet betaalbare huur en elk goed onderhoudsbedrijf in de regio. Lokale kennis is niet te kopen — die bouw je op.</p></div>
-    <div class="val-card rv d1"><div class="val-eyebrow">05 — Partnerschap</div><h3>Meer dan een beheerder</h3><p>Wij adviseren, investeren mee en groeien mee met uw portefeuille. Dat is de reden waarom onze klanten jarenlang bij ons blijven.</p></div>
-    <div class="val-card rv d2"><div class="val-eyebrow">06 — Compliance</div><h3>Altijd regelgevingsklaar</h3><p>WWS-puntenstelsel, Wet betaalbare huur, verhuurdersvergunning Rotterdam — wij monitoren de regelgeving actief en passen uw beheer automatisch aan.</p></div>
+    <div class="val-card rv"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-euro"/></svg></div><div class="val-eyebrow">01 — Transparantie</div><h3>Geen kleine lettertjes</h3><p>Vaste percentages, een heldere minimumfee en maandelijks inzicht in elk eurocent. U weet altijd precies wat HomeINN kost en wat het oplevert.</p></div>
+    <div class="val-card rv d1"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-klok"/></svg></div><div class="val-eyebrow">02 — Betrouwbaarheid</div><h3>Afspraken zijn heilig</h3><p>Eén vaste contactpersoon die uw object kent. Altijd bereikbaar. Geen callcenter, geen wachtrijen, geen excuses. Wat wij beloven, doen wij.</p></div>
+    <div class="val-card rv d2"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-grafiek"/></svg></div><div class="val-eyebrow">03 — Resultaat</div><h3>Uw succes is ons succes</h3><p>Bij Performance Partner verdienen wij mee op wat u extra verdient. Dat is geen toeval — het is de kern van hoe wij onze diensten hebben ontworpen.</p></div>
+    <div class="val-card rv"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-pin"/></svg></div><div class="val-eyebrow">04 — Lokale kennis</div><h3>Rotterdam door en door</h3><p>Wij kennen de huurprijzen per wijk, de gevolgen van de Wet betaalbare huur en elk goed onderhoudsbedrijf in de regio. Lokale kennis is niet te kopen — die bouw je op.</p></div>
+    <div class="val-card rv d1"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-gesprek"/></svg></div><div class="val-eyebrow">05 — Partnerschap</div><h3>Meer dan een beheerder</h3><p>Wij adviseren, investeren mee en groeien mee met uw portefeuille. Dat is de reden waarom onze klanten jarenlang bij ons blijven.</p></div>
+    <div class="val-card rv d2"><div class="card-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-schaal"/></svg></div><div class="val-eyebrow">06 — Compliance</div><h3>Altijd regelgevingsklaar</h3><p>WWS-puntenstelsel, Wet betaalbare huur, verhuurdersvergunning Rotterdam — wij monitoren de regelgeving actief en passen uw beheer automatisch aan.</p></div>
   </div>
 </section>
 
@@ -983,10 +1164,10 @@
 
 <section class="jstats-band">
   <div class="jstats-inner">
-    <div class="jstat rv"><div class="jstat-val">2007</div><div class="jstat-lbl">Actief in vastgoed sinds</div></div>
-    <div class="jstat rv d1"><div class="jstat-val">25+</div><div class="jstat-lbl">Panden aangekocht, ontwikkeld of verkocht</div></div>
-    <div class="jstat rv d2"><div class="jstat-val">€ 4 mln+</div><div class="jstat-lbl">Aan gerealiseerde verkopen</div></div>
-    <div class="jstat rv d3"><div class="jstat-val">1.000 m²+</div><div class="jstat-lbl">Woonoppervlak in actief beheer</div></div>
+    <div class="jstat rv"><div class="jstat-val" data-count="2007" data-from="1990">2007</div><div class="jstat-lbl">Actief in vastgoed sinds</div></div>
+    <div class="jstat rv d1"><div class="jstat-val" data-count="25" data-suffix="+">25+</div><div class="jstat-lbl">Panden aangekocht, ontwikkeld of verkocht</div></div>
+    <div class="jstat rv d2"><div class="jstat-val" data-count="4" data-prefix="€ " data-suffix=" mln+">€ 4 mln+</div><div class="jstat-lbl">Aan gerealiseerde verkopen</div></div>
+    <div class="jstat rv d3"><div class="jstat-val" data-count="1000" data-suffix=" m²+" data-sep="1">1.000 m²+</div><div class="jstat-lbl">Woonoppervlak in actief beheer</div></div>
   </div>
 </section>
 
@@ -1087,7 +1268,7 @@
   <div class="blog-grid" style="max-width:1320px;margin:0 auto">
     
     <article class="blog-card rv">
-      <div class="blog-img"></div>
+      <div class="blog-img"><svg class="blog-art" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#ill-skyline"/></svg></div>
       <div class="blog-body">
         <div class="blog-meta">HomeINN gids</div>
         <h3>Uw pand direct verkopen: zo werkt het</h3>
@@ -1095,7 +1276,7 @@
       </div>
     </article>
     <article class="blog-card rv d1">
-      <div class="blog-img alt"></div>
+      <div class="blog-img alt"><svg class="blog-art" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#ill-block"/></svg></div>
       <div class="blog-body">
         <div class="blog-meta">Strategie</div>
         <h3>Verhuren of verkopen? Zo maakt u de afweging</h3>
@@ -1103,7 +1284,7 @@
       </div>
     </article>
     <article class="blog-card rv d2">
-      <div class="blog-img"></div>
+      <div class="blog-img"><svg class="blog-art" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#ill-renovatie"/></svg></div>
       <div class="blog-body">
         <div class="blog-meta">Projectontwikkeling</div>
         <h3>Verduurzamen naar label A: wat levert het op?</h3>
@@ -1138,6 +1319,12 @@
       <p class="rv">Wij reageren binnen vier uur op werkdagen. Of het nu gaat om de verkoop van uw pand, vastgoedbeheer of ons woningaanbod — een gesprek van 30 minuten is altijd vrijblijvend.</p>
       <p class="rv d1">Verkoopt u een pand? Stuur het adres mee — dan plannen wij direct een opname in en ontvangt u binnen 48 uur een voorstel.</p>
     </div>
+  </div>
+  <div class="contact-spot spot-art" aria-hidden="true">
+    <svg viewBox="0 0 440 240" preserveAspectRatio="xMaxYMax meet">
+      <g class="sa-line"><path d="M40 210 H430"/><path d="M300 210 V96 L230 30"/><path d="M300 210 V228"/></g>
+      <g class="sa-faint"><path d="M236 40 L120 210"/><path d="M244 52 L165 210"/><path d="M254 66 L212 210"/><path d="M266 84 L258 210"/><path d="M236 40 L398 210"/><path d="M248 60 L360 210"/><path d="M262 84 L326 210"/></g>
+    </svg>
   </div>
 </section>
 
@@ -1193,6 +1380,13 @@
       <p>HomeINN verwerkt persoonsgegevens zorgvuldig en alleen voor contact, dienstverlening en het verbeteren van de website. Hieronder leest u in duidelijke taal welke gegevens wij verwerken en waarom.</p>
     </div>
   </div>
+  <div class="legal-spot spot-art" aria-hidden="true">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <circle class="sa-line" cx="50" cy="50" r="46"/>
+      <circle class="sa-faint" cx="50" cy="50" r="38" stroke-dasharray="2.5 4"/>
+      <svg x="29" y="29" width="42" height="42" viewBox="0 0 24 24"><use href="#ic-slot"/></svg>
+    </svg>
+  </div>
 </section>
 <section class="section legal-section">
   <div class="legal-wrap">
@@ -1229,6 +1423,13 @@
       <p>Onze algemene voorwaarden geven duidelijkheid over samenwerking, verantwoordelijkheden, tarieven en communicatie. Zo weten beide partijen vooraf precies waar zij aan toe zijn.</p>
     </div>
   </div>
+  <div class="legal-spot spot-art" aria-hidden="true">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <circle class="sa-line" cx="50" cy="50" r="46"/>
+      <circle class="sa-faint" cx="50" cy="50" r="38" stroke-dasharray="2.5 4"/>
+      <svg x="29" y="29" width="42" height="42" viewBox="0 0 24 24"><use href="#ic-doc"/></svg>
+    </svg>
+  </div>
 </section>
 <section class="section legal-section">
   <div class="legal-wrap">
@@ -1260,6 +1461,13 @@
       <p>Deze website plaatst geen cookies en gebruikt geen trackers. Alleen uw eigen browser bewaart formuliergegevens lokaal; kaarten laden pas na uw klik.</p>
     </div>
   </div>
+  <div class="legal-spot spot-art" aria-hidden="true">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <circle class="sa-line" cx="50" cy="50" r="46"/>
+      <circle class="sa-faint" cx="50" cy="50" r="38" stroke-dasharray="2.5 4"/>
+      <svg x="29" y="29" width="42" height="42" viewBox="0 0 24 24"><use href="#ic-discreet"/></svg>
+    </svg>
+  </div>
 </section>
 <section class="section legal-section">
   <div class="legal-wrap">
@@ -1285,7 +1493,7 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="f-logo"><img src="assets/logo-light.png?v=20260614" alt="HomeINN" class="f-logo-img"></div>
+      <div class="f-logo"><img src="assets/logo-light.png?v=20260615" alt="HomeINN" class="f-logo-img" width="158" height="54"></div>
       <div class="f-tagline">Aankoop · Ontwikkeling · Verkoop · Beheer</div>
       <p class="f-desc">HomeINN koopt, ontwikkelt, verkoopt en beheert vastgoed in Rotterdam en omstreken. Met eigen kapitaal, een vast uitvoeringsteam en één aanspreekpunt.</p>
     </div>
@@ -1363,6 +1571,6 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="homeinn-public.js?v=20260612"></script>
+<script src="homeinn-public.js?v=20260615"></script>
 </body>
 </html>

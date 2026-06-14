@@ -1,6 +1,7 @@
 var curPk = 'p2';
 var curX = 0, curY = 0, ringX = 0, ringY = 0;
 var hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+var prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var curEl = document.getElementById('cur');
 var ringEl = document.getElementById('cur-ring');
 var navEl = document.getElementById('nav');
@@ -36,6 +37,11 @@ if (hasFinePointer && curEl && ringEl) {
 
 /* NAV */
 window.addEventListener('scroll', () => {
+  var sb = document.getElementById('scrollbar');
+  if (sb) {
+    var h = document.documentElement;
+    sb.style.transform = 'scaleX(' + Math.min(1, h.scrollTop / ((h.scrollHeight - h.clientHeight) || 1)).toFixed(3) + ')';
+  }
   var n = document.getElementById('nav');
   if (!n) return;
   n.classList.toggle('scrolled', window.scrollY > 50 && !n.classList.contains('light'));
@@ -131,6 +137,7 @@ function calcUpdate() {
   netEl.textContent = '€ ' + (h - fee).toLocaleString('nl-NL');
 }
 document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('hero-ready');
   var params = new URLSearchParams(window.location.search);
   var formStatus = params.get('form_status');
   var initialView = params.get('view');
@@ -194,9 +201,43 @@ function doReveal() {
   var obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
   }, {threshold: 0.08});
-  document.querySelectorAll('.rv:not(.in)').forEach(el => obs.observe(el));
+  document.querySelectorAll('.rv:not(.in), .rv-stagger:not(.in)').forEach(el => obs.observe(el));
 }
 window.addEventListener('scroll', doReveal, {passive: true});
+
+/* ===== Count-up op kerncijfers (jstats) ===== */
+function runCount(el) {
+  var target = parseFloat(el.getAttribute('data-count'));
+  if (isNaN(target)) return;
+  var from = parseFloat(el.getAttribute('data-from'));
+  if (isNaN(from)) from = 0;
+  var prefix = el.getAttribute('data-prefix') || '';
+  var suffix = el.getAttribute('data-suffix') || '';
+  var useSep = el.getAttribute('data-sep') === '1';
+  var dur = 1100, start = null;
+  function fmt(v) {
+    var n = Math.round(v);
+    return prefix + (useSep ? n.toLocaleString('nl-NL') : String(n)) + suffix;
+  }
+  function step(ts) {
+    if (start === null) start = ts;
+    var p = Math.min(1, (ts - start) / dur);
+    var eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(from + (target - from) * eased);
+    if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(target);
+  }
+  requestAnimationFrame(step);
+}
+if (!prefersReduce && 'IntersectionObserver' in window) {
+  var countObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { runCount(e.target); countObs.unobserve(e.target); }
+    });
+  }, { threshold: 0.4 });
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-count]').forEach(function (el) { countObs.observe(el); });
+  });
+}
 window.addEventListener('resize', () => {
   if (window.innerWidth > 960) closeMob();
 });
@@ -325,7 +366,7 @@ function renderAanbod() {
   var grid = document.getElementById('aanbod-grid');
   var soldBox = document.getElementById('aanbod-verkocht');
   if (!grid) return;
-  var leeg = '<div class="aanbod-leeg"><h3>Op dit moment is alles verkocht.</h3><p>Nieuwe woningen zijn in ontwikkeling. Laat uw gegevens achter via "Houd mij op de hoogte" en u hoort het als eerste.</p></div>';
+  var leeg = '<div class="aanbod-leeg"><div class="leeg-spot hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></div><h3>Op dit moment is alles verkocht.</h3><p>Nieuwe woningen zijn in ontwikkeling. Laat uw gegevens achter via "Houd mij op de hoogte" en u hoort het als eerste.</p></div>';
   fetch('aanbod.json', { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('geen aanbod.json'); return r.json(); })
     .then(function (data) {
@@ -373,7 +414,7 @@ function fmtDatumNl(iso) {
 function renderProjectenPublic() {
   var grid = document.getElementById('projecten-grid');
   if (!grid) return;
-  var leeg = '<div class="aanbod-leeg"><h3>Geen lopende projecten zichtbaar.</h3><p>Nieuwe ontwikkelprojecten worden hier gepubliceerd zodra ze starten. Wilt u meedoen in een volgend project? Plan een kennismaking.</p></div>';
+  var leeg = '<div class="aanbod-leeg"><div class="leeg-spot hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></div><h3>Geen lopende projecten zichtbaar.</h3><p>Nieuwe ontwikkelprojecten worden hier gepubliceerd zodra ze starten. Wilt u meedoen in een volgend project? Plan een kennismaking.</p></div>';
   fetch('aanbod.json', { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('geen data'); return r.json(); })
     .then(function (data) {
