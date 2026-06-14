@@ -721,3 +721,28 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .cmdk-cat{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px 14px 2px;font-weight:700}
 .cmdk-empty{padding:16px;color:var(--muted);font-size:.88rem}
 .cmdk-hint{margin:0;padding:8px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.74rem}
+
+/* ===== Visuele rapportage: waterfall, donuts, funnel ===== */
+.waterfall-wrap{margin:4px 0 14px}
+.waterfall-svg{width:100%;height:auto;display:block}
+.donut-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:6px 0 14px}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.donut-svg{width:150px;height:150px}
+.donut-legend{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:4px}
+.donut-legend li{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--navy)}
+.donut-legend li .sub{margin-left:auto;color:var(--muted)}
+.donut-legend li strong{font-variant-numeric:tabular-nums}
+.dl-dot{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
+.funnel{display:flex;flex-direction:column;gap:6px;margin:0 0 14px}
+.funnel-row{display:grid;grid-template-columns:130px 1fr auto;align-items:center;gap:12px;cursor:pointer;padding:3px 4px;border-radius:8px}
+.funnel-row:hover{background:rgba(180,144,48,.08)}
+.funnel-row.is-empty{opacity:.5;cursor:default}
+.funnel-row.is-empty:hover{background:transparent}
+.funnel-label{font-size:.82rem;font-weight:700;color:var(--navy)}
+.funnel-bar-track{height:18px;background:rgba(11,30,48,.06);border-radius:6px;overflow:hidden}
+.funnel-bar{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2,#cca94a));border-radius:6px}
+.funnel-row.is-empty .funnel-bar{background:var(--muted)}
+.funnel-meta{font-size:.8rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.lead-column.flash{animation:leadflash 1.2s ease}
+@keyframes leadflash{0%,100%{background:transparent}30%{background:rgba(180,144,48,.22)}}
+@media(max-width:640px){.donut-pair{grid-template-columns:1fr}.funnel-row{grid-template-columns:100px 1fr;grid-template-rows:auto auto}.funnel-meta{grid-column:1/-1}}
