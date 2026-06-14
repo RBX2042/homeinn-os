@@ -163,8 +163,9 @@
           <div class="panel-head">
             <div>
               <h2>Aankooppijplijn</h2>
-              <p>Van lead tot notaris. Klik op een kaart voor calculatie, biedingen en vervolgstappen.</p>
+              <p>Van lead tot notaris. Klik op een kaart voor calculatie, biedingen en vervolgstappen. Vink kansen aan om ze zij-aan-zij te vergelijken.</p>
             </div>
+            <div id="deal-compare-bar" class="compare-bar"></div>
           </div>
           <div class="lead-board" id="deal-board"></div>
         </div>
@@ -227,6 +228,7 @@
           </div>
         </aside>
       </div>
+      <div id="calc-scenarios"></div>
     </section>
 
     <!-- ===== Portfolio / Panden ===== -->
@@ -1212,6 +1214,26 @@
         <button class="btn primary" value="save">Opslaan</button>
       </menu>
     </form>
+  </dialog>
+
+  <dialog class="modal wide-modal" id="compare-modal">
+    <div class="modal-card">
+      <button class="close" type="button" data-action="close-compare" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Aankoopkansen</p>
+      <h2>Deals vergelijken</h2>
+      <div id="compare-body"></div>
+      <menu>
+        <button class="btn secondary" type="button" data-action="close-compare">Sluiten</button>
+      </menu>
+    </div>
+  </dialog>
+
+  <dialog id="cmdk" class="cmdk">
+    <div class="cmdk-box">
+      <input id="cmdk-input" type="text" placeholder="Zoek een pand, deal, relatie… of typ een actie (bijv. 'nieuwe kostenpost')" autocomplete="off" spellcheck="false">
+      <div id="cmdk-list" class="cmdk-list"></div>
+      <p class="cmdk-hint">↑↓ navigeren · ↵ kiezen · esc sluiten</p>
+    </div>
   </dialog>
 
   <div id="portal-gate" hidden>

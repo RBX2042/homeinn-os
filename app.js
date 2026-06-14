@@ -447,6 +447,51 @@ function computeDeal(input) {
   return { koopsom, verbouwing, verkoopprijs, maanden, otb: r(otb), notaris: d.notaris, makelaar: r(makelaar), aankoopkosten: r(aankoopkosten), financiering: r(financiering), rente: r(rente), lasten: r(lasten), houdkosten: r(houdkosten), investering: r(investering), eigenGeld: r(eigenGeld), verkoopkosten: r(verkoopkosten), opbrengst: r(opbrengst), winst: r(winst), roi, roiEigen };
 }
 
+/* ---------- Rendementsmotor: XIRR (intern rendement op datumcashflows) ----------
+   flows: [{date:'YYYY-MM-DD', amount:Number}] — negatief = inleg, positief = ontvangst.
+   Geeft het op jaarbasis samengestelde rendement in % terug, of null bij te weinig data.
+   Newton-Raphson met bisectie-fallback; herbruikt door calculator (hold-vs-flip) én investeerders. */
+function xirr(flows) {
+  const f = (flows || []).filter(x => x && x.date && isFinite(Number(x.amount)) && Number(x.amount) !== 0)
+    .map(x => ({ date: x.date, amount: Number(x.amount) }));
+  if (f.length < 2) return null;
+  if (!f.some(x => x.amount < 0) || !f.some(x => x.amount > 0)) return null;
+  const t0 = f.reduce((m, x) => (x.date < m ? x.date : m), f[0].date);
+  const pts = f.map(x => ({ t: daysBetween(t0, x.date) / 365, a: x.amount }));
+  const npv = rate => pts.reduce((s, x) => s + x.a / Math.pow(1 + rate, x.t), 0);
+  const dnpv = rate => pts.reduce((s, x) => s - x.t * x.a / Math.pow(1 + rate, x.t + 1), 0);
+  // Newton-Raphson
+  let rate = 0.1;
+  for (let i = 0; i < 60; i++) {
+    const v = npv(rate), d = dnpv(rate);
+    if (!isFinite(v) || !isFinite(d) || d === 0) break;
+    const next = rate - v / d;
+    if (!isFinite(next)) break;
+    if (Math.abs(next - rate) < 1e-7) { rate = next; break; }
+    rate = Math.max(-0.9999, next);
+  }
+  if (isFinite(rate) && rate > -0.9999 && Math.abs(npv(rate)) < 1) return rate * 100;
+  // Bisectie-fallback over [-0.99, 10]
+  let lo = -0.99, hi = 10, flo = npv(lo), fhi = npv(hi);
+  if (!isFinite(flo) || !isFinite(fhi) || flo * fhi > 0) return null;
+  for (let i = 0; i < 200; i++) {
+    const mid = (lo + hi) / 2, fm = npv(mid);
+    if (!isFinite(fm)) return null;
+    if (Math.abs(fm) < 1e-6 || (hi - lo) < 1e-8) return mid * 100;
+    if (flo * fm < 0) { hi = mid; } else { lo = mid; flo = fm; }
+  }
+  return ((lo + hi) / 2) * 100;
+}
+
+/* Compacte IRR-weergave + kleurbadge t.o.v. doel-ROI. */
+function fmtPct(v, dec = 1) { return (v === null || v === undefined || !isFinite(v)) ? '—' : fmtNum(v, dec) + '%'; }
+function irrBadge(irr) {
+  if (irr === null || irr === undefined || !isFinite(irr)) return '<span class="badge gray">—</span>';
+  const doel = Number(state.settings.doelROI) || 15;
+  const cls = irr >= doel ? 'green' : irr >= 0 ? '' : 'red';
+  return `<span class="badge ${cls}">${fmtNum(irr, 1)}%</span>`;
+}
+
 /* Volledige financiële stand van een pand in bezit. */
 function propertyFinance(p) {
   const s = state.settings;
@@ -547,11 +592,13 @@ function buildSignals() {
         signals.push({ level: 'middel', text: `${v.type} ${p.address} verloopt op ${fmtDate(v.eind)} (${dgn} dgn) — verleng de polis.`, go: 'pand:' + p.id });
     });
   });
-  // Ontwikkeling
+  // Ontwikkeling: budget reactief (al over) + proactief (prognose loopt over)
   state.projects.filter(pr => pr.status !== 'Afgerond').forEach(pr => {
-    const actual = state.costs.filter(k => k.projectId === pr.id).reduce((sum, k) => sum + (Number(k.amount) || 0), 0);
-    if (actual > (Number(pr.budget) || 0)) {
-      signals.push({ level: 'hoog', text: `${pr.name} (${propertyLabel(pr.propertyId)}) is ${fmtMoney(actual - pr.budget)} over budget.`, go: 'project:' + pr.id });
+    const e = calculateEAC(pr);
+    if (e.committed > e.budget) {
+      signals.push({ level: 'hoog', text: `${pr.name} (${propertyLabel(pr.propertyId)}) is ${fmtMoney(e.committed - e.budget)} over budget.`, go: 'project:' + pr.id });
+    } else if (e.basis === 'runrate' && e.eac > e.budget) {
+      signals.push({ level: e.eac > e.budget * 1.1 ? 'hoog' : 'middel', text: `${pr.name} koerst op ${fmtMoney(e.eac)} — naar verwachting ${fmtMoney(e.over)} over budget (nu ${fmtMoney(e.committed)} besteed). Stuur bij nu het nog kan.`, go: 'project:' + pr.id });
     }
     if (pr.endDate && pr.endDate < t) {
       signals.push({ level: 'middel', text: `${pr.name} is over de geplande opleverdatum (${fmtDate(pr.endDate)}) — elke maand uitloop kost houdkosten.`, go: 'project:' + pr.id });
@@ -844,13 +891,18 @@ function renderDeals() {
     <article class="kpi small"><span>Potentiële winst pijplijn</span><strong class="${winstClass(totalWinst)}">${fmtMoney(totalWinst)}</strong><small>volgens calculaties</small></article>
     <article class="kpi small"><span>Biedingen uitstaand</span><strong>${bodenUit}</strong><small>wacht op reactie verkoper</small></article>`;
 
+  // Geselecteerde kansen kunnen ondertussen gearchiveerd zijn: opschonen.
+  Array.from(compareSet).forEach(cid => { if (!active.some(d => d.id === cid)) compareSet.delete(cid); });
+  renderCompareBar();
+
   $('#deal-board').innerHTML = DEAL_STAGES.map(stage => {
     const cards = active.filter(d => d.status === stage);
     return `<section class="lead-column">
       <h3>${stage} <span class="sub">(${cards.length})</span></h3>
       ${cards.map(d => {
         const c = computeDeal(d.calc);
-        return `<article class="lead-card" data-action="open-deal" data-id="${d.id}">
+        return `<article class="lead-card ${compareSet.has(d.id) ? 'cmp-on' : ''}" data-action="open-deal" data-id="${d.id}">
+          <label class="cmp-check" data-action="cmp-toggle" data-id="${d.id}" title="Selecteer om te vergelijken"><input type="checkbox" tabindex="-1" ${compareSet.has(d.id) ? 'checked' : ''}><span>vergelijk</span></label>
           <strong>${esc(d.address)}</strong>
           <span>${esc(d.city)} · ${esc(d.ptype)}</span>
           <span>Vraag ${fmtMoneyK(d.vraagprijs)} · bod ${fmtMoneyK(d.calc?.koopsom)}</span>
@@ -873,6 +925,57 @@ function renderDeals() {
         <button class="icon-btn" data-action="del-deal" data-id="${d.id}" title="Verwijderen">🗑</button>
       </td>
     </tr>`).join('') : emptyRow(5, 'Nog niets in het archief.');
+}
+
+function renderCompareBar() {
+  const bar = $('#deal-compare-bar');
+  if (!bar) return;
+  const n = compareSet.size;
+  bar.innerHTML = n
+    ? `<span class="cmp-count">${n} geselecteerd</span>
+       <button class="btn primary slim" data-action="open-compare" ${n < 2 ? 'disabled title="Selecteer minstens 2"' : ''}>Vergelijk (${n})</button>
+       <button class="btn secondary slim" data-action="clear-compare">Wis selectie</button>`
+    : '';
+}
+
+/* Zij-aan-zij metriekvergelijking van geselecteerde aankoopkansen. */
+function renderComparison() {
+  const deals = state.deals.filter(d => compareSet.has(d.id));
+  if (deals.length < 2) { showToast('Selecteer minstens 2 kansen om te vergelijken.'); return; }
+  const calcs = deals.map(d => ({ d, c: computeDeal(d.calc) }));
+  // Metriek-definities: key, label, betere richting (max/min), formatter.
+  const metrics = [
+    ['koopsom', 'Koopsom / bod', 'min', c => fmtMoney(c.koopsom)],
+    ['verbouwing', 'Verbouwbudget', 'min', c => fmtMoney(c.verbouwing)],
+    ['investering', 'Totale investering', 'min', c => fmtMoney(c.investering)],
+    ['eigenGeld', 'Eigen geld', 'min', c => fmtMoney(c.eigenGeld)],
+    ['verkoopprijs', 'Verwachte verkoop', 'max', c => fmtMoney(c.verkoopprijs)],
+    ['winst', 'Verwachte winst', 'max', c => fmtMoney(c.winst)],
+    ['roi', 'ROI', 'max', c => fmtNum(c.roi, 1) + '%'],
+    ['roiEigen', 'ROI op eigen geld', 'max', c => fmtNum(c.roiEigen, 0) + '%'],
+    ['maanden', 'Doorlooptijd', 'min', c => fmtNum(c.maanden, 0) + ' mnd']
+  ];
+  // Beste waarde per metriek bepalen voor highlight.
+  const best = {};
+  metrics.forEach(([key, , dir]) => {
+    const vals = calcs.map(x => x.c[key]);
+    best[key] = dir === 'max' ? Math.max(...vals) : Math.min(...vals);
+  });
+  // Winnaar = hoogste ROI op eigen geld.
+  const winnerIdx = calcs.reduce((bi, x, i, arr) => x.c.roiEigen > arr[bi].c.roiEigen ? i : bi, 0);
+  const head = `<th>Metriek</th>${calcs.map((x, i) => `<th class="${i === winnerIdx ? 'cmp-winner' : ''}">${esc(x.d.address)}${i === winnerIdx ? '<br><span class="badge gold">Beste deal</span>' : ''}</th>`).join('')}`;
+  const rows = metrics.map(([key, label, dir, fmt]) => `
+    <tr><td class="cmp-metric">${label}</td>${calcs.map(x => {
+      const isBest = x.c[key] === best[key] && calcs.length > 1;
+      return `<td class="${isBest ? 'cmp-best' : ''} ${(key === 'winst' || key === 'roi' || key === 'roiEigen') ? winstClass(x.c.winst) : ''}">${fmt(x.c)}</td>`;
+    }).join('')}</tr>`).join('');
+  $('#compare-body').innerHTML = `
+    <p class="hint">Groen = beste waarde per regel. De winnaar is gekozen op rendement op eigen geld (${fmtNum(calcs[winnerIdx].c.roiEigen, 0)}%).</p>
+    <div class="table-wrap"><table class="compare-table">
+      <thead><tr>${head}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  $('#compare-modal').showModal();
 }
 
 function dealBreakdownHTML(c) {
@@ -1028,6 +1131,151 @@ function refreshCalcResult() {
     <p class="sub">verwachte winst · ${fmtNum(c.roi, 1)}% ROI · ${fmtNum(c.roiEigen, 0)}% op eigen geld</p>
     <p>${c.roi >= doel ? `<span class="badge green">Haalt doel-ROI van ${doel}%</span>` : c.winst > 0 ? `<span class="badge">Onder doel-ROI van ${doel}%</span>` : '<span class="badge red">Verliesgevend — niet doen</span>'}</p>
     <div class="totals-box">${dealBreakdownHTML(c)}</div>`;
+  renderCalcScenarios(input);
+}
+
+/* ---------- Dealcalculator Pro: scenario's, break-even, gevoeligheid, hold-vs-flip ---------- */
+let calcHold = { huur: 1400, jaren: 5, groei: 2 };
+const compareSet = new Set(); // ids van aankoopkansen geselecteerd om te vergelijken
+
+/* Break-even zoeken: waarde van 'key' waar de winst precies 0 is (monotone aanname). */
+function breakEvenValue(input, key, increasing) {
+  let lo = 0, hi = Math.max((Number(input[key]) || 0) * 3, (Number(input.verkoopprijs) || Number(input.koopsom) || 100000) * 3, 100000);
+  for (let i = 0; i < 48; i++) {
+    const mid = (lo + hi) / 2;
+    const w = computeDeal(Object.assign({}, input, { [key]: mid })).winst;
+    if ((w > 0) === increasing) hi = mid; else lo = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/* Gevoeligheidsanalyse (tornado): welke aanname beweegt de winst het meest? */
+function tornadoAnalysis(input) {
+  const factors = [
+    ['Verkoopprijs', 'verkoopprijs', 0.05, 'pct'],
+    ['Verbouwbudget', 'verbouwing', 0.10, 'pct'],
+    ['Rente', 'rentePct', 1, 'abs'],
+    ['Doorlooptijd', 'maanden', 3, 'abs'],
+    ['Koopsom', 'koopsom', 0.03, 'pct']
+  ];
+  return factors.map(([label, key, amt, mode]) => {
+    const cur = Number(input[key]) || 0;
+    const low = mode === 'pct' ? cur * (1 - amt) : cur - amt;
+    const high = mode === 'pct' ? cur * (1 + amt) : cur + amt;
+    const floor = key === 'maanden' ? 1 : 0;
+    const wLow = computeDeal(Object.assign({}, input, { [key]: Math.max(floor, low) })).winst;
+    const wHigh = computeDeal(Object.assign({}, input, { [key]: Math.max(floor, high) })).winst;
+    const rangeLabel = mode === 'pct' ? `±${Math.round(amt * 100)}%` : key === 'rentePct' ? '±1pp' : '±3 mnd';
+    return { label, rangeLabel, wLow, wHigh, delta: Math.abs(wHigh - wLow), min: Math.min(wLow, wHigh), max: Math.max(wLow, wHigh) };
+  }).sort((a, b) => b.delta - a.delta);
+}
+
+/* Aanhouden & verhuren i.p.v. flippen: jaarcashflows → IRR, multiple, cash-on-cash. */
+function computeHold(input, hold) {
+  const base = computeDeal(input);
+  const jaren = Math.max(1, Math.round(Number(hold.jaren) || 5));
+  const huurMnd = Number(hold.huur) || 0;
+  const groei = Number(hold.groei) || 0;
+  const eigenGeld = base.eigenGeld;
+  const renteJaar = base.financiering * (Number(input.rentePct) || 0) / 100;
+  const lastenJaar = (Number(input.vasteLasten) || 0) * 12;
+  const netHuurJaar = huurMnd * 12 - renteJaar - lastenJaar;
+  const today = todayISO();
+  const flows = [{ date: today, amount: -eigenGeld }];
+  for (let y = 1; y <= jaren; y++) {
+    let amount = netHuurJaar;
+    if (y === jaren) {
+      const exitWaarde = (Number(input.verkoopprijs) || 0) * Math.pow(1 + groei / 100, jaren);
+      const exitNet = exitWaarde * (1 - (Number(input.verkoopkostenPct) || 0) / 100) - base.financiering;
+      amount += exitNet;
+    }
+    flows.push({ date: addDaysISO(today, Math.round(365 * y)), amount });
+  }
+  const irr = eigenGeld > 0 ? xirr(flows) : null;
+  const totaalOntvangen = flows.filter(f => f.amount > 0).reduce((s, f) => s + f.amount, 0);
+  const equityMultiple = eigenGeld > 0 ? totaalOntvangen / eigenGeld : null;
+  const cashOnCash = eigenGeld > 0 ? netHuurJaar / eigenGeld * 100 : null;
+  // Flip-IRR ter vergelijking (zelfde eigen geld, exit na 'maanden').
+  const flipFlows = [{ date: today, amount: -eigenGeld }, { date: addDaysISO(today, Math.round((Number(input.maanden) || 9) * 30.44)), amount: eigenGeld + base.winst }];
+  const flipIrr = eigenGeld > 0 ? xirr(flipFlows) : null;
+  return { jaren, netHuurJaar, irr, equityMultiple, cashOnCash, flipIrr, eigenGeld, exitJaar: jaren };
+}
+
+function renderHoldResult(input) {
+  const box = $('#hold-result');
+  if (!box) return;
+  const h = computeHold(input, calcHold);
+  const flipWint = (h.flipIrr !== null && h.irr !== null) ? h.flipIrr >= h.irr : null;
+  box.innerHTML = `
+    <div class="hold-grid">
+      <div><span>Netto huur / jaar</span><strong class="${h.netHuurJaar < 0 ? 'alert' : ''}">${fmtMoney(Math.round(h.netHuurJaar))}</strong></div>
+      <div><span>Cash-on-cash</span><strong>${fmtPct(h.cashOnCash, 1)}</strong></div>
+      <div><span>IRR aanhouden (${h.jaren} jr)</span><strong>${fmtPct(h.irr, 1)}</strong></div>
+      <div><span>Equity multiple</span><strong>${h.equityMultiple === null ? '—' : fmtNum(h.equityMultiple, 2) + '×'}</strong></div>
+      <div><span>IRR flippen (${fmtNum(Number(input.maanden) || 9, 0)} mnd)</span><strong>${fmtPct(h.flipIrr, 1)}</strong></div>
+    </div>
+    ${flipWint === null
+      ? `<p class="hint">Vul eigen geld in (financiering &lt; 100%) om IRR's te vergelijken.</p>`
+      : `<p class="verdict ${flipWint ? 'flip' : 'hold'}">${flipWint
+        ? `<span class="badge gold">Flippen wint</span> Snel verkopen levert een hoger jaarrendement (${fmtPct(h.flipIrr, 1)}) dan ${h.jaren} jaar aanhouden (${fmtPct(h.irr, 1)}).`
+        : `<span class="badge green">Aanhouden wint</span> ${h.jaren} jaar verhuren levert een hoger jaarrendement (${fmtPct(h.irr, 1)}) dan direct flippen (${fmtPct(h.flipIrr, 1)}).`}</p>`}`;
+}
+
+function renderCalcScenarios(input) {
+  const wrap = $('#calc-scenarios');
+  if (!wrap) return;
+  const base = computeDeal(input);
+  const worst = computeDeal(Object.assign({}, input, { verkoopprijs: (Number(input.verkoopprijs) || 0) * 0.95, verbouwing: (Number(input.verbouwing) || 0) * 1.10, maanden: (Number(input.maanden) || 9) + 3 }));
+  const best = computeDeal(Object.assign({}, input, { verkoopprijs: (Number(input.verkoopprijs) || 0) * 1.05, verbouwing: (Number(input.verbouwing) || 0) * 0.95 }));
+  const maxBod = breakEvenValue(input, 'koopsom', false);
+  const minVerkoop = breakEvenValue(input, 'verkoopprijs', true);
+  const tornado = tornadoAnalysis(input);
+  const maxDelta = Math.max(...tornado.map(t => t.delta), 1);
+  const scenarioCol = (titel, c, cls) => `
+    <div class="scen-col ${cls}">
+      <span class="scen-title">${titel}</span>
+      <strong class="${winstClass(c.winst)}">${fmtMoney(c.winst)}</strong>
+      <span class="scen-sub">${fmtNum(c.roi, 1)}% ROI</span>
+      <span class="scen-sub">${fmtNum(c.roiEigen, 0)}% op eigen geld</span>
+    </div>`;
+  wrap.innerHTML = `
+    <div class="split scen-split">
+      <section class="panel">
+        <div class="panel-head compact"><h2>Scenario's</h2><span class="sub">slecht · verwacht · goed</span></div>
+        <div class="scen-grid">
+          ${scenarioCol('Slecht', worst, 'bad')}
+          ${scenarioCol('Verwacht', base, 'base')}
+          ${scenarioCol('Goed', best, 'good')}
+        </div>
+        <p class="hint">Slecht = verkoop −5%, verbouwing +10%, 3 mnd langer. Goed = verkoop +5%, verbouwing −5%.</p>
+        <div class="breakeven-box">
+          <div><span>Max. bod om quitte te spelen</span><strong>${fmtMoney(Math.round(maxBod))}</strong><small>${maxBod >= (Number(input.koopsom) || 0) ? `${fmtMoneyK(maxBod - (Number(input.koopsom) || 0))} marge boven je bod` : 'lager dan je huidige bod — te duur'}</small></div>
+          <div><span>Min. verkoopprijs voor break-even</span><strong>${fmtMoney(Math.round(minVerkoop))}</strong><small>${minVerkoop <= (Number(input.verkoopprijs) || 0) ? `${fmtMoneyK((Number(input.verkoopprijs) || 0) - minVerkoop)} buffer onder je raming` : 'boven je raming — risicovol'}</small></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head compact"><h2>Gevoeligheid</h2><span class="sub">grootste invloed op de winst</span></div>
+        <div class="report-bars tornado">
+          ${tornado.map(t => `
+            <div class="report-bar">
+              <span class="rb-label" title="${esc(t.label)}">${esc(t.label)} <span class="sub">${t.rangeLabel}</span></span>
+              <div class="rb-track"><span class="rb-fill ${t.min < 0 ? 'neg' : ''}" style="width:${Math.max(3, Math.round(t.delta / maxDelta * 100))}%"></span></div>
+              <span class="rb-val">${fmtMoneyK(t.delta)}</span>
+            </div>`).join('')}
+        </div>
+        <p class="hint">Hoe langer de balk, hoe sterker die aanname je winst beïnvloedt. Zet je energie op de bovenste rij.</p>
+      </section>
+    </div>
+    <section class="panel hold-panel">
+      <div class="panel-head compact"><h2>Aanhouden &amp; verhuren of flippen?</h2><span class="sub">jaarrendement (IRR) van beide strategieën</span></div>
+      <div class="hold-inputs">
+        <label>Maandhuur (€)<input type="number" min="0" step="any" class="hold-input" data-hold="huur" value="${esc(calcHold.huur)}"></label>
+        <label>Houdperiode (jaren)<input type="number" min="1" max="30" step="1" class="hold-input" data-hold="jaren" value="${esc(calcHold.jaren)}"></label>
+        <label>Waardegroei (%/jaar)<input type="number" step="any" class="hold-input" data-hold="groei" value="${esc(calcHold.groei)}"></label>
+      </div>
+      <div id="hold-result"></div>
+    </section>`;
+  renderHoldResult(input);
 }
 
 function renderCalculator() {
@@ -1327,6 +1575,66 @@ function projectActual(pr) {
   return state.costs.filter(k => k.projectId === pr.id).reduce((sum, k) => sum + (Number(k.amount) || 0), 0);
 }
 
+/* Forecast-to-completion (EAC): voorspel de eindkosten op basis van het besteedtempo,
+   zodat je een budgetoverschrijding ziet aankomen vóórdat het geld op is. */
+function calculateEAC(pr) {
+  const committed = projectActual(pr);
+  const budget = Number(pr.budget) || 0;
+  const t = todayISO();
+  let timeFrac = null;
+  if (pr.startDate && pr.endDate) {
+    const total = daysBetween(pr.startDate, pr.endDate);
+    const elapsed = daysBetween(pr.startDate, t);
+    if (total > 0) timeFrac = Math.min(1, Math.max(0, elapsed / total));
+  }
+  let eac = committed, basis = 'committed';
+  if (pr.status === 'Afgerond') { basis = 'done'; }
+  else if (timeFrac !== null && timeFrac > 0.05 && committed > 0) {
+    // Lineaire extrapolatie van het huidige besteedtempo naar de opleverdatum.
+    eac = Math.max(committed, committed / timeFrac);
+    basis = 'runrate';
+  }
+  return { committed, budget, eac: Math.round(eac), timeFrac, basis, over: Math.round(eac - budget) };
+}
+
+/* Burn-up: cumulatieve kosten in de tijd, met budgetlijn en prognoselijn tot oplevering. */
+function burnUpSvg(pr) {
+  const start = pr.startDate, end = pr.endDate;
+  if (!start || !end || daysBetween(start, end) <= 0) return '<p class="hint">Vul start- en opleverdatum in voor een prognosegrafiek.</p>';
+  const e = calculateEAC(pr);
+  const t = todayISO();
+  const W = 760, H = 220, padL = 60, padR = 14, padT = 16, padB = 28;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const x0 = new Date(start + 'T12:00:00').getTime();
+  const span = (new Date(end + 'T12:00:00').getTime() - x0) || 1;
+  const maxY = Math.max(e.budget, e.eac, e.committed, 1) * 1.1;
+  const X = iso => padL + Math.max(0, Math.min(1, (new Date(iso + 'T12:00:00').getTime() - x0) / span)) * innerW;
+  const Y = v => padT + innerH - (v / maxY) * innerH;
+  const costs = state.costs.filter(k => k.projectId === pr.id && k.date).slice().sort((a, b) => a.date.localeCompare(b.date));
+  let cum = 0; const pts = [[X(start), Y(0)]];
+  costs.forEach(k => { if (k.date <= t) { cum += Number(k.amount) || 0; pts.push([X(k.date), Y(cum)]); } });
+  const todayX = X(t > end ? end : t);
+  pts.push([todayX, Y(cum)]);
+  const actualLine = pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const over = e.eac > e.budget;
+  const fcColor = over ? '#b03a3a' : '#1e6a42';
+  const budgetY = Y(e.budget);
+  return `<svg viewBox="0 0 ${W} ${H}" class="burnup-svg" role="img" aria-label="Burn-up prognose">
+    <line x1="${padL}" y1="${budgetY.toFixed(1)}" x2="${W - padR}" y2="${budgetY.toFixed(1)}" stroke="#b49030" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="${padL - 6}" y="${budgetY.toFixed(1)}" text-anchor="end" dominant-baseline="middle" style="font-size:10px;fill:#6f756f">${esc(fmtMoneyK(e.budget))}</text>
+    <line x1="${todayX.toFixed(1)}" y1="${padT}" x2="${todayX.toFixed(1)}" y2="${padT + innerH}" stroke="rgba(12,11,9,.18)" stroke-width="1"/>
+    <polyline points="${actualLine}" fill="none" stroke="#0b1e30" stroke-width="2.5"/>
+    <polyline points="${todayX.toFixed(1)},${Y(cum).toFixed(1)} ${X(end).toFixed(1)},${Y(e.eac).toFixed(1)}" fill="none" stroke="${fcColor}" stroke-width="2" stroke-dasharray="6 4"/>
+    <circle cx="${X(end).toFixed(1)}" cy="${Y(e.eac).toFixed(1)}" r="3.5" fill="${fcColor}"><title>Prognose eindkosten: ${esc(fmtMoney(e.eac))}</title></circle>
+    <text x="${padL}" y="${H - 8}" style="font-size:10px;fill:#6f756f">${esc(fmtDate(start))}</text>
+    <text x="${W - padR}" y="${H - 8}" text-anchor="end" style="font-size:10px;fill:#6f756f">${esc(fmtDate(end))}</text>
+  </svg>
+  <p class="cf-legend" style="display:flex;gap:16px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);margin:8px 0 0">
+    <span class="cf-dot" style="background:#0b1e30"></span>Besteed tot nu
+    <span class="cf-dot" style="background:${fcColor}"></span>Prognose tot oplevering
+    <span class="cf-dot" style="background:#b49030"></span>Budget</p>`;
+}
+
 function renderProjects() {
   $('#project-list-wrap').hidden = false;
   $('#project-detail').hidden = true;
@@ -1337,6 +1645,8 @@ function renderProjects() {
   $('#projects-table').innerHTML = list.length ? list.map(pr => {
     const actual = projectActual(pr);
     const diff = (Number(pr.budget) || 0) - actual;
+    const e = calculateEAC(pr);
+    const forecastOver = diff >= 0 && e.basis === 'runrate' && e.eac > e.budget;
     const phases = pr.phases || [];
     const progress = phases.length ? Math.round(phases.filter(ph => ph.status === 'Klaar').length / phases.length * 100) : 0;
     return `<tr data-action="open-project" data-id="${pr.id}">
@@ -1345,7 +1655,7 @@ function renderProjects() {
       <td>${statusBadge(pr.status)}</td>
       <td>${fmtMoney(pr.budget)}</td>
       <td>${fmtMoney(actual)}</td>
-      <td class="${diff < 0 ? 'alert' : ''}"><strong>${fmtMoney(diff)}</strong></td>
+      <td class="${diff < 0 ? 'alert' : ''}"><strong>${fmtMoney(diff)}</strong>${forecastOver ? `<br><span class="sub alert">prognose ${fmtMoneyK(e.over)} over</span>` : ''}</td>
       <td><div class="progress small"><i style="width:${progress}%"></i></div><span class="sub">${progress}%</span></td>
       <td class="row-actions">
         <button class="icon-btn" data-action="edit-project" data-id="${pr.id}" title="Bewerken">✎</button>
@@ -1387,12 +1697,25 @@ function renderProjectDetail() {
         <span class="sub">${progress}% van de fases klaar</span>
       </div>
     </div>
-    <div class="kpi-grid">
+    ${(() => {
+      const e = calculateEAC(pr);
+      const over = e.basis === 'runrate' && e.eac > e.budget;
+      const prognoseSub = e.basis === 'runrate'
+        ? (over ? `<small class="alert">${fmtMoneyK(e.over)} over budget</small>` : `<small>binnen budget</small>`)
+        : (e.committed > e.budget ? '<small class="alert">al over budget</small>' : '<small>nog te weinig data</small>');
+      return `<div class="kpi-grid">
       <article class="kpi small"><span>Budget</span><strong>${fmtMoney(budget)}</strong></article>
       <article class="kpi small"><span>Realisatie</span><strong>${fmtMoney(actual)}</strong><small>${costs.length} kostenposten</small></article>
       <article class="kpi small"><span>${diff < 0 ? 'Over budget' : 'Resterend budget'}</span><strong class="${diff < 0 ? 'alert' : ''}">${fmtMoney(Math.abs(diff))}</strong></article>
+      <article class="kpi small"><span>Prognose eindkosten</span><strong class="${over ? 'alert' : ''}">${fmtMoney(e.eac)}</strong>${prognoseSub}</article>
       <article class="kpi small"><span>Geplande oplevering</span><strong>${fmtDate(pr.endDate)}</strong>${pr.endDate && pr.endDate < todayISO() && pr.status !== 'Afgerond' ? '<small class="alert">uitgelopen</small>' : ''}</article>
-    </div>
+    </div>`;
+    })()}
+    ${pr.status !== 'Afgerond' ? `<section class="panel burnup-panel">
+      <div class="panel-head compact"><h2>Kostenprognose (burn-up)</h2><span class="sub">besteedtempo → verwachte eindkosten</span></div>
+      ${burnUpSvg(pr)}
+      <p class="hint">De stippellijn extrapoleert je huidige besteedtempo naar de opleverdatum. Kruist die de budgetlijn, dan stuur je nu bij in plaats van achteraf.</p>
+    </section>` : ''}
     <div class="split detail-grid">
       <section class="panel">
         <div class="panel-head compact"><h2>Fases</h2></div>
@@ -1912,24 +2235,37 @@ function investorReportData() {
   const map = {}; // key = email||naam → geaggregeerde investeerder
   state.projects.forEach(pr => {
     const rPct = Number(pr.invest?.rendementPct) || 0;
+    const afgerond = pr.status === 'Afgerond';
     (pr.investeerders || []).forEach(i => {
       const key = (i.email || i.naam || '').toLowerCase().trim() || i.id;
-      const e = map[key] || (map[key] = { naam: i.naam, email: i.email || '', inleg: 0, gewogenRendement: 0, verwachtJaar: 0, uitbetaaldPerJaar: {}, wwft: true, projecten: [] });
+      const e = map[key] || (map[key] = { naam: i.naam, email: i.email || '', inleg: 0, gewogenRendement: 0, verwachtJaar: 0, uitbetaaldPerJaar: {}, wwft: true, projecten: [], cashflows: [], nav: 0 });
       const bedrag = Number(i.bedrag) || 0;
       e.inleg += bedrag;
       e.gewogenRendement += bedrag * rPct;
       e.verwachtJaar += bedrag * rPct / 100;
       if (!i.wwft) e.wwft = false;
       e.projecten.push({ project: pr.name, bedrag, rPct, datum: i.datum, uitkeringen: i.uitkeringen || [] });
+      // Cashflows voor IRR/MOIC: inleg negatief op instapdatum, uitbetaalde uitkeringen positief.
+      if (bedrag) e.cashflows.push({ date: i.datum || pr.startDate || todayISO(), amount: -bedrag });
+      // Lopende projecten houden de inleg als huidige waarde (NAV); afgeronde zijn afgewikkeld.
+      if (!afgerond) e.nav += bedrag;
       (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald').forEach(u => {
         const jr = (u.date || '').slice(0, 4) || '—';
-        e.uitbetaaldPerJaar[jr] = (e.uitbetaaldPerJaar[jr] || 0) + (Number(u.amount) || 0);
+        const bedr = Number(u.amount) || 0;
+        e.uitbetaaldPerJaar[jr] = (e.uitbetaaldPerJaar[jr] || 0) + bedr;
+        if (bedr) e.cashflows.push({ date: u.date || todayISO(), amount: bedr });
       });
     });
   });
   const list = Object.values(map).map(e => {
     e.rendementPct = e.inleg ? e.gewogenRendement / e.inleg : 0;
     e.uitbetaaldTotaal = Object.values(e.uitbetaaldPerJaar).reduce((s, v) => s + v, 0);
+    // Netto IRR: cashflows + huidige waarde (NAV) als slotbedrag vandaag.
+    const flows = e.cashflows.slice();
+    if (e.nav > 0) flows.push({ date: todayISO(), amount: e.nav });
+    e.irr = xirr(flows);
+    // MOIC = (uitbetaald + huidige waarde) / inleg.
+    e.moic = e.inleg ? (e.uitbetaaldTotaal + e.nav) / e.inleg : null;
     return e;
   }).sort((a, b) => b.inleg - a.inleg);
   return list;
@@ -1942,33 +2278,91 @@ function renderInvestorReports() {
   const totInleg = list.reduce((s, e) => s + e.inleg, 0);
   const totVerwacht = list.reduce((s, e) => s + e.verwachtJaar, 0);
   const totUitbetaaldYtd = list.reduce((s, e) => s + (e.uitbetaaldPerJaar[String(jaar)] || 0), 0);
+  // Inleg-gewogen gemiddelde netto-IRR over alle investeerders met een berekenbare IRR.
+  const irrPool = list.filter(e => e.irr !== null && isFinite(e.irr));
+  const irrWeight = irrPool.reduce((s, e) => s + e.inleg, 0);
+  const gemIrr = irrWeight ? irrPool.reduce((s, e) => s + e.irr * e.inleg, 0) / irrWeight : null;
   const body = $('#investors-body'); if (!body) return;
+  const colCount = 6 + jaren.length;
   body.innerHTML = `
     <div class="kpi-grid">
       <article class="kpi"><span>Totaal opgehaald</span><strong>${fmtMoney(totInleg)}</strong><small>${list.length} investeerder${list.length === 1 ? '' : 's'}</small></article>
+      <article class="kpi"><span>Gem. netto IRR</span><strong>${fmtPct(gemIrr, 1)}</strong><small>inleg-gewogen, incl. huidige waarde</small></article>
       <article class="kpi"><span>Verwacht rendement / jaar</span><strong>${fmtMoney(Math.round(totVerwacht))}</strong></article>
       <article class="kpi"><span>Uitbetaald ${jaar}</span><strong>${fmtMoney(totUitbetaaldYtd)}</strong></article>
       <article class="kpi"><span>Wwft-geverifieerd</span><strong>${list.filter(e => e.wwft).length}/${list.length}</strong></article>
     </div>
     <div class="panel">
       <div class="panel-head">
-        <div><h2>Investeerders-roster</h2><p>Alle investeerders over alle projecten, met inleg, rendement en uitkeringen per jaar.</p></div>
+        <div><h2>Investeerders-roster</h2><p>Alle investeerders over alle projecten, met inleg, netto-IRR, multiple en uitkeringen per jaar. Klik een rij open voor de cashflow-tijdlijn.</p></div>
         <button class="btn primary slim" data-action="export-investors">Exporteer ledger</button>
       </div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Investeerder</th><th>Inleg</th><th>Rendement</th><th>Verwacht/jr</th>${jaren.map(j => `<th>Uitbetaald ${j}</th>`).join('')}<th>Wwft</th></tr></thead>
-        <tbody>${list.map(e => `<tr>
-          <td><strong>${esc(e.naam)}</strong>${e.email ? `<br><span class="sub">${esc(e.email)}</span>` : ''}<br><span class="sub">${e.projecten.length} project${e.projecten.length === 1 ? '' : 'en'}</span></td>
+      <div class="table-wrap"><table class="investor-table">
+        <thead><tr><th>Investeerder</th><th>Inleg</th><th>Netto IRR</th><th>Multiple</th><th>Verwacht/jr</th>${jaren.map(j => `<th>Uitbetaald ${j}</th>`).join('')}<th>Wwft</th></tr></thead>
+        <tbody>${list.map((e, idx) => `<tr class="investor-row" data-action="toggle-investor" data-idx="${idx}">
+          <td><strong>${esc(e.naam)}</strong>${e.email ? `<br><span class="sub">${esc(e.email)}</span>` : ''}<br><span class="sub">${e.projecten.length} project${e.projecten.length === 1 ? '' : 'en'} · ${fmtNum(e.rendementPct, 1)}% afgesproken</span></td>
           <td><strong>${fmtMoney(e.inleg)}</strong></td>
-          <td>${fmtNum(e.rendementPct, 1)}%</td>
+          <td>${irrBadge(e.irr)}</td>
+          <td>${e.moic === null || !isFinite(e.moic) ? '—' : fmtNum(e.moic, 2) + '×'}</td>
           <td>${fmtMoney(Math.round(e.verwachtJaar))}</td>
           ${jaren.map(j => `<td>${e.uitbetaaldPerJaar[j] ? fmtMoney(e.uitbetaaldPerJaar[j]) : '—'}</td>`).join('')}
           <td>${e.wwft ? '<span class="badge green">✔</span>' : '<span class="badge red">⚠</span>'}</td>
-        </tr>`).join('') || emptyRow(4 + jaren.length, 'Nog geen investeerders. Voeg ze toe bij een ontwikkelproject.')}</tbody>
-        <tfoot><tr><td><strong>Totaal</strong></td><td><strong>${fmtMoney(totInleg)}</strong></td><td></td><td><strong>${fmtMoney(Math.round(totVerwacht))}</strong></td>${jaren.map(j => `<td><strong>${fmtMoney(list.reduce((s, e) => s + (e.uitbetaaldPerJaar[j] || 0), 0))}</strong></td>`).join('')}<td></td></tr></tfoot>
+        </tr>
+        <tr class="investor-detail" id="inv-detail-${idx}" hidden><td colspan="${colCount}">${investorCashflowDetail(e)}</td></tr>`).join('') || emptyRow(colCount, 'Nog geen investeerders. Voeg ze toe bij een ontwikkelproject.')}</tbody>
+        <tfoot><tr><td><strong>Totaal</strong></td><td><strong>${fmtMoney(totInleg)}</strong></td><td><strong>${fmtPct(gemIrr, 1)}</strong></td><td></td><td><strong>${fmtMoney(Math.round(totVerwacht))}</strong></td>${jaren.map(j => `<td><strong>${fmtMoney(list.reduce((s, e) => s + (e.uitbetaaldPerJaar[j] || 0), 0))}</strong></td>`).join('')}<td></td></tr></tfoot>
       </table></div>
-      <p class="report-note">Investeerders worden samengevoegd op e-mailadres (of naam). Rendement is gewogen naar inleg. Uitbetaald = uitkeringen met status "Uitbetaald" in dat jaar.</p>
+      <p class="report-note">Investeerders worden samengevoegd op e-mailadres (of naam). <strong>Netto IRR</strong> is het werkelijke, op datum gewogen rendement (cashflows + huidige waarde van lopende inleg); <strong>multiple</strong> = (uitbetaald + huidige waarde) ÷ inleg. Lopende projecten waarderen de inleg op 100%; afgeronde projecten gelden als afgewikkeld.</p>
     </div>`;
+}
+
+/* Uitklap-detail per investeerder: cashflow-tijdlijn (SVG) + tabel met alle stromen. */
+function investorCashflowDetail(e) {
+  const flows = (e.cashflows || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  if (e.nav > 0) flows.push({ date: todayISO(), amount: e.nav, nav: true });
+  const svg = cashflowTimelineSvg(flows);
+  const rows = flows.map(f => `<tr>
+    <td>${fmtDate(f.date)}</td>
+    <td>${f.nav ? 'Huidige waarde (lopend)' : f.amount < 0 ? 'Inleg' : 'Uitkering'}</td>
+    <td class="${f.amount < 0 ? 'alert' : ''}" style="text-align:right">${fmtMoney(f.amount)}</td>
+  </tr>`).join('');
+  return `<div class="investor-detail-inner">
+    <div class="cashflow-chart">${svg}</div>
+    <table class="cashflow-table"><thead><tr><th>Datum</th><th>Soort</th><th style="text-align:right">Bedrag</th></tr></thead><tbody>${rows || emptyRow(3, 'Geen cashflows.')}</tbody></table>
+  </div>`;
+}
+
+/* Pure inline-SVG cashflow-tijdlijn: inleg omlaag (rood), uitkeringen omhoog (groen),
+   cumulatieve lijn (blauw). Geen dependencies. */
+function cashflowTimelineSvg(flows) {
+  const data = (flows || []).filter(f => f && isFinite(Number(f.amount)));
+  if (data.length < 2) return '<p class="empty">Onvoldoende data voor een tijdlijn.</p>';
+  const W = 760, H = 240, padL = 56, padR = 16, padT = 20, padB = 34;
+  const innerW = W - padL - padR, innerH = H - padT - padB, zeroY = padT + innerH / 2;
+  const maxAbs = Math.max(...data.map(f => Math.abs(Number(f.amount))), 1);
+  let cum = 0; const cums = data.map(f => (cum += Number(f.amount)));
+  const cumMax = Math.max(...cums.map(Math.abs), maxAbs, 1);
+  const n = data.length;
+  const slot = innerW / n, barW = Math.max(6, Math.min(40, slot * 0.45));
+  const x = i => padL + slot * (i + 0.5);
+  const barH = v => Math.abs(v) / maxAbs * (innerH / 2 - 4);
+  const cumY = v => zeroY - (v / cumMax) * (innerH / 2 - 4);
+  const bars = data.map((f, i) => {
+    const v = Number(f.amount), h = barH(v), cx = x(i);
+    const y = v < 0 ? zeroY : zeroY - h;
+    const fill = f.nav ? '#3a6ea5' : v < 0 ? 'var(--red,#b03a3a)' : 'var(--green,#1e6a42)';
+    return `<rect x="${(cx - barW / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${Math.max(1, h).toFixed(1)}" rx="2" fill="${fill}"><title>${esc(fmtDate(f.date))}: ${esc(fmtMoney(v))}${f.nav ? ' (huidige waarde)' : ''}</title></rect>`;
+  }).join('');
+  const linePts = cums.map((c, i) => `${x(i).toFixed(1)},${cumY(c).toFixed(1)}`).join(' ');
+  const dots = cums.map((c, i) => `<circle cx="${x(i).toFixed(1)}" cy="${cumY(c).toFixed(1)}" r="3" fill="#3a6ea5"><title>Cumulatief ${esc(fmtDate(data[i].date))}: ${esc(fmtMoney(c))}</title></circle>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" class="cf-svg" role="img" aria-label="Cashflow-tijdlijn">
+    <line x1="${padL}" y1="${zeroY}" x2="${W - padR}" y2="${zeroY}" stroke="var(--line,#ccc)" stroke-width="1"/>
+    <text x="6" y="${padT + 8}" class="cf-axis">+</text>
+    <text x="6" y="${H - padB}" class="cf-axis">−</text>
+    ${bars}
+    <polyline points="${linePts}" fill="none" stroke="#3a6ea5" stroke-width="2"/>
+    ${dots}
+  </svg>
+  <p class="cf-legend"><span class="cf-dot" style="background:var(--red,#b03a3a)"></span>Inleg <span class="cf-dot" style="background:var(--green,#1e6a42)"></span>Uitkering <span class="cf-dot" style="background:#3a6ea5"></span>Cumulatief / huidige waarde</p>`;
 }
 
 /* ---------- Adverteren ---------- */
@@ -3316,8 +3710,8 @@ function exportCurrentView() {
     case 'investors': {
       const inv = investorReportData();
       const jr = new Date().getFullYear();
-      rows = [['Investeerder', 'E-mail', 'Totaal inleg', 'Rendement %', 'Verwacht per jaar', `Uitbetaald ${jr - 2}`, `Uitbetaald ${jr - 1}`, `Uitbetaald ${jr}`, 'Totaal uitbetaald', 'Wwft', 'Projecten']];
-      inv.forEach(e => rows.push([e.naam, e.email, csvNum(e.inleg), csvNum(e.rendementPct), csvNum(e.verwachtJaar), csvNum(e.uitbetaaldPerJaar[jr - 2] || 0), csvNum(e.uitbetaaldPerJaar[jr - 1] || 0), csvNum(e.uitbetaaldPerJaar[jr] || 0), csvNum(e.uitbetaaldTotaal), e.wwft ? 'ja' : 'nee', e.projecten.map(p => p.project).join(' / ')]));
+      rows = [['Investeerder', 'E-mail', 'Totaal inleg', 'Afgesproken rendement %', 'Netto IRR %', 'Multiple (MOIC)', 'Verwacht per jaar', `Uitbetaald ${jr - 2}`, `Uitbetaald ${jr - 1}`, `Uitbetaald ${jr}`, 'Totaal uitbetaald', 'Wwft', 'Projecten']];
+      inv.forEach(e => rows.push([e.naam, e.email, csvNum(e.inleg), csvNum(e.rendementPct), e.irr === null ? '' : csvNum(e.irr), e.moic === null ? '' : csvNum(e.moic), csvNum(e.verwachtJaar), csvNum(e.uitbetaaldPerJaar[jr - 2] || 0), csvNum(e.uitbetaaldPerJaar[jr - 1] || 0), csvNum(e.uitbetaaldPerJaar[jr] || 0), csvNum(e.uitbetaaldTotaal), e.wwft ? 'ja' : 'nee', e.projecten.map(p => p.project).join(' / ')]));
       name = 'investeerders-ledger'; break;
     }
     case 'contracts':
@@ -3487,6 +3881,95 @@ function renderSearch(query) {
   box.hidden = false;
 }
 
+/* ---------- Cmd-K command palette ---------- */
+const CMDK_RECENT_KEY = 'homeinn-cmdk-recent';
+let cmdkResults = [], cmdkIdx = 0;
+
+function loadCmdkRecent() { try { return JSON.parse(localStorage.getItem(CMDK_RECENT_KEY) || '[]'); } catch (e) { return []; } }
+function pushCmdkRecent(label) {
+  let r = loadCmdkRecent().filter(x => x !== label);
+  r.unshift(label); r = r.slice(0, 5);
+  try { localStorage.setItem(CMDK_RECENT_KEY, JSON.stringify(r)); } catch (e) { /* quota */ }
+}
+
+function cmdkActions() {
+  const A = [];
+  Object.keys(VIEWS).forEach(v => { if (v !== 'landing') A.push({ label: 'Ga naar ' + VIEWS[v], cat: 'Navigatie', ic: '→', run: () => setView(v) }); });
+  A.push(
+    { label: 'Nieuwe aankoopkans', cat: 'Aanmaken', ic: '＋', run: () => openDealModal() },
+    { label: 'Pand toevoegen', cat: 'Aanmaken', ic: '＋', run: () => openPropertyModal() },
+    { label: 'Nieuw ontwikkelproject', cat: 'Aanmaken', ic: '＋', run: () => openProjectModal() },
+    { label: 'Nieuwe kostenpost', cat: 'Aanmaken', ic: '＋', run: () => openCostModal() },
+    { label: 'Factuur opstellen', cat: 'Aanmaken', ic: '＋', run: () => openInvoiceModal() },
+    { label: 'Lening toevoegen', cat: 'Aanmaken', ic: '＋', run: () => openLoanModal() },
+    { label: 'Bankrekening toevoegen', cat: 'Aanmaken', ic: '＋', run: () => openAccountModal() },
+    { label: 'Nieuwe relatie', cat: 'Aanmaken', ic: '＋', run: () => openContactModal() },
+    { label: 'Planning toevoegen', cat: 'Aanmaken', ic: '＋', run: () => openPlanModal() },
+    { label: 'Nieuw contract', cat: 'Aanmaken', ic: '＋', run: () => openContractModal() },
+    { label: 'Backup downloaden', cat: 'Acties', ic: '⤓', run: () => downloadBackup() },
+    { label: 'Huidige weergave exporteren', cat: 'Acties', ic: '⤓', run: () => exportCurrentView() },
+    { label: 'Cloud synchroniseren', cat: 'Acties', ic: '☁', run: () => { const b = document.querySelector('[data-action="cloud-sync"]'); b ? b.click() : setView('settings'); } }
+  );
+  return A;
+}
+
+function cmdkEntities(q) {
+  const hit = txt => String(txt || '').toLowerCase().includes(q);
+  const r = [];
+  state.properties.filter(p => hit(p.address) || hit(p.ref) || hit(p.city)).slice(0, 5)
+    .forEach(p => r.push({ label: p.address, cat: 'Pand', ic: '🏠', sub: p.status, run: () => goTo('pand:' + p.id) }));
+  state.deals.filter(d => hit(d.address) || hit(d.ref)).slice(0, 5)
+    .forEach(d => r.push({ label: d.address, cat: 'Kans', ic: '🔑', sub: d.status, run: () => goTo('deal:' + d.id) }));
+  state.projects.filter(pr => hit(pr.name) || hit(pr.ref)).slice(0, 4)
+    .forEach(pr => r.push({ label: pr.name, cat: 'Project', ic: '🏗️', sub: propertyLabel(pr.propertyId), run: () => goTo('project:' + pr.id) }));
+  state.contacts.filter(c => hit(c.name) || hit(c.email) || hit(c.contact)).slice(0, 4)
+    .forEach(c => r.push({ label: c.name, cat: 'Relatie', ic: '👤', sub: c.type, run: () => goTo('relations') }));
+  state.costs.filter(k => hit(k.desc)).slice(0, 3)
+    .forEach(k => r.push({ label: k.desc, cat: 'Kosten', ic: '🧾', sub: propertyLabel(k.propertyId), run: () => goTo('costs') }));
+  return r;
+}
+
+function cmdkCompute(query) {
+  const q = (query || '').trim().toLowerCase();
+  if (!q) {
+    const acts = cmdkActions();
+    const recents = loadCmdkRecent().map(lbl => acts.find(a => a.label === lbl)).filter(Boolean);
+    const rest = acts.filter(a => !recents.includes(a));
+    return recents.concat(rest).slice(0, 12);
+  }
+  const ents = cmdkEntities(q);
+  const acts = cmdkActions().filter(a => a.label.toLowerCase().includes(q));
+  return ents.concat(acts).slice(0, 16);
+}
+
+function cmdkRender() {
+  const list = $('#cmdk-list'); if (!list) return;
+  cmdkResults = cmdkCompute($('#cmdk-input').value);
+  if (cmdkIdx >= cmdkResults.length) cmdkIdx = 0;
+  if (!cmdkResults.length) { list.innerHTML = '<p class="cmdk-empty">Niets gevonden. Probeer een adres, naam of een actie zoals “nieuwe kostenpost”.</p>'; return; }
+  list.innerHTML = cmdkResults.map((it, i) => `
+    <div class="cmdk-item ${i === cmdkIdx ? 'active' : ''}" data-cmdk="${i}">
+      <span class="cmdk-ic">${it.ic || '•'}</span><span>${esc(it.label)}</span>
+      <span class="cmdk-sub">${esc(it.sub || it.cat || '')}</span>
+    </div>`).join('');
+  const active = list.querySelector('.cmdk-item.active');
+  if (active) active.scrollIntoView({ block: 'nearest' });
+}
+
+function openCmdK() {
+  const dlg = $('#cmdk'); if (!dlg || dlg.open) return;
+  $('#cmdk-input').value = ''; cmdkIdx = 0; cmdkRender();
+  dlg.showModal();
+  setTimeout(() => $('#cmdk-input').focus(), 20);
+}
+
+function cmdkRun(i) {
+  const it = cmdkResults[i]; if (!it) return;
+  if (it.cat === 'Navigatie' || it.cat === 'Aanmaken' || it.cat === 'Acties') pushCmdkRecent(it.label);
+  $('#cmdk').close();
+  try { it.run(); } catch (e) { showToast('Actie mislukt: ' + (e.message || e)); }
+}
+
 /* ---------- Toast ---------- */
 let toastTimer;
 function showToast(message) {
@@ -3530,6 +4013,13 @@ document.addEventListener('click', event => {
       break;
     }
     case 'print-deal': printDeal(id); break;
+    case 'cmp-toggle':
+      if (compareSet.has(id)) compareSet.delete(id); else compareSet.add(id);
+      renderDeals();
+      break;
+    case 'open-compare': renderComparison(); break;
+    case 'clear-compare': compareSet.clear(); renderDeals(); break;
+    case 'close-compare': $('#compare-modal').close(); break;
     // Portfolio
     case 'open-property': setView('portfolio', 'property', id); break;
     case 'back-to-portfolio': setView('portfolio'); break;
@@ -3773,6 +4263,11 @@ document.addEventListener('click', event => {
       break;
     }
     case 'export-investors': exportCurrentView(); break;
+    case 'toggle-investor': {
+      const row = document.getElementById('inv-detail-' + el.dataset.idx);
+      if (row) { row.hidden = !row.hidden; el.classList.toggle('open', !row.hidden); }
+      break;
+    }
     case 'maint-messages': openMaintMessages(id); break;
     case 'export-ical': exportPlanningAsIcal(); break;
     case 'export-audit': {
@@ -4115,6 +4610,26 @@ function initStatic() {
   $('#search-input').addEventListener('input', e => renderSearch(e.target.value));
   $('#search-input').addEventListener('keydown', e => { if (e.key === 'Escape') { $('#search-results').hidden = true; e.target.blur(); } });
 
+  // Cmd/Ctrl+K command palette
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); openCmdK(); }
+  });
+  const cmdkInput = $('#cmdk-input');
+  if (cmdkInput) {
+    cmdkInput.addEventListener('input', () => { cmdkIdx = 0; cmdkRender(); });
+    cmdkInput.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); cmdkIdx = Math.min(cmdkResults.length - 1, cmdkIdx + 1); cmdkRender(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); cmdkIdx = Math.max(0, cmdkIdx - 1); cmdkRender(); }
+      else if (e.key === 'Enter') { e.preventDefault(); cmdkRun(cmdkIdx); }
+    });
+  }
+  const cmdkDlg = $('#cmdk');
+  if (cmdkDlg) cmdkDlg.addEventListener('click', e => {
+    const it = e.target.closest('[data-cmdk]');
+    if (it) cmdkRun(Number(it.dataset.cmdk));
+    else if (e.target === cmdkDlg) cmdkDlg.close();
+  });
+
   // Filters
   $$('#portfolio-filter button').forEach(b => b.addEventListener('click', () => { filters.portfolio = b.dataset.pfilter; $$('#portfolio-filter button').forEach(x => x.classList.toggle('active', x === b)); renderPortfolio(); }));
   $$('#project-filter button').forEach(b => b.addEventListener('click', () => { filters.project = b.dataset.prfilter; $$('#project-filter button').forEach(x => x.classList.toggle('active', x === b)); renderProjects(); }));
@@ -4148,6 +4663,14 @@ function initStatic() {
     setView('deals');
   });
   $('#calc-print').addEventListener('click', event => { event.preventDefault(); printCalcForm(); });
+  // Hold-vs-flip-velden staan buiten het formulier: alleen het resultaatblok herrekenen (focus behouden).
+  $('#calc-scenarios').addEventListener('input', e => {
+    const inp = e.target.closest('.hold-input');
+    if (!inp) return;
+    const key = inp.dataset.hold;
+    calcHold[key] = Number(inp.value) || 0;
+    renderHoldResult(readCalcForm());
+  });
 
   // Live previews in modals
   $('#deal-form').addEventListener('input', refreshDealPreview);

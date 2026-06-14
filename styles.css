@@ -623,6 +623,19 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .cashflow-table td.neg,.cashflow-table strong.neg{color:var(--red)}
 .report-note{font-size:.8rem;color:var(--muted);margin-top:6px}
 
+/* ===== Investeerders-roster: uitklap + cashflow-tijdlijn ===== */
+.investor-row{cursor:pointer}
+.investor-row:hover{background:rgba(180,144,48,.06)}
+.investor-row.open{background:rgba(180,144,48,.1)}
+.investor-detail>td{background:rgba(11,30,48,.03);padding:0}
+.investor-detail-inner{display:flex;gap:22px;flex-wrap:wrap;padding:14px 12px}
+.cashflow-chart{flex:2 1 420px;min-width:300px}
+.cashflow-chart .cf-svg{width:100%;height:auto;display:block}
+.cf-axis{font-size:11px;fill:var(--muted)}
+.cashflow-chart .cf-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);margin:8px 0 0}
+.cf-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.investor-detail-inner .cashflow-table{flex:1 1 240px;align-self:flex-start}
+
 /* ===== Verhuur & onderhoud ===== */
 .maint-open{color:var(--red);font-weight:700}
 .maint-done{color:var(--green)}
@@ -647,3 +660,64 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .adtext-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .adtext-area{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:.88rem;line-height:1.5;background:var(--cream);color:var(--ink);resize:vertical}
 @media(max-width:640px){.ad-card-head{flex-wrap:wrap}.ad-thumb{width:100%;height:160px}}
+
+/* ===== Dealcalculator Pro ===== */
+#calc-scenarios{margin-top:14px;display:grid;gap:14px}
+#calc-scenarios:empty{display:none}
+.scen-split{align-items:start}
+.scen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 8px}
+.scen-col{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;text-align:center}
+.scen-col.bad{background:rgba(176,58,58,.06)}
+.scen-col.base{background:rgba(11,30,48,.04)}
+.scen-col.good{background:rgba(30,106,66,.07)}
+.scen-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.scen-col strong{font-size:1.18rem;color:var(--navy);font-variant-numeric:tabular-nums}
+.scen-col strong.alert{color:var(--red)}
+.scen-sub{font-size:.78rem;color:var(--muted)}
+.breakeven-box{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.breakeven-box>div{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.breakeven-box span{font-size:.78rem;color:var(--muted)}
+.breakeven-box strong{font-size:1.05rem;color:var(--navy);font-variant-numeric:tabular-nums}
+.breakeven-box small{font-size:.74rem;color:var(--muted)}
+.tornado .rb-fill{background:var(--gold)}
+.hold-panel{margin-top:0}
+.hold-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0 14px}
+.hold-inputs label{display:grid;gap:6px;font-size:.82rem;font-weight:700;color:var(--navy)}
+.hold-inputs input{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit}
+.hold-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:10px}
+.hold-grid>div{background:rgba(11,30,48,.04);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.hold-grid span{font-size:.76rem;color:var(--muted)}
+.hold-grid strong{font-size:1.05rem;color:var(--navy);font-variant-numeric:tabular-nums}
+.hold-grid strong.alert{color:var(--red)}
+.verdict{font-size:.86rem;color:var(--navy);background:rgba(180,144,48,.08);border-radius:10px;padding:10px 12px;margin:4px 0 0}
+.verdict.hold{background:rgba(30,106,66,.08)}
+@media(max-width:640px){.scen-grid,.hold-inputs{grid-template-columns:1fr}.breakeven-box{grid-template-columns:1fr}}
+
+/* ===== Deal-vergelijker ===== */
+.compare-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cmp-count{font-size:.82rem;color:var(--muted);font-weight:700}
+.cmp-check{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);cursor:pointer;margin-bottom:4px;user-select:none}
+.cmp-check input{width:14px;height:14px;cursor:pointer}
+.lead-card.cmp-on{border-color:var(--gold);box-shadow:0 0 0 2px rgba(180,144,48,.25)}
+.compare-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.compare-table th,.compare-table td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:right}
+.compare-table th:first-child,.compare-table td.cmp-metric{text-align:left;color:var(--navy);font-weight:700}
+.compare-table thead th{font-size:.8rem;color:var(--navy);vertical-align:bottom}
+.compare-table th.cmp-winner{background:rgba(180,144,48,.1);border-radius:8px 8px 0 0}
+.compare-table td.cmp-best{background:rgba(30,106,66,.1);font-weight:700;color:var(--green)}
+.compare-table td.cmp-best.alert{color:var(--red);background:rgba(176,58,58,.1)}
+
+/* ===== Cmd-K command palette ===== */
+.cmdk{border:0;border-radius:14px;padding:0;width:min(620px,calc(100vw - 28px));box-shadow:0 30px 90px rgba(0,0,0,.4);background:transparent}
+.cmdk::backdrop{background:rgba(11,30,48,.5)}
+.cmdk-box{background:#fff;border-radius:14px;overflow:hidden}
+#cmdk-input{width:100%;border:0;border-bottom:1px solid var(--line);padding:18px 20px;font:inherit;font-size:1.02rem;outline:none}
+.cmdk-list{max-height:50vh;overflow-y:auto;padding:6px}
+.cmdk-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:9px;cursor:pointer;font-size:.9rem}
+.cmdk-item .cmdk-ic{width:22px;text-align:center;flex:0 0 auto}
+.cmdk-item .cmdk-sub{color:var(--muted);font-size:.78rem;margin-left:auto}
+.cmdk-item.active{background:var(--gold);color:#fff}
+.cmdk-item.active .cmdk-sub{color:rgba(255,255,255,.85)}
+.cmdk-cat{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px 14px 2px;font-weight:700}
+.cmdk-empty{padding:16px;color:var(--muted);font-size:.88rem}
+.cmdk-hint{margin:0;padding:8px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:.74rem}

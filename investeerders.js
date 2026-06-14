@@ -17,6 +17,73 @@
   function fdate(d) { if (!d) return '—'; var p = String(d).slice(0, 10).split('-'); return p.length === 3 ? p[2] + '-' + p[1] + '-' + p[0] : d; }
   var toastTimer = null;
   function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 4200); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function todayISO() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function days(a, b) { return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 86400000); }
+
+  /* Netto IRR op datumcashflows (Newton-Raphson + bisectie-fallback). Geeft % per jaar of null. */
+  function xirr(flows) {
+    var f = (flows || []).filter(function (x) { return x && x.date && isFinite(Number(x.amount)) && Number(x.amount) !== 0; })
+      .map(function (x) { return { date: String(x.date).slice(0, 10), amount: Number(x.amount) }; });
+    if (f.length < 2) return null;
+    if (!f.some(function (x) { return x.amount < 0; }) || !f.some(function (x) { return x.amount > 0; })) return null;
+    var t0 = f.reduce(function (m, x) { return x.date < m ? x.date : m; }, f[0].date);
+    var pts = f.map(function (x) { return { t: days(t0, x.date) / 365, a: x.amount }; });
+    function npv(r) { return pts.reduce(function (s, x) { return s + x.a / Math.pow(1 + r, x.t); }, 0); }
+    function dnpv(r) { return pts.reduce(function (s, x) { return s - x.t * x.a / Math.pow(1 + r, x.t + 1); }, 0); }
+    var rate = 0.1, i;
+    for (i = 0; i < 60; i++) {
+      var v = npv(rate), d = dnpv(rate);
+      if (!isFinite(v) || !isFinite(d) || d === 0) break;
+      var nx = rate - v / d;
+      if (!isFinite(nx)) break;
+      if (Math.abs(nx - rate) < 1e-7) { rate = nx; break; }
+      rate = Math.max(-0.9999, nx);
+    }
+    if (isFinite(rate) && rate > -0.9999 && Math.abs(npv(rate)) < 1) return rate * 100;
+    var lo = -0.99, hi = 10, flo = npv(lo), fhi = npv(hi);
+    if (!isFinite(flo) || !isFinite(fhi) || flo * fhi > 0) return null;
+    for (i = 0; i < 200; i++) {
+      var mid = (lo + hi) / 2, fm = npv(mid);
+      if (!isFinite(fm)) return null;
+      if (Math.abs(fm) < 1e-6 || (hi - lo) < 1e-8) return mid * 100;
+      if (flo * fm < 0) { hi = mid; } else { lo = mid; flo = fm; }
+    }
+    return ((lo + hi) / 2) * 100;
+  }
+  function pct(v, dec) { return (v === null || v === undefined || !isFinite(v)) ? '—' : (Number(v).toLocaleString('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: dec == null ? 1 : dec }) + '%'); }
+
+  /* Pure inline-SVG cashflow-tijdlijn voor het portaal. flows: [{date,amount,nav?}]. */
+  function cfTimeline(flows) {
+    var data = (flows || []).filter(function (f) { return f && isFinite(Number(f.amount)); })
+      .sort(function (a, b) { return String(a.date).localeCompare(String(b.date)); });
+    if (data.length < 2) return '<p class="empty">Nog te weinig cashflows voor een tijdlijn.</p>';
+    var W = 760, H = 240, padL = 50, padR = 14, padT = 18, padB = 30;
+    var innerW = W - padL - padR, innerH = H - padT - padB, zeroY = padT + innerH / 2;
+    var maxAbs = Math.max.apply(null, data.map(function (f) { return Math.abs(Number(f.amount)); }).concat([1]));
+    var cum = 0, cums = data.map(function (f) { return (cum += Number(f.amount)); });
+    var cumMax = Math.max.apply(null, cums.map(function (c) { return Math.abs(c); }).concat([maxAbs, 1]));
+    var n = data.length, slot = innerW / n, barW = Math.max(6, Math.min(40, slot * 0.45));
+    function x(i) { return padL + slot * (i + 0.5); }
+    function barH(v) { return Math.abs(v) / maxAbs * (innerH / 2 - 4); }
+    function cumY(v) { return zeroY - (v / cumMax) * (innerH / 2 - 4); }
+    var bars = data.map(function (f, i) {
+      var v = Number(f.amount), h = barH(v), cx = x(i);
+      var y = v < 0 ? zeroY : zeroY - h;
+      var fill = f.nav ? '#3a6ea5' : v < 0 ? '#b03a3a' : '#1e6a42';
+      return '<rect x="' + (cx - barW / 2).toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + Math.max(1, h).toFixed(1) + '" rx="2" fill="' + fill + '"><title>' + esc(fdate(f.date)) + ': ' + esc(money(v)) + (f.nav ? ' (huidige waarde)' : '') + '</title></rect>';
+    }).join('');
+    var linePts = cums.map(function (c, i) { return x(i).toFixed(1) + ',' + cumY(c).toFixed(1); }).join(' ');
+    var dots = cums.map(function (c, i) { return '<circle cx="' + x(i).toFixed(1) + '" cy="' + cumY(c).toFixed(1) + '" r="3" fill="#3a6ea5"><title>Cumulatief ' + esc(fdate(data[i].date)) + ': ' + esc(money(c)) + '</title></circle>'; }).join('');
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto;display:block" role="img" aria-label="Cashflow-tijdlijn">' +
+      '<line x1="' + padL + '" y1="' + zeroY + '" x2="' + (W - padR) + '" y2="' + zeroY + '" stroke="rgba(12,11,9,.18)" stroke-width="1"/>' +
+      '<text x="6" y="' + (padT + 8) + '" style="font-size:11px;fill:#6f756f">+</text>' +
+      '<text x="6" y="' + (H - padB) + '" style="font-size:11px;fill:#6f756f">−</text>' +
+      bars + '<polyline points="' + linePts + '" fill="none" stroke="#3a6ea5" stroke-width="2"/>' + dots + '</svg>' +
+      '<p style="display:flex;gap:16px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);margin:8px 0 0">' +
+      legendDot('#b03a3a') + 'Inleg' + legendDot('#1e6a42') + 'Uitkering' + legendDot('#3a6ea5') + 'Cumulatief / huidige waarde</p>';
+  }
+  function legendDot(c) { return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;background:' + c + '"></span>'; }
 
   function printContractDoc(html) {
     var w = window.open('', '_blank');
@@ -90,13 +157,27 @@
     var verwachtRendement = investments.reduce(function (s, i) { return s + (Number(i.bedrag) || 0) * (Number(i.rendement_pct) || 0) / 100; }, 0);
     var uitbetaald = payouts.filter(function (p) { return p.status === 'Uitbetaald'; }).reduce(function (s, p) { return s + (Number(p.amount) || 0); }, 0);
 
+    // Netto IRR & multiple over alle eigen investeringen: inleg negatief, uitkeringen positief,
+    // huidige waarde (lopende inleg) als slotbedrag vandaag.
+    var cf = [];
+    investments.forEach(function (i) { if (Number(i.bedrag)) cf.push({ date: i.datum, amount: -(Number(i.bedrag) || 0) }); });
+    payouts.filter(function (p) { return p.status === 'Uitbetaald' && Number(p.amount); }).forEach(function (p) { cf.push({ date: p.date, amount: Number(p.amount) || 0 }); });
+    var navTotal = investments.reduce(function (s, i) { var st = (i.project && i.project.status) || ''; return s + (st === 'Afgerond' ? 0 : (Number(i.bedrag) || 0)); }, 0);
+    var flowsChart = cf.slice();
+    if (navTotal > 0) flowsChart.push({ date: todayISO(), amount: navTotal, nav: true });
+    var myIrr = xirr(flowsChart);
+    var myMoic = totaalInleg ? (uitbetaald + navTotal) / totaalInleg : null;
+
     var html =
       '<div class="kpis">' +
         kpi('Totaal ingelegd', money(totaalInleg)) +
-        kpi('Verwacht rendement / jaar', money(verwachtRendement)) +
+        kpi('Mijn netto IRR', pct(myIrr, 1)) +
+        kpi('Multiple (MOIC)', myMoic === null || !isFinite(myMoic) ? '—' : (Number(myMoic).toLocaleString('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '×')) +
         kpi('Reeds uitbetaald', money(uitbetaald)) +
+        kpi('Verwacht rendement / jaar', money(verwachtRendement)) +
         kpi('Projecten', String(investments.length)) +
-      '</div>';
+      '</div>' +
+      (cf.length >= 1 ? '<div class="card"><h2>Mijn cashflow in de tijd</h2><p class="muted" style="font-size:.82rem;margin:0 0 12px">Je netto rendement (IRR) over alle inleg samen is <strong>' + pct(myIrr, 1) + '</strong>. Rode balken zijn je inleg, groene de uitkeringen, de blauwe lijn het cumulatieve saldo inclusief de huidige waarde van je lopende inleg.</p>' + cfTimeline(flowsChart) + '</div>' : '');
 
     investments.forEach(function (inv) {
       var proj = inv.project || {};
