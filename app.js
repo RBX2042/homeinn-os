@@ -95,20 +95,20 @@ function seedData() {
       otbPct: 8, notaris: 1500, makelaarPct: 1, rentePct: 6, vasteLasten: 300, verkoopkostenPct: 1.25, doelROI: 15
     },
     contacts: [
-      { id: 'r1', type: 'Makelaar', name: 'Maaskant Makelaardij', contact: 'D. Maaskant', email: 'info@maaskantmakelaardij.nl', phone: '010-1112233', address: 'Rotterdam', note: 'Brengt off-market portiekpanden. Snel schakelen.' },
-      { id: 'r2', type: 'Makelaar', name: 'Van Vliet & Partners', contact: 'S. van Vliet', email: 'verkoop@vanvlietpartners.nl', phone: '010-2223344', address: 'Rotterdam', note: 'Verkopend makelaar van onze panden. Courtage 1,1%.' },
-      { id: 'r3', type: 'Notaris', name: 'Notariskantoor Maas', contact: 'mr. R. Maas', email: 'vastgoed@notarismaas.nl', phone: '010-3334455', address: 'Rotterdam', note: 'Vaste notaris. Passeert binnen 2 weken.' },
-      { id: 'r4', type: 'Aannemer', name: 'Bouwbedrijf Vos', contact: 'K. Vos', email: 'planning@bouwbedrijfvos.nl', phone: '010-4445566', address: 'Schiedam', note: 'Hoofdaannemer renovaties. Plant 4-6 wkn vooruit.' },
-      { id: 'r5', type: 'Aannemer', name: 'Installatietechniek Botlek', contact: 'M. Aydin', email: 'service@itbotlek.nl', phone: '010-5556677', address: 'Rotterdam-Zuid', note: 'W/E-installaties, ook keuringen.' },
-      { id: 'r6', type: 'Financier', name: 'Rijnmond Vastgoedfinanciering', contact: 'P. de Lange', email: 'p.delange@rijnmondvf.nl', phone: '010-6667788', address: 'Rotterdam', note: 'Bridge- en ontwikkelfinanciering, 70-80% LTV.' },
-      { id: 'r7', type: 'Koper/Verkoper', name: 'B. Janssen', contact: 'B. Janssen', email: 'b.janssen@example.nl', phone: '06-11223344', address: '', note: 'Bod uitgebracht op Laan op Zuid 304.' },
-      { id: 'r8', type: 'Overig', name: 'Taxatiebureau Erasmus', contact: 'L. Vermeer', email: 'planning@taxatie-erasmus.nl', phone: '010-7778899', address: 'Rotterdam', note: 'Gevalideerde taxaties binnen 5 werkdagen.' },
-      { id: 'r9', type: 'Aannemer', name: 'Stukadoors- & afbouwbedrijf Demir', contact: 'E. Demir', email: 'demir.afbouw@example.nl', phone: '06-99887766', address: 'Schiedam', note: 'Afbouw en styling richting oplevering.' }
+      { id: 'r1', type: 'Makelaar', name: 'Makelaarskantoor A', contact: 'Contactpersoon', email: 'aankoop@voorbeeld-makelaar.nl', phone: '010-0000001', address: 'Rotterdam', note: 'Brengt off-market portiekpanden. Snel schakelen.' },
+      { id: 'r2', type: 'Makelaar', name: 'Makelaarskantoor B', contact: 'Contactpersoon', email: 'verkoop@voorbeeld-makelaar.nl', phone: '010-0000002', address: 'Rotterdam', note: 'Verkopend makelaar van onze panden. Courtage 1,1%.' },
+      { id: 'r3', type: 'Notaris', name: 'Notariskantoor A', contact: 'Contactpersoon', email: 'vastgoed@voorbeeld-notaris.nl', phone: '010-0000003', address: 'Rotterdam', note: 'Vaste notaris. Passeert binnen 2 weken.' },
+      { id: 'r4', type: 'Aannemer', name: 'Bouwbedrijf A', contact: 'Contactpersoon', email: 'planning@voorbeeld-bouw.nl', phone: '010-0000004', address: 'Schiedam', note: 'Hoofdaannemer renovaties. Plant 4-6 wkn vooruit.' },
+      { id: 'r5', type: 'Aannemer', name: 'Installatiebedrijf A', contact: 'Contactpersoon', email: 'service@voorbeeld-installatie.nl', phone: '010-0000005', address: 'Rotterdam-Zuid', note: 'W/E-installaties, ook keuringen.' },
+      { id: 'r6', type: 'Financier', name: 'Vastgoedfinanciering A', contact: 'Contactpersoon', email: 'krediet@voorbeeld-financier.nl', phone: '010-0000006', address: 'Rotterdam', note: 'Bridge- en ontwikkelfinanciering, 70-80% LTV.' },
+      { id: 'r7', type: 'Koper/Verkoper', name: 'Belangstellende A', contact: 'Belangstellende A', email: 'belangstellende-a@voorbeeld.nl', phone: '06-00000001', address: '', note: 'Bod uitgebracht op Laan op Zuid 304.' },
+      { id: 'r8', type: 'Overig', name: 'Taxatiebureau A', contact: 'Contactpersoon', email: 'taxatie@voorbeeld-taxatie.nl', phone: '010-0000007', address: 'Rotterdam', note: 'Gevalideerde taxaties binnen 5 werkdagen.' },
+      { id: 'r9', type: 'Aannemer', name: 'Afbouwbedrijf A', contact: 'Contactpersoon', email: 'afbouw@voorbeeld-bouw.nl', phone: '06-00000002', address: 'Schiedam', note: 'Afbouw en styling richting oplevering.' }
     ],
     deals: [
       {
         id: 'd1', ref: 'AK-2026-007', address: 'Schiedamseweg 77C', city: 'Rotterdam', ptype: 'Appartement',
-        status: 'Lead', vraagprijs: 285000, makelaarId: 'r1', viewingDate: '', source: 'Off-market via Maaskant',
+        status: 'Lead', vraagprijs: 285000, makelaarId: 'r1', viewingDate: '', source: 'Off-market via makelaar',
         createdAt: addDaysISO(t, -2), note: 'Verhuurd geweest, gedateerd. Mogelijk snel te schakelen.',
         calc: { koopsom: 262000, verbouwing: 60000, verkoopprijs: 425000, maanden: 8 }, biedingen: []
       },
@@ -131,14 +131,14 @@ function seedData() {
       {
         id: 'd4', ref: 'AK-2026-004', address: 'Mathenesserweg 51A', city: 'Rotterdam', ptype: 'Appartement',
         status: 'Onder voorbehoud', vraagprijs: 250000, makelaarId: 'r2', viewingDate: addDaysISO(t, -20), source: 'Funda',
-        createdAt: addDaysISO(t, -28), note: 'Koopovereenkomst getekend o.v.v. financiering — stukken vóór 20-06 bij Rijnmond VF.',
+        createdAt: addDaysISO(t, -28), note: 'Koopovereenkomst getekend o.v.v. financiering — stukken vóór 20-06 bij de financier.',
         calc: { koopsom: 240000, verbouwing: 45000, verkoopprijs: 365000, maanden: 8 },
         biedingen: [{ id: 'b3', date: addDaysISO(t, -16), amount: 240000, validUntil: addDaysISO(t, -12), status: 'Geaccepteerd', note: 'O.v.v. financiering' }]
       },
       {
         id: 'd5', ref: 'AK-2026-003', address: 'Wolphaertsbocht 219', city: 'Rotterdam', ptype: 'Portiekpand',
         status: 'Notaris', vraagprijs: 210000, makelaarId: 'r1', viewingDate: addDaysISO(t, -35), source: 'Veiling',
-        createdAt: addDaysISO(t, -42), note: 'Passeert 24-06 bij Notariskantoor Maas.',
+        createdAt: addDaysISO(t, -42), note: 'Passeert 24-06 bij de notaris.',
         calc: { koopsom: 198000, verbouwing: 85000, verkoopprijs: 392000, maanden: 12 },
         biedingen: [{ id: 'b4', date: addDaysISO(t, -30), amount: 198000, validUntil: addDaysISO(t, -26), status: 'Geaccepteerd', note: 'Veilingbod' }]
       },
@@ -178,10 +178,10 @@ function seedData() {
         sale: null, dealId: 'd-oud2',
         docs: DEFAULT_DOCS.map((name, i) => ({ id: 'doc2' + i, name, done: true })),
         viewings: [
-          { id: 'v1', date: addDaysISO(t, -9), name: 'Fam. Pietersen (via Van Vliet)', note: 'Serieus, tweede bezichtiging aangevraagd' },
-          { id: 'v2', date: addDaysISO(t, -4), name: 'B. Janssen', note: 'Direct geïnteresseerd, financiering rond' }
+          { id: 'v1', date: addDaysISO(t, -9), name: 'Belangstellende B (via makelaar)', note: 'Serieus, tweede bezichtiging aangevraagd' },
+          { id: 'v2', date: addDaysISO(t, -4), name: 'Belangstellende A', note: 'Direct geïnteresseerd, financiering rond' }
         ],
-        offers: [{ id: 'o1', date: addDaysISO(t, -2), name: 'B. Janssen', amount: 392000, status: 'Ontvangen', note: 'Zonder voorbehoud' }],
+        offers: [{ id: 'o1', date: addDaysISO(t, -2), name: 'Belangstellende A', amount: 392000, status: 'Ontvangen', note: 'Zonder voorbehoud' }],
         advertenties: [
           { id: 'ad1', kanaal: 'Funda', doel: 'Verkoop', status: 'Geplaatst', url: 'https://www.funda.nl/', datum: addDaysISO(t, -26), kosten: 595 },
           { id: 'ad2', kanaal: 'Instagram', doel: 'Verkoop', status: 'Geplaatst', url: '', datum: addDaysISO(t, -24), kosten: 0 }
@@ -195,7 +195,7 @@ function seedData() {
         vraagprijs: 0, teKoopSinds: '',
         purchase: { date: addDaysISO(t, -300), koopsom: 198000, otb: 20592, notaris: 1350, makelaar: 1980, overig: 400 },
         financing: { financierId: 'r6', bedrag: 160000, rentePct: 5.9, einddatum: addDaysISO(t, 41) },
-        vasteLasten: 240, maandhuur: 1450, huurder: 'S. el Amrani',
+        vasteLasten: 240, maandhuur: 1450, huurder: 'Huurder A',
         sale: null, dealId: '',
         docs: DEFAULT_DOCS.map((name, i) => ({ id: 'doc3' + i, name, done: i !== 4 })),
         viewings: [], offers: [],
@@ -209,11 +209,11 @@ function seedData() {
         financing: { financierId: 'r6', bedrag: 250000, rentePct: 6.5, einddatum: '' },
         vasteLasten: 350, maandhuur: 0, huurder: '', m2: 86, kamers: 3,
         webOmschrijving: '',
-        sale: { verkoopprijs: 489000, date: addDaysISO(t, -43), kosten: 6100, koper: 'Fam. Oduber' },
+        sale: { verkoopprijs: 489000, date: addDaysISO(t, -43), kosten: 6100, koper: 'Koper C' },
         dealId: '',
         docs: DEFAULT_DOCS.map((name, i) => ({ id: 'doc4' + i, name, done: true })),
-        viewings: [{ id: 'v3', date: addDaysISO(t, -75), name: 'Fam. Oduber', note: 'Bood na 2e bezichtiging' }],
-        offers: [{ id: 'o2', date: addDaysISO(t, -65), name: 'Fam. Oduber', amount: 489000, status: 'Geaccepteerd', note: '' }],
+        viewings: [{ id: 'v3', date: addDaysISO(t, -75), name: 'Koper C', note: 'Bood na 2e bezichtiging' }],
+        offers: [{ id: 'o2', date: addDaysISO(t, -65), name: 'Koper C', amount: 489000, status: 'Geaccepteerd', note: '' }],
         note: 'Afgerond. Resultaat boven calculatie.'
       }
     ],
@@ -221,7 +221,7 @@ function seedData() {
       {
         id: 'prj1', ref: 'PRJ-2026-003', name: 'Volledige renovatie + tuinkamer', propertyId: 'pnd1',
         status: 'Uitvoering', startDate: addDaysISO(t, -56), endDate: addDaysISO(t, 34), budget: 85000,
-        note: 'Bouwbedrijf Vos hoofdaannemer. Oplevering richting half juli.',
+        note: 'Vaste hoofdaannemer. Oplevering richting half juli.',
         publish: true,
         updates: [
           { id: 'u1', date: addDaysISO(t, -40), text: 'Sloop en ruwbouw afgerond — het pand is wind- en waterdicht.' },
@@ -281,22 +281,22 @@ function seedData() {
       { id: 'k12', propertyId: 'pnd2', projectId: '', contactId: 'r2', desc: 'Verkoopstyling + fotografie', category: 'Styling & oplevering', amount: 1450, date: addDaysISO(t, -27), status: 'Factuur ontvangen' }
     ],
     planning: [
-      { id: 'pl1', date: addDaysISO(t, 1), type: 'Bezichtiging', title: 'Bezichtiging Bergselaan 110B (aankoop)', who: 'Eigen + Maaskant', ref: 'd:d2' },
-      { id: 'pl2', date: addDaysISO(t, 2), type: 'Aannemer', title: 'Bouwoverleg Vos — afbouwplanning Kralingse Plaslaan', who: 'Eigen + Vos', ref: 'p:pnd1' },
-      { id: 'pl3', date: addDaysISO(t, 3), type: 'Bezichtiging', title: '2e bezichtiging fam. Pietersen — Laan op Zuid 304', who: 'Van Vliet', ref: 'p:pnd2' },
-      { id: 'pl4', date: addDaysISO(t, 6), type: 'Taxatie', title: 'Taxatie Erasmus — herfinanciering Bergweg 91A', who: 'Eigen', ref: 'p:pnd3' },
-      { id: 'pl5', date: addDaysISO(t, 14), type: 'Notaris', title: 'Passeren Wolphaertsbocht 219 bij Notariskantoor Maas', who: 'Eigen', ref: 'd:d5' },
-      { id: 'pl6', date: addDaysISO(t, 9), type: 'Oplevering', title: 'Voorschouw installaties Kralingse Plaslaan', who: 'Eigen + ITB', ref: 'p:pnd1' }
+      { id: 'pl1', date: addDaysISO(t, 1), type: 'Bezichtiging', title: 'Bezichtiging Bergselaan 110B (aankoop)', who: 'Eigen + makelaar', ref: 'd:d2' },
+      { id: 'pl2', date: addDaysISO(t, 2), type: 'Aannemer', title: 'Bouwoverleg aannemer — afbouwplanning Kralingse Plaslaan', who: 'Eigen + aannemer', ref: 'p:pnd1' },
+      { id: 'pl3', date: addDaysISO(t, 3), type: 'Bezichtiging', title: '2e bezichtiging Belangstellende B — Laan op Zuid 304', who: 'Makelaar', ref: 'p:pnd2' },
+      { id: 'pl4', date: addDaysISO(t, 6), type: 'Taxatie', title: 'Taxatie taxatiebureau — herfinanciering Bergweg 91A', who: 'Eigen', ref: 'p:pnd3' },
+      { id: 'pl5', date: addDaysISO(t, 14), type: 'Notaris', title: 'Passeren Wolphaertsbocht 219 bij de notaris', who: 'Eigen', ref: 'd:d5' },
+      { id: 'pl6', date: addDaysISO(t, 9), type: 'Oplevering', title: 'Voorschouw installaties Kralingse Plaslaan', who: 'Eigen + installateur', ref: 'p:pnd1' }
     ],
     tasks: [
-      { id: 't1', title: 'Reageren op bod € 392k van B. Janssen (Laan op Zuid)', due: t, done: false },
-      { id: 't2', title: 'Financieringsstukken Mathenesserweg naar Rijnmond VF', due: addDaysISO(t, 3), done: false },
+      { id: 't1', title: 'Reageren op bod € 392k van Belangstellende A (Laan op Zuid)', due: t, done: false },
+      { id: 't2', title: 'Financieringsstukken Mathenesserweg naar de financier', due: addDaysISO(t, 3), done: false },
       { id: 't3', title: 'Herfinanciering Bergweg 91A opstarten', due: addDaysISO(t, 7), done: false },
       { id: 't4', title: 'Bankgarantie Wolphaertsbocht geregeld', due: addDaysISO(t, -5), done: true }
     ],
     invoices: [
-      { id: 'f1', soort: 'Huur', propertyId: 'pnd3', debiteur: 'S. el Amrani', desc: 'Huur juni 2026', amount: 1450, date: addDaysISO(t, -11), due: addDaysISO(t, -4), status: 'Betaald' },
-      { id: 'f2', soort: 'Huur', propertyId: 'pnd3', debiteur: 'S. el Amrani', desc: 'Huur juli 2026', amount: 1450, date: addDaysISO(t, 19), due: addDaysISO(t, 26), status: 'Concept' }
+      { id: 'f1', soort: 'Huur', propertyId: 'pnd3', debiteur: 'Huurder A', desc: 'Huur juni 2026', amount: 1450, date: addDaysISO(t, -11), due: addDaysISO(t, -4), status: 'Betaald' },
+      { id: 'f2', soort: 'Huur', propertyId: 'pnd3', debiteur: 'Huurder A', desc: 'Huur juli 2026', amount: 1450, date: addDaysISO(t, 19), due: addDaysISO(t, 26), status: 'Concept' }
     ],
     loans: [
       { id: 'l1', propertyId: 'pnd1', financierId: 'r6', soort: 'Ontwikkelfinanciering', bedrag: 300000, rentePct: 6.2, aflossing: 0, start: addDaysISO(t, -84), eind: addDaysISO(t, 290) },
@@ -313,7 +313,7 @@ function seedData() {
     contracten: [
       {
         id: 'c1', ref: 'CON-2026-001', type: 'Huurovereenkomst', propertyId: 'pnd3', projectId: '', contactId: '',
-        partijNaam: 'S. el Amrani', partijAdres: 'Bergweg 91A, Rotterdam', positie: 'HomeINN verhuurt',
+        partijNaam: 'Huurder A', partijAdres: 'Bergweg 91A, Rotterdam', positie: 'HomeINN verhuurt',
         bedrag: 1450, datum: addDaysISO(t, -300), ingangsdatum: addDaysISO(t, -298), looptijd: '12 maanden', rendementPct: 0,
         note: 'Waarborgsom € 2.900. Jaarlijkse indexering conform CBS.', status: 'Getekend', createdAt: addDaysISO(t, -300)
       }
@@ -894,6 +894,7 @@ function renderDeals() {
   // Geselecteerde kansen kunnen ondertussen gearchiveerd zijn: opschonen.
   Array.from(compareSet).forEach(cid => { if (!active.some(d => d.id === cid)) compareSet.delete(cid); });
   renderCompareBar();
+  const funnelEl = $('#deal-funnel'); if (funnelEl) funnelEl.innerHTML = dealFunnelHtml();
 
   $('#deal-board').innerHTML = DEAL_STAGES.map(stage => {
     const cards = active.filter(d => d.status === stage);
@@ -2136,8 +2137,90 @@ function reportData() {
   return { fins, totaalGeinvesteerd, openFinanciering, eigenVermogenIngelegd, pijplijnWinst, gerealiseerdWinst, huurPerJaar, renteLastenMnd, months, soldThisYear, jaar };
 }
 
+/* ---------- Visuele rapportage (pure SVG/HTML, geen dependencies) ---------- */
+/* Cashflow-waterfall: banksaldo nu + maandelijkse netto-stappen → eindsaldo.
+   steps: [{label, delta, events}]. */
+function cashflowWaterfallSvg(start, steps) {
+  let bal = start;
+  const points = [{ label: 'Saldo nu', type: 'start', to: start }];
+  (steps || []).forEach(m => { const from = bal; bal += m.delta; points.push({ label: m.label, type: 'step', delta: m.delta, from, to: bal, events: m.events || [] }); });
+  const vals = points.flatMap(p => [p.to, p.from || 0]).concat([0]);
+  const maxV = Math.max(...vals), minV = Math.min(...vals), range = (maxV - minV) || 1;
+  const W = 760, H = 250, padL = 56, padR = 14, padT = 18, padB = 42;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const Y = v => padT + innerH - ((v - minV) / range) * innerH;
+  const n = points.length, slot = innerW / n, barW = Math.max(10, Math.min(46, slot * 0.5));
+  const X = i => padL + slot * (i + 0.5);
+  const zeroY = Y(0);
+  const bars = points.map((p, i) => {
+    const cx = X(i); let top, fill, title;
+    if (p.type === 'start') { top = Y(Math.max(0, p.to)); fill = '#0b1e30'; title = 'Banksaldo nu: ' + fmtMoney(p.to); }
+    else { top = Y(Math.max(p.from, p.to)); fill = p.delta >= 0 ? '#1e6a42' : '#b03a3a'; title = p.label + ': ' + (p.delta >= 0 ? '+' : '') + fmtMoney(p.delta) + ' → ' + fmtMoney(p.to) + (p.events && p.events.length ? ' (' + p.events.join(', ') + ')' : ''); }
+    const bottom = p.type === 'start' ? Y(Math.min(0, p.to)) : Y(Math.min(p.from, p.to));
+    const h = Math.max(2, bottom - top);
+    return `<rect x="${(cx - barW / 2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="${fill}"><title>${esc(title)}</title></rect>`;
+  }).join('');
+  let conn = '';
+  for (let i = 0; i < points.length - 1; i++) { const y = Y(points[i].to); conn += `<line x1="${X(i).toFixed(1)}" y1="${y.toFixed(1)}" x2="${X(i + 1).toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(12,11,9,.22)" stroke-width="1" stroke-dasharray="3 3"/>`; }
+  const zeroLine = (minV < 0 && maxV > 0) ? `<line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W - padR}" y2="${zeroY.toFixed(1)}" stroke="var(--line)" stroke-width="1"/>` : '';
+  const labels = points.map((p, i) => `<text x="${X(i).toFixed(1)}" y="${H - 24}" text-anchor="middle" style="font-size:10px;fill:#6f756f">${esc(p.label)}</text>`).join('');
+  const endLabels = points.map((p, i) => `<text x="${X(i).toFixed(1)}" y="${H - 9}" text-anchor="middle" style="font-size:10px;fill:#0b1e30;font-weight:700">${esc(fmtMoneyK(p.to))}</text>`).join('');
+  const warn = bal < 0 ? `<text x="${padL}" y="${padT + 8}" style="font-size:11px;fill:#b03a3a;font-weight:700">Let op: het saldo loopt negatief</text>` : '';
+  return `<svg viewBox="0 0 ${W} ${H}" class="waterfall-svg" role="img" aria-label="Cashflow-waterfall">${zeroLine}${conn}${bars}${labels}${endLabels}${warn}</svg>`;
+}
+
+/* Generieke donut uit segmenten [{label, value, color}]. */
+function donutSvg(segments, centerTitle) {
+  const segs = segments.filter(s => Number(s.value) > 0);
+  const total = segs.reduce((s, x) => s + Number(x.value), 0);
+  if (total <= 0) return '<p class="empty">Geen data.</p>';
+  const size = 168, cx = size / 2, cy = size / 2, stroke = 26, r = size / 2 - 6 - stroke / 2, circ = 2 * Math.PI * r;
+  let off = 0;
+  const arcs = segs.map(s => {
+    const len = Number(s.value) / total * circ;
+    const el = `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="${s.color}" stroke-width="${stroke}" stroke-dasharray="${len.toFixed(2)} ${(circ - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"><title>${esc(s.label)}: ${esc(fmtMoney(s.value))} (${Math.round(Number(s.value) / total * 100)}%)</title></circle>`;
+    off += len; return el;
+  }).join('');
+  return `<div class="donut-wrap">
+    <svg viewBox="0 0 ${size} ${size}" class="donut-svg">${arcs}<text x="${cx}" y="${cy - 3}" text-anchor="middle" style="font-size:10.5px;fill:#6f756f">${esc(centerTitle)}</text><text x="${cx}" y="${cy + 14}" text-anchor="middle" style="font-size:15px;font-weight:700;fill:#0b1e30">${esc(fmtMoneyK(total))}</text></svg>
+    <ul class="donut-legend">${segs.map(s => `<li><span class="dl-dot" style="background:${s.color}"></span><span>${esc(s.label)}</span><strong>${fmtMoneyK(s.value)}</strong><span class="sub">${Math.round(Number(s.value) / total * 100)}%</span></li>`).join('')}</ul>
+  </div>`;
+}
+
+/* Aankoop-funnel: per fase aantal kansen + som winst + gem. ROI. */
+function dealFunnelHtml() {
+  const stages = DEAL_STAGES.map(stage => {
+    const ds = state.deals.filter(d => d.status === stage);
+    const winst = ds.reduce((s, d) => s + computeDeal(d.calc).winst, 0);
+    const roi = ds.length ? ds.reduce((s, d) => s + computeDeal(d.calc).roi, 0) / ds.length : 0;
+    return { stage, count: ds.length, winst, roi };
+  });
+  const maxCount = Math.max(1, ...stages.map(s => s.count));
+  return `<div class="funnel">${stages.map(s => {
+    const w = s.count ? Math.max(14, Math.round(s.count / maxCount * 100)) : 8;
+    return `<div class="funnel-row ${s.count ? '' : 'is-empty'}" data-action="funnel-jump" data-stage="${esc(s.stage)}" title="Spring naar ${esc(s.stage)}">
+      <span class="funnel-label">${esc(s.stage)}</span>
+      <span class="funnel-bar-track"><span class="funnel-bar" style="width:${w}%"></span></span>
+      <span class="funnel-meta">${s.count} kans${s.count === 1 ? '' : 'en'}${s.count ? ` · <strong class="${winstClass(s.winst)}">${fmtMoneyK(s.winst)}</strong> · Ø${fmtNum(s.roi, 0)}% ROI` : ''}</span>
+    </div>`;
+  }).join('')}</div>`;
+}
+
 function renderReports() {
   const r = reportData();
+  const investeerdersInleg = state.projects.reduce((s, pr) => s + (pr.investeerders || []).reduce((a, i) => a + (Number(i.bedrag) || 0), 0), 0);
+  const eigenGeldBedrijf = Math.max(0, r.eigenVermogenIngelegd - investeerdersInleg);
+  const herkomstDonut = donutSvg([
+    { label: 'Bankfinanciering', value: r.openFinanciering, color: '#0b1e30' },
+    { label: 'Investeerders', value: investeerdersInleg, color: '#b49030' },
+    { label: 'Eigen geld', value: eigenGeldBedrijf, color: '#1e6a42' }
+  ], 'Herkomst');
+  const inzetDonut = donutSvg([
+    { label: 'Aankoopwaarde', value: r.fins.reduce((s, x) => s + x.f.aankoop, 0), color: '#0b1e30' },
+    { label: 'Ontwikkeld', value: r.fins.reduce((s, x) => s + x.f.ontwikkeld, 0), color: '#b49030' },
+    { label: 'Restbudget', value: r.fins.reduce((s, x) => s + x.f.restBudget, 0), color: '#cca94a' },
+    { label: 'Houdkosten', value: r.fins.reduce((s, x) => s + x.f.houdkosten, 0), color: '#6f756f' }
+  ], 'Inzet');
   const bars = r.fins.slice().sort((a, b) => (b.f.winst || 0) - (a.f.winst || 0));
   const maxAbs = Math.max(1, ...bars.map(x => Math.abs(x.f.winst || 0)));
   $('#report-body').innerHTML = `
@@ -2165,7 +2248,8 @@ function renderReports() {
         <p class="report-note">ROI = winst gedeeld door totale investering (incl. resterend ontwikkelbudget). Klik een balk om het pand te openen.</p>
       </section>
       <section class="panel">
-        <div class="panel-head compact"><h2>Kapitaalverdeling</h2></div>
+        <div class="panel-head compact"><h2>Kapitaal: herkomst &amp; inzet</h2></div>
+        <div class="donut-pair">${herkomstDonut}${inzetDonut}</div>
         <div class="totals-box">
           <div><dt>Aankoopwaarde portfolio</dt><dd>${fmtMoney(r.fins.reduce((s, x) => s + x.f.aankoop, 0))}</dd></div>
           <div><dt>Ontwikkelkosten geboekt</dt><dd>${fmtMoney(r.fins.reduce((s, x) => s + x.f.ontwikkeld, 0))}</dd></div>
@@ -2174,13 +2258,14 @@ function renderReports() {
           <div><dt>Openstaande financiering</dt><dd>${fmtMoney(r.openFinanciering)}</dd></div>
           <div><dt>Eigen geld ingelegd</dt><dd><strong>${fmtMoney(r.eigenVermogenIngelegd)}</strong></dd></div>
         </div>
-        <p class="report-note">Indicatief — toon dit overzicht aan je financier samen met de dealcalculaties.</p>
+        <p class="report-note">Links: waar je kapitaal vandaan komt. Rechts: waar het in zit. Toon dit aan je financier samen met de dealcalculaties.</p>
       </section>
     </div>
     <section class="panel">
       <div class="panel-head compact"><h2>Cashflow-prognose — 6 maanden</h2>
-        <span class="sub">huur in, rente + vaste lasten en geplande kosten uit</span>
+        <span class="sub">banksaldo nu → verwacht eindsaldo</span>
       </div>
+      <div class="waterfall-wrap">${cashflowWaterfallSvg(state.accounts.reduce((s, a) => s + (Number(a.saldo) || 0), 0), r.months.map(m => ({ label: m.label, delta: m.netto, events: m.events })))}</div>
       <div class="table-wrap"><table class="cashflow-table">
         <thead><tr><th>Maand</th><th>Huur in</th><th>Rente + lasten</th><th>Geplande kosten</th><th>Netto</th><th>Aandachtspunten</th></tr></thead>
         <tbody>
@@ -2751,6 +2836,7 @@ function renderLiquidity() {
     </div>
     <section class="panel">
       <div class="panel-head compact"><h2>Saldoprognose — 6 maanden</h2><span class="sub">doorlopend banksaldo</span></div>
+      <div class="waterfall-wrap">${cashflowWaterfallSvg(totaal, proj.map(p => ({ label: p.label, delta: p.net, events: p.events })))}</div>
       <div class="table-wrap"><table class="cashflow-table">
         <thead><tr><th>Maand</th><th>Huur in</th><th>Uit (rente/lasten/aflossing/kosten)</th><th>Netto</th><th>Verwacht saldo</th><th>Aandachtspunten</th></tr></thead>
         <tbody>${proj.map(p => `<tr>
@@ -4020,6 +4106,12 @@ document.addEventListener('click', event => {
     case 'open-compare': renderComparison(); break;
     case 'clear-compare': compareSet.clear(); renderDeals(); break;
     case 'close-compare': $('#compare-modal').close(); break;
+    case 'funnel-jump': {
+      const idx = DEAL_STAGES.indexOf(el.dataset.stage);
+      const col = document.querySelectorAll('#deal-board .lead-column')[idx];
+      if (col) { col.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }); col.classList.add('flash'); setTimeout(() => col.classList.remove('flash'), 1200); }
+      break;
+    }
     // Portfolio
     case 'open-property': setView('portfolio', 'property', id); break;
     case 'back-to-portfolio': setView('portfolio'); break;

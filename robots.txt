@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /portaal.html
+Disallow: /inloggen.html
+Disallow: /investeerders.html
+Disallow: /huurders.html
+Disallow: /kopers.html
+Disallow: /verkoper.html
+
+Sitemap: https://home-inn.nl/sitemap.xml
