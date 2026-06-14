@@ -1197,6 +1197,27 @@
     </form>
   </dialog>
 
+  <dialog class="modal" id="capitalcall-modal">
+    <form method="dialog" class="modal-card" id="capitalcall-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Kapitaaloproep</p>
+      <h2 id="capitalcall-title">Kapitaaloproep</h2>
+      <input type="hidden" name="projectId">
+      <p class="hint" id="capitalcall-investors"></p>
+      <div class="form-grid">
+        <label>Op te halen bedrag (€)<input name="bedrag" type="number" min="0" step="any" required></label>
+        <label>Reactiedeadline<input name="deadline" type="date" required></label>
+      </div>
+      <label>Omschrijving / reden<input name="omschrijving" placeholder="Bijv. extra ronde voor meerwerk installaties"></label>
+      <div id="capitalcall-preview"></div>
+      <p class="hint">Het bedrag wordt pro-rata over de investeerders verdeeld naar hun inleg. Je kunt per investeerder bijhouden of het is toegezegd en gestort.</p>
+      <menu>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Oproep aanmaken</button>
+      </menu>
+    </form>
+  </dialog>
+
   <dialog class="modal" id="account-modal">
     <form method="dialog" class="modal-card" id="account-form">
       <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>

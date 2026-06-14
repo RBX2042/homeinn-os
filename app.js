@@ -306,6 +306,7 @@ function seedData() {
     cloudMaintenance: [], // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
     campaigns: [], // verzonden mailings (nieuwsbrief)
     audit: [], // wijzigingshistorie (wie/wat/wanneer)
+    capitalCalls: [], // kapitaaloproepen per project (raise-mechanisme)
     accounts: [
       { id: 'acc1', naam: 'Zakelijke rekening', type: 'Zakelijk', saldo: 84500, updatedAt: addDaysISO(t, -2) },
       { id: 'acc2', naam: 'Spaarrekening (buffer)', type: 'Spaar', saldo: 120000, updatedAt: addDaysISO(t, -2) }
@@ -604,6 +605,14 @@ function buildSignals() {
       signals.push({ level: 'middel', text: `${pr.name} is over de geplande opleverdatum (${fmtDate(pr.endDate)}) — elke maand uitloop kost houdkosten.`, go: 'project:' + pr.id });
     }
   });
+  // Kapitaaloproepen: deadline verstreken en nog niet iedereen heeft gereageerd
+  (state.capitalCalls || []).filter(c => c.status === 'Open' && c.deadline && c.deadline < t).forEach(c => {
+    const open = (c.perInvesteerder || []).filter(r => r.status === 'Verstuurd' || r.status === 'Te laat');
+    if (open.length) {
+      const openBedrag = open.reduce((s, r) => s + (Number(r.bedragVerschuldigd) || 0), 0);
+      signals.push({ level: 'hoog', text: `Kapitaaloproep (${propertyLabel(projectById(c.projectId)?.propertyId)}): ${open.length} investeerder${open.length === 1 ? '' : 's'} nog niet gereageerd op oproep van ${fmtMoney(c.bedrag)} — ${fmtMoney(openBedrag)} openstaand sinds ${fmtDate(c.deadline)}.`, go: 'project:' + c.projectId });
+    }
+  });
   // Betalingen
   const openFacturen = state.costs.filter(k => k.status === 'Factuur ontvangen');
   if (openFacturen.length) {
@@ -766,6 +775,7 @@ function statusBadge(status) {
     'Uitgebracht': 'blue', 'Geaccepteerd': 'green', 'Afgewezen': 'red', 'Verlopen': 'red', 'Ontvangen': '',
     'Nieuw': '', 'Afgehandeld': 'gray', 'Gesprek': 'blue', 'Contact': 'gray',
     'Concept': 'gray', 'Geplaatst': 'green', 'Gepauzeerd': 'blue', 'Verzonden': 'blue',
+    'Open': 'blue', 'Geannuleerd': 'red', 'Verstuurd': 'gray', 'Toegezegd': 'blue', 'Gestort': 'green', 'Te laat': 'red',
     'Makelaar': 'blue', 'Notaris-rel': 'gray', 'Aannemer': 'green', 'Financier': '', 'Koper/Verkoper': 'gray', 'Overig': 'gray'
   };
   return `<span class="badge ${map[status] ?? ''}">${esc(status)}</span>`;
@@ -1636,6 +1646,95 @@ function burnUpSvg(pr) {
     <span class="cf-dot" style="background:#b49030"></span>Budget</p>`;
 }
 
+/* ---------- Kapitaaloproepen (capital calls): het raise-mechanisme ---------- */
+const CC_STATES = ['Verstuurd', 'Toegezegd', 'Gestort', 'Te laat'];
+
+/* Pro-rata verdeling van een oproepbedrag over de investeerders, naar inleg. */
+function capitalCallSplit(pr, bedrag) {
+  const invs = pr.investeerders || [];
+  const totaalInleg = invs.reduce((s, i) => s + (Number(i.bedrag) || 0), 0);
+  return invs.map(i => {
+    const aandeel = totaalInleg > 0 ? (Number(i.bedrag) || 0) / totaalInleg : (invs.length ? 1 / invs.length : 0);
+    return { investorKey: i.id || i.email || i.naam, naam: i.naam, email: i.email || '', aandeelPct: aandeel * 100, bedragVerschuldigd: Math.round(bedrag * aandeel), status: 'Verstuurd', respondedAt: '' };
+  });
+}
+
+function capitalCallProgress(call) {
+  const rows = call.perInvesteerder || [];
+  const totaal = rows.reduce((s, r) => s + (Number(r.bedragVerschuldigd) || 0), 0);
+  const gestort = rows.filter(r => r.status === 'Gestort').reduce((s, r) => s + (Number(r.bedragVerschuldigd) || 0), 0);
+  const toegezegd = rows.filter(r => r.status === 'Toegezegd' || r.status === 'Gestort').reduce((s, r) => s + (Number(r.bedragVerschuldigd) || 0), 0);
+  const open = rows.filter(r => r.status !== 'Gestort').length;
+  return { totaal, gestort, toegezegd, open, pct: totaal ? Math.round(gestort / totaal * 100) : 0 };
+}
+
+function openCapitalCallModal(projectId) {
+  const pr = projectById(projectId);
+  if (!pr) return;
+  const form = $('#capitalcall-form');
+  form.reset();
+  form.elements.projectId.value = projectId;
+  form.elements.deadline.value = addDaysISO(todayISO(), 14);
+  $('#capitalcall-title').textContent = `Kapitaaloproep — ${pr.name}`;
+  const invs = pr.investeerders || [];
+  $('#capitalcall-investors').textContent = invs.length
+    ? `${invs.length} investeerder${invs.length === 1 ? '' : 's'} · samen ${fmtMoney(invs.reduce((s, i) => s + (Number(i.bedrag) || 0), 0))} ingelegd. Het bedrag wordt pro-rata verdeeld.`
+    : 'Let op: dit project heeft nog geen investeerders. Voeg ze eerst toe.';
+  refreshCapitalCallPreview();
+  $('#capitalcall-modal').showModal();
+}
+
+function refreshCapitalCallPreview() {
+  const form = $('#capitalcall-form');
+  if (!form) return;
+  const pr = projectById(form.elements.projectId.value);
+  const bedrag = Number(form.elements.bedrag.value) || 0;
+  const box = $('#capitalcall-preview');
+  if (!pr || !bedrag) { box.innerHTML = ''; return; }
+  const split = capitalCallSplit(pr, bedrag);
+  box.innerHTML = `<table class="cc-preview-table"><thead><tr><th>Investeerder</th><th>Aandeel</th><th>Verschuldigd</th></tr></thead>
+    <tbody>${split.map(s => `<tr><td>${esc(s.naam)}</td><td>${fmtNum(s.aandeelPct, 1)}%</td><td><strong>${fmtMoney(s.bedragVerschuldigd)}</strong></td></tr>`).join('') || emptyRow(3, 'Geen investeerders.')}</tbody></table>`;
+}
+
+/* Sectie met kapitaaloproepen in het projectdetail. */
+function renderCapitalCalls(pr) {
+  const calls = (state.capitalCalls || []).filter(c => c.projectId === pr.id).slice().sort((a, b) => (b.aanmaakdatum || '').localeCompare(a.aanmaakdatum || ''));
+  const t = todayISO();
+  return `<section class="panel">
+    <div class="panel-head compact"><h2>Kapitaaloproepen</h2>
+      <button class="btn primary slim" data-action="new-capitalcall" data-id="${pr.id}">+ Oproep</button>
+    </div>
+    <p class="hint">Roep extra kapitaal op bij je investeerders, pro-rata naar inleg. Volg per investeerder of het is toegezegd en gestort.</p>
+    ${calls.length ? calls.map(call => {
+      const pg = capitalCallProgress(call);
+      const overdue = call.status === 'Open' && call.deadline && call.deadline < t;
+      return `<div class="cc-card ${call.status === 'Geannuleerd' ? 'cancelled' : ''}">
+        <div class="cc-head">
+          <div>
+            <strong>${fmtMoney(call.bedrag)}</strong> ${statusBadge(call.status === 'Open' ? (pg.pct === 100 ? 'Betaald' : 'Geplaatst') : call.status)}
+            <span class="sub">deadline ${fmtDate(call.deadline)}${overdue ? ' <span class="alert">(verlopen)</span>' : ''}${call.omschrijving ? ' · ' + esc(call.omschrijving) : ''}</span>
+          </div>
+          ${call.status === 'Open' ? `<div class="head-actions">
+            <button class="btn secondary slim" data-action="cc-remind" data-id="${call.id}">Herinnering</button>
+            <button class="btn secondary slim danger" data-action="cc-cancel" data-id="${call.id}">Annuleren</button>
+          </div>` : `<button class="icon-btn" data-action="cc-del" data-id="${call.id}" title="Verwijderen">🗑</button>`}
+        </div>
+        <div class="cc-progress"><div class="progress"><i style="width:${pg.pct}%"></i></div><span class="sub">${fmtMoney(pg.gestort)} van ${fmtMoney(pg.totaal)} gestort · ${pg.open} openstaand</span></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Investeerder</th><th>Verschuldigd</th><th>Status</th></tr></thead>
+          <tbody>${(call.perInvesteerder || []).map(r => `<tr>
+            <td>${esc(r.naam)}${r.email ? `<br><span class="sub">${esc(r.email)}</span>` : ''}</td>
+            <td>${fmtMoney(r.bedragVerschuldigd)}</td>
+            <td>${call.status === 'Open' ? `<select class="row-status" data-action="cc-status" data-id="${call.id}" data-item="${esc(r.investorKey)}">
+              ${CC_STATES.map(s => `<option ${r.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>` : statusBadge(r.status === 'Gestort' ? 'Betaald' : r.status)}</td>
+          </tr>`).join('') || emptyRow(3, 'Geen investeerders.')}</tbody>
+        </table></div>
+      </div>`;
+    }).join('') : '<p class="empty">Nog geen kapitaaloproepen voor dit project.</p>'}
+  </section>`;
+}
+
 function renderProjects() {
   $('#project-list-wrap').hidden = false;
   $('#project-detail').hidden = true;
@@ -1835,6 +1934,7 @@ function renderProjectDetail() {
         </form>
       </section>
     </div>
+    ${renderCapitalCalls(pr)}
     <section class="panel">
       <div class="panel-head compact"><h2>Voortgangsfoto's</h2>
         <span class="sub">${(pr.fotos || []).length} foto's — getoond op de website (volgen) en in het investeerdersportaal</span>
@@ -3663,6 +3763,24 @@ function handleModalSubmit(event) {
     }
   }
 
+  if (formId === 'capitalcall-form') {
+    const pr = projectById(data.get('projectId'));
+    const bedrag = num('bedrag');
+    if (pr && bedrag > 0) {
+      const split = capitalCallSplit(pr, bedrag);
+      if (!split.length) { showToast('Dit project heeft geen investeerders.'); return; }
+      state.capitalCalls = state.capitalCalls || [];
+      const call = { id: uid('cc'), projectId: pr.id, bedrag, deadline: data.get('deadline') || '', omschrijving: str('omschrijving'), aanmaakdatum: todayISO(), status: 'Open', perInvesteerder: split };
+      state.capitalCalls.push(call);
+      logAudit('kapitaaloproep-aangemaakt', `${fmtMoney(bedrag)} — ${pr.name}`);
+      // Optioneel: investeerders direct mailen als de cloud actief is.
+      if (window.HCloud && HCloud.status().ready) {
+        split.filter(r => r.email).forEach(r => HCloud.notify({ to: r.email, subject: `Kapitaaloproep HomeINN — ${pr.name}`, html: `<p>Beste ${esc(r.naam)},</p><p>Voor het project <strong>${esc(pr.name)}</strong> doen we een kapitaaloproep van ${fmtMoney(bedrag)}. Jouw pro-rata aandeel is <strong>${fmtMoney(r.bedragVerschuldigd)}</strong>. Reactiedeadline: ${fmtDate(call.deadline)}.</p>${call.omschrijving ? `<p>${esc(call.omschrijving)}</p>` : ''}<p>Met vriendelijke groet,<br>HomeINN</p>` }));
+      }
+      showToast(`Kapitaaloproep van ${fmtMoney(bedrag)} aangemaakt voor ${split.length} investeerder${split.length === 1 ? '' : 's'}.`);
+    }
+  }
+
   if (FORM_LABEL[formId]) logAudit(id ? 'bijgewerkt' : 'aangemaakt', FORM_LABEL[formId]);
   rerender();
 }
@@ -4267,6 +4385,36 @@ document.addEventListener('click', event => {
       if (confirmDel('Investeerder verwijderen uit de administratie?')) { pr.investeerders = (pr.investeerders || []).filter(i => i.id !== item); rerender(); }
       break;
     }
+    // Kapitaaloproepen
+    case 'new-capitalcall': {
+      const pr = projectById(id);
+      if (!pr) break;
+      if (!(pr.investeerders || []).length) { showToast('Voeg eerst investeerders toe aan dit project.'); break; }
+      openCapitalCallModal(id);
+      break;
+    }
+    case 'cc-cancel': {
+      const call = (state.capitalCalls || []).find(c => c.id === id);
+      if (call && confirmDel('Deze kapitaaloproep annuleren?')) { call.status = 'Geannuleerd'; logAudit('kapitaaloproep-geannuleerd', fmtMoney(call.bedrag)); rerender(); }
+      break;
+    }
+    case 'cc-del': {
+      if (confirmDel('Kapitaaloproep verwijderen?')) { state.capitalCalls = (state.capitalCalls || []).filter(c => c.id !== id); rerender(); }
+      break;
+    }
+    case 'cc-remind': {
+      const call = (state.capitalCalls || []).find(c => c.id === id);
+      if (!call) break;
+      const open = (call.perInvesteerder || []).filter(r => r.status !== 'Gestort' && r.email);
+      if (!open.length) { showToast('Iedereen heeft al gestort of er zijn geen e-mailadressen.'); break; }
+      if (window.HCloud && HCloud.status().ready) {
+        open.forEach(r => HCloud.notify({ to: r.email, subject: 'Herinnering: kapitaaloproep HomeINN', html: `<p>Beste ${esc(r.naam)},</p><p>Dit is een herinnering aan de kapitaaloproep van ${fmtMoney(call.bedrag)} (jouw aandeel: <strong>${fmtMoney(r.bedragVerschuldigd)}</strong>), reactiedeadline ${fmtDate(call.deadline)}.</p><p>Met vriendelijke groet,<br>HomeINN</p>` }));
+        showToast(`Herinnering verstuurd naar ${open.length} investeerder${open.length === 1 ? '' : 's'}.`);
+      } else {
+        showToast(`${open.length} investeerder(s) nog niet gestort. Log in op de cloud (Instellingen) om e-mails te versturen.`);
+      }
+      break;
+    }
     // Adverteren
     case 'open-adtext': openAdTextModal(id); break;
     case 'ad-add': openAdModal(id); break;
@@ -4560,6 +4708,16 @@ document.addEventListener('change', event => {
       rerender();
       break;
     }
+    case 'cc-status': {
+      const call = (state.capitalCalls || []).find(c => c.id === id);
+      if (!call) return;
+      const row = (call.perInvesteerder || []).find(r => r.investorKey === el.dataset.item);
+      if (row) { row.status = el.value; if (el.value !== 'Verstuurd' && !row.respondedAt) row.respondedAt = todayISO(); }
+      // Alle gestort → oproep automatisch afronden
+      if ((call.perInvesteerder || []).every(r => r.status === 'Gestort')) call.status = 'Afgerond';
+      rerender();
+      break;
+    }
     case 'contract-status': {
       const c = state.contracten.find(x => x.id === id);
       if (c) c.status = el.value;
@@ -4767,6 +4925,7 @@ function initStatic() {
   // Live previews in modals
   $('#deal-form').addEventListener('input', refreshDealPreview);
   $('#sale-form').addEventListener('input', refreshSalePreview);
+  const ccForm = $('#capitalcall-form'); if (ccForm) ccForm.addEventListener('input', refreshCapitalCallPreview);
 
   // Annuleren/sluiten zijn géén submit-knoppen: anders is × de default button en gooit Enter alle invoer weg
   $$('.modal [value="cancel"], .modal .close').forEach(b => {

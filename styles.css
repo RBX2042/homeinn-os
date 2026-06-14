@@ -746,3 +746,15 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .lead-column.flash{animation:leadflash 1.2s ease}
 @keyframes leadflash{0%,100%{background:transparent}30%{background:rgba(180,144,48,.22)}}
 @media(max-width:640px){.donut-pair{grid-template-columns:1fr}.funnel-row{grid-template-columns:100px 1fr;grid-template-rows:auto auto}.funnel-meta{grid-column:1/-1}}
+
+/* ===== Kapitaaloproepen ===== */
+.cc-card{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.cc-card.cancelled{opacity:.6}
+.cc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.cc-head strong{font-size:1.1rem;color:var(--navy)}
+.cc-progress{display:flex;align-items:center;gap:10px;margin:6px 0 10px}
+.cc-progress .progress{flex:1 1 auto}
+.cc-preview-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:10px 0}
+.cc-preview-table th,.cc-preview-table td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+.cc-preview-table th:last-child,.cc-preview-table td:last-child{text-align:right}
+#capitalcall-preview:empty{display:none}
