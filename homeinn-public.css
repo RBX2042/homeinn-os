@@ -99,7 +99,7 @@ body.admin-bar #nav{top:32px}
 #nav.light{background:rgba(11,30,48,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.08);color:var(--white)}
 .nav-logo{display:flex;align-items:center;line-height:1;transition:opacity .3s}
 .nav-logo:hover{opacity:.85}
-.nav-logo-img{height:58px;width:auto;display:block;max-width:260px}
+.nav-logo-img{height:54px;width:auto;display:block;max-width:300px}
 .nav-links{display:flex;align-items:center;gap:2.75rem;list-style:none}
 .nav-links a{font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;opacity:.88;transition:opacity .2s,color .2s;text-shadow:0 1px 6px rgba(0,0,0,.35);color:var(--white)}
 .nav-links a:hover,.nav-links a.on,.nav-links .current-menu-item > a,.nav-links .current_page_item > a,.nav-links .current-menu-parent > a,.nav-links .current-page-ancestor > a{opacity:1;color:var(--gold2)}
@@ -511,7 +511,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5rem) 2.5rem;color:rgba(255,255,255,.3)}
 .footer-grid{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:5rem;padding-bottom:4rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:2.5rem}
 .f-logo{margin-bottom:.75rem;display:flex;align-items:center}
-.f-logo-img{height:54px;width:auto;display:block;max-width:240px}
+.f-logo-img{height:50px;width:auto;display:block;max-width:270px}
 .f-tagline{font-size:.75rem;font-weight:300;color:rgba(255,255,255,.25);margin-bottom:1.5rem;letter-spacing:.03em}
 .f-desc{font-size:.8rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.3);max-width:280px}
 .f-col h5{font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1.25rem}
@@ -641,7 +641,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 
 @media(max-width:720px){
   html{font-size:15px}
-  .nav-logo-img{height:48px;max-width:220px}
+  .nav-logo-img{height:46px;max-width:232px}
   .btn,.tc-btn,.cf-submit,.m-submit,.nav-cta{width:100%;max-width:100%}
   .hero{min-height:auto}
   .hero-content{min-height:auto;padding:calc(76px + 2rem) 1.25rem 2rem}
@@ -656,6 +656,11 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
   .statement-inner,.wb-inner,.calc-inner,.over-hero-inner,.story-inner,.contact-hero-inner,.contact-inner,.footer-grid{gap:2.25rem}
   .statement-body h2,.wb-text h2,.proc-head h2,.calc-text h2,.testi-head h2,.cta-inner h2,.over-h1,.contact-h1,.blog-hero h1,.page-hero h1{line-height:1.08}
   .pk,.tc,.testi-card,.cf,.proc-aside,.val-card{padding:1.5rem}
+  /* Tarief-kaarten gestapeld op mobiel: geen vaste min-hoogte (anders veel leeg navy) en geen offset */
+  .tc-head{min-height:auto;padding:1.75rem 1.5rem 1.5rem}
+  .tc-body{padding:1.5rem}
+  .tc-featured{transform:none}
+  .tc-head-pct{font-size:3.5rem}
   .pk-tag{position:static;display:inline-block;margin-bottom:1rem}
   .pk-price{align-items:flex-end;flex-wrap:wrap}
   .pk-pct{font-size:3.1rem}
@@ -690,7 +695,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 @media(max-width:480px){
   #nav{height:70px;padding:0 1rem}
   #mob{padding:calc(70px + 1.75rem) 1rem 2rem}
-  .nav-logo-img{height:42px;max-width:190px}
+  .nav-logo-img{height:40px;max-width:200px}
   .hero-content{padding-top:calc(70px + 1.75rem)}
   .btn{padding:14px 20px}
   .t-eyebrow{letter-spacing:.18em}
@@ -713,6 +718,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
   *,*::before,*::after{animation:none!important;transition:none!important}
   .hero-pill,.hero-sub,.hero-actions,.hero h1 .hl{opacity:1!important}
   .hero-bridge{opacity:1!important}
+  .hero-bridge-m{opacity:.6!important}
   .hb-cable{stroke-dashoffset:0!important}
   #scrollbar{transition:none}
 }
@@ -1028,17 +1034,27 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 /* Lege-staat illustratie (Aanbod/Projecten laden) */
 .leeg-spot{width:64px;height:64px;margin:0 auto 1.4rem;color:var(--gold);opacity:.85}
 
-/* ── Erasmusbrug op smal scherm: toon alleen de zwanenkop + bovenste waaier, ──
-   ── die naar onderen wegvloeit. Zo geen verticale pyloonlijn of dek door de  ──
-   ── tekst/knoppen. Horizontale linker-fade × verticale onder-fade (intersect). ── */
-@media(max-width:820px),(orientation:portrait) and (max-width:1024px),(orientation:landscape) and (max-height:500px){
-  .hero-bridge{
-    -webkit-mask-image:linear-gradient(95deg,transparent 4%,#000 34%),linear-gradient(180deg,#000 14%,transparent 50%);
-    mask-image:linear-gradient(95deg,transparent 4%,#000 34%),linear-gradient(180deg,#000 14%,transparent 50%);
-    -webkit-mask-composite:source-in;
-    mask-composite:intersect;
+/* ── Erasmusbrug op smal scherm: de desktop-fan (rechts, naast de tekst) werkt niet
+   ── op een full-width kolom — de kabels zouden de kop kruisen. Daarom op mobiel de
+   ── volledige brug als rustige signatuur ONDER de content, omhoog wegvloeiend. ── */
+.hero-bridge-m{display:none}
+.hb-deck-m{fill:none;stroke:rgba(255,255,255,.24);stroke-width:1.1;vector-effect:non-scaling-stroke;stroke-linecap:round}
+@keyframes heroBridgeMIn{from{opacity:0}to{opacity:.6}}
+@media(max-width:820px),(orientation:portrait) and (max-width:1024px),(orientation:landscape) and (max-height:520px){
+  .hero-bridge-d{display:none}
+  .hero-bridge-m{
+    display:block;position:absolute;left:0;right:0;bottom:0;top:auto;
+    height:clamp(150px,44vw,240px);z-index:1;pointer-events:none;opacity:0;
+    -webkit-mask:linear-gradient(180deg,transparent 0,#000 54%);
+    mask:linear-gradient(180deg,transparent 0,#000 54%)
   }
+  .hero-bridge-m svg{width:100%;height:100%;display:block}
+  .hero-bridge-m line,.hero-bridge-m path{fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+  body.hero-ready .hero-bridge-m{animation:heroBridgeMIn 1.6s var(--ease-out) .55s both}
+  /* ademruimte onder de CTA's zodat de brug de knoppen niet raakt */
+  .hero-copy{padding-bottom:clamp(7rem,32vw,11rem)}
 }
+@media(scripting:none){.hero-bridge-m{opacity:.6}}
 
 /* ── A11y: zichtbare gouden focus-ring voor toetsenbordgebruikers ──
    (de site verbergt de muis met cursor:none; keyboard/AT-gebruikers

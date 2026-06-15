@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt of beheert ze. Voorstel binnen 48 uur.">
   <meta name="twitter:image" content="https://home-inn.nl/assets/favicon-512.png">
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260623">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260624">
 </head>
 <body>
 <div id="cur"><div id="cur-dot"></div></div>
@@ -151,7 +151,7 @@
 
 <!-- ═══ NAV ═══ -->
 <header id="nav">
-  <a class="nav-logo" href="#" onclick="go('home');return false"><img src="assets/logo-light.png?v=20260615" alt="HomeINN" class="nav-logo-img" width="170" height="58"></a>
+  <a class="nav-logo" href="#" onclick="go('home');return false"><img src="assets/logo-light.png?v=20260615b" alt="HomeINN" class="nav-logo-img" width="265" height="58"></a>
   <ul class="nav-links">
     <li><a href="#" onclick="go('home');return false" data-p="home">Home</a></li>
     <li><a href="#" onclick="go('verkopen');return false" data-p="verkopen">Pand verkopen</a></li>
@@ -197,7 +197,7 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-glow"></div>
-  <div class="hero-bridge" aria-hidden="true">
+  <div class="hero-bridge hero-bridge-d" aria-hidden="true">
     <svg viewBox="0 0 1200 760" preserveAspectRatio="xMaxYMax slice" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <!-- dek-verloop: onzichtbaar boven de tekst/knoppen (links), zichtbaar onder de brug, vloeit weg vóór de schermrand -->
@@ -231,6 +231,30 @@
         <line class="hb-cable" pathLength="1" x1="962" y1="201" x2="1150" y2="600"/>
       </g>
       <!-- De Zwaan: kaarsrechte schacht 'recht omhoog' → knik op ~3/5 → nek helt fors ACHTEROVER (van de overspanning af) naar de vrije kop -->
+      <path class="hb-pylon" d="M850 600 L850 335 L1000 150"/>
+      <line class="hb-pier" x1="850" y1="600" x2="850" y2="656"/>
+    </svg>
+  </div>
+  <!-- Mobiele Erasmusbrug: volledige silhouet als signatuur onderaan de hero (kruist de kop niet) -->
+  <div class="hero-bridge-m" aria-hidden="true">
+    <svg viewBox="80 150 1120 530" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+      <line class="hb-deck-m" x1="110" y1="600" x2="1190" y2="600"/>
+      <g class="hb-cables">
+        <line class="hb-cable" pathLength="1" x1="862" y1="320" x2="760" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="873" y1="306" x2="702" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="885" y1="292" x2="644" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="896" y1="279" x2="586" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="907" y1="265" x2="528" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="918" y1="251" x2="470" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="930" y1="237" x2="412" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="941" y1="223" x2="354" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="952" y1="209" x2="296" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="963" y1="195" x2="238" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="975" y1="181" x2="180" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="986" y1="168" x2="122" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="984" y1="168" x2="1150" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="962" y1="201" x2="1150" y2="600"/>
+      </g>
       <path class="hb-pylon" d="M850 600 L850 335 L1000 150"/>
       <line class="hb-pier" x1="850" y1="600" x2="850" y2="656"/>
     </svg>
@@ -423,7 +447,7 @@
         <li><span class="pk-check on"></span>24/7 storingslijn voor huurders</li>
         <li><span class="pk-check on"></span>Technisch en onderhoudsbeheer</li>
         <li><span class="pk-check on"></span>Gegarandeerde responstijden (SLA)</li>
-        <li><span class="pk-check on"></span>In- en uittreedsinspecties</li>
+        <li><span class="pk-check on"></span>In- en uittredeinspecties</li>
         <li><span class="pk-check on"></span>Sleutelbeheer en toegangscoördinatie</li>
         <li><span class="pk-check on"></span>VvE- en leverancierscontact</li>
         <li><span class="pk-check on"></span>Leegstandsbeheer en herplaatsing</li>
@@ -440,13 +464,13 @@
       <div class="pk-min">Co-investering: <strong>HomeINN draagt tot 50% van projectkosten</strong></div>
       <ul class="pk-list">
         <li><span class="pk-check on"></span>Alles uit Full Operational</li>
-        <li><span class="pk-check on"></span>Grondige portfolio-analyse</li>
+        <li><span class="pk-check on"></span>Grondige portefeuilleanalyse</li>
         <li><span class="pk-check on"></span>WWS-puntentelling en optimalisatie</li>
         <li><span class="pk-check on"></span>Renovatiebegeleiding op maat</li>
         <li><span class="pk-check on"></span>Co-investering tot 50% projectkosten</li>
         <li><span class="pk-check on"></span>Huurprijsoptimalisatie (wettelijk kader)</li>
         <li><span class="pk-check on"></span>Kwartaalgesprek strategie en rendement</li>
-        <li><span class="pk-check on"></span>Jaarlijks strategisch portfolio-rapport</li>
+        <li><span class="pk-check on"></span>Jaarlijks strategisch portefeuillerapport</li>
       </ul>
       <button class="pk-cta" onclick="openModal()">Performance Partner aanvragen <span class="pk-cta-arr">→</span></button>
     </div>
@@ -482,7 +506,7 @@
           <span class="wb-pill navy">Actief</span>
         </li>
         <li class="wb-item">
-          <div class="wb-item-l"><div class="wb-bullet navy"></div><div><div class="wb-item-name">Vlaardingen</div><div class="wb-item-sub">Hoge brutoyields, toenemende huurvraag</div></div></div>
+          <div class="wb-item-l"><div class="wb-bullet navy"></div><div><div class="wb-item-name">Vlaardingen</div><div class="wb-item-sub">Hoge brutorendementen, toenemende huurvraag</div></div></div>
           <span class="wb-pill navy">Actief</span>
         </li>
       </ul>
@@ -537,7 +561,7 @@
       </div>
       <div class="testi-card rv d2">
         <div class="testi-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-        <p class="testi-quote">"Via Performance Partner renoveerden we een leegstaand appartement. HomeINN co-investeerde de helft, begeleidde het hele traject en de huur steeg van €975,- naar €1.380,-. Dit is wat echte samenwerking betekent."</p>
+        <p class="testi-quote">"Via Performance Partner renoveerden we een leegstaand appartement. HomeINN co-investeerde de helft, begeleidde het hele traject en de huur steeg van € 975,- naar € 1.380,-. Zo voelt echte samenwerking."</p>
         <div class="testi-person"><div class="testi-avatar">RB</div><div><div class="testi-name">Robert B.</div><div class="testi-desc">7 objecten · Regio Rotterdam</div></div></div>
       </div>
     </div>
@@ -565,7 +589,7 @@
       <div class="calc-results">
         <div class="cr-item"><div class="cr-val" id="c-fee">€ 135</div><div class="cr-lbl">Maandtarief</div></div>
         <div class="cr-item"><div class="cr-val" id="c-pct">8,0%</div><div class="cr-lbl">Effectief tarief</div></div>
-        <div class="cr-item"><div class="cr-val" id="c-net">€ 1.065</div><div class="cr-lbl">Netto uitbetaling</div></div>
+        <div class="cr-item"><div class="cr-val" id="c-net">€ 1.065</div><div class="cr-lbl">Netto-uitbetaling</div></div>
       </div>
     </div>
   </div>
@@ -835,12 +859,12 @@
         <li><span class="pk-check on"></span>24/7 storingslijn voor huurders</li>
         <li><span class="pk-check on"></span>Technisch en onderhoudsbeheer</li>
         <li><span class="pk-check on"></span>Gegarandeerde SLA-responstijden</li>
-        <li><span class="pk-check on"></span>In- en uittreedsinspecties</li>
+        <li><span class="pk-check on"></span>In- en uittredeinspecties</li>
         <li><span class="pk-check on"></span>Sleutelbeheer en toegangscoördinatie</li>
         <li><span class="pk-check on"></span>VvE- en leverancierscontact</li>
         <li><span class="pk-check on"></span>Leegstandsbeheer en herplaatsing</li>
         <li><span class="pk-check on"></span>Kwartaalrapportage per object</li>
-        <li><span class="pk-check on"></span>Jaarlijkse staat-van-het-objectcheck</li>
+        <li><span class="pk-check on"></span>Jaarlijkse objectcontrole</li>
       </ul>
       <button class="pk-cta" onclick="openModal()">Start Full Operational <span class="pk-cta-arr">→</span></button>
     </div>
@@ -853,13 +877,13 @@
       <div class="pk-min">HomeINN draagt <strong>tot 50% van projectkosten</strong> — geen lening, co-investering</div>
       <ul class="pk-list">
         <li><span class="pk-check on"></span>Alles uit Full Operational</li>
-        <li><span class="pk-check on"></span>Grondige portfolio-analyse en benchmark</li>
-        <li><span class="pk-check on"></span>WWS-puntentelling en rendements-optimalisatie</li>
+        <li><span class="pk-check on"></span>Grondige portefeuilleanalyse en benchmark</li>
+        <li><span class="pk-check on"></span>WWS-puntentelling en rendementsoptimalisatie</li>
         <li><span class="pk-check on"></span>Begeleiding renovatie- en verbetertrajecten</li>
         <li><span class="pk-check on"></span>Co-investering tot 50% projectkosten</li>
         <li><span class="pk-check on"></span>Huurprijsoptimalisatie binnen wettelijk kader</li>
         <li><span class="pk-check on"></span>Kwartaalgesprek strategie en rendement</li>
-        <li><span class="pk-check on"></span>Jaarlijks strategisch portfolio-rapport</li>
+        <li><span class="pk-check on"></span>Jaarlijks strategisch portefeuillerapport</li>
       </ul>
       <button class="pk-cta" onclick="openModal()">Performance Partner aanvragen <span class="pk-cta-arr">→</span></button>
     </div>
@@ -885,7 +909,7 @@
       <div class="proc-panel on" id="tp-onboarding">
         <div class="proc-steps">
           <div class="pstep"><div class="pstep-n">01</div><div class="pstep-body"><strong>Vrijblijvend kennismakingsgesprek</strong><span>Telefonisch of op locatie in Rotterdam — dag 1</span></div></div>
-          <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Intakegesprek en portfolio-analyse</strong><span>Wij analyseren uw objecten, doelen en wensen — dag 2 en 3</span></div></div>
+          <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Intakegesprek en portefeuilleanalyse</strong><span>Wij analyseren uw objecten, doelen en wensen — dag 2 en 3</span></div></div>
           <div class="pstep"><div class="pstep-n">03</div><div class="pstep-body"><strong>Offerte op maat</strong><span>Helder overzicht van tarieven en diensten op basis van uw pakket — dag 3 of 4</span></div></div>
           <div class="pstep"><div class="pstep-n">04</div><div class="pstep-body"><strong>Beheerovereenkomst ondertekend</strong><span>Digitaal via DocuSign of in persoon — dag 5</span></div></div>
           <div class="pstep"><div class="pstep-n">05</div><div class="pstep-body"><strong>Objectintake</strong><span>Sleutels, huurcontracten en relevante documenten worden overgedragen — week 1</span></div></div>
@@ -944,7 +968,7 @@
           <div class="pstep"><div class="pstep-n">01</div><div class="pstep-body"><strong>Afspraak minimaal vijf werkdagen vooraf</strong><span>Huurder tijdig geïnformeerd en ingepland</span></div></div>
           <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Ruimte voor ruimte inspectie met checklist</strong><span>Gedetailleerde staat van het object per onderdeel vastgelegd</span></div></div>
           <div class="pstep"><div class="pstep-n">03</div><div class="pstep-body"><strong>Tijdgestempelde fotoreportage</strong><span>Elke ruimte gedocumenteerd — juridisch bruikbaar als bewijs</span></div></div>
-          <div class="pstep"><div class="pstep-n">04</div><div class="pstep-body"><strong>Vergelijking met het intrederapport</strong><span>Afwijkingen worden automatisch zichtbaar gemaakt bij uittreed</span></div></div>
+          <div class="pstep"><div class="pstep-n">04</div><div class="pstep-body"><strong>Vergelijking met het intrederapport</strong><span>Afwijkingen worden automatisch zichtbaar gemaakt bij uittrede</span></div></div>
           <div class="pstep"><div class="pstep-n">05</div><div class="pstep-body"><strong>Schadeoverzicht binnen 48 uur</strong><span>Verrekening van de borg op basis van het officiële rapport</span></div></div>
           <div class="pstep"><div class="pstep-n">06</div><div class="pstep-body"><strong>Digitale handtekening via DocuSign</strong><span>Rechtsgeldige ondertekening door de huurder</span></div></div>
         </div>
@@ -952,7 +976,7 @@
           <div class="proc-aside-title">Professioneel en juridisch waterdicht</div>
           <p class="proc-aside-desc">Elk inspectierapport is opgesteld volgens de meest recente normen en altijd beschikbaar in uw eigenaar-portaal.</p>
           <div class="sla-row"><span class="sla-row-label">Intredeinspectie</span><span class="sla-tag sla-blue">€ 125,- eenmalig</span></div>
-          <div class="sla-row"><span class="sla-row-label">Uittreedsinspectie</span><span class="sla-tag sla-blue">€ 125,- eenmalig</span></div>
+          <div class="sla-row"><span class="sla-row-label">Uittredeinspectie</span><span class="sla-tag sla-blue">€ 125,- eenmalig</span></div>
           <div class="sla-row"><span class="sla-row-label">Schadeoverzicht</span><span class="sla-tag sla-blue">Binnen 48 uur</span></div>
           <div class="sla-row"><span class="sla-row-label">Digitale handtekening</span><span class="sla-tag sla-blue">Via DocuSign</span></div>
         </div>
@@ -1033,7 +1057,7 @@
           <div class="tc-row"><span class="tc-row-label">Alles uit Core Management</span><span class="tc-row-val">Inbegrepen</span></div>
           <div class="tc-row"><span class="tc-row-label">24/7 storingslijn huurders</span><span class="tc-row-val">Inbegrepen</span></div>
           <div class="tc-row"><span class="tc-row-label">Technisch en onderhoudsbeheer</span><span class="tc-row-val">Inbegrepen</span></div>
-          <div class="tc-row"><span class="tc-row-label">In- en uittreedsinspecties</span><span class="tc-row-val">€ 125,- per inspectie</span></div>
+          <div class="tc-row"><span class="tc-row-label">In- en uittredeinspecties</span><span class="tc-row-val">€ 125,- per inspectie</span></div>
           <div class="tc-row"><span class="tc-row-label">Kwartaalrapportage</span><span class="tc-row-val">Inbegrepen</span></div>
           <div class="tc-row"><span class="tc-row-label">Btw</span><span class="tc-row-val">21% excl.</span></div>
           <button class="tc-btn fill" onclick="openModal()">Start Full Operational</button>
@@ -1076,7 +1100,7 @@
         <tbody>
           <tr><td>Nieuwe huurder vinden en screenen</td><td>€ 395,- per plaatsing</td></tr>
           <tr><td>Intredeinspectie</td><td>€ 125,- per object</td></tr>
-          <tr><td>Uittreedsinspectie</td><td>€ 125,- per object</td></tr>
+          <tr><td>Uittredeinspectie</td><td>€ 125,- per object</td></tr>
           <tr><td>WWS-puntentelling en adviesrapport</td><td>€ 175,- per object</td></tr>
           <tr><td>Renovatiebegeleiding</td><td>€ 65,- per uur</td></tr>
           <tr><td>Spoeduitruk buiten kantooruren (buiten SLA)</td><td>€ 85,- per uitruk</td></tr>
@@ -1087,7 +1111,7 @@
   </div>
 </section>
 
-<div class="cta-band"><div class="cta-inner rv"><h2>Vraag een vrijblijvende offerte aan voor uw <em>portfolio.</em></h2><button class="btn btn-dark" onclick="openModal()">Offerte aanvragen <span class="arr">→</span></button></div></div>
+<div class="cta-band"><div class="cta-inner rv"><h2>Vraag een vrijblijvende offerte aan voor uw <em>portefeuille.</em></h2><button class="btn btn-dark" onclick="openModal()">Offerte aanvragen <span class="arr">→</span></button></div></div>
 </div><!-- /tarieven -->
 
 
@@ -1493,7 +1517,7 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="f-logo"><img src="assets/logo-light.png?v=20260615" alt="HomeINN" class="f-logo-img" width="158" height="54"></div>
+      <div class="f-logo"><img src="assets/logo-light.png?v=20260615b" alt="HomeINN" class="f-logo-img" width="247" height="54"></div>
       <div class="f-tagline">Aankoop · Ontwikkeling · Verkoop · Beheer</div>
       <p class="f-desc">HomeINN koopt, ontwikkelt, verkoopt en beheert vastgoed in Rotterdam en omstreken. Met eigen kapitaal, een vast uitvoeringsteam en één aanspreekpunt.</p>
     </div>
