@@ -5,25 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HomeINN | Aankoop, ontwikkeling, verkoop &amp; beheer van vastgoed — Rotterdam</title>
   <meta name="description" content="HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt of beheert ze. Verkoop uw pand zonder gedoe — voorstel binnen 48 uur.">
-  <link rel="icon" href="assets/favicon-512.png?v=20260614">
+  <link rel="icon" href="assets/favicon-512.png?v=20260616">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#0f1b2d">
-  <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260614">
+  <meta name="theme-color" content="#0b1e30">
+  <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616">
   <link rel="canonical" href="https://home-inn.nl/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://home-inn.nl/">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="HomeINN — Aankoop, ontwikkeling, verkoop &amp; beheer van vastgoed">
   <meta property="og:description" content="HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt of beheert ze. Voorstel binnen 48 uur.">
-  <meta property="og:image" content="https://home-inn.nl/assets/favicon-512.png">
+  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HomeINN — aankoop, ontwikkeling, verkoop &amp; beheer van vastgoed in Rotterdam">
+  <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="HomeINN — Aankoop, ontwikkeling, verkoop &amp; beheer van vastgoed">
   <meta name="twitter:description" content="HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt of beheert ze. Voorstel binnen 48 uur.">
-  <meta name="twitter:image" content="https://home-inn.nl/assets/favicon-512.png">
+  <meta name="twitter:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616">
+  <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260624">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260616">
 </head>
 <body>
+<a class="skip-link" href="#main">Naar de inhoud</a>
 <div id="cur"><div id="cur-dot"></div></div>
 <div id="cur-ring"><div id="cur-ring-inner"></div></div>
 
@@ -146,12 +153,16 @@
         <path d="M150 172 H176 V198 H150 Z"/><path d="M224 172 H250 V198 H224 Z"/>
       </g>
     </symbol>
+    <!-- Vinkje (line-art, voor USP's en pakketten) -->
+    <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12.5l4.2 4.2L19 6.5"/>
+    </symbol>
   </defs>
 </svg>
 
 <!-- ═══ NAV ═══ -->
 <header id="nav">
-  <a class="nav-logo" href="#" onclick="go('home');return false"><img src="assets/logo-light.png?v=20260615b" alt="HomeINN" class="nav-logo-img" width="265" height="58"></a>
+  <a class="nav-logo" href="#" onclick="go('home');return false"><picture><source srcset="assets/logo-light.webp?v=20260616" type="image/webp"><img src="assets/logo-light.png?v=20260616" alt="HomeINN" class="nav-logo-img" width="265" height="58" fetchpriority="high" decoding="async"></picture></a>
   <ul class="nav-links">
     <li><a href="#" onclick="go('home');return false" data-p="home">Home</a></li>
     <li><a href="#" onclick="go('verkopen');return false" data-p="verkopen">Pand verkopen</a></li>
@@ -163,11 +174,11 @@
     <li><a href="inloggen.html">Inloggen</a></li>
   </ul>
   <button class="nav-cta" onclick="openModal()">Gratis gesprek</button>
-  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" onclick="toggleMob()"><span></span><span></span><span></span></button>
+  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
 </header>
 <div id="scrollbar"></div>
 
-<div id="mob">
+<div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
   <nav>
     <a href="#" onclick="go('home');return false">Home</a>
     <a href="#" onclick="go('verkopen');return false">Pand verkopen</a>
@@ -192,6 +203,7 @@
 <!-- ══════════════════════════════════════
      HOME
 ══════════════════════════════════════ -->
+<span id="main" tabindex="-1"></span>
 <div class="pg on" id="pg-home">
 
 <section class="hero">
@@ -579,8 +591,8 @@
     </div>
     <div class="calc-box rv d1">
       <div class="calc-row">
-        <div class="calc-row-label">Kale huurprijs / maand <span id="c-huur">€ 1.200</span></div>
-        <input type="range" min="600" max="3000" step="50" value="1200" id="c-slider">
+        <div class="calc-row-label" id="c-slider-lbl">Kale huurprijs / maand <span id="c-huur">€ 1.200</span></div>
+        <input type="range" min="600" max="3000" step="50" value="1200" id="c-slider" aria-labelledby="c-slider-lbl">
       </div>
       <div class="calc-toggle">
         <button class="calc-tog-btn" id="ct-p1" onclick="setPk('p1')">Core Management · 5%</button>
@@ -621,11 +633,11 @@
 
 <div class="usp-strip">
   <div class="usp-inner">
-    <div class="usp rv"><span class="usp-check">✓</span>Voorstel binnen 48 uur</div>
-    <div class="usp rv"><span class="usp-check">✓</span>Geen makelaars- of stylingkosten</div>
-    <div class="usp rv d1"><span class="usp-check">✓</span>Geen financieringsvoorbehoud</div>
-    <div class="usp rv d1"><span class="usp-check">✓</span>Notaris naar uw keuze</div>
-    <div class="usp rv d2"><span class="usp-check">✓</span>Discreet — geen borden, geen Funda</div>
+    <div class="usp rv"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Voorstel binnen 48 uur</div>
+    <div class="usp rv"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Geen makelaars- of stylingkosten</div>
+    <div class="usp rv d1"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Geen financieringsvoorbehoud</div>
+    <div class="usp rv d1"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Notaris naar uw keuze</div>
+    <div class="usp rv d2"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Discreet — geen borden, geen Funda</div>
   </div>
 </div>
 
@@ -737,10 +749,10 @@
 
 <div class="usp-strip">
   <div class="usp-inner">
-    <div class="usp rv"><span class="usp-check">✓</span>Door onszelf gerenoveerd</div>
-    <div class="usp rv"><span class="usp-check">✓</span>Bouwkundig gekeurd</div>
-    <div class="usp rv d1"><span class="usp-check">✓</span>Energiezuinig opgeleverd</div>
-    <div class="usp rv d2"><span class="usp-check">✓</span>Geen verrassingen achter de muren</div>
+    <div class="usp rv"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Door onszelf gerenoveerd</div>
+    <div class="usp rv"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Bouwkundig gekeurd</div>
+    <div class="usp rv d1"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Energiezuinig opgeleverd</div>
+    <div class="usp rv d2"><span class="usp-check"><svg width="11" height="11" aria-hidden="true"><use href="#ic-check"/></svg></span>Geen verrassingen achter de muren</div>
   </div>
 </div>
 
@@ -1361,16 +1373,16 @@
         <input type="hidden" name="homeinn_form_type" value="contact">
         <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="cf-2col">
-          <div class="cf-group"><label>Voornaam</label><input type="text" name="first_name" placeholder="Jan" required></div>
-          <div class="cf-group"><label>Achternaam</label><input type="text" name="last_name" placeholder="de Vries"></div>
+          <div class="cf-group"><label for="cf-first">Voornaam</label><input id="cf-first" type="text" name="first_name" placeholder="Jan" required></div>
+          <div class="cf-group"><label for="cf-last">Achternaam</label><input id="cf-last" type="text" name="last_name" placeholder="de Vries"></div>
         </div>
-        <div class="cf-group"><label>E-mailadres</label><input type="email" name="email" placeholder="jan@voorbeeld.nl"></div>
-        <div class="cf-group"><label>Telefoonnummer</label><input type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
+        <div class="cf-group"><label for="cf-email">E-mailadres</label><input id="cf-email" type="email" name="email" placeholder="jan@voorbeeld.nl"></div>
+        <div class="cf-group"><label for="cf-phone">Telefoonnummer</label><input id="cf-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
         <div class="cf-2col">
-          <div class="cf-group"><label>Aantal objecten</label><select name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
-          <div class="cf-group"><label>Waar gaat het om?</label><select name="package_interest"><option>Pand verkopen aan HomeINN</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Interesse in woningaanbod</option><option>Anders / advies</option></select></div>
+          <div class="cf-group"><label for="cf-portfolio">Aantal objecten</label><select id="cf-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
+          <div class="cf-group"><label for="cf-interest">Waar gaat het om?</label><select id="cf-interest" name="package_interest"><option>Pand verkopen aan HomeINN</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Interesse in woningaanbod</option><option>Anders / advies</option></select></div>
         </div>
-        <div class="cf-group"><label>Uw bericht (optioneel)</label><textarea name="message" placeholder="Vertel ons over uw vastgoedportefeuille of stel een vraag..."></textarea></div>
+        <div class="cf-group"><label for="cf-message">Uw bericht (optioneel)</label><textarea id="cf-message" name="message" placeholder="Vertel ons over uw vastgoedportefeuille of stel een vraag..."></textarea></div>
         <button class="cf-submit" type="submit">Verstuur bericht →</button>
         <p class="m-note" style="margin-top:.9rem">Met verzenden gaat u akkoord met ons <a href="#" onclick="go('privacy');return false" style="color:inherit;text-decoration:underline">privacybeleid</a>.</p>
       </form>
@@ -1517,7 +1529,7 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="f-logo"><img src="assets/logo-light.png?v=20260615b" alt="HomeINN" class="f-logo-img" width="247" height="54"></div>
+      <div class="f-logo"><picture><source srcset="assets/logo-light.webp?v=20260616" type="image/webp"><img src="assets/logo-light.png?v=20260616" alt="HomeINN" class="f-logo-img" width="247" height="54" loading="lazy" decoding="async"></picture></div>
       <div class="f-tagline">Aankoop · Ontwikkeling · Verkoop · Beheer</div>
       <p class="f-desc">HomeINN koopt, ontwikkelt, verkoopt en beheert vastgoed in Rotterdam en omstreken. Met eigen kapitaal, een vast uitvoeringsteam en één aanspreekpunt.</p>
     </div>
@@ -1574,18 +1586,18 @@
           <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="hidden" name="meeting_ref" value="">
           <div class="m2col">
-            <div class="m-group"><label>Voornaam</label><input type="text" id="m-naam" name="meeting_name" placeholder="Uw naam" required></div>
-            <div class="m-group"><label>Telefoon of e-mail</label><input type="text" id="m-contact" name="meeting_contact" placeholder="06… of e-mail" required></div>
+            <div class="m-group"><label for="m-naam">Voornaam</label><input type="text" id="m-naam" name="meeting_name" placeholder="Uw naam" required></div>
+            <div class="m-group"><label for="m-contact">Telefoon of e-mail</label><input type="text" id="m-contact" name="meeting_contact" placeholder="06… of e-mail" required></div>
           </div>
-          <div class="m-group"><label>Aantal objecten</label><select name="meeting_portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
-          <div class="m-group"><label>Waar gaat het om?</label><select name="meeting_package"><option>Ik wil mijn pand verkopen</option><option>Investeren in een project</option><option>Project volgen</option><option>Woningaanbod ontvangen</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Ik wil advies</option></select></div>
+          <div class="m-group"><label for="m-portfolio">Aantal objecten</label><select id="m-portfolio" name="meeting_portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
+          <div class="m-group"><label for="m-package">Waar gaat het om?</label><select id="m-package" name="meeting_package"><option>Ik wil mijn pand verkopen</option><option>Investeren in een project</option><option>Project volgen</option><option>Woningaanbod ontvangen</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Ik wil advies</option></select></div>
           <button class="m-submit" type="submit">Plan mijn gratis gesprek →</button>
           <p class="m-note">Uw aanvraag wordt direct doorgestuurd naar het HomeINN-team. Met verzenden gaat u akkoord met ons <a href="#" onclick="closeModal();go('privacy');return false" style="color:inherit;text-decoration:underline">privacybeleid</a>.</p>
         </div>
       </form>
     </div>
     <div class="modal-success" id="ms">
-      <div class="success-icon">✓</div>
+      <div class="success-icon"><svg width="22" height="22" aria-hidden="true"><use href="#ic-check"/></svg></div>
       <h3>Uw aanvraag is ontvangen</h3>
       <p>Wij nemen binnen vier uur contact met u op om een afspraak in te plannen. We kijken ernaar uit.</p>
       <button class="btn btn-primary" style="margin-top:2rem" onclick="closeModal()">Sluiten <span class="arr">→</span></button>
@@ -1595,6 +1607,6 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="homeinn-public.js?v=20260615"></script>
+<script src="homeinn-public.js?v=20260616"></script>
 </body>
 </html>

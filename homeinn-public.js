@@ -44,7 +44,7 @@ window.addEventListener('scroll', () => {
   }
   var n = document.getElementById('nav');
   if (!n) return;
-  n.classList.toggle('scrolled', window.scrollY > 50 && !n.classList.contains('light'));
+  n.classList.toggle('scrolled', window.scrollY > 50);
 }, {passive:true});
 
 /* PAGE ROUTER */
@@ -100,8 +100,8 @@ function toggleMob() {
 
 /* PROCESS TABS */
 function setTab(id, btn) {
-  document.querySelectorAll('.proc-panel').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('#proc-panels .proc-panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.proc-tabs .ptab').forEach(t => t.classList.remove('on'));
   var panel = document.getElementById('tp-' + id);
   if (!panel) return;
   panel.classList.add('on');
@@ -132,6 +132,7 @@ function calcUpdate() {
   var fee = Math.max(amt, min);
   var eff = (fee / h * 100).toFixed(1);
   huurEl.textContent = '€ ' + h.toLocaleString('nl-NL');
+  slider.setAttribute('aria-valuetext', '€ ' + h.toLocaleString('nl-NL'));
   feeEl.textContent = '€ ' + fee.toLocaleString('nl-NL');
   pctEl.textContent = eff + '%';
   netEl.textContent = '€ ' + (h - fee).toLocaleString('nl-NL');
