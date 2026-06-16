@@ -134,7 +134,7 @@ function calcUpdate() {
   huurEl.textContent = '€ ' + h.toLocaleString('nl-NL');
   slider.setAttribute('aria-valuetext', '€ ' + h.toLocaleString('nl-NL'));
   feeEl.textContent = '€ ' + fee.toLocaleString('nl-NL');
-  pctEl.textContent = eff + '%';
+  pctEl.textContent = eff.replace('.', ',') + '%';
   netEl.textContent = '€ ' + (h - fee).toLocaleString('nl-NL');
 }
 document.addEventListener('DOMContentLoaded', () => {
