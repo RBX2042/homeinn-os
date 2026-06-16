@@ -769,7 +769,7 @@ function renderSidebar() {
 function statusBadge(status) {
   const map = {
     'Lead': 'gray', 'Bezichtiging': 'blue', 'Bod uitgebracht': '', 'Onder voorbehoud': 'blue', 'Notaris': 'green', 'Aangekocht': 'green', 'Afgehaakt': 'red',
-    'In ontwikkeling': 'blue', 'Te koop': '', 'Onder bod': 'green', 'Verhuurd': 'blue', 'Verkocht': 'gray',
+    'In ontwikkeling': 'blue', 'Te koop': '', 'Onder bod': 'green', 'Te huur': 'green', 'Verhuurd': 'blue', 'Verkocht': 'gray',
     'Voorbereiding': 'gray', 'Vergunning': 'blue', 'Uitvoering': 'green', 'Oplevering': '', 'Afgerond': 'gray',
     'Opdracht': 'blue', 'Factuur ontvangen': '', 'Betaald': 'green',
     'Uitgebracht': 'blue', 'Geaccepteerd': 'green', 'Afgewezen': 'red', 'Verlopen': 'red', 'Ontvangen': '',
@@ -1365,7 +1365,7 @@ function renderPropertyDetail() {
         <p class="eyebrow">${esc(p.ref)} · ${esc(p.ptype)} ${p.label ? '· energielabel ' + esc(p.label) : '· <b class="alert">geen energielabel</b>'}</p>
         <h2 class="detail-title">${esc(p.address)}, ${esc(p.city)}</h2>
         <p class="sub">${p.status === 'Verkocht' ? statusBadge(p.status) : `<select class="row-status" data-action="property-status" data-id="${p.id}">
-          ${['In ontwikkeling', 'Te koop', 'Onder bod', 'Verhuurd'].map(s => `<option ${p.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+          ${['In ontwikkeling', 'Te koop', 'Onder bod', 'Te huur', 'Verhuurd'].map(s => `<option ${p.status === s ? 'selected' : ''}>${s}</option>`).join('')}
         </select>`}
         &nbsp; Aangekocht ${fmtDate(p.purchase?.date)} · in bezit ${fmtNum(fin.maanden, 1)} mnd
         ${p.note ? '· ' + esc(p.note) : ''}</p>
@@ -1414,7 +1414,7 @@ function renderPropertyDetail() {
         <p class="hint">Upload koopakte, taxatierapport, contract enz. (max 3 MB per bestand — grotere bestanden als pad bewaren: "docs/akte.pdf").</p>
       </section>
     </div>
-    ${(p.status === 'Verhuurd' || Number(p.maandhuur) > 0) ? `
+    ${(p.status === 'Verhuurd' || p.status === 'Te huur' || Number(p.maandhuur) > 0) ? `
     <section class="panel">
       <div class="panel-head compact"><h2>Verhuur &amp; beheer</h2>
         <span class="sub">${esc(p.huurder || 'Geen huurder')} · ${fmtMoney(p.maandhuur)}/mnd</span>
@@ -4016,6 +4016,15 @@ function buildAanbodJson() {
       omschrijving: p.webOmschrijving || '',
       fotos: p.fotos || []
     }));
+  const tehuur = state.properties
+    .filter(p => p.status === 'Te huur')
+    .map(p => ({
+      id: p.ref, adres: p.address, plaats: p.city, type: p.ptype, status: p.status,
+      huur: Number(p.maandhuur) || 0, label: p.label || '',
+      m2: Number(p.m2) || 0, kamers: Number(p.kamers) || 0,
+      omschrijving: p.webOmschrijving || '',
+      fotos: p.fotos || []
+    }));
   const verkocht = state.properties
     .filter(p => p.status === 'Verkocht')
     .slice(-6)
@@ -4040,7 +4049,7 @@ function buildAanbodJson() {
       } : null
     };
   });
-  return JSON.stringify({ bijgewerkt: todayISO(), aanbod, projecten, verkocht }, null, 2);
+  return JSON.stringify({ bijgewerkt: todayISO(), aanbod, tehuur, projecten, verkocht }, null, 2);
 }
 
 function publishAanbod() {
@@ -4051,7 +4060,8 @@ function publishAanbod() {
   if (tips.length) showToast(`Tip: ${[...new Set(tips)].join(', ')} mist nog een vraagprijs of website-omschrijving (Pand bewerken → Website-presentatie).`);
   downloadFile('aanbod.json', buildAanbodJson(), 'application/json');
   const pubProjecten = state.projects.filter(pr => pr.publish).length;
-  setTimeout(() => showToast(`aanbod.json gedownload: ${teKoop.length} woning${teKoop.length === 1 ? '' : 'en'} te koop + ${pubProjecten} project${pubProjecten === 1 ? '' : 'en'} om te volgen. Vervang het bestand in je software-map en op je hosting.`), zonderInfo.length ? 3700 : 0);
+  const teHuur = state.properties.filter(p => p.status === 'Te huur').length;
+  setTimeout(() => showToast(`aanbod.json gedownload: ${teKoop.length} te koop + ${teHuur} te huur + ${pubProjecten} project${pubProjecten === 1 ? '' : 'en'} om te volgen. Vervang het bestand in je software-map en op je hosting.`), zonderInfo.length ? 3700 : 0);
 }
 
 function downloadBackup() {

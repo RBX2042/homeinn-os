@@ -405,6 +405,50 @@ function renderAanbod() {
 }
 document.addEventListener('DOMContentLoaded', renderAanbod);
 
+/* ===== Te huur: huuraanbod uit aanbod.json (sleutel 'tehuur') ===== */
+function fmtHuur(n) {
+  return '€ ' + (Number(n) || 0).toLocaleString('nl-NL') + ' /mnd';
+}
+
+var huurCache = [];
+
+function renderHuuraanbod() {
+  var grid = document.getElementById('huren-grid');
+  var metaBox = document.getElementById('huren-meta');
+  if (!grid) return;
+  var leeg = '<div class="aanbod-leeg"><div class="leeg-spot hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-sleutel"/></svg></div><h3>Op dit moment hebben wij geen woningen te huur.</h3><p>Nieuwe huurwoningen komen geregeld beschikbaar. Laat via "Ik zoek een huurwoning" weten wat u zoekt — wij benaderen u zodra er een passende woning vrijkomt.</p></div>';
+  fetch('aanbod.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('geen aanbod.json'); return r.json(); })
+    .then(function (data) {
+      var items = (data && Array.isArray(data.tehuur)) ? data.tehuur : [];
+      huurCache = items;
+      grid.innerHTML = items.length ? items.map(function (w, i) {
+        var kenmerken = [escHtml(w.plaats), escHtml(w.type), w.m2 ? w.m2 + ' m²' : '', w.kamers ? w.kamers + ' kamers' : '', w.label ? 'Energielabel ' + escHtml(w.label) : '']
+          .filter(Boolean).join(' · ');
+        var mapsQ = encodeURIComponent((w.adres || '') + ', ' + (w.plaats || 'Rotterdam'));
+        var fotos = Array.isArray(w.fotos) ? w.fotos : [];
+        var visual = fotos.length
+          ? '<div class="card-visual" data-huur="' + i + '"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="' + escHtml(fotos[0]) + '" alt="' + escHtml(w.adres) + '">' + (fotos.length > 1 ? '<span class="foto-count">' + fotos.length + ' foto’s</span>' : '') + '</div>'
+          : mapsKnop(mapsQ, escHtml(w.adres));
+        return '<article class="blog-card rv in ' + (i === 1 ? 'd1' : i === 2 ? 'd2' : '') + '">' +
+          visual + '<div class="blog-body">' +
+          '<div class="proj-status">Te huur</div>' +
+          '<h3>' + escHtml(w.adres) + '</h3>' +
+          '<p class="aanbod-kenmerken">' + kenmerken + '</p>' +
+          '<div class="aanbod-prijs">' + fmtHuur(w.huur) + '</div>' +
+          '<p>' + escHtml((w.omschrijving || '').slice(0, 140) + ((w.omschrijving || '').length > 140 ? '…' : '')) + '</p>' +
+          '<button class="pillar-cta" data-huur="' + i + '">Bekijk deze woning →</button> ' +
+          '<button class="pillar-cta" data-open-modal data-subject="Huurwoning bezichtigen" data-ref="' + escHtml(w.id || w.adres) + '">Plan een bezichtiging →</button>' +
+          '</div></article>';
+      }).join('') : leeg;
+      if (metaBox && data && data.bijgewerkt && items.length) {
+        metaBox.innerHTML = '<p class="aanbod-sold-note">Huuraanbod bijgewerkt op ' + escHtml(data.bijgewerkt) + '</p>';
+      }
+    })
+    .catch(function () { grid.innerHTML = leeg; });
+}
+document.addEventListener('DOMContentLoaded', renderHuuraanbod);
+
 /* ===== Projecten volgen & investeren (uit aanbod.json) ===== */
 function fmtDatumNl(iso) {
   if (!iso) return '';
@@ -472,10 +516,13 @@ function openWoningDetail(w) {
   if (!box || !w) return;
   var fotos = Array.isArray(w.fotos) ? w.fotos : [];
   var mapsQ = encodeURIComponent((w.adres || '') + ', ' + (w.plaats || 'Rotterdam'));
-  var prijs = '€ ' + (Number(w.prijs) || 0).toLocaleString('nl-NL') + ' k.k.';
+  var isHuur = (w.huur != null) && (w.prijs == null);
+  var prijs = isHuur ? fmtHuur(w.huur) : ('€ ' + (Number(w.prijs) || 0).toLocaleString('nl-NL') + ' k.k.');
+  var statusTxt = w.status || (isHuur ? 'Te huur' : 'Te koop');
+  var bezSubject = isHuur ? 'Huurwoning bezichtigen' : 'Woningaanbod ontvangen';
   var rows = [
-    ['Vraagprijs', prijs],
-    ['Status', w.status || 'Te koop'],
+    [isHuur ? 'Huurprijs' : 'Vraagprijs', prijs],
+    ['Status', statusTxt],
     ['Type', w.type || ''],
     ['Woonoppervlakte', w.m2 ? w.m2 + ' m²' : ''],
     ['Kamers', w.kamers || ''],
@@ -492,7 +539,7 @@ function openWoningDetail(w) {
           }).join('') + '</div>' : '') + '</div>'
         : '') +
       '<div class="wd-body">' +
-        '<div class="proj-status">' + escHtml(w.status || 'Te koop') + '</div>' +
+        '<div class="proj-status">' + escHtml(statusTxt) + '</div>' +
         '<h3 class="wd-titel">' + escHtml(w.adres) + ', ' + escHtml(w.plaats || 'Rotterdam') + '</h3>' +
         '<div class="wd-prijs">' + prijs + '</div>' +
         '<div class="wd-kenmerken">' + rows.map(function (r) {
@@ -500,7 +547,7 @@ function openWoningDetail(w) {
         }).join('') + '</div>' +
         (w.omschrijving ? '<p class="wd-tekst">' + escHtml(w.omschrijving) + '</p>' : '') +
         '<div class="wd-acties">' +
-          '<button class="btn btn-primary" data-open-modal data-subject="Woningaanbod ontvangen" data-ref="' + escHtml((w.id || '') + ' — ' + (w.adres || '')) + '" data-wd-close>Plan een bezichtiging <span class="arr">→</span></button>' +
+          '<button class="btn btn-primary" data-open-modal data-subject="' + escHtml(bezSubject) + '" data-ref="' + escHtml((w.id || '') + ' — ' + (w.adres || '')) + '" data-wd-close>Plan een bezichtiging <span class="arr">→</span></button>' +
           '<a class="btn btn-outline-dark" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + mapsQ + '">Route & omgeving</a>' +
         '</div>' +
         '<div class="wd-map-wrap">' + mapsKnop(mapsQ, escHtml(w.adres)).replace('class="map-load"', 'class="map-load" data-hoogte="wd"') + '</div>' +
@@ -524,6 +571,8 @@ document.addEventListener('click', function (e) {
   if (!e.target) return;
   var open = e.target.closest ? e.target.closest('[data-woning]') : null;
   if (open) { openWoningDetail(aanbodCache[Number(open.getAttribute('data-woning'))]); return; }
+  var openH = e.target.closest ? e.target.closest('[data-huur]') : null;
+  if (openH) { openWoningDetail(huurCache[Number(openH.getAttribute('data-huur'))]); return; }
   var thumb = e.target.closest ? e.target.closest('.wd-thumb') : null;
   if (thumb) {
     var main = document.getElementById('wd-main');

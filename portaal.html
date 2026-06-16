@@ -248,6 +248,7 @@
               <button data-pfilter="all">Alles</button>
               <button data-pfilter="In ontwikkeling">In ontwikkeling</button>
               <button data-pfilter="Te koop">Te koop</button>
+              <button data-pfilter="Te huur">Te huur</button>
               <button data-pfilter="Verhuurd">Verhuurd</button>
               <button data-pfilter="Verkocht">Verkocht</button>
             </div>
@@ -758,6 +759,7 @@
             <option>In ontwikkeling</option>
             <option>Te koop</option>
             <option>Onder bod</option>
+            <option>Te huur</option>
             <option>Verhuurd</option>
           </select>
         </label>
@@ -796,9 +798,9 @@
         <label>Kamers<input name="kamers" type="number" min="0" step="any"></label>
       </div>
       <label>Omschrijving voor de website<textarea name="webOmschrijving" rows="2" placeholder="Bijv. Volledig gerenoveerd 3-kamerappartement met energielabel A…"></textarea></label>
-      <h3 class="modal-section">Verhuur (alleen bij status Verhuurd)</h3>
+      <h3 class="modal-section">Verhuur (bij status Verhuurd of Te huur)</h3>
       <div class="form-grid">
-        <label>Maandhuur (€)<input name="maandhuur" type="number" min="0" step="any" value="0"></label>
+        <label>Maandhuur (€)<input name="maandhuur" type="number" min="0" step="any" value="0"><small class="field-hint">Bij "Te huur" = de gevraagde kale huur op de website.</small></label>
         <label>Huurder<input name="huurder"></label>
         <label>E-mail huurder (voor portaal)<input name="huurderEmail" type="email"></label>
         <label>Ingangsdatum huur<input name="huurIngang" type="date"></label>

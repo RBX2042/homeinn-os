@@ -423,6 +423,7 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 12px; }
 .modal label { display: grid; gap: 7px; color: var(--navy); font-weight: 700; font-size: .85rem; }
+.field-hint { font-weight: 400; font-size: .72rem; color: var(--muted); line-height: 1.4; }
 .modal menu { display: flex; justify-content: end; gap: 10px; padding: 0; margin: 18px 0 0; }
 
 .lines-head, .line-row { display: grid; gap: 8px; align-items: center; }

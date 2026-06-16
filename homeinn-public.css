@@ -803,12 +803,17 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 
 /* ===== Pijlers & projectstatus (aankoop/ontwikkeling/verkoop/beheer) ===== */
 .values-grid.four{grid-template-columns:repeat(4,1fr)}
+.values-grid.five{grid-template-columns:repeat(5,1fr)}
+.values-grid.five .val-card p{flex:1}
 .pillar-cta{margin-top:1.25rem;display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--gold);background:none;border:none;cursor:pointer;padding:0;transition:color .25s}
 .pillar-cta:hover{color:var(--navy)}
 .proj-status{display:inline-block;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:.35rem .7rem;border:1px solid var(--gold);color:var(--gold);margin-bottom:.9rem}
 .proj-status.sold{background:var(--navy);border-color:var(--navy);color:var(--gold2)}
 @media(max-width:1100px){.values-grid.four{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.values-grid.four{grid-template-columns:1fr}}
+@media(max-width:1200px){.values-grid.five{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.values-grid.five{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.values-grid.five{grid-template-columns:1fr}}
 
 /* ===== Aanbodpagina ===== */
 .aanbod-prijs{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.55rem;font-weight:600;color:var(--navy);margin:.35rem 0 .65rem}
@@ -1006,18 +1011,18 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 
 /* Knooppunten op de ring */
 .cyc-node{position:absolute;transform:translate(-50%,-50%);width:64px;height:64px;z-index:2}
-.cyc-node.cn-top{left:50%;top:8%}
-.cyc-node.cn-right{left:92%;top:50%}
-.cyc-node.cn-bottom{left:50%;top:92%}
-.cyc-node.cn-left{left:8%;top:50%}
+.cyc-node.cn-1{left:50%;top:7%}
+.cyc-node.cn-2{left:90%;top:38%}
+.cyc-node.cn-3{left:74%;top:84%}
+.cyc-node.cn-4{left:26%;top:84%}
+.cyc-node.cn-5{left:10%;top:38%}
 .cyc-bubble{width:64px;height:64px;border-radius:50%;background:var(--cream);border:1px solid var(--gold);display:grid;place-items:center;box-shadow:0 6px 22px rgba(11,30,48,.1);transition:transform .35s var(--ease),background .25s,box-shadow .35s}
 .cyc-bubble .hi-ico{width:30px;height:30px;color:var(--gold);transition:color .25s}
 .cyc-node:hover .cyc-bubble{transform:scale(1.08);background:var(--navy);box-shadow:0 12px 30px rgba(11,30,48,.22)}
 .cyc-node:hover .cyc-bubble .hi-ico{color:var(--gold2)}
 .cyc-cap{position:absolute;left:50%;transform:translateX(-50%);width:128px;text-align:center;white-space:nowrap}
-.cyc-node.cn-top .cyc-cap{bottom:calc(100% + .5rem)}
-.cyc-node.cn-bottom .cyc-cap{top:calc(100% + .5rem)}
-.cyc-node.cn-left .cyc-cap,.cyc-node.cn-right .cyc-cap{top:calc(100% + .5rem)}
+.cyc-node.cn-1 .cyc-cap{bottom:calc(100% + .5rem)}
+.cyc-node.cn-2 .cyc-cap,.cyc-node.cn-3 .cyc-cap,.cyc-node.cn-4 .cyc-cap,.cyc-node.cn-5 .cyc-cap{top:calc(100% + .5rem)}
 .cyc-cap .cyc-num{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:.82rem;color:var(--gold);display:block;line-height:1}
 .cyc-cap .cyc-name{font-size:.78rem;font-weight:600;letter-spacing:.02em;color:var(--ink2);display:block;margin-top:.15rem}
 
