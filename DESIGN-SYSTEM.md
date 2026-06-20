@@ -66,6 +66,33 @@ Schaal: `--text-xs` (12px) → `--text-5xl` (64px). Vloeiende koppen op de websi
 
 ---
 
+## Componentlaag (`portal.css`)
+
+Naast `tokens.css` (waarden) is er één gedeelde **componentlaag** voor login + de
+vier rolportalen: `portal.css`. Het definieert knoppen, kaarten, invoervelden,
+badges, toast, topbar, focus en de laad-spinner één keer, token-gedreven — zodat
+de vijf portalen er identiek uitzien. Link als **laatste** stylesheet (ná de
+pagina-eigen `<style>`) zodat oude drift wordt rechtgetrokken en pagina-layout
+intact blijft.
+
+> Vóór deze laag verschilden de portalen subtiel: knop-transities .16s/.18s/.2s,
+> paddings 10/11/13px, de gouden signatuurlijn ontbrak op sommige kaarten, alleen
+> huurders had een toast-schaduw, en geen enkele knop had `:active`-feedback.
+> Nu: één knop, één kaart, één badge-set, één focus-ring — overal gelijk.
+
+| Component | Canoniek (portal.css) |
+|-----------|------------------------|
+| `.btn` | radius `--radius-lg`, padding 11×20, `--text-sm`, uppercase, transitie `--t-fast` op alle props, `:active` press |
+| `.btn` varianten | `.primary` (goud/navy) · `.secondary` (navy-outline) · `.ghost` (wit-op-navy) · `.slim` · `.outline` |
+| `.card` | gouden top-hairline `::before` op élke kaart, `--elev-2`, `--line`-rand |
+| inputs | `--radius-lg`, focus = zachte goud-rand + 3px goud-glow, `--t-fast` |
+| `.badge` | volledige set: default/green/gold/red/blue/gray, identiek formaat |
+| `.toast` | `--shadow` + `--radius-lg` overal |
+| `.topbar` | gouden onderlijn als merksignatuur |
+| `.hi-spin` | gouden laad-spinner voor de eerste paint (respecteert reduced-motion) |
+
+---
+
 ## Componenten
 
 | Component | Varianten | States | Notities |

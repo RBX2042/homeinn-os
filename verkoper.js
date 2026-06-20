@@ -33,7 +33,7 @@
   async function renderDashboard(user) {
     who.innerHTML = '<span>' + esc(user.email) + '</span><button class="btn ghost slim" id="logout">Uitloggen</button>';
     document.getElementById('logout').addEventListener('click', function () { client.auth.signOut(); });
-    app.innerHTML = '<div class="card"><p class="muted">Je dossier wordt geladen…</p></div>';
+    app.innerHTML = '<div class="card"><p class="muted"><span class="hi-spin"></span>Je dossier wordt geladen…</p></div>';
 
     var r = await client.from('hios_deals').select('*').order('created_at', { ascending: false });
     if (r.error) { app.innerHTML = '<div class="card"><p class="empty">Kon je dossier niet laden: ' + esc(r.error.message) + '</p></div>'; return; }

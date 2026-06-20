@@ -67,7 +67,7 @@
   }
 
   async function routeAfterLogin(user) {
-    card.innerHTML = brand() + '<p class="intro">Een moment — we sturen je door…</p>';
+    card.innerHTML = brand() + '<p class="intro"><span class="hi-spin"></span>Een moment — we sturen je door…</p>';
     // rol bepalen
     var prof = await client.from('hios_profiles').select('role').eq('id', user.id).maybeSingle();
     var role = (prof && prof.data) ? prof.data.role : null;

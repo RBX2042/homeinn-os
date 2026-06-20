@@ -60,6 +60,7 @@
     .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
     @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
   </style>
+  <link rel="stylesheet" href="portal.css?v=20260620">
 </head>
 <body>
   <header class="topbar">
@@ -67,7 +68,7 @@
     <div class="who" id="who"></div>
   </header>
   <main id="app">
-    <div class="card login-card"><p class="muted">Laden…</p></div>
+    <div class="card login-card"><p class="muted"><span class="hi-spin"></span>Laden…</p></div>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

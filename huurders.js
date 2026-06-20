@@ -62,7 +62,7 @@
   async function renderDashboard(user) {
     who.innerHTML = '<span>' + esc(user.email) + '</span><button class="btn ghost slim" id="logout">Uitloggen</button>';
     document.getElementById('logout').addEventListener('click', function () { client.auth.signOut(); });
-    app.innerHTML = '<div class="card"><p class="muted">Je gegevens worden geladen…</p></div>';
+    app.innerHTML = '<div class="card"><p class="muted"><span class="hi-spin"></span>Je gegevens worden geladen…</p></div>';
 
     var tenRes = await client.rpc('hios_my_tenancy');
     if (tenRes.error) { app.innerHTML = '<div class="card"><p class="empty">Kon je gegevens niet laden: ' + esc(tenRes.error.message) + '</p></div>'; return; }

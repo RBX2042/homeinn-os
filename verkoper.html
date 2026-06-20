@@ -47,13 +47,14 @@
     .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
     @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
   </style>
+  <link rel="stylesheet" href="portal.css?v=20260620">
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="homeinn-public.html"><img src="assets/logo-light.png?v=20260615b" alt="HomeINN"><span>Verkopers</span></a>
     <div class="who" id="who"></div>
   </header>
-  <main id="app"><div class="card login-card"><p class="muted">Laden…</p></div></main>
+  <main id="app"><div class="card login-card"><p class="muted"><span class="hi-spin"></span>Laden…</p></div></main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="verkoper.js"></script>

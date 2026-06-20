@@ -126,7 +126,7 @@
     who.innerHTML = '<span>' + esc(user.email) + '</span><button class="btn ghost slim" id="logout">Uitloggen</button>';
     document.getElementById('logout').addEventListener('click', function () { client.auth.signOut(); });
 
-    app.innerHTML = '<div class="card"><p class="muted">Je gegevens worden geladen…</p></div>';
+    app.innerHTML = '<div class="card"><p class="muted"><span class="hi-spin"></span>Je gegevens worden geladen…</p></div>';
 
     // RLS zorgt dat we uitsluitend de EIGEN rijen terugkrijgen.
     var invRes = await client.from('hios_investors')

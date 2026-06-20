@@ -10,6 +10,7 @@ mkdir website-online
 cp homeinn-public.html website-online/index.html       # root = landingspagina
 cp homeinn-public.html website-online/                 # ook als zichzelf (interne links)
 cp tokens.css website-online/                          # design-tokens (single source of truth) — vereist door alle pagina's
+cp portal.css website-online/                          # gedeelde componentlaag — vereist door login + rolportalen
 cp homeinn-public.css homeinn-public.js website-online/
 cp inloggen.html inloggen.js website-online/ 2>/dev/null || true
 cp investeerders.html investeerders.js website-online/ 2>/dev/null || true

@@ -1,0 +1,146 @@
+/* ============================================================================
+   HomeINN — Gedeelde componentlaag voor de portalen
+   ----------------------------------------------------------------------------
+   Eén canonieke, token-gedreven definitie van knoppen, kaarten, invoervelden,
+   badges, toasts, topbar en focus — zodat login + alle rolportalen (kopers,
+   verkoper, huurders, investeerders) er identiek en premium uitzien.
+
+   Link op elke portaalpagina ALS LAATSTE stylesheet, ná tokens.css én ná de
+   pagina-eigen <style>, zodat oude drift wordt rechtgetrokken en pagina-eigen
+   layout (breedtes, marges) intact blijft:
+
+     <link rel="stylesheet" href="fonts/fonts.css">
+     <link rel="stylesheet" href="tokens.css">
+     <style> … pagina-specifiek … </style>
+     <link rel="stylesheet" href="portal.css">
+
+   Versie 1.0 — 20 juni 2026
+   ============================================================================ */
+
+/* — Knoppen ———————————————————————————————————————————————————————————— */
+.btn {
+  border: 0;
+  border-radius: var(--radius-lg);
+  padding: 11px 20px;
+  font: inherit;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color var(--t-fast), color var(--t-fast),
+              border-color var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+}
+.btn.primary { background: var(--gold); color: var(--navy); }
+.btn.primary:hover { background: var(--gold2); }
+.btn.secondary { background: transparent; color: var(--navy); border: 1px solid var(--line); }
+.btn.secondary:hover { border-color: var(--gold); color: var(--gold); }
+.btn.ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.4); }
+.btn.ghost:hover { border-color: var(--gold2); color: var(--gold2); }
+.btn.slim { padding: 8px 12px; font-size: var(--text-xs); }
+.btn:active { transform: translateY(1px); }
+.btn[disabled], .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+/* — Secundaire/inline knoppen (print, link, berichten) ————————————————
+   Deze knoppen worden in de portaal-JS inline gestyled (statische look),
+   maar misten hover/transition — hier krijgen ze leven, zonder JS-wijziging. */
+.btn.outline {
+  background: transparent; color: var(--navy); border: 1px solid var(--line);
+  text-transform: none; letter-spacing: 0;
+}
+.btn.outline:hover { border-color: var(--gold); color: var(--gold); }
+.printbtn, .msgbtn {
+  transition: border-color var(--t-fast), color var(--t-fast), background-color var(--t-fast), transform var(--t-fast);
+}
+.printbtn:hover, .msgbtn:hover { border-color: var(--gold); color: var(--gold); }
+.printbtn:active, .msgbtn:active { transform: translateY(1px); }
+
+/* — Kaarten met gouden signatuurlijn ————————————————————————————————— */
+.card {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--elev-2);
+}
+.card::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+}
+
+/* — Invoervelden ——————————————————————————————————————————————————————— */
+input[type=email], input[type=text], input[type=password], input[type=number],
+input[type=tel], input[type=date], textarea, select, .signname {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  font: inherit;
+  background: #fff;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+input[type=email]:focus, input[type=text]:focus, input[type=password]:focus,
+input[type=number]:focus, input[type=tel]:focus, input[type=date]:focus,
+textarea:focus, select:focus, .signname:focus {
+  outline: none;
+  border-color: rgba(var(--gold-rgb), .6);
+  box-shadow: 0 0 0 3px rgba(var(--gold-rgb), .13);
+}
+
+/* — Badges ————————————————————————————————————————————————————————————— */
+.badge {
+  display: inline-block;
+  padding: 3px 11px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  background: rgba(11,30,48,.08);
+  color: var(--navy);
+}
+.badge.green { background: rgba(30,106,66,.14); color: var(--green); }
+.badge.gold  { background: rgba(var(--gold-rgb),.16); color: var(--gold); }
+.badge.red   { background: rgba(176,58,58,.14); color: var(--red); }
+.badge.blue  { background: rgba(11,30,48,.10); color: var(--navy); }
+.badge.gray  { background: rgba(111,117,111,.14); color: var(--muted); }
+
+/* — Toast ——————————————————————————————————————————————————————————————— */
+.toast { box-shadow: var(--shadow); border-radius: var(--radius-lg); }
+
+/* — Topbar-signatuur (gouden onderlijn) ——————————————————————————————— */
+.topbar { border-bottom: 2px solid var(--gold); }
+
+/* — Tabelkoppen uniform gedempt ——————————————————————————————————————— */
+th { color: var(--muted); }
+
+/* — Focus: zet de bestaande focus-tokens daadwerkelijk in —————————————— */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius-sm);
+}
+
+/* — Laadstaat: gouden spinner ————————————————————————————————————————— */
+.hi-spin {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(var(--gold-rgb), .25);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: hi-spin .7s linear infinite;
+  vertical-align: -4px;
+  margin-right: 9px;
+}
+@keyframes hi-spin { to { transform: rotate(360deg); } }
+
+/* — Reduced motion (canoniek) ————————————————————————————————————————— */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
