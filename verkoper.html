@@ -14,18 +14,13 @@
     *{box-sizing:border-box}
     body{margin:0;font-family:'Outfit',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
     a{color:var(--gold)}
-    :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;background:var(--navy);color:#fff}
     .topbar .brand{display:flex;align-items:center;gap:10px}
     .topbar img{height:30px}.topbar .brand span{font-family:var(--serif);font-weight:600;font-size:1.15rem;letter-spacing:.01em}
     .topbar .who{display:flex;align-items:center;gap:14px;font-size:.9rem;color:#dfe5ea}
-    .btn{border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;font-size:.82rem;transition:background .2s ease,transform .15s ease}
-    .btn.primary{background:var(--gold);color:var(--navy)}.btn.primary:hover{background:var(--gold-2)}
-    .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}.btn.ghost:hover{border-color:rgba(255,255,255,.7)}.btn.slim{padding:7px 13px;font-size:.74rem}
     main{max-width:760px;margin:0 auto;padding:28px 20px 60px}
     .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px;box-shadow:0 18px 48px rgba(11,30,48,.07);margin-bottom:20px}
     .login-card{max-width:440px;margin:8vh auto 0;overflow:hidden}
-    .login-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-2));border-radius:12px 12px 0 0}
     h1{font-family:var(--serif);font-weight:400;font-size:2rem;line-height:1.12;margin:0 0 6px;color:var(--navy);letter-spacing:-.01em}
     h2{font-family:var(--serif);font-weight:400;font-size:1.5rem;line-height:1.15;margin:0 0 4px;color:var(--navy);letter-spacing:-.01em}
     .eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.72rem;color:var(--gold);font-weight:600;margin:0 0 8px}
@@ -38,14 +33,12 @@
     th{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:600}
     /* Bedragen → Cormorant 600 + tabular. Het hoofd-voorstel staat in <td><strong>; .amount blijft als hook beschikbaar. */
     td strong,.amount,td.amount{font-family:var(--serif);font-weight:600;font-size:1.18em;font-variant-numeric:tabular-nums;color:var(--navy);letter-spacing:.01em}
-    .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:rgba(var(--gold-rgb),.14);color:var(--gold)}
     .steps{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap}
     .step{flex:1;min-width:70px;text-align:center;font-size:.7rem;letter-spacing:.04em;padding:8px 4px;border-radius:8px;background:rgba(11,30,48,.05);color:var(--muted);transition:background .2s ease,color .2s ease}
     .step.active{background:var(--gold);color:var(--navy);font-weight:600}.step.done{background:rgba(30,106,66,.14);color:var(--green)}
     .empty{color:var(--muted);font-style:italic}
     .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw}.toast.show{opacity:1}
     .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
-    @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
   </style>
   <link rel="stylesheet" href="portal.css?v=20260620">
 </head>

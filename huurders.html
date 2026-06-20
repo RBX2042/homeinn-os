@@ -14,21 +14,13 @@
     *{box-sizing:border-box}
     body{margin:0;font-family:'Outfit',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
     a{color:var(--gold)}
-    :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;background:var(--navy);color:#fff}
     .topbar .brand{display:flex;align-items:center;gap:10px}
     .topbar img{height:30px}
     .topbar .brand span{text-transform:uppercase;letter-spacing:.2em;font-size:.78rem;font-weight:600;color:var(--gold-2)}
     .topbar .who{display:flex;align-items:center;gap:14px;font-size:.9rem;color:#dfe5ea}
-    .btn{border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;font-size:.82rem;transition:background .2s ease,color .2s ease,border-color .2s ease}
-    .btn.primary{background:var(--gold);color:var(--navy)}
-    .btn.primary:hover{background:var(--gold-2)}
-    .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
-    .btn.ghost:hover{border-color:var(--gold-2);color:var(--gold-2)}
-    .btn.slim{padding:8px 14px;font-size:.76rem}
     main{max-width:760px;margin:0 auto;padding:28px 20px 60px}
     .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px;box-shadow:0 18px 48px rgba(11,30,48,.07);margin-bottom:20px}
-    .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0;background:linear-gradient(90deg,var(--gold),var(--gold-2))}
     .login-card{max-width:440px;margin:8vh auto 0}
     h1{font-family:var(--serif);font-weight:400;font-size:2rem;line-height:1.15;letter-spacing:-.01em;margin:0 0 6px;color:var(--navy)}
     h2{font-family:var(--serif);font-weight:600;font-size:1.4rem;line-height:1.2;letter-spacing:-.01em;margin:0 0 4px;color:var(--navy)}
@@ -43,10 +35,6 @@
     td{font-variant-numeric:tabular-nums}
     th{font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--muted)}
     .amount,.amount td,td.amount{font-family:var(--serif);font-weight:600;font-size:1.1rem;color:var(--navy);font-variant-numeric:tabular-nums;letter-spacing:0}
-    .badge{display:inline-block;padding:3px 11px;border-radius:999px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:rgba(11,30,48,.08);color:var(--navy)}
-    .badge.green{background:rgba(30,106,66,.14);color:var(--green)}
-    .badge.gold{background:rgba(var(--gold-rgb),.16);color:var(--gold)}
-    .badge.red{background:rgba(176,58,58,.14);color:var(--red)}
     .empty{color:var(--muted);font-style:italic}
     .contract-doc{max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;font-size:.82rem;line-height:1.55;margin:10px 0;color:#222}
     .contract-doc h1{font-family:var(--serif);font-weight:600;font-size:1.3rem;letter-spacing:-.01em;color:var(--navy);margin:0 0 4px}
@@ -60,7 +48,6 @@
     .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;box-shadow:0 18px 48px rgba(11,30,48,.18)}
     .toast.show{opacity:1}
     .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
-    @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
   </style>
   <link rel="stylesheet" href="portal.css?v=20260620">
 </head>

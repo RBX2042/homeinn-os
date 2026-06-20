@@ -16,7 +16,6 @@
       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased}
     a{color:var(--gold)}
     /* Zichtbare gouden focus-ring voor toetsenbordnavigatie */
-    :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
     .login-card{position:relative;background:var(--cream);border-radius:12px;max-width:440px;width:100%;padding:36px 32px;
       border:1px solid var(--line);box-shadow:0 18px 48px rgba(11,30,48,.07),0 40px 90px rgba(0,0,0,.32);overflow:hidden}
     /* Gouden top-hairline-accent op de kaart */
@@ -30,16 +29,11 @@
     label{display:block;font-weight:600;font-size:.8rem;letter-spacing:.01em;color:var(--navy);margin:14px 0 6px}
     input[type=email],input[type=password]{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;color:var(--ink);background:#fff;transition:border-color .16s ease,box-shadow .16s ease}
     input[type=email]:focus,input[type=password]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
-    .btn{display:block;width:100%;border:0;border-radius:10px;padding:13px 18px;font:inherit;cursor:pointer;text-align:center;text-decoration:none;margin-top:14px;transition:background-color .16s ease,border-color .16s ease,color .16s ease}
-    .btn.primary{background:var(--gold);color:var(--navy);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-    .btn.primary:hover{background:var(--gold-2)}
-    .btn.secondary{background:transparent;color:var(--navy);border:1px solid var(--line);font-weight:600}
-    .btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
+    .btn{display:block;width:100%;text-align:center;margin-top:14px}
     .muted{color:var(--muted);font-size:.85rem}
     .foot{text-align:center;margin-top:18px;font-size:.8rem}
     .status{text-align:center;color:var(--muted);margin-top:14px;min-height:1.2em}
     .chooser .btn{margin-top:12px}
-    @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
   </style>
   <link rel="stylesheet" href="portal.css?v=20260620">
 </head>
