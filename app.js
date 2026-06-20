@@ -1631,7 +1631,7 @@ function burnUpSvg(pr) {
   const fcColor = over ? '#b03a3a' : '#1e6a42';
   const budgetY = Y(e.budget);
   return `<svg viewBox="0 0 ${W} ${H}" class="burnup-svg" role="img" aria-label="Burn-up prognose">
-    <line x1="${padL}" y1="${budgetY.toFixed(1)}" x2="${W - padR}" y2="${budgetY.toFixed(1)}" stroke="#b49030" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <line x1="${padL}" y1="${budgetY.toFixed(1)}" x2="${W - padR}" y2="${budgetY.toFixed(1)}" stroke="#b8933a" stroke-width="1.5" stroke-dasharray="5 4"/>
     <text x="${padL - 6}" y="${budgetY.toFixed(1)}" text-anchor="end" dominant-baseline="middle" style="font-size:10px;fill:#6f756f">${esc(fmtMoneyK(e.budget))}</text>
     <line x1="${todayX.toFixed(1)}" y1="${padT}" x2="${todayX.toFixed(1)}" y2="${padT + innerH}" stroke="rgba(12,11,9,.18)" stroke-width="1"/>
     <polyline points="${actualLine}" fill="none" stroke="#0b1e30" stroke-width="2.5"/>
@@ -1643,7 +1643,7 @@ function burnUpSvg(pr) {
   <p class="cf-legend" style="display:flex;gap:16px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);margin:8px 0 0">
     <span class="cf-dot" style="background:#0b1e30"></span>Besteed tot nu
     <span class="cf-dot" style="background:${fcColor}"></span>Prognose tot oplevering
-    <span class="cf-dot" style="background:#b49030"></span>Budget</p>`;
+    <span class="cf-dot" style="background:#b8933a"></span>Budget</p>`;
 }
 
 /* ---------- Kapitaaloproepen (capital calls): het raise-mechanisme ---------- */
@@ -2312,12 +2312,12 @@ function renderReports() {
   const eigenGeldBedrijf = Math.max(0, r.eigenVermogenIngelegd - investeerdersInleg);
   const herkomstDonut = donutSvg([
     { label: 'Bankfinanciering', value: r.openFinanciering, color: '#0b1e30' },
-    { label: 'Investeerders', value: investeerdersInleg, color: '#b49030' },
+    { label: 'Investeerders', value: investeerdersInleg, color: '#b8933a' },
     { label: 'Eigen geld', value: eigenGeldBedrijf, color: '#1e6a42' }
   ], 'Herkomst');
   const inzetDonut = donutSvg([
     { label: 'Aankoopwaarde', value: r.fins.reduce((s, x) => s + x.f.aankoop, 0), color: '#0b1e30' },
-    { label: 'Ontwikkeld', value: r.fins.reduce((s, x) => s + x.f.ontwikkeld, 0), color: '#b49030' },
+    { label: 'Ontwikkeld', value: r.fins.reduce((s, x) => s + x.f.ontwikkeld, 0), color: '#b8933a' },
     { label: 'Restbudget', value: r.fins.reduce((s, x) => s + x.f.restBudget, 0), color: '#cca94a' },
     { label: 'Houdkosten', value: r.fins.reduce((s, x) => s + x.f.houdkosten, 0), color: '#6f756f' }
   ], 'Inzet');

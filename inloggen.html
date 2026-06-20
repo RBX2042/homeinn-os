@@ -8,18 +8,16 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/favicon-512.png?v=20260614">
   <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="tokens.css?v=20260618">
   <style>
-    :root{
-      --navy:#0b1e30; --gold:#b49030; --gold-2:#cca94a; --cream:#f5f2ec; --ink:#0c0b09;
-      --muted:#6f756f; --line:rgba(12,11,9,.08); --panel:#f5f2ec; --red:#b03a3a; --green:#1e6a42;
-    }
+    /* Design-tokens komen uit tokens.css (single source of truth). */
     *{box-sizing:border-box}
     body{margin:0;font-family:'Outfit',system-ui,-apple-system,sans-serif;background:var(--navy);color:var(--ink);
       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased}
     a{color:var(--gold)}
     /* Zichtbare gouden focus-ring voor toetsenbordnavigatie */
     :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
-    .login-card{position:relative;background:var(--panel);border-radius:12px;max-width:440px;width:100%;padding:36px 32px;
+    .login-card{position:relative;background:var(--cream);border-radius:12px;max-width:440px;width:100%;padding:36px 32px;
       border:1px solid var(--line);box-shadow:0 18px 48px rgba(11,30,48,.07),0 40px 90px rgba(0,0,0,.32);overflow:hidden}
     /* Gouden top-hairline-accent op de kaart */
     .login-card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;
@@ -31,7 +29,7 @@
     p.intro{color:var(--muted);text-align:center;margin:0 0 18px;line-height:1.5}
     label{display:block;font-weight:600;font-size:.8rem;letter-spacing:.01em;color:var(--navy);margin:14px 0 6px}
     input[type=email],input[type=password]{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;color:var(--ink);background:#fff;transition:border-color .16s ease,box-shadow .16s ease}
-    input[type=email]:focus,input[type=password]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(180,144,48,.13)}
+    input[type=email]:focus,input[type=password]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
     .btn{display:block;width:100%;border:0;border-radius:10px;padding:13px 18px;font:inherit;cursor:pointer;text-align:center;text-decoration:none;margin-top:14px;transition:background-color .16s ease,border-color .16s ease,color .16s ease}
     .btn.primary{background:var(--gold);color:var(--navy);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
     .btn.primary:hover{background:var(--gold-2)}

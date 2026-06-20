@@ -76,7 +76,7 @@
     }
 
     var maint = await loadMaintenance();
-    var contRes = await client.from('hios_contracts').select('*').order('created_at', { ascending: false });
+    var contRes = await client.from('hios_contracts').select('*').eq('type', 'Huurovereenkomst').order('created_at', { ascending: false });
     var contracts = (contRes && contRes.data) || [];
     var indexNote = ten.index_pct ? ' · indexering ' + Number(ten.index_pct).toLocaleString('nl-NL') + '%/jaar' : '';
 

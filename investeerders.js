@@ -141,7 +141,7 @@
     var updates = (updRes && updRes.data) || [];
     var docRes = await client.from('hios_documents').select('*');
     var documents = (docRes && docRes.data) || [];
-    var contRes = await client.from('hios_contracts').select('*').order('created_at', { ascending: false });
+    var contRes = await client.from('hios_contracts').select('*').eq('type', 'Investeringsovereenkomst').order('created_at', { ascending: false });
     var contracts = (contRes && contRes.data) || [];
     var contractsHtml = contractsSection(contracts);
 

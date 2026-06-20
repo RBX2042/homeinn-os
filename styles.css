@@ -1,19 +1,5 @@
-:root {
-  --navy:#0b1e30; --navy2:#102840; --navy3:#183450;
-  --gold:#b49030; --gold2:#cca94a; --gold3:#e8c96a; --gold-ink:#7d6418;
-  --cream:#f5f2ec; --cream2:#ece7de; --cream3:#ddd7cb;
-  --ink:#0c0b09; --muted:#6f756f; --panel:#fffdf8;
-  --line:rgba(12,11,9,.1); --hair:rgba(180,144,48,.22); --hair-strong:rgba(180,144,48,.5);
-  --red:#b03a3a; --green:#1e6a42;
-  --radius:7px; --radius-lg:10px;
-  --ease:cubic-bezier(.25,.46,.45,.94); --ease-out:cubic-bezier(0,0,.2,1);
-  --t-fast:.16s var(--ease); --t:.24s var(--ease);
-  --elev-1:0 1px 2px rgba(11,30,48,.05); --elev-2:0 18px 48px rgba(11,30,48,.07);
-  /* legacy-aliassen — bestaande selectors blijven werken */
-  --gold-2:var(--gold2); --navy-2:var(--navy2);
-  --shadow:0 22px 55px rgba(11,30,48,.12);
-  color-scheme:light;
-}
+/* Design-tokens leven in tokens.css (single source of truth) — link dat
+   bestand vóór deze stylesheet. */
 body{accent-color:var(--gold);}
 
 * { box-sizing: border-box; }
@@ -112,8 +98,8 @@ p { line-height: 1.6; }
 }
 
 .search input:focus, select:focus, input:focus, textarea:focus {
-  border-color: rgba(180, 144, 48, .6);
-  box-shadow: 0 0 0 3px rgba(180, 144, 48, .13);
+  border-color: rgba(var(--gold-rgb), .6);
+  box-shadow: 0 0 0 3px rgba(var(--gold-rgb), .13);
 }
 
 .search-results {
@@ -145,7 +131,7 @@ p { line-height: 1.6; }
   text-align: left;
   font-size: .88rem;
 }
-.search-results button:hover { background: rgba(180,144,48,.1); }
+.search-results button:hover { background: rgba(var(--gold-rgb),.1); }
 .search-results .empty { margin: 8px; }
 
 .btn {
@@ -291,7 +277,7 @@ p { line-height: 1.6; }
   height: 26px;
   border-radius: 8px;
   border: 1px solid var(--line);
-  background: rgba(180,144,48,.08);
+  background: rgba(var(--gold-rgb),.08);
   flex: none;
 }
 .task-check.checked { background: var(--green); border-color: var(--green); position: relative; }
@@ -309,7 +295,7 @@ table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 th { color: var(--muted); font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; }
 tbody tr[data-action] { cursor: pointer; }
-tbody tr[data-action]:hover td { background: rgba(180,144,48,.05); }
+tbody tr[data-action]:hover td { background: rgba(var(--gold-rgb),.05); }
 .late-row td { background: rgba(176,58,58,.05); }
 .row-actions { white-space: nowrap; text-align: right; }
 .row-actions .icon-btn { margin-left: 4px; }
@@ -323,7 +309,7 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
   padding: 4px 9px;
   font-size: .74rem;
   font-weight: 700;
-  background: rgba(180, 144, 48, .13);
+  background: rgba(var(--gold-rgb), .13);
   color: #765a12;
   white-space: nowrap;
 }
@@ -389,7 +375,7 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .week-grid { display: grid; grid-template-columns: repeat(7, minmax(150px, 1fr)); gap: 10px; overflow-x: auto; }
 
 .day-col { border: 1px solid var(--line); border-radius: 10px; background: rgba(11,30,48,.04); padding: 10px; min-height: 260px; }
-.day-col.today { border-color: var(--gold); background: rgba(180,144,48,.08); }
+.day-col.today { border-color: var(--gold); background: rgba(var(--gold-rgb),.08); }
 .day-col header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .day-col header strong { font-size: .85rem; color: var(--navy); }
 
@@ -628,8 +614,8 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 
 /* ===== Investeerders-roster: uitklap + cashflow-tijdlijn ===== */
 .investor-row{cursor:pointer}
-.investor-row:hover{background:rgba(180,144,48,.06)}
-.investor-row.open{background:rgba(180,144,48,.1)}
+.investor-row:hover{background:rgba(var(--gold-rgb),.06)}
+.investor-row.open{background:rgba(var(--gold-rgb),.1)}
 .investor-detail>td{background:rgba(11,30,48,.03);padding:0}
 .investor-detail-inner{display:flex;gap:22px;flex-wrap:wrap;padding:14px 12px}
 .cashflow-chart{flex:2 1 420px;min-width:300px}
@@ -692,7 +678,7 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .hold-grid span{font-size:.76rem;color:var(--muted)}
 .hold-grid strong{font-size:1.05rem;color:var(--navy);font-variant-numeric:tabular-nums}
 .hold-grid strong.alert{color:var(--red)}
-.verdict{font-size:.86rem;color:var(--navy);background:rgba(180,144,48,.08);border-radius:10px;padding:10px 12px;margin:4px 0 0}
+.verdict{font-size:.86rem;color:var(--navy);background:rgba(var(--gold-rgb),.08);border-radius:10px;padding:10px 12px;margin:4px 0 0}
 .verdict.hold{background:rgba(30,106,66,.08)}
 @media(max-width:640px){.scen-grid,.hold-inputs{grid-template-columns:1fr}.breakeven-box{grid-template-columns:1fr}}
 
@@ -701,12 +687,12 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .cmp-count{font-size:.82rem;color:var(--muted);font-weight:700}
 .cmp-check{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);cursor:pointer;margin-bottom:4px;user-select:none}
 .cmp-check input{width:14px;height:14px;cursor:pointer}
-.lead-card.cmp-on{border-color:var(--gold);box-shadow:0 0 0 2px rgba(180,144,48,.25)}
+.lead-card.cmp-on{border-color:var(--gold);box-shadow:0 0 0 2px rgba(var(--gold-rgb),.25)}
 .compare-table{width:100%;border-collapse:collapse;font-size:.88rem}
 .compare-table th,.compare-table td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:right}
 .compare-table th:first-child,.compare-table td.cmp-metric{text-align:left;color:var(--navy);font-weight:700}
 .compare-table thead th{font-size:.8rem;color:var(--navy);vertical-align:bottom}
-.compare-table th.cmp-winner{background:rgba(180,144,48,.1);border-radius:8px 8px 0 0}
+.compare-table th.cmp-winner{background:rgba(var(--gold-rgb),.1);border-radius:8px 8px 0 0}
 .compare-table td.cmp-best{background:rgba(30,106,66,.1);font-weight:700;color:var(--green)}
 .compare-table td.cmp-best.alert{color:var(--red);background:rgba(176,58,58,.1)}
 
@@ -738,7 +724,7 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .dl-dot{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
 .funnel{display:flex;flex-direction:column;gap:6px;margin:0 0 14px}
 .funnel-row{display:grid;grid-template-columns:130px 1fr auto;align-items:center;gap:12px;cursor:pointer;padding:3px 4px;border-radius:8px}
-.funnel-row:hover{background:rgba(180,144,48,.08)}
+.funnel-row:hover{background:rgba(var(--gold-rgb),.08)}
 .funnel-row.is-empty{opacity:.5;cursor:default}
 .funnel-row.is-empty:hover{background:transparent}
 .funnel-label{font-size:.82rem;font-weight:700;color:var(--navy)}
@@ -747,7 +733,7 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 .funnel-row.is-empty .funnel-bar{background:var(--muted)}
 .funnel-meta{font-size:.8rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
 .lead-column.flash{animation:leadflash 1.2s ease}
-@keyframes leadflash{0%,100%{background:transparent}30%{background:rgba(180,144,48,.22)}}
+@keyframes leadflash{0%,100%{background:transparent}30%{background:rgba(var(--gold-rgb),.22)}}
 @media(max-width:640px){.donut-pair{grid-template-columns:1fr}.funnel-row{grid-template-columns:100px 1fr;grid-template-rows:auto auto}.funnel-meta{grid-column:1/-1}}
 
 /* ===== Kapitaaloproepen ===== */
@@ -803,7 +789,7 @@ tfoot td strong,.totals-box .grand dd{font-family:"Cormorant Garamond",Georgia,s
 .btn.primary::before{content:"";position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);transform:translateX(-180%);transition:transform .6s var(--ease);pointer-events:none}
 .btn.primary:hover::before{transform:translateX(320%)}
 .btn.secondary{background:rgba(255,255,255,.72);color:var(--navy);border-color:var(--line)}
-.btn.secondary:hover{background:#fff;border-color:rgba(180,144,48,.4)}
+.btn.secondary:hover{background:#fff;border-color:rgba(var(--gold-rgb),.4)}
 .btn:active{transform:translateY(1px)}
 .text-btn{letter-spacing:.02em}
 
@@ -827,7 +813,7 @@ tfoot td strong,.totals-box .grand dd{font-family:"Cormorant Garamond",Georgia,s
 .kpi,.panel{box-shadow:var(--elev-2);border-color:rgba(12,11,9,.07)}
 .kpi{position:relative;overflow:hidden}
 .kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));opacity:0;transition:opacity var(--t)}
-.kpi:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(11,30,48,.12);border-color:rgba(180,144,48,.3)}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(11,30,48,.12);border-color:rgba(var(--gold-rgb),.3)}
 .kpi:hover::before{opacity:1}
 
 /* ── Tabellen: premium ledger ── */
@@ -835,12 +821,12 @@ th{color:var(--gold-ink);font-size:.68rem;letter-spacing:.13em;font-weight:600;b
 th,td{padding:13px 12px}
 td.num,th.num{text-align:right}
 td.num{font-weight:600;color:var(--navy)}
-tbody tr[data-action]:hover td{background:rgba(180,144,48,.06)}
+tbody tr[data-action]:hover td{background:rgba(var(--gold-rgb),.06)}
 tbody tr[data-action]:hover td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
 tfoot td{border-top:1px solid rgba(11,30,48,.25)}
 
 /* ── Badges & segmented: editorial pills ── */
-.badge{gap:6px;padding:4px 10px;font-size:.7rem;font-weight:600;letter-spacing:.02em;border:1px solid rgba(180,144,48,.24);background:rgba(180,144,48,.1);color:#765a12}
+.badge{gap:6px;padding:4px 10px;font-size:.7rem;font-weight:600;letter-spacing:.02em;border:1px solid rgba(var(--gold-rgb),.24);background:rgba(var(--gold-rgb),.1);color:#765a12}
 .badge.green{background:rgba(30,106,66,.1);color:var(--green);border-color:rgba(30,106,66,.24)}
 .badge.red{background:rgba(176,58,58,.1);color:#963535;border-color:rgba(176,58,58,.24)}
 .badge.blue{background:rgba(11,30,48,.07);color:var(--navy);border-color:rgba(11,30,48,.16)}
@@ -856,10 +842,10 @@ tfoot td{border-top:1px solid rgba(11,30,48,.25)}
 .signal::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}
 .signal.hoog::before{background:linear-gradient(180deg,#c44,#b03a3a)}
 .signal.middel::before{background:linear-gradient(180deg,var(--gold2),var(--gold))}
-.signal:hover{border-color:rgba(180,144,48,.45);box-shadow:0 10px 24px rgba(11,30,48,.07);transform:translateY(-1px)}
+.signal:hover{border-color:rgba(var(--gold-rgb),.45);box-shadow:0 10px 24px rgba(11,30,48,.07);transform:translateY(-1px)}
 
 /* ── Gouden focus-ring (a11y) — zichtbaar voor toetsenbordgebruikers ── */
-:where(.btn,.icon-btn,.text-btn,.segmented button,[data-action],.lead-card,.signal,.markt-link):focus-visible{outline:none;box-shadow:0 0 0 2px var(--panel),0 0 0 4px rgba(180,144,48,.6)}
+:where(.btn,.icon-btn,.text-btn,.segmented button,[data-action],.lead-card,.signal,.markt-link):focus-visible{outline:none;box-shadow:0 0 0 2px var(--panel),0 0 0 4px rgba(var(--gold-rgb),.6)}
 .nav-item:focus-visible{outline:none;box-shadow:0 0 0 2px var(--navy),0 0 0 4px rgba(204,169,74,.7)}
 a:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
 

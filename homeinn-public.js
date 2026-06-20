@@ -174,7 +174,13 @@ function openModal(subject, ref) {
   document.body.classList.add('no-scroll');
   var sel = modalFormEl.querySelector('select[name="meeting_package"]');
   if (sel) {
-    if (subject) { sel.value = subject; } else { sel.selectedIndex = 0; }
+    if (subject) {
+      // Onderwerp dat (nog) niet als optie bestaat — bijv. een huur-CTA — dynamisch
+      // toevoegen, zodat het onderwerp nooit stil verloren gaat in de lead.
+      var heeft = Array.prototype.some.call(sel.options, function (o) { return o.value === subject || o.text === subject; });
+      if (!heeft) sel.add(new Option(subject, subject));
+      sel.value = subject;
+    } else { sel.selectedIndex = 0; }
   }
   var refEl = modalFormEl.querySelector('input[name="meeting_ref"]');
   if (refEl) refEl.value = ref || '';

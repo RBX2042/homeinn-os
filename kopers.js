@@ -49,7 +49,7 @@
     document.getElementById('logout').addEventListener('click', function () { client.auth.signOut(); });
     app.innerHTML = '<div class="card"><p class="muted">Je dossier wordt geladen…</p></div>';
 
-    var cRes = await client.from('hios_contracts').select('*').order('created_at', { ascending: false });
+    var cRes = await client.from('hios_contracts').select('*').eq('type', 'Koopovereenkomst').order('created_at', { ascending: false });
     if (cRes.error) { app.innerHTML = '<div class="card"><p class="empty">Kon je dossier niet laden: ' + esc(cRes.error.message) + '</p></div>'; return; }
     var contracts = cRes.data || [];
 

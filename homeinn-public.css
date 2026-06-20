@@ -12,31 +12,8 @@ Text Domain: homeinn
 */
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#0c0b09;
-  --ink2:#1e1c18;
-  --ink3:#5c5750;
-  --ink4:#736d64;
-  --cream:#f5f2ec;
-  --cream2:#ece7de;
-  --cream3:#ddd7cb;
-  --gold:#b8933a;
-  --gold-rgb:184,147,58;
-  --gold2:#cca94a;
-  --gold3:#e8c96a;
-  --gold-light:#f7f0dc;
-  --gold-ink:#7d6418;
-  --gold-text:#6d5612;
-  --navy:#0b1e30;
-  --navy2:#102840;
-  --navy3:#183450;
-  --navy4:#224060;
-  --white:#ffffff;
-  --ease:cubic-bezier(.25,.46,.45,.94);
-  --ease-out:cubic-bezier(0,0,.2,1);
-  --ease-in-out:cubic-bezier(.4,0,.2,1);
-  --dur:.65s;
-}
+/* Design-tokens leven in tokens.css (single source of truth) — link dat
+   bestand vóór deze stylesheet. */
 html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 body{font-family:'Outfit',system-ui,sans-serif;color:var(--ink);background:var(--cream);overflow-x:hidden}
 body.no-scroll{overflow:hidden}

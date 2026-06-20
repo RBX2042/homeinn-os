@@ -1,0 +1,145 @@
+/* ============================================================================
+   HomeINN — Design Tokens (single source of truth)
+   ----------------------------------------------------------------------------
+   Dit bestand is de ENIGE plek waar design-tokens worden gedefinieerd.
+   Link het op elke pagina vóór de overige stylesheets / inline <style>:
+
+     <link rel="stylesheet" href="fonts/fonts.css">
+     <link rel="stylesheet" href="tokens.css">
+     <link rel="stylesheet" href="styles.css">   (of homeinn-public.css)
+
+   Wijzig nooit kleuren/tokens in homeinn-public.css, styles.css of in de
+   inline <style> van de portaalpagina's — pas ze hier aan.
+
+   Versie 1.0 — 18 juni 2026
+   ============================================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* — Merk: goud ————————————————————————————————————————————————
+     Canonieke merkkleur is #b8933a (de website-goud). Hairlines verwijzen
+     naar --gold-rgb zodat ze automatisch meebewegen met de merkkleur. */
+  --gold:        #b8933a;
+  --gold-rgb:    184, 147, 58;
+  --gold2:       #cca94a;          /* lichter accent (badges, focus-ring) */
+  --gold3:       #e8c96a;          /* highlight */
+  --gold-light:  #f7f0dc;          /* zachte goud-tint achtergrond */
+  --gold-ink:    #7d6418;          /* goud-tekst op licht */
+  --gold-text:   #6d5612;          /* donkerste goud-tekst */
+  --gold-2:      var(--gold2);     /* legacy-alias — niet meer gebruiken */
+
+  /* — Merk: navy ———————————————————————————————————————————————— */
+  --navy:        #0b1e30;
+  --navy2:       #102840;
+  --navy3:       #183450;
+  --navy4:       #224060;
+  --navy-2:      var(--navy2);     /* legacy-alias — niet meer gebruiken */
+
+  /* — Neutraal: inkt & crème ———————————————————————————————————— */
+  --ink:         #0c0b09;          /* primaire tekst */
+  --ink2:        #1e1c18;          /* secundaire tekst */
+  --ink3:        #5c5750;          /* tertiaire tekst */
+  --ink4:        #736d64;          /* zwakste tekst */
+  --muted:       #6f756f;          /* gedempte tekst (portaal) */
+  --cream:       #f5f2ec;          /* paginakleur */
+  --cream2:      #ece7de;
+  --cream3:      #ddd7cb;
+  --white:       #ffffff;
+  --panel:       #fffdf8;          /* kaart-/paneelkleur (warm wit) */
+
+  /* — Semantisch ———————————————————————————————————————————————— */
+  --red:         #b03a3a;          /* fout / negatief */
+  --green:       #1e6a42;          /* succes / positief */
+
+  /* — Lijnen & randen ——————————————————————————————————————————— */
+  --line:         rgba(12, 11, 9, .1);          /* standaard hairline */
+  --hairline:     rgba(12, 11, 9, .12);         /* sterkere hairline */
+  --hair:         rgba(var(--gold-rgb), .22);   /* goud-hairline */
+  --hair-strong:  rgba(var(--gold-rgb), .5);    /* sterke goud-hairline */
+
+  /* — Typografie ————————————————————————————————————————————————
+     Families volgen fonts/fonts.css (Cormorant Garamond 300/400/600,
+     Outfit 300–700). */
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans:  'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Type-schaal (rem) — additief; voor nieuwe/gemigreerde UI.
+     Vloeiende kop-groottes op de website blijven via clamp() werken. */
+  --text-xs:   .75rem;    /* 12px */
+  --text-sm:   .82rem;    /* ~13px — bestaande knop-/labelgrootte */
+  --text-base: 1rem;      /* 16px */
+  --text-md:   1.125rem;  /* 18px */
+  --text-lg:   1.25rem;   /* 20px */
+  --text-xl:   1.5rem;    /* 24px */
+  --text-2xl:  1.875rem;  /* 30px */
+  --text-3xl:  2.25rem;   /* 36px */
+  --text-4xl:  3rem;      /* 48px */
+  --text-5xl:  4rem;      /* 64px */
+
+  --leading-tight:  1.15;
+  --leading-snug:   1.3;
+  --leading-normal: 1.55;
+  --tracking-caps:  .05em;   /* letter-spacing voor uppercase labels/knoppen */
+
+  /* — Ruimte-schaal (8pt-basis) — additief —————————————————————— */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* — Radius ————————————————————————————————————————————————————— */
+  --radius-sm:   4px;
+  --radius:      7px;
+  --radius-lg:   10px;
+  --radius-xl:   14px;
+  --radius-pill: 999px;
+
+  /* — Elevatie / schaduw ———————————————————————————————————————— */
+  --elev-1: 0 1px 2px rgba(11, 30, 48, .05);
+  --elev-2: 0 18px 48px rgba(11, 30, 48, .07);
+  --elev:   var(--elev-2);                       /* legacy-alias */
+  --shadow: 0 22px 55px rgba(11, 30, 48, .12);   /* diepe schaduw (gate/modal) */
+
+  /* — Beweging ——————————————————————————————————————————————————— */
+  --ease:        cubic-bezier(.25, .46, .45, .94);
+  --ease-out:    cubic-bezier(0, 0, .2, 1);
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --t-fast: .16s var(--ease);
+  --t:      .24s var(--ease);
+  --dur:    .65s;                                /* lange entree-animaties */
+
+  /* — Focus-ring (uniform) ——————————————————————————————————————— */
+  --focus-ring:   2px solid var(--gold2);
+  --focus-offset: 3px;
+
+  /* — Z-index-lagen ————————————————————————————————————————————— */
+  --z-base:     1;
+  --z-sticky:   100;
+  --z-nav:      800;
+  --z-dropdown: 900;
+  --z-overlay:  1000;
+  --z-modal:    1200;
+  --z-toast:    9999;
+
+  /* — Breakpoints (referentie) ——————————————————————————————————
+     CSS custom properties werken niet in @media-queries; standaardiseer
+     handmatig op deze waarden i.p.v. de ~24 ad-hoc breakpoints van nu:
+       --bp-sm: 560px;   (mobiel → tablet)
+       --bp-md: 768px;   (tablet)
+       --bp-lg: 1024px;  (desktop)
+       --bp-xl: 1280px;  (breed)
+     Onderstaande props zijn bruikbaar vanuit JS (matchMedia). */
+  --bp-sm: 560px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+}

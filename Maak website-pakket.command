@@ -9,6 +9,7 @@ mkdir website-online
 [ -d /tmp/homeinn-vercel-link ] && cp -R /tmp/homeinn-vercel-link website-online/.vercel && rm -rf /tmp/homeinn-vercel-link
 cp homeinn-public.html website-online/index.html       # root = landingspagina
 cp homeinn-public.html website-online/                 # ook als zichzelf (interne links)
+cp tokens.css website-online/                          # design-tokens (single source of truth) — vereist door alle pagina's
 cp homeinn-public.css homeinn-public.js website-online/
 cp inloggen.html inloggen.js website-online/ 2>/dev/null || true
 cp investeerders.html investeerders.js website-online/ 2>/dev/null || true

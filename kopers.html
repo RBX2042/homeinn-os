@@ -8,13 +8,9 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/favicon-512.png?v=20260614">
   <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="tokens.css?v=20260618">
   <style>
-    :root{
-      --navy:#0b1e30; --gold:#b49030; --gold-2:#cca94a; --cream:#f5f2ec; --ink:#0c0b09;
-      --muted:#6f756f; --line:rgba(12,11,9,.08); --hairline:rgba(12,11,9,.12); --panel:#fffdf8; --red:#b03a3a; --green:#1e6a42;
-      --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
-      --elev:0 18px 48px rgba(11,30,48,.07);
-    }
+    /* Design-tokens komen uit tokens.css (single source of truth). */
     *{box-sizing:border-box}
     body{margin:0;font-family:'Outfit',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
     a{color:var(--gold)}
@@ -40,14 +36,14 @@
     .muted{color:var(--muted)}
     label{display:block;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);margin:14px 0 6px}
     input[type=email],input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--hairline);border-radius:10px;font:inherit;background:#fff;transition:border-color .18s ease,box-shadow .18s ease}
-    input[type=email]:focus,input[type=text]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(180,144,48,.13)}
+    input[type=email]:focus,input[type=text]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
     table{width:100%;border-collapse:collapse;font-size:.9rem}
     th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--hairline)}
     th{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:600}
     td.amount,td.num{font-family:var(--serif);font-weight:600;font-variant-numeric:tabular-nums;font-size:1.02rem;color:var(--navy)}
     .badge{display:inline-block;padding:3px 11px;border-radius:999px;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;background:rgba(11,30,48,.07);color:var(--navy)}
     .badge.green{background:rgba(30,106,66,.14);color:var(--green)}
-    .badge.gold{background:rgba(180,144,48,.16);color:var(--gold)}
+    .badge.gold{background:rgba(var(--gold-rgb),.16);color:var(--gold)}
     .empty{color:var(--muted);font-style:italic}
     .contract-doc{max-height:360px;overflow:auto;border:1px solid var(--hairline);border-radius:10px;padding:16px;background:#fff;font-size:.82rem;line-height:1.55;margin:10px 0;color:#222}
     .contract-doc h1{font-family:var(--serif);font-weight:600;font-size:1.3rem;color:var(--navy);margin:0 0 4px}
@@ -58,7 +54,7 @@
     .contract-doc .doc-sign{display:flex;gap:24px;margin-top:14px}
     .contract-doc .doc-sign .line{border-top:1px solid #999;margin-top:24px;padding-top:3px;color:#777;font-size:.74rem}
     .signname{width:100%;padding:11px 13px;border:1px solid var(--hairline);border-radius:9px;font:inherit;margin-top:4px;transition:border-color .18s ease,box-shadow .18s ease}
-    .signname:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(180,144,48,.13)}
+    .signname:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
     .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw}
     .toast.show{opacity:1}
     .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}

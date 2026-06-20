@@ -78,7 +78,9 @@
     var hasInv = !!(inv && inv.data && inv.data.length);
     var ten = await client.rpc('hios_my_tenancy');
     var hasTen = !!(ten && ten.data && ten.data.length);
-    var con = await client.from('hios_contracts').select('id').limit(1);
+    // alleen een échte koopovereenkomst maakt iemand een 'koper' — hios_contracts
+    // bevat ook huur-/investerings-/aannemingsovereenkomsten op hetzelfde e-mailadres.
+    var con = await client.from('hios_contracts').select('id').eq('type', 'Koopovereenkomst').limit(1);
     var hasKoper = !!(con && con.data && con.data.length);
     var dls = await client.from('hios_deals').select('id').limit(1);
     var hasVerkoper = !!(dls && dls.data && dls.data.length);

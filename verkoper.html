@@ -8,9 +8,9 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/favicon-512.png?v=20260614">
   <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="tokens.css?v=20260618">
   <style>
-    :root{--navy:#0b1e30;--gold:#b49030;--gold-2:#cca94a;--cream:#f5f2ec;--ink:#0c0b09;--muted:#6f756f;--line:rgba(12,11,9,.08);--panel:#fffdf8;--red:#b03a3a;--green:#1e6a42;
-      --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;}
+    /* Design-tokens komen uit tokens.css (single source of truth). */
     *{box-sizing:border-box}
     body{margin:0;font-family:'Outfit',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
     a{color:var(--gold)}
@@ -32,13 +32,13 @@
     .muted{color:var(--muted)}
     label{display:block;font-weight:600;font-size:.82rem;letter-spacing:.02em;color:var(--navy);margin:14px 0 6px}
     input[type=email]{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;transition:border-color .2s ease,box-shadow .2s ease}
-    input[type=email]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(180,144,48,.13)}
+    input[type=email]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
     table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
     td{font-variant-numeric:tabular-nums}
     th{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:600}
     /* Bedragen → Cormorant 600 + tabular. Het hoofd-voorstel staat in <td><strong>; .amount blijft als hook beschikbaar. */
     td strong,.amount,td.amount{font-family:var(--serif);font-weight:600;font-size:1.18em;font-variant-numeric:tabular-nums;color:var(--navy);letter-spacing:.01em}
-    .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:rgba(180,144,48,.14);color:var(--gold)}
+    .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:rgba(var(--gold-rgb),.14);color:var(--gold)}
     .steps{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap}
     .step{flex:1;min-width:70px;text-align:center;font-size:.7rem;letter-spacing:.04em;padding:8px 4px;border-radius:8px;background:rgba(11,30,48,.05);color:var(--muted);transition:background .2s ease,color .2s ease}
     .step.active{background:var(--gold);color:var(--navy);font-weight:600}.step.done{background:rgba(30,106,66,.14);color:var(--green)}
