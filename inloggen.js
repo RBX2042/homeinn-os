@@ -8,6 +8,7 @@
   var client = (window.supabase && window.supabase.createClient)
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
     : null;
+  var recoveryMode = false; // staat aan tijdens een wachtwoord-reset (niet doorsturen)
 
   function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function brand() { return '<div class="brand"><img src="assets/logo-dark.png?v=20260614" alt="HomeINN"></div>'; }
@@ -26,7 +27,8 @@
           '<form id="f"><label for="email">E-mailadres</label><input id="email" type="email" required placeholder="jouw@email.nl" autocomplete="email">' +
           '<label for="pw">Wachtwoord <span class="muted" style="font-weight:400">(optioneel)</span></label><input id="pw" type="password" placeholder="••••••••" autocomplete="current-password">' +
           '<button class="btn primary" type="submit">Inloggen</button>' +
-          '<button class="btn secondary" type="button" id="magic">Stuur inloglink (zonder wachtwoord)</button></form><div class="status" id="status"></div>') +
+          '<button class="btn secondary" type="button" id="magic">Stuur inloglink (zonder wachtwoord)</button></form>' +
+          '<p class="foot" style="margin-top:8px"><a href="#" id="forgot">Wachtwoord vergeten of nog geen wachtwoord?</a></p><div class="status" id="status"></div>') +
       '<p class="foot"><a href="homeinn-public.html">← terug naar de website</a></p>';
     var f = document.getElementById('f');
     function fail(err) { var s = document.getElementById('status'); if (s) s.textContent = 'Inloggen mislukt: ' + (err.message || err); }
@@ -49,6 +51,73 @@
     });
     var mg = document.getElementById('magic');
     if (mg) mg.addEventListener('click', sendMagic);
+    var fg = document.getElementById('forgot');
+    if (fg) fg.addEventListener('click', function (e) {
+      e.preventDefault();
+      var em = document.getElementById('email');
+      renderForgot(em ? em.value.trim() : '');
+    });
+  }
+
+  // Stuurt een reset-link; daarmee kan de gebruiker (ook voor de eerste keer) een wachtwoord kiezen.
+  function renderForgot(prefill) {
+    card.innerHTML = brand() +
+      '<p class="eyebrow">HomeINN portaal</p><h1>Wachtwoord instellen</h1>' +
+      '<p class="intro">Vul je e-mailadres in — we sturen je een link waarmee je een (nieuw) wachtwoord kiest.</p>' +
+      '<form id="ff"><label for="femail">E-mailadres</label>' +
+      '<input id="femail" type="email" required placeholder="jouw@email.nl" autocomplete="email" value="' + esc(prefill || '') + '">' +
+      '<button class="btn primary" type="submit">Stuur reset-link</button>' +
+      '<button class="btn secondary" type="button" id="backlogin">Terug naar inloggen</button></form><div class="status" id="status"></div>';
+    var ff = document.getElementById('ff');
+    function fail(err) { var s = document.getElementById('status'); if (s) s.textContent = 'Mislukt: ' + (err.message || err); }
+    if (ff) ff.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('femail').value.trim();
+      if (!email) return;
+      document.getElementById('status').textContent = 'Bezig…';
+      client.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname })
+        .then(function (r) {
+          if (r.error) throw r.error;
+          card.innerHTML = brand() + '<p class="eyebrow">HomeINN portaal</p><h1>Check je e-mail</h1>' +
+            '<p class="intro">Als er een account bestaat voor ' + esc(email) + ', is er een link verstuurd om je wachtwoord in te stellen. Open die link op dit apparaat.</p>' +
+            '<p class="foot"><a href="#" id="backlogin2">← terug naar inloggen</a></p>';
+          var b2 = document.getElementById('backlogin2');
+          if (b2) b2.addEventListener('click', function (ev) { ev.preventDefault(); renderLogin(false); });
+        }).catch(fail);
+    });
+    var bl = document.getElementById('backlogin');
+    if (bl) bl.addEventListener('click', function () { renderLogin(false); });
+  }
+
+  // Wachtwoord kiezen na het openen van een reset-link (PASSWORD_RECOVERY-sessie).
+  function renderSetPassword() {
+    card.innerHTML = brand() +
+      '<p class="eyebrow">HomeINN portaal</p><h1>Kies een wachtwoord</h1>' +
+      '<p class="intro">Stel een wachtwoord in voor je account — hiermee log je voortaan in.</p>' +
+      '<form id="sp"><label for="np">Nieuw wachtwoord</label>' +
+      '<input id="np" type="password" required minlength="8" placeholder="minimaal 8 tekens" autocomplete="new-password">' +
+      '<label for="np2">Herhaal wachtwoord</label>' +
+      '<input id="np2" type="password" required minlength="8" autocomplete="new-password">' +
+      '<button class="btn primary" type="submit">Wachtwoord opslaan</button></form><div class="status" id="status"></div>';
+    var sp = document.getElementById('sp');
+    function fail(err) { var s = document.getElementById('status'); if (s) s.textContent = 'Mislukt: ' + (err.message || err); }
+    if (sp) sp.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var p1 = document.getElementById('np').value, p2 = document.getElementById('np2').value;
+      if (p1.length < 8) { fail({ message: 'gebruik minimaal 8 tekens' }); return; }
+      if (p1 !== p2) { fail({ message: 'de wachtwoorden komen niet overeen' }); return; }
+      document.getElementById('status').textContent = 'Opslaan…';
+      client.auth.updateUser({ password: p1 })
+        .then(function (r) {
+          if (r.error) throw r.error;
+          recoveryMode = false;
+          card.innerHTML = brand() + '<p class="eyebrow">HomeINN portaal</p><h1>Gelukt</h1>' +
+            '<p class="intro"><span class="hi-spin"></span>Wachtwoord ingesteld — je wordt doorgestuurd…</p>';
+          return client.auth.getUser();
+        })
+        .then(function (res) { var u = res && res.data ? res.data.user : null; if (u) routeAfterLogin(u); else renderLogin(false); })
+        .catch(fail);
+    });
   }
 
   function renderChooser(email, opts) {
@@ -96,11 +165,22 @@
 
   async function boot() {
     if (!client) { renderUnavailable(); return; }
+    // Aankomst via een e-maillink (magic-link óf wachtwoord-reset): Supabase verwerkt de
+    // link en vuurt onAuthStateChange (SIGNED_IN of PASSWORD_RECOVERY). Niet zelf routeren
+    // — anders sturen we een reset-gebruiker door vóór hij een wachtwoord kan kiezen.
+    if (/[?&#](code|access_token|type)=/.test(location.href)) {
+      card.innerHTML = brand() + '<p class="intro"><span class="hi-spin"></span>Een moment…</p>';
+      return;
+    }
     var res = await client.auth.getUser();
     var user = res && res.data ? res.data.user : null;
     if (user) routeAfterLogin(user); else renderLogin(false);
   }
 
-  if (client) client.auth.onAuthStateChange(function (_e, session) { if (session && session.user) routeAfterLogin(session.user); });
+  if (client) client.auth.onAuthStateChange(function (event, session) {
+    if (event === 'PASSWORD_RECOVERY') { recoveryMode = true; renderSetPassword(); return; }
+    if (recoveryMode) return; // blijf op het wachtwoord-scherm tot het is opgeslagen
+    if (session && session.user) routeAfterLogin(session.user);
+  });
   boot();
 })();
