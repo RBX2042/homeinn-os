@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- HomeINN woningfeed (Pararius-stijl).
+     Plaatshouder — vervang via het portaal: Verkoop → "Funda/Pararius-feed". -->
+<pararius source="HomeINN" generated="" count="0">
+  <agent>
+    <name>HomeINN</name>
+    <email>info@homeinn.nl</email>
+    <phone></phone>
+  </agent>
+  <properties>
+  </properties>
+</pararius>

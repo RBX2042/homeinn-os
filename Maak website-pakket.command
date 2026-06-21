@@ -20,6 +20,9 @@ cp verkoper.html verkoper.js website-online/ 2>/dev/null || true
 # Beheerportaal (back-end) meeleveren zodat de login-router werkt
 cp portaal.html app.js styles.css cloud.js website-online/ 2>/dev/null || true
 cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[],"tehuur":[],"projecten":[],"verkocht":[]}' > website-online/aanbod.json
+# Funda/Pararius woningfeeds (regenereren via portaal → Verkoop → "Funda/Pararius-feed")
+cp funda-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<RealEstateFeed bron="HomeINN" versie="3.0" gegenereerd="" aantal="0"><Objecten></Objecten></RealEstateFeed>' > website-online/funda-feed.xml
+cp pararius-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<pararius source="HomeINN" generated="" count="0"><properties></properties></pararius>' > website-online/pararius-feed.xml
 cp sw.js website-online/ 2>/dev/null || true
 # Cloudflare Pages security-headers + SEO-bestanden meeleveren
 cp _headers robots.txt sitemap.xml website-online/ 2>/dev/null || true

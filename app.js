@@ -91,7 +91,7 @@ function seedData() {
     lastBackup: '',
     settings: {
       companyName: 'HomeINN', address: 'Rotterdam', email: 'info@homeinn.nl', phone: '[TELEFOON]',
-      kvk: '[KVK-NUMMER]', btw: '[BTW-NUMMER]',
+      kvk: '[KVK-NUMMER]', btw: '[BTW-NUMMER]', siteUrl: 'https://home-inn.nl',
       otbPct: 8, notaris: 1500, makelaarPct: 1, rentePct: 6, vasteLasten: 300, verkoopkostenPct: 1.25, doelROI: 15
     },
     contacts: [
@@ -4064,6 +4064,152 @@ function publishAanbod() {
   setTimeout(() => showToast(`aanbod.json gedownload: ${teKoop.length} te koop + ${teHuur} te huur + ${pubProjecten} project${pubProjecten === 1 ? '' : 'en'} om te volgen. Vervang het bestand in je software-map en op je hosting.`), zonderInfo.length ? 3700 : 0);
 }
 
+/* ---------- Funda / Pararius woningfeeds (Module 8) ----------
+   Genereert valide XML-feeds uit het actuele aanbod (Te koop / Onder bod / Te huur),
+   te serveren als funda-feed.xml / pararius-feed.xml op de hosting — zelfde
+   publiceer-flow als aanbod.json. De feed zelf is leverancier-onafhankelijk;
+   feitelijke plaatsing vereist een NVM-/Funda-koppeling resp. een Pararius-account. */
+
+function feedBaseUrl() {
+  return String(state.settings.siteUrl || 'https://home-inn.nl').trim().replace(/\/+$/, '');
+}
+
+/* Absolute, extern-ophaalbare foto-URL's; dataURL's worden overgeslagen (niet bereikbaar voor crawlers). */
+function feedPhotoUrls(p) {
+  const base = feedBaseUrl();
+  return (p.fotos || [])
+    .filter(src => typeof src === 'string' && src && !src.startsWith('data:'))
+    .map(src => /^https?:\/\//i.test(src) ? src : base + '/' + src.replace(/^\/+/, ''));
+}
+
+/* "Laan op Zuid 304" → { street:'Laan op Zuid', number:'304' } */
+function splitHouseNumber(address) {
+  const m = String(address || '').match(/^(.*?)[\s,]+(\d+\s*[a-zA-Z]?(?:[-/]\d+\s*[a-zA-Z]?)?)\s*$/);
+  return m ? { street: m[1].trim(), number: m[2].replace(/\s+/g, '').trim() }
+           : { street: String(address || '').trim(), number: '' };
+}
+
+/* Leverancier-neutraal feed-item per actief pand. */
+function feedItems() {
+  return state.properties
+    .filter(p => ['Te koop', 'Onder bod', 'Te huur'].includes(p.status))
+    .map(p => {
+      const huur = p.status === 'Te huur';
+      const { street, number } = splitHouseNumber(p.address);
+      return {
+        ref: p.ref || p.id,
+        transactie: huur ? 'Huur' : 'Koop',
+        status: p.status === 'Onder bod' ? 'Onder bod' : 'Beschikbaar',
+        type: p.ptype || 'Woning',
+        street, number, city: p.city || '',
+        prijs: huur ? (Number(p.maandhuur) || 0) : (Number(p.vraagprijs) || 0),
+        conditie: huur ? 'per maand' : 'kosten koper',
+        m2: Number(p.m2) || 0,
+        kamers: Number(p.kamers) || 0,
+        label: p.label || '',
+        omschrijving: p.webOmschrijving || '',
+        fotos: feedPhotoUrls(p),
+        url: feedBaseUrl() + '/homeinn-public.html#' + (huur ? 'huren' : 'aanbod')
+      };
+    });
+}
+
+/* CDATA-veilig: breek een eventuele ']]>'-reeks op zodat de sectie geldig blijft. */
+function cdata(text) {
+  return '<![CDATA[' + String(text || '').replace(/]]>/g, ']]]]><![CDATA[>') + ']]>';
+}
+
+function buildFundaFeed() {
+  const items = feedItems();
+  const ads = items.map(it => `    <Object>
+      <ExterneCode>${esc(it.ref)}</ExterneCode>
+      <Transactievorm>${esc(it.transactie)}</Transactievorm>
+      <Status>${esc(it.status)}</Status>
+      <Woningtype>${esc(it.type)}</Woningtype>
+      <Adres>
+        <Straat>${esc(it.street)}</Straat>
+        <Huisnummer>${esc(it.number)}</Huisnummer>
+        <Plaats>${esc(it.city)}</Plaats>
+        <Land>NL</Land>
+      </Adres>
+      <Prijs valuta="EUR" conditie="${esc(it.conditie)}">${it.prijs}</Prijs>
+      <Woonoppervlakte eenheid="m2">${it.m2}</Woonoppervlakte>
+      <AantalKamers>${it.kamers}</AantalKamers>
+      <Energielabel>${esc(it.label)}</Energielabel>
+      <Omschrijving>${cdata(it.omschrijving)}</Omschrijving>
+      <Media>
+${it.fotos.map((u, i) => `        <Foto volgorde="${i + 1}"${i === 0 ? ' hoofdfoto="true"' : ''}>${esc(u)}</Foto>`).join('\n')}
+      </Media>
+      <Link>${esc(it.url)}</Link>
+    </Object>`).join('\n');
+  const s = state.settings;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<!-- HomeINN woningfeed (Funda-stijl, TechSpec-geïnspireerd). Gegenereerd ${todayISO()}. -->
+<RealEstateFeed bron="HomeINN" versie="3.0" gegenereerd="${todayISO()}" aantal="${items.length}">
+  <Aanbieder>
+    <Naam>${esc(s.companyName || 'HomeINN')}</Naam>
+    <Email>${esc(s.email || '')}</Email>
+    <Telefoon>${esc(s.phone || '')}</Telefoon>
+    <Plaats>${esc(s.address || '')}</Plaats>
+  </Aanbieder>
+  <Objecten>
+${ads}
+  </Objecten>
+</RealEstateFeed>
+`;
+}
+
+function buildParariusFeed() {
+  const items = feedItems();
+  const objs = items.map(it => `    <property>
+      <reference>${esc(it.ref)}</reference>
+      <transaction>${it.transactie === 'Huur' ? 'rent' : 'sale'}</transaction>
+      <status>${it.status === 'Onder bod' ? 'under_option' : 'available'}</status>
+      <type>${esc(it.type)}</type>
+      <address>
+        <street>${esc(it.street)}</street>
+        <house_number>${esc(it.number)}</house_number>
+        <city>${esc(it.city)}</city>
+        <country>NL</country>
+      </address>
+      <price currency="EUR" period="${it.transactie === 'Huur' ? 'month' : 'total'}">${it.prijs}</price>
+      <surface unit="m2">${it.m2}</surface>
+      <rooms>${it.kamers}</rooms>
+      <energy_label>${esc(it.label)}</energy_label>
+      <description>${cdata(it.omschrijving)}</description>
+      <media>
+${it.fotos.map((u, i) => `        <picture position="${i + 1}"${i === 0 ? ' primary="true"' : ''}>${esc(u)}</picture>`).join('\n')}
+      </media>
+      <url>${esc(it.url)}</url>
+    </property>`).join('\n');
+  const s = state.settings;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<!-- HomeINN woningfeed (Pararius-stijl). Gegenereerd ${todayISO()}. -->
+<pararius source="HomeINN" generated="${todayISO()}" count="${items.length}">
+  <agent>
+    <name>${esc(s.companyName || 'HomeINN')}</name>
+    <email>${esc(s.email || '')}</email>
+    <phone>${esc(s.phone || '')}</phone>
+  </agent>
+  <properties>
+${objs}
+  </properties>
+</pararius>
+`;
+}
+
+/* Eén klik → beide feeds downloaden (zelfde stap als aanbod.json). */
+function publishFeeds() {
+  const items = feedItems();
+  if (!items.length) { showToast('Geen actief aanbod voor de feeds — zet eerst panden op Te koop, Onder bod of Te huur.'); return; }
+  if (!state.settings.siteUrl) showToast('Tip: vul je Website-adres in (Instellingen) zodat foto- en woninglinks in de feed absoluut zijn.');
+  downloadFile('funda-feed.xml', buildFundaFeed(), 'application/xml');
+  setTimeout(() => downloadFile('pararius-feed.xml', buildParariusFeed(), 'application/xml'), 400);
+  const koop = items.filter(i => i.transactie === 'Koop').length;
+  const huur = items.length - koop;
+  setTimeout(() => showToast(`Feeds gegenereerd: ${koop} koop + ${huur} huur. Vervang funda-feed.xml + pararius-feed.xml in je software-map én op je hosting.`), state.settings.siteUrl ? 700 : 3700);
+}
+
 function downloadBackup() {
   state.lastBackup = todayISO();
   save();
@@ -4847,7 +4993,7 @@ document.addEventListener('submit', event => {
   if (form.id === 'settings-form') {
     event.preventDefault();
     const data = new FormData(form);
-    ['companyName', 'address', 'email', 'phone', 'kvk', 'btw'].forEach(k => state.settings[k] = String(data.get(k) || '').trim());
+    ['companyName', 'address', 'email', 'phone', 'kvk', 'btw', 'siteUrl'].forEach(k => state.settings[k] = String(data.get(k) || '').trim());
     ['otbPct', 'notaris', 'makelaarPct', 'rentePct', 'vasteLasten', 'verkoopkostenPct', 'doelROI'].forEach(k => {
       const v = Number(data.get(k));
       if (!Number.isNaN(v)) state.settings[k] = v;
@@ -4968,6 +5114,7 @@ function initStatic() {
   // Website publiceren
   $('#publish-aanbod').addEventListener('click', publishAanbod);
   $('#publish-site-projects').addEventListener('click', publishAanbod);
+  $('#publish-feeds').addEventListener('click', publishFeeds);
 
   // Backup / herstel / reset
   $('#backup-btn').addEventListener('click', downloadBackup);

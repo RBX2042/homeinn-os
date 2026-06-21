@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- HomeINN woningfeed (Funda-stijl, TechSpec-geïnspireerd).
+     Plaatshouder — vervang via het portaal: Verkoop → "Funda/Pararius-feed". -->
+<RealEstateFeed bron="HomeINN" versie="3.0" gegenereerd="" aantal="0">
+  <Aanbieder>
+    <Naam>HomeINN</Naam>
+    <Email>info@homeinn.nl</Email>
+    <Telefoon></Telefoon>
+    <Plaats>Rotterdam</Plaats>
+  </Aanbieder>
+  <Objecten>
+  </Objecten>
+</RealEstateFeed>

@@ -52,6 +52,15 @@ het portaal:
    — je downloadt `aanbod.json` met je aanbod, projecten en track record
 4. Vervang `aanbod.json` in deze map én op je hosting
 
+**Funda & Pararius woningfeeds:** klik in *Verkoop* op **"Funda/Pararius-feed"** —
+je downloadt `funda-feed.xml` en `pararius-feed.xml` met al je panden op status
+Te koop, Onder bod en Te huur. Vervang die twee bestanden in deze map én op je
+hosting (zelfde stap als `aanbod.json`); ze staan dan op `…/funda-feed.xml` en
+`…/pararius-feed.xml`. Vul vóór de eerste keer je **Website-adres** in
+(Instellingen) zodat de foto- en woninglinks in de feed absoluut zijn. De feed
+zelf is leverancier-onafhankelijk; feitelijke plaatsing op Funda vereist een
+NVM-/Funda-koppeling, op Pararius een Pararius-account — geef de feed-URL bij hen op.
+
 **Foto's:** beheer je per pand in het panddetail ("Foto's voor de website").
 Twee manieren: (1) zet fotobestanden in de map **fotos/** en voeg ze toe als
 "fotos/bestandsnaam.jpg"; of (2) upload direct vanaf je computer (JPG/PNG,

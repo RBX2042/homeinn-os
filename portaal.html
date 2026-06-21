@@ -365,7 +365,10 @@
             <h2>Te koop &amp; onder bod</h2>
             <p>Lopende verkoopdossiers met bezichtigingen en biedingen.</p>
           </div>
-          <button class="btn secondary" id="publish-aanbod">Publiceer website (JSON)</button>
+          <div class="head-actions">
+            <button class="btn secondary slim" id="publish-feeds">Funda/Pararius-feed</button>
+            <button class="btn secondary" id="publish-aanbod">Publiceer website (JSON)</button>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
@@ -528,6 +531,7 @@
               <label>Telefoon<input name="phone"></label>
               <label>KvK-nummer<input name="kvk" placeholder="12345678"></label>
               <label>BTW-nummer<input name="btw" placeholder="NL123456789B01"></label>
+              <label>Website-adres (voor feeds &amp; foto-links)<input name="siteUrl" type="url" placeholder="https://home-inn.nl"></label>
               <label>Overdrachtsbelasting (%)<input name="otbPct" type="number" min="0" step="any"></label>
               <label>Notaris &amp; recherche aankoop (€)<input name="notaris" type="number" min="0" step="any"></label>
               <label>Aankoopmakelaar (%)<input name="makelaarPct" type="number" min="0" step="any"></label>
@@ -1277,6 +1281,6 @@
   <div id="print-area" aria-hidden="true"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="cloud.js?v=20260623"></script>
-  <script src="app.js?v=20260623"></script>
+  <script src="app.js?v=20260628"></script>
 </body>
 </html>
