@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vastgoedbeheer Rotterdam | Transparante pakketten — HomeINN</title>
+  <meta name="description" content="Vastgoedbeheer in Rotterdam met vaste percentages en één aanspreekpunt. Drie heldere pakketten, 24/7 storingslijn en een eigenaar-portaal. Vraag een vrijblijvende offerte aan.">
+  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <meta name="theme-color" content="#0b1e30">
+  <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="canonical" href="https://home-inn.nl/vastgoedbeheer">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://home-inn.nl/vastgoedbeheer">
+  <meta property="og:site_name" content="HomeINN">
+  <meta property="og:title" content="Vastgoedbeheer Rotterdam — transparante pakketten — HomeINN">
+  <meta property="og:description" content="Vastgoedbeheer met vaste percentages, één aanspreekpunt en een 24/7 storingslijn. Drie heldere pakketten. Vraag een vrijblijvende offerte aan.">
+  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="tokens.css?v=20260618">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260616g">
+  <style>
+    /* Slimme kop + pagina-specifieke aanvullingen. Tokens uit tokens.css; componenten uit homeinn-public.css. */
+    .vb-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);
+      position:sticky;top:0;z-index:800}
+    .vb-top .brand img{height:34px;width:auto;display:block}
+    .vb-top .right{display:flex;align-items:center;gap:1.25rem}
+    .vb-top .tel{color:#eaf0f5;text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:.02em;white-space:nowrap}
+    .vb-top .tel strong{color:#fff;font-weight:600}
+    .vb-top .tel:hover{color:var(--gold3)}
+    .vb-top .top-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--navy);
+      text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:11px 20px}
+    .vb-top .top-cta:hover{background:var(--gold2)}
+    @media(max-width:620px){.vb-top .tel{display:none}}
+    .vb-hero-cta{margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center}
+    .vb-hero-micro{color:rgba(255,255,255,.5);font-size:.8rem;font-weight:300;letter-spacing:.02em}
+    /* FAQ via native <details> — geen JS nodig */
+    .vb-faq{max-width:880px;margin:0 auto}
+    .vb-faq details{border-bottom:1px solid var(--line)}
+    .vb-faq summary{list-style:none;cursor:pointer;padding:1.35rem 2.25rem 1.35rem 0;position:relative;
+      font-size:1.05rem;font-weight:400;color:var(--ink2);font-family:var(--sans)}
+    .vb-faq summary::-webkit-details-marker{display:none}
+    .vb-faq summary::after{content:'+';position:absolute;right:.25rem;top:50%;transform:translateY(-50%);
+      font-size:1.4rem;font-weight:300;color:var(--gold);transition:transform .25s var(--ease)}
+    .vb-faq details[open] summary::after{content:'–'}
+    .vb-faq .faq-body{padding:0 0 1.5rem;font-size:.95rem;font-weight:300;line-height:1.85;color:var(--ink3);max-width:760px}
+    /* Offerte-formulier hergebruikt .cf-* uit homeinn-public.css; lichte wrapper */
+    .vb-offerte{max-width:720px;margin:0 auto}
+    .vb-offerte .vb-form-success{display:none;background:var(--panel);border:1px solid var(--line);padding:2.5rem;text-align:center}
+    .vb-offerte .vb-form-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy);margin:0 0 .75rem}
+    .vb-offerte .vb-form-success p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0}
+    .vb-foot{border-top:1px solid var(--line);background:var(--panel)}
+    .vb-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);
+      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
+    .vb-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
+    .vb-foot .in a:first-child{margin-left:0}
+    .vb-foot .in a:hover{color:var(--gold-ink)}
+    .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  </style>
+</head>
+<body>
+  <header class="vb-top">
+    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home">
+      <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
+      <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
+    </a>
+    <div class="right">
+      <a class="tel" href="tel:+31626257071">Liever bellen? <strong>+31 6 26 25 70 71</strong></a>
+      <a class="top-cta" href="#offerte">Offerte aanvragen</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Vastgoedbeheer · Rotterdam</span>
+        <h1>Vastgoedbeheer in Rotterdam — <em>rust</em> voor eigenaren</h1>
+        <p>Niet verkopen, maar verhuren? Wij beheren uw vastgoed alsof het ons eigen pand is — met vaste percentages, één aanspreekpunt en een 24/7 storingslijn voor uw huurders.</p>
+        <div class="vb-hero-cta">
+          <a class="btn btn-primary" href="#offerte">Vraag een vrijblijvende offerte aan <span class="arr">→</span></a>
+          <span class="vb-hero-micro">Vaste percentages · Eén aanspreekpunt · 24/7 storingslijn</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="usp-strip"><div class="usp-inner">
+      <div class="usp"><span class="usp-check">&#10003;</span>Vaste, percentagegebaseerde tarieven</div>
+      <div class="usp"><span class="usp-check">&#10003;</span>Eén vast aanspreekpunt</div>
+      <div class="usp"><span class="usp-check">&#10003;</span>24/7 storingslijn voor huurders</div>
+      <div class="usp"><span class="usp-check">&#10003;</span>Eigenaar-portaal, 24/7 inzage</div>
+      <div class="usp"><span class="usp-check">&#10003;</span>Maandelijkse rapportage</div>
+    </div></div>
+
+    <!-- PAKKETTEN -->
+    <div class="pakketten-bg">
+      <div class="pakketten-head">
+        <div>
+          <span class="t-eyebrow" style="color:rgba(var(--gold-rgb),.7)">Drie pakketten</span>
+          <h2 style="margin-top:.75rem">Eén basis. Drie<br>niveaus van <em>ontzorgen.</em></h2>
+        </div>
+        <p>Elk pakket is gebouwd op het vorige — u start waar ú wilt en groeit wanneer u er klaar voor bent. Alle tarieven zijn exclusief btw (21%).</p>
+      </div>
+      <div class="pk-grid">
+        <div class="pk">
+          <div class="pk-top-line"></div>
+          <div class="pk-num">01 — Core Management</div>
+          <div class="pk-name">Administratief Beheer</div>
+          <div class="pk-sub">"De basis goed geregeld — elke maand opnieuw"</div>
+          <div class="pk-price"><span class="pk-pct">5%</span><span class="pk-pct-lbl">van de kale huur</span></div>
+          <div class="pk-min">Minimumtarief: <strong>&euro; 95,- per object per maand</strong> (excl. btw)</div>
+          <ul class="pk-list">
+            <li><span class="pk-check on"></span>Huurcontracten opstellen en beheren</li>
+            <li><span class="pk-check on"></span>Maandelijkse huurincasso</li>
+            <li><span class="pk-check on"></span>Debiteurenbeheer en aanmaningen</li>
+            <li><span class="pk-check on"></span>Jaarlijkse huurindexering (CBS-index)</li>
+            <li><span class="pk-check on"></span>Maandelijkse financiële rapportage</li>
+            <li><span class="pk-check on"></span>Eigenaar-portaal, 24/7 inzage</li>
+            <li><span class="pk-check on"></span>Communicatie huurder (administratief)</li>
+            <li><span class="pk-check on"></span>Document- en verzekeringsbeheer</li>
+            <li class="dim"><span class="pk-check"></span>Technisch en onderhoudsbeheer</li>
+            <li class="dim"><span class="pk-check"></span>24/7 storingslijn voor huurders</li>
+          </ul>
+          <button class="pk-cta" type="button" data-offerte>Start met Core Management <span class="pk-cta-arr">→</span></button>
+        </div>
+        <div class="pk featured">
+          <div class="pk-top-line"></div>
+          <div class="pk-tag">Meest gekozen</div>
+          <div class="pk-num">02 — Full Operational</div>
+          <div class="pk-name">Volledig Beheer</div>
+          <div class="pk-sub">"Uw vastgoed werkt voor u — niet andersom"</div>
+          <div class="pk-price"><span class="pk-pct">8%</span><span class="pk-pct-lbl">van de kale huur</span></div>
+          <div class="pk-min">Minimumtarief: <strong>&euro; 135,- per object per maand</strong> (excl. btw)</div>
+          <ul class="pk-list">
+            <li><span class="pk-check on"></span>Alles uit Core Management</li>
+            <li><span class="pk-check on"></span>24/7 storingslijn voor huurders</li>
+            <li><span class="pk-check on"></span>Technisch en onderhoudsbeheer</li>
+            <li><span class="pk-check on"></span>Gegarandeerde responstijden (SLA)</li>
+            <li><span class="pk-check on"></span>In- en uittrede-inspecties — &euro; 125,- p. inspectie</li>
+            <li><span class="pk-check on"></span>Sleutelbeheer en toegangscoördinatie</li>
+            <li><span class="pk-check on"></span>VvE- en leverancierscontact</li>
+            <li><span class="pk-check on"></span>Leegstandsbeheer en herplaatsing</li>
+            <li><span class="pk-check on"></span>Kwartaalrapportage per object</li>
+            <li><span class="pk-check on"></span>Jaarlijkse objectcontrole</li>
+          </ul>
+          <button class="pk-cta" type="button" data-offerte>Start met Full Operational <span class="pk-cta-arr">→</span></button>
+        </div>
+        <div class="pk">
+          <div class="pk-top-line"></div>
+          <div class="pk-num">03 — Performance Partner</div>
+          <div class="pk-name">Strategisch Partnerschap</div>
+          <div class="pk-sub">"Wij investeren in uw vastgoed alsof het het onze is"</div>
+          <div class="pk-price"><span class="pk-pct" style="font-size:2.75rem">8%+</span><span class="pk-pct-lbl">beheer<br>+ 20% op huurstijging (jaar 1)<br>+ 10% op gerealiseerde meerwaarde</span></div>
+          <div class="pk-min">HomeINN draagt <strong>tot 50% van projectkosten</strong> — geen lening, co-investering</div>
+          <ul class="pk-list">
+            <li><span class="pk-check on"></span>Alles uit Full Operational</li>
+            <li><span class="pk-check on"></span>Grondige portefeuilleanalyse en benchmark</li>
+            <li><span class="pk-check on"></span>WWS-puntentelling en rendementsoptimalisatie</li>
+            <li><span class="pk-check on"></span>Begeleiding renovatie- en verbetertrajecten</li>
+            <li><span class="pk-check on"></span>Co-investering tot 50% projectkosten</li>
+            <li><span class="pk-check on"></span>Huurprijsoptimalisatie binnen wettelijk kader</li>
+            <li><span class="pk-check on"></span>Kwartaalgesprek strategie en rendement</li>
+            <li><span class="pk-check on"></span>Jaarlijks strategisch portefeuillerapport</li>
+          </ul>
+          <button class="pk-cta" type="button" data-offerte>Performance Partner aanvragen <span class="pk-cta-arr">→</span></button>
+        </div>
+      </div>
+      <div class="pakketten-note">
+        <p>Pakketten 1 en 2 zijn standaard beheervormen. Pakket 3 wordt altijd gecombineerd met Pakket 2 (Full Operational) en is voor eigenaren die actief willen groeien. Alle tarieven zijn exclusief btw (21%). Uw persoonlijke tarief is afhankelijk van huurprijs en objecttype — vraag een vrijblijvende offerte aan.</p>
+      </div>
+    </div>
+
+    <!-- REKENMODULE -->
+    <section class="calc-section section">
+      <div class="calc-inner">
+        <div class="calc-text">
+          <span class="t-eyebrow" style="color:rgba(var(--gold-rgb),.7)">Bereken uw tarief</span>
+          <div class="rule" style="margin-top:1.25rem"></div>
+          <h2>Hoeveel betaalt<br>u aan HomeINN<br>per <em>maand?</em></h2>
+          <p>Onze tarieven zijn altijd transparant. Stel uw huurprijs in, kies een pakket en zie direct uw maandkosten en netto-uitbetaling. U betaalt nooit meer dan het percentage of het minimumtarief rechtvaardigt.</p>
+        </div>
+        <div class="calc-box">
+          <div class="calc-row">
+            <div class="calc-row-label" id="c-slider-lbl">Kale huurprijs / maand <span id="c-huur">&euro; 1.200</span></div>
+            <input type="range" min="600" max="3000" step="50" value="1200" id="c-slider" aria-labelledby="c-slider-lbl">
+          </div>
+          <div class="calc-toggle">
+            <button class="calc-tog-btn" id="ct-p1" type="button" onclick="setPk('p1')">Core Management · 5%</button>
+            <button class="calc-tog-btn on" id="ct-p2" type="button" onclick="setPk('p2')">Full Operational · 8%</button>
+          </div>
+          <div class="calc-results">
+            <div class="cr-item"><div class="cr-val" id="c-fee">&euro; 135</div><div class="cr-lbl">Maandtarief</div></div>
+            <div class="cr-item"><div class="cr-val" id="c-pct">11,3%</div><div class="cr-lbl">Effectief tarief</div></div>
+            <div class="cr-item"><div class="cr-val" id="c-net">&euro; 1.065</div><div class="cr-lbl">Netto-uitbetaling</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:var(--cream2)">
+      <div class="wrap">
+        <!-- MINIMUMTARIEF -->
+        <div style="background:var(--gold-light);border-left:3px solid var(--gold);padding:2rem 2.5rem;margin:0 0 4rem;display:flex;gap:1.5rem;align-items:flex-start">
+          <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--gold-ink)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 34px;margin-top:.2rem"><path d="M12 3v18M7 21h10M5 7h14M5 7 3 13h4L5 7Zm14 0-2 6h4l-2-6ZM5 13a2 2 0 0 0 4 0M15 13a2 2 0 0 0 4 0"/></svg>
+          <div>
+            <h3 style="font-family:var(--serif);font-size:1.35rem;font-weight:300;color:var(--ink2);margin-bottom:.75rem">Hoe werkt het minimumtarief?</h3>
+            <p style="font-size:.875rem;font-weight:300;line-height:1.85;color:var(--ink3);max-width:720px">Bij een kale huur van &euro; 1.200,- per maand geldt voor Pakket 2: 8% = &euro; 96,-. Omdat dit lager is dan het minimumtarief van &euro; 135,-, geldt het minimumtarief. Zodra de huurprijs boven &euro; 1.688,- per maand uitkomt, wordt het percentage hoger dan het minimumtarief en geldt het percentage. U betaalt altijd het hoogste van de twee — maar nooit beide tegelijk. Dit is altijd transparant zichtbaar in uw portaal.</p>
+          </div>
+        </div>
+
+        <!-- AANVULLENDE TARIEVEN -->
+        <h2 style="font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.5rem);font-weight:300;color:var(--ink2);margin-bottom:2rem">Aanvullende tarieven</h2>
+        <div class="anv">
+          <table>
+            <thead><tr><th>Dienst</th><th>Tarief (excl. btw)</th></tr></thead>
+            <tbody>
+              <tr><td>Nieuwe huurder vinden en screenen</td><td>&euro; 395,- per plaatsing</td></tr>
+              <tr><td>Intrede-inspectie</td><td>&euro; 125,- per object</td></tr>
+              <tr><td>Uittrede-inspectie</td><td>&euro; 125,- per object</td></tr>
+              <tr><td>WWS-puntentelling en adviesrapport</td><td>&euro; 175,- per object</td></tr>
+              <tr><td>Renovatiebegeleiding</td><td>&euro; 65,- per uur</td></tr>
+              <tr><td>Spoeduitruk buiten kantooruren (buiten SLA)</td><td>&euro; 85,- per uitruk</td></tr>
+              <tr><td>Juridische opvolging huurachterstand</td><td>Op basis van incassoprocedure</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAAROM HOMEINN -->
+    <section class="values-section section-sm">
+      <div style="max-width:1320px;margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem)">
+        <div class="proc-head"><span class="t-eyebrow">Waarom HomeINN</span><h2>Beheer met<br>een <em>eigenaarsblik.</em></h2></div>
+      </div>
+      <div class="values-grid">
+        <div class="val-card"><div class="val-eyebrow">Transparantie</div><h3>Vaste percentages</h3><p>Geen verrassingen achteraf. U weet vooraf precies wat u betaalt — percentage of minimumtarief, nooit beide.</p></div>
+        <div class="val-card"><div class="val-eyebrow">Betrouwbaarheid</div><h3>Eén aanspreekpunt</h3><p>Geen doorverwijzen. Eén vast contactpersoon die uw portefeuille en uw huurders kent.</p></div>
+        <div class="val-card"><div class="val-eyebrow">Resultaat</div><h3>Rendement voorop</h3><p>Wij sturen op bezetting, onderhoudslasten en huurprijs binnen het wettelijk kader — uw rendement, niet ons uurtje.</p></div>
+        <div class="val-card"><div class="val-eyebrow">Lokale kennis</div><h3>Rotterdam door en door</h3><p>Wij kennen de wijken, de huurders en de regelgeving. Dat scheelt leegstand en verrassingen.</p></div>
+        <div class="val-card"><div class="val-eyebrow">Partnerschap</div><h3>Wij investeren mee</h3><p>Met de Performance Partner dragen wij tot 50% van projectkosten — co-investering, geen lening.</p></div>
+        <div class="val-card"><div class="val-eyebrow">Compliance</div><h3>Altijd volgens de regels</h3><p>Huurcontracten, WWS-punten en indexering conform de actuele Rotterdamse en landelijke regelgeving.</p></div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+      <div class="faq-inner">
+        <div class="proc-head"><span class="t-eyebrow">Veelgestelde vragen</span><h2>Wat eigenaren<br>ons <em>vragen.</em></h2></div>
+        <div class="vb-faq">
+          <details><summary>Wat kost vastgoedbeheer bij HomeINN?</summary><div class="faq-body">U betaalt een vast percentage van de kale huur: 5% (Core Management) of 8% (Full Operational), met een minimumtarief van respectievelijk &euro; 95,- en &euro; 135,- per object per maand (excl. btw). U betaalt altijd het hoogste van percentage of minimumtarief — nooit beide. Gebruik de rekenmodule hierboven voor uw situatie.</div></details>
+          <details><summary>Wat is het verschil tussen de drie pakketten?</summary><div class="faq-body">Core Management regelt de administratie (incasso, contracten, rapportage). Full Operational voegt het volledige technische en onderhoudsbeheer toe, met 24/7 storingslijn en SLA-responstijden. Performance Partner is voor eigenaren die actief willen groeien: wij investeren mee in verbetertrajecten en delen in het resultaat.</div></details>
+          <details><summary>Zit ik vast aan een lange looptijd?</summary><div class="faq-body">Nee. Wij geloven in beheer dat zichzelf bewijst. U ontvangt een heldere overeenkomst met een korte, redelijke opzegtermijn — geen meerjarige verplichting om u binnen te houden.</div></details>
+          <details><summary>Beheren jullie ook één enkele woning?</summary><div class="faq-body">Ja. Of u nu één woning verhuurt of een complete portefeuille beheert — beide zijn welkom. Het minimumtarief per object zorgt dat ook één woning rendabel en zorgvuldig wordt beheerd.</div></details>
+          <details><summary>Hoe snel worden storingen opgelost?</summary><div class="faq-body">Bij Full Operational en Performance Partner geldt een 24/7 storingslijn met gegarandeerde responstijden (SLA). Spoed wordt direct opgepakt; regulier onderhoud plannen wij in overleg met huurder en eigenaar.</div></details>
+          <details><summary>Kan ik later van pakket wisselen?</summary><div class="faq-body">Altijd. De pakketten zijn op elkaar gebouwd, dus opschalen van Core naar Full Operational of doorgroeien naar Performance Partner kan op elk moment — zonder gedoe.</div></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- OFFERTE -->
+    <section class="section" id="offerte" style="background:var(--cream2)">
+      <div class="wrap vb-offerte">
+        <div class="proc-head" style="text-align:center"><span class="t-eyebrow">Vrijblijvend</span><h2>Welk pakket past bij u?<br>Vraag <em>gratis advies</em> aan.</h2></div>
+        <p style="text-align:center;max-width:60ch;margin:1rem auto 2.5rem;font-weight:300;color:var(--ink3);line-height:1.8">Laat uw gegevens achter — wij rekenen vrijblijvend uw tarief uit en adviseren welk pakket bij uw portefeuille past. Reactie binnen vier uur op werkdagen.</p>
+        <div class="cf" id="vb-form-wrap">
+          <form method="post" action="#" id="vb-form" novalidate>
+            <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="cf-2col">
+              <div class="cf-group"><label for="vb-first">Voornaam</label><input id="vb-first" type="text" name="first_name" placeholder="Jan" required></div>
+              <div class="cf-group"><label for="vb-last">Achternaam</label><input id="vb-last" type="text" name="last_name" placeholder="de Vries"></div>
+            </div>
+            <div class="cf-2col">
+              <div class="cf-group"><label for="vb-email">E-mailadres</label><input id="vb-email" type="email" name="email" placeholder="jan@voorbeeld.nl"></div>
+              <div class="cf-group"><label for="vb-phone">Telefoonnummer</label><input id="vb-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
+            </div>
+            <div class="cf-2col">
+              <div class="cf-group"><label for="vb-portfolio">Aantal objecten</label><select id="vb-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
+              <div class="cf-group"><label for="vb-package">Interesse in pakket</label><select id="vb-package" name="package_interest"><option>Weet ik nog niet — graag advies</option><option>Core Management (5%)</option><option>Full Operational (8%)</option><option>Performance Partner (8%+)</option></select></div>
+            </div>
+            <div class="cf-group"><label for="vb-message">Toelichting (optioneel)</label><textarea id="vb-message" name="message" placeholder="Vertel kort over uw vastgoed: locatie, type, huidige situatie..."></textarea></div>
+            <button class="cf-submit" type="submit">Vrijblijvende offerte aanvragen →</button>
+            <p class="m-note" style="margin-top:.9rem">Met verzenden gaat u akkoord met ons <a href="homeinn-public.html?view=privacy" style="color:inherit;text-decoration:underline">privacybeleid</a>. Geen nieuwsbrief, geen derden.</p>
+          </form>
+          <div class="vb-form-success" id="vb-success">
+            <h3>Uw aanvraag is ontvangen ✓</h3>
+            <p>Bedankt. Wij nemen binnen vier uur op werkdagen contact met u op en rekenen vrijblijvend uw tarief uit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-band"><div class="cta-inner"><h2>Liever uw pand <em>verkopen</em> in plaats van verhuren?</h2><a class="btn btn-dark" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div></div>
+  </main>
+
+  <footer class="vb-foot">
+    <div class="in">
+      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
+      <nav aria-label="Links">
+        <a href="homeinn-public.html">Home</a>
+        <a href="pand-verkopen.html">Pand verkopen</a>
+        <a href="homeinn-public.html?view=privacy">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Service",
+    "serviceType":"Vastgoedbeheer",
+    "name":"Vastgoedbeheer Rotterdam — HomeINN",
+    "areaServed":{"@type":"City","name":"Rotterdam"},
+    "provider":{"@type":"RealEstateAgent","name":"HomeINN","telephone":"+31626257071","email":"info@homeinn.nl","address":{"@type":"PostalAddress","addressLocality":"Rotterdam","addressCountry":"NL"}},
+    "description":"Professioneel vastgoedbeheer in Rotterdam met vaste percentages, één aanspreekpunt en 24/7 storingslijn. Drie pakketten: Core Management (5%), Full Operational (8%) en Performance Partner.",
+    "offers":[
+      {"@type":"Offer","name":"Core Management","description":"Administratief beheer: 5% van de kale huur, minimumtarief € 95 per object per maand.","priceCurrency":"EUR","priceSpecification":{"@type":"UnitPriceSpecification","price":"95","priceCurrency":"EUR","unitText":"per object per maand (minimumtarief, excl. btw)"}},
+      {"@type":"Offer","name":"Full Operational","description":"Volledig beheer incl. technisch beheer en 24/7 storingslijn: 8% van de kale huur, minimumtarief € 135 per object per maand.","priceCurrency":"EUR","priceSpecification":{"@type":"UnitPriceSpecification","price":"135","priceCurrency":"EUR","unitText":"per object per maand (minimumtarief, excl. btw)"}},
+      {"@type":"Offer","name":"Performance Partner","description":"Strategisch partnerschap met co-investering tot 50% van projectkosten en performance fees.","priceCurrency":"EUR"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"Wat kost vastgoedbeheer bij HomeINN?","acceptedAnswer":{"@type":"Answer","text":"U betaalt een vast percentage van de kale huur: 5% (Core Management) of 8% (Full Operational), met een minimumtarief van respectievelijk € 95 en € 135 per object per maand (excl. btw). U betaalt altijd het hoogste van percentage of minimumtarief, nooit beide."}},
+      {"@type":"Question","name":"Wat is het verschil tussen de drie pakketten?","acceptedAnswer":{"@type":"Answer","text":"Core Management regelt de administratie. Full Operational voegt volledig technisch en onderhoudsbeheer toe met 24/7 storingslijn en SLA. Performance Partner is voor eigenaren die actief willen groeien, met co-investering en gedeeld resultaat."}},
+      {"@type":"Question","name":"Zit ik vast aan een lange looptijd?","acceptedAnswer":{"@type":"Answer","text":"Nee. U ontvangt een heldere overeenkomst met een korte, redelijke opzegtermijn — geen meerjarige verplichting."}},
+      {"@type":"Question","name":"Beheren jullie ook één enkele woning?","acceptedAnswer":{"@type":"Answer","text":"Ja, zowel één woning als een complete portefeuille. Het minimumtarief per object zorgt dat ook één woning zorgvuldig wordt beheerd."}}
+    ]
+  }
+  </script>
+
+  <script>
+  (function(){
+    'use strict';
+    /* ── Rekenmodule (zelfde logica als homeinn-public.js) ── */
+    var curPk = 'p2';
+    window.setPk = function(p){
+      curPk = p;
+      var p1 = document.getElementById('ct-p1'), p2 = document.getElementById('ct-p2');
+      if (p1) p1.classList.toggle('on', p === 'p1');
+      if (p2) p2.classList.toggle('on', p === 'p2');
+      calcUpdate();
+    };
+    function calcUpdate(){
+      var slider = document.getElementById('c-slider');
+      var huurEl = document.getElementById('c-huur'), feeEl = document.getElementById('c-fee');
+      var pctEl = document.getElementById('c-pct'), netEl = document.getElementById('c-net');
+      if (!slider || !huurEl || !feeEl || !pctEl || !netEl) return;
+      var h = parseInt(slider.value, 10);
+      var pct = curPk === 'p1' ? 0.05 : 0.08;
+      var min = curPk === 'p1' ? 95 : 135;
+      var fee = Math.max(Math.round(h * pct), min);
+      var eff = (fee / h * 100).toFixed(1);
+      huurEl.textContent = '€ ' + h.toLocaleString('nl-NL');
+      slider.setAttribute('aria-valuetext', '€ ' + h.toLocaleString('nl-NL'));
+      feeEl.textContent = '€ ' + fee.toLocaleString('nl-NL');
+      pctEl.textContent = eff.replace('.', ',') + '%';
+      netEl.textContent = '€ ' + (h - fee).toLocaleString('nl-NL');
+    }
+    var s = document.getElementById('c-slider');
+    if (s) { s.addEventListener('input', calcUpdate); calcUpdate(); }
+
+    /* ── Pakket-CTA's → scroll naar offerteformulier ── */
+    document.querySelectorAll('[data-offerte]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var el = document.getElementById('offerte');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        var f = document.getElementById('vb-first'); if (f) setTimeout(function(){ try{ f.focus({preventScroll:true}); }catch(e){} }, 500);
+      });
+    });
+
+    /* ── Lead-pipeline (gelijk aan homeinn-public.js): localStorage + FormSubmit ── */
+    var INBOX_KEY = 'homeinn-inbox-v1';
+    var LEAD_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/info@homeinn.nl';
+    function stuurLeadDoor(type, data){
+      try{
+        if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
+        fetch(LEAD_EMAIL_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body: JSON.stringify({ _subject:'Website-aanvraag: ' + (data.subject || type), _template:'table',
+            Type:type, Naam:data.name||'', Email:data.email||'', Telefoon:data.phone||'', Onderwerp:data.subject||'', Portfolio:data.portfolio||'', Bericht:data.message||'' }) }).catch(function(){});
+      }catch(e){}
+    }
+    function saveLead(type, data){
+      try{
+        var list = JSON.parse(localStorage.getItem(INBOX_KEY) || '[]');
+        if (!Array.isArray(list)) list = [];
+        data.id = 'lead' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+        data.type = type; data.date = new Date().toISOString(); data.handled = false;
+        list.push(data); localStorage.setItem(INBOX_KEY, JSON.stringify(list));
+      }catch(e){}
+      stuurLeadDoor(type, data);
+    }
+    var form = document.getElementById('vb-form');
+    if (form) form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var f = new FormData(form);
+      if (f.get('company_website')) return; // honeypot
+      var naam = (String(f.get('first_name')||'') + ' ' + String(f.get('last_name')||'')).trim();
+      if (!naam || (!String(f.get('email')||'').trim() && !String(f.get('phone')||'').trim())) {
+        // minimale validatie: naam + (e-mail of telefoon)
+        var first = document.getElementById('vb-first'); if (first) first.focus();
+        return;
+      }
+      saveLead('Beheer-offerte', {
+        name: naam,
+        email: String(f.get('email')||'').trim(),
+        phone: String(f.get('phone')||'').trim(),
+        portfolio: String(f.get('portfolio_size')||''),
+        subject: 'Vastgoedbeheer — ' + String(f.get('package_interest')||'advies'),
+        message: String(f.get('message')||'').trim()
+      });
+      var wrap = document.getElementById('vb-form-wrap');
+      var ok = document.getElementById('vb-success');
+      if (form) form.style.display = 'none';
+      if (ok) ok.style.display = 'block';
+      if (ok) ok.scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+  })();
+  </script>
+</body>
+</html>

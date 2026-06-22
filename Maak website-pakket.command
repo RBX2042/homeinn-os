@@ -13,6 +13,7 @@ cp tokens.css website-online/                          # design-tokens (single s
 cp portal.css website-online/                          # gedeelde componentlaag — vereist door login + rolportalen
 cp homeinn-public.css homeinn-public.js website-online/
 cp pand-verkopen.html website-online/                  # verkoop-flow (navigatie-loze meerstaps intake)
+cp vastgoedbeheer.html website-online/                 # dienstenpagina vastgoedbeheer (pakketten + rekenmodule + offerte)
 cp verkopen-*.html website-online/ 2>/dev/null || true # wijk-/gemeente-spokes (SEO-motor, gegenereerd via build-spokes.js)
 cp inloggen.html inloggen.js website-online/ 2>/dev/null || true
 cp investeerders.html investeerders.js website-online/ 2>/dev/null || true
