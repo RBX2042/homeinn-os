@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Woningdetail — HomeINN Rotterdam</title>
+  <meta name="description" content="Bekijk de details van deze door HomeINN ontwikkelde woning in Rotterdam: kenmerken, omschrijving en de mogelijkheid een bezichtiging aan te vragen.">
+  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <meta name="theme-color" content="#0b1e30">
+  <link rel="canonical" href="https://home-inn.nl/te-koop">
+  <meta name="robots" content="noindex,follow">
+  <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="tokens.css?v=20260618">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260616g">
+  <style>
+    .wd-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
+    .wd-top .brand img{height:34px;width:auto;display:block}
+    .wd-top .right{display:flex;align-items:center;gap:1.25rem}
+    .wd-top .tel{color:#eaf0f5;text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:.02em;white-space:nowrap}
+    .wd-top .tel strong{color:#fff;font-weight:600}
+    .wd-top .top-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--navy);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:11px 20px}
+    @media(max-width:620px){.wd-top .tel{display:none}}
+    .wd-wrap{max-width:1100px;margin:0 auto;padding:clamp(2rem,5vw,3.5rem) clamp(1.5rem,5vw,2rem) clamp(3rem,6vw,5rem)}
+    .wd-crumb{font-size:.78rem;color:var(--ink4);margin-bottom:1.5rem}
+    .wd-crumb a{color:var(--gold-ink);text-decoration:none}
+    .wd-status{display:inline-block;font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--gold-ink);border:1px solid var(--gold);padding:5px 12px;margin-bottom:1rem}
+    .wd-title{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,5vw,3rem);color:var(--navy);line-height:1.1;margin:0 0 .4rem}
+    .wd-sub{color:var(--ink3);font-weight:300;font-size:1.05rem;margin:0 0 2rem}
+    .wd-gallery{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:2.5rem}
+    @media(min-width:640px){.wd-gallery{grid-template-columns:2fr 1fr}.wd-gallery .g0{grid-row:span 2}}
+    .wd-gallery img{width:100%;height:100%;object-fit:cover;background:var(--cream2);display:block;min-height:180px}
+    .wd-cols{display:grid;grid-template-columns:1fr;gap:2.5rem}
+    @media(min-width:880px){.wd-cols{grid-template-columns:1.6fr 1fr;align-items:start}}
+    .wd-specs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--cream3);margin-bottom:2rem}
+    .wd-spec{padding:1rem 1.25rem;border-bottom:1px solid var(--cream3)}
+    .wd-spec:nth-child(odd){border-right:1px solid var(--cream3)}
+    .wd-spec .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink4);font-weight:600}
+    .wd-spec .v{font-size:1rem;color:var(--navy);font-weight:400;margin-top:2px}
+    .wd-body h2{font-family:var(--serif);font-weight:400;font-size:1.5rem;color:var(--navy);margin:2rem 0 .75rem}
+    .wd-body p{font-size:1.02rem;font-weight:300;line-height:1.9;color:var(--ink2);margin:0 0 1.25rem}
+    .wd-prijs{font-family:var(--serif);font-size:2rem;color:var(--navy);font-weight:300}
+    .wd-aside{background:var(--panel);border:1px solid var(--cream3);padding:1.75rem;position:sticky;top:90px}
+    .wd-aside h3{font-family:var(--serif);font-weight:300;font-size:1.4rem;color:var(--navy);margin:0 0 1rem}
+    .wd-aside .cf-group{margin-bottom:.9rem}
+    .wd-aside .vb-success{display:none;text-align:center}
+    .wd-aside .vb-success h4{font-family:var(--serif);font-weight:300;font-size:1.3rem;color:var(--navy);margin:0 0 .5rem}
+    .wd-aside .vb-success p{font-size:.85rem;font-weight:300;color:var(--ink3);line-height:1.7;margin:0}
+    .map-load{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;width:100%;min-height:160px;background:var(--cream2);border:1px dashed var(--cream3);cursor:pointer;color:var(--ink3);font:inherit;margin:1rem 0 0}
+    .map-load strong{color:var(--navy);font-size:.95rem}
+    .map-load .map-load-sub{font-size:.75rem;color:var(--ink4)}
+    .wd-iframe{width:100%;height:300px;border:0;margin-top:1rem}
+    .wd-msg{max-width:600px;margin:0 auto;text-align:center;padding:4rem 1rem}
+    .wd-msg h1{font-family:var(--serif);font-weight:300;font-size:2rem;color:var(--navy);margin:0 0 1rem}
+    .wd-msg p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0 0 1.5rem}
+    .wd-foot{border-top:1px solid var(--line);background:var(--panel)}
+    .wd-foot .in{max-width:1100px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,2rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
+    .wd-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
+    .wd-foot .in a:first-child{margin-left:0}
+    .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  </style>
+</head>
+<body>
+  <header class="wd-top">
+    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <div class="right"><a class="tel" href="tel:+31626257071">Liever bellen? <strong>+31 6 26 25 70 71</strong></a><a class="top-cta" href="te-koop.html">Al het aanbod</a></div>
+  </header>
+
+  <main id="wd-main">
+    <div class="wd-wrap"><p class="wd-crumb">Aanbod laden…</p></div>
+  </main>
+
+  <footer class="wd-foot">
+    <div class="in">
+      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
+      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="te-koop.html">Te koop</a><a href="verhuur.html">Te huur</a><a href="homeinn-public.html?view=privacy">Privacy</a></nav>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    'use strict';
+    function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+    function getParam(n){return new URLSearchParams(location.search).get(n);}
+    var main = document.getElementById('wd-main');
+    var id = getParam('id');
+
+    function notFound(){
+      main.innerHTML = '<div class="wd-msg"><h1>Deze woning is niet (meer) beschikbaar</h1><p>Mogelijk is de woning inmiddels verkocht of verhuurd. Bekijk ons actuele aanbod of laat weten wat u zoekt.</p><a class="btn btn-primary" href="te-koop.html">Bekijk het aanbod →</a></div>';
+    }
+
+    if (!id) { notFound(); return; }
+
+    fetch('aanbod.json', { cache:'no-store' })
+      .then(function(r){ if(!r.ok) throw new Error('geen aanbod.json'); return r.json(); })
+      .then(function(data){
+        var koop = (data && Array.isArray(data.aanbod)) ? data.aanbod : [];
+        var huur = (data && Array.isArray(data.tehuur)) ? data.tehuur : [];
+        function match(w){ return String(w.id||w.adres) === id; }
+        var w = koop.filter(match)[0]; var isHuur = false;
+        if (!w) { w = huur.filter(match)[0]; isHuur = !!w; }
+        if (!w) { notFound(); return; }
+
+        document.title = escHtml(w.adres) + ' — ' + (isHuur ? 'te huur' : 'te koop') + ' | HomeINN Rotterdam';
+        var prijs = isHuur ? ('€ ' + (Number(w.huur)||0).toLocaleString('nl-NL') + ' /mnd') : ('€ ' + (Number(w.prijs)||0).toLocaleString('nl-NL') + ' k.k.');
+        var fotos = Array.isArray(w.fotos) ? w.fotos : [];
+        var gallery = fotos.length
+          ? '<div class="wd-gallery">' + fotos.slice(0,3).map(function(f,i){ return '<img class="g'+i+'" loading="'+(i===0?'eager':'lazy')+'" onerror="this.style.display=&quot;none&quot;" src="'+escHtml(f)+'" alt="'+escHtml(w.adres)+' foto '+(i+1)+'">'; }).join('') + '</div>'
+          : '';
+        var mapsQ = encodeURIComponent((w.adres||'') + ', ' + (w.plaats||'Rotterdam'));
+        var specs = [
+          ['Type', w.type], ['Woonoppervlak', w.m2 ? w.m2+' m²' : ''], ['Kamers', w.kamers || ''],
+          ['Energielabel', w.label || ''], ['Plaats', w.plaats || ''], [isHuur?'Huurprijs':'Vraagprijs', prijs]
+        ].filter(function(s){ return s[1]; });
+
+        main.innerHTML =
+          '<div class="wd-wrap">'+
+          '<p class="wd-crumb"><a href="homeinn-public.html">Home</a> · <a href="'+(isHuur?'verhuur.html':'te-koop.html')+'">'+(isHuur?'Te huur':'Te koop')+'</a> · '+escHtml(w.adres)+'</p>'+
+          '<div class="wd-status">'+escHtml(w.status || (isHuur?'Te huur':'Te koop'))+'</div>'+
+          '<h1 class="wd-title">'+escHtml(w.adres)+'</h1>'+
+          '<p class="wd-sub">'+escHtml(w.plaats||'Rotterdam')+(w.type?(' · '+escHtml(w.type)):'')+'</p>'+
+          gallery+
+          '<div class="wd-cols"><div class="wd-body">'+
+          '<div class="wd-specs">'+specs.map(function(s){return '<div class="wd-spec"><div class="k">'+escHtml(s[0])+'</div><div class="v">'+escHtml(s[1])+'</div></div>';}).join('')+'</div>'+
+          (w.omschrijving ? '<h2>Omschrijving</h2><p>'+escHtml(w.omschrijving)+'</p>' : '')+
+          '<h2>Locatie</h2>'+
+          '<button class="map-load" type="button" id="wd-map"><strong>📍 Kaart tonen</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik (privacy)</span></button>'+
+          '</div>'+
+          '<aside class="wd-aside" id="wd-aside">'+
+          '<div class="wd-prijs">'+prijs+'</div>'+
+          '<h3 style="margin-top:.75rem">Bezichtiging aanvragen</h3>'+
+          '<form id="wd-form" novalidate>'+
+          '<input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">'+
+          '<div class="cf-group"><label for="wd-naam">Naam</label><input id="wd-naam" type="text" name="naam" placeholder="Jan de Vries" required></div>'+
+          '<div class="cf-group"><label for="wd-phone">Telefoon</label><input id="wd-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>'+
+          '<div class="cf-group"><label for="wd-email">E-mail</label><input id="wd-email" type="email" name="email" placeholder="jan@voorbeeld.nl"></div>'+
+          '<button class="cf-submit" type="submit" style="width:100%">Bezichtiging aanvragen →</button>'+
+          '<p class="m-note" style="margin-top:.7rem;font-size:.72rem">Akkoord met ons <a href="homeinn-public.html?view=privacy" style="color:inherit;text-decoration:underline">privacybeleid</a>.</p>'+
+          '</form>'+
+          '<div class="vb-success" id="wd-success"><h4>Aanvraag ontvangen ✓</h4><p>Wij nemen binnen vier uur op werkdagen contact met u op.</p></div>'+
+          '</aside></div>'+
+          '</div>';
+
+        // RealEstateListing schema
+        var ld = document.createElement('script'); ld.type='application/ld+json';
+        ld.textContent = JSON.stringify({
+          "@context":"https://schema.org","@type":["Product","Residence"],
+          "name": w.adres, "description": w.omschrijving || '',
+          "address":{"@type":"PostalAddress","streetAddress":w.adres,"addressLocality":w.plaats||'Rotterdam',"addressCountry":"NL"},
+          "offers":{"@type":"Offer","price": String(isHuur? (w.huur||'') : (w.prijs||'')),"priceCurrency":"EUR","availability":"https://schema.org/InStock","seller":{"@type":"RealEstateAgent","name":"HomeINN"}}
+        });
+        document.head.appendChild(ld);
+
+        // map-load
+        var mapBtn = document.getElementById('wd-map');
+        if (mapBtn) mapBtn.addEventListener('click', function(){
+          var f = document.createElement('iframe'); f.className='wd-iframe'; f.loading='lazy'; f.referrerPolicy='no-referrer-when-downgrade';
+          f.src='https://www.google.com/maps?q='+mapsQ+'&output=embed'; f.title='Kaart '+w.adres;
+          mapBtn.replaceWith(f);
+        });
+
+        // lead pipeline
+        var INBOX_KEY='homeinn-inbox-v1', EP='https://formsubmit.co/ajax/info@homeinn.nl';
+        function saveLead(type,d){
+          try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];d.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);d.type=type;d.date=new Date().toISOString();d.handled=false;l.push(d);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}
+          try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return;fetch(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+d.subject,_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||''})}).catch(function(){});}catch(e){}
+        }
+        var form = document.getElementById('wd-form');
+        if (form) form.addEventListener('submit', function(e){
+          e.preventDefault();
+          var f=new FormData(form);
+          if(f.get('company_website'))return;
+          var naam=String(f.get('naam')||'').trim();
+          if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){var n=document.getElementById('wd-naam');if(n)n.focus();return;}
+          saveLead(isHuur?'Huurwoning bezichtigen':'Woning bezichtigen',{name:naam,email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),subject:(isHuur?'Bezichtiging huurwoning — ':'Bezichtiging woning — ')+w.adres+' ('+(w.plaats||'Rotterdam')+')'});
+          form.style.display='none';
+          var ok=document.getElementById('wd-success'); if(ok) ok.style.display='block';
+        });
+      })
+      .catch(function(){ notFound(); });
+  })();
+  </script>
+</body>
+</html>
