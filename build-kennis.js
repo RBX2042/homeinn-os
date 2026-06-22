@@ -1,0 +1,234 @@
+#!/usr/bin/env node
+/* ============================================================================
+   HomeINN — Kennis/blog generator
+   ----------------------------------------------------------------------------
+   Bouwt het overzicht (kennis.html → /kennis) + één pagina per artikel
+   (kennis-<slug>.html → /kennis-<slug>). Hergebruikt het designsysteem
+   (fonts.css → tokens.css → homeinn-public.css) + een leesgerichte
+   prose-laag. Content komt uit kennis-content.json (gegenereerd +
+   adversarieel feitelijk geverifieerd via de workflow 'homeinn-kennis-artikelen').
+
+   Gebruik:  node build-kennis.js
+   ============================================================================ */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+
+const TEL = '+31 6 26 25 70 71';
+const TEL_HREF = '+31626257071';
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+const CTA = {
+  verkopen: { titel: 'Overweegt u uw pand te verkopen?', sub: 'HomeINN koopt direct aan met eigen kapitaal — voorstel binnen 48 uur, zonder makelaarskosten.', label: 'Vraag een voorstel aan', href: 'pand-verkopen.html' },
+  beheer:   { titel: 'Uw vastgoed zorgeloos laten beheren?', sub: 'Vaste percentages, één aanspreekpunt en een 24/7 storingslijn. Vraag vrijblijvend advies aan.', label: 'Vraag een offerte aan', href: 'vastgoedbeheer.html#offerte' },
+  gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een gesprek', href: 'homeinn-public.html?view=contact' },
+};
+
+function head(titel, desc, canonical) {
+  return `<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${esc(titel)}</title>
+  <meta name="description" content="${esc(desc)}">
+  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <meta name="theme-color" content="#0b1e30">
+  <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="canonical" href="${canonical}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:site_name" content="HomeINN">
+  <meta property="og:title" content="${esc(titel)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="tokens.css?v=20260618">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260616g">
+  <style>
+    .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
+    .kn-top .brand img{height:34px;width:auto;display:block}
+    .kn-top .right{display:flex;align-items:center;gap:1.25rem}
+    .kn-top .tel{color:#eaf0f5;text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:.02em;white-space:nowrap}
+    .kn-top .tel strong{color:#fff;font-weight:600}
+    .kn-top .tel:hover{color:var(--gold3)}
+    .kn-top .top-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--navy);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:11px 20px}
+    .kn-top .top-cta:hover{background:var(--gold2)}
+    @media(max-width:620px){.kn-top .tel{display:none}}
+    .kn-foot{border-top:1px solid var(--line);background:var(--panel)}
+    .kn-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
+    .kn-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
+    .kn-foot .in a:first-child{margin-left:0}
+    .kn-foot .in a:hover{color:var(--gold-ink)}
+    /* Overzicht */
+    .kn-hero{background:var(--navy);padding:clamp(5rem,11vw,9rem) clamp(1.5rem,5vw,5.5rem) clamp(3rem,6vw,5rem)}
+    .kn-hero-in{max-width:1100px;margin:0 auto}
+    .kn-hero .t-eyebrow{color:var(--gold2);display:block;margin-bottom:1.25rem}
+    .kn-hero h1{font-family:var(--serif);font-weight:300;color:#fff;line-height:1.05;letter-spacing:-.015em;font-size:clamp(2.4rem,6vw,4rem);margin:0}
+    .kn-hero p{color:rgba(255,255,255,.55);font-weight:300;max-width:60ch;margin:1.5rem 0 0;line-height:1.8;font-size:1.02rem}
+    .kn-grid{max-width:1100px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(1.5rem,5vw,5.5rem);display:grid;grid-template-columns:1fr;gap:1.5rem}
+    @media(min-width:720px){.kn-grid{grid-template-columns:1fr 1fr}}
+    @media(min-width:1040px){.kn-grid{grid-template-columns:repeat(3,1fr)}}
+    .kn-card{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--cream3);padding:2rem;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+    .kn-card:hover{border-color:var(--gold);box-shadow:var(--elev-2)}
+    .kn-card .kn-cat{font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--gold-ink);font-weight:600}
+    .kn-card h2{font-family:var(--serif);font-weight:300;font-size:1.5rem;line-height:1.2;color:var(--navy);margin:.75rem 0 .6rem}
+    .kn-card p{font-size:.9rem;font-weight:300;line-height:1.7;color:var(--ink3);flex:1;margin:0}
+    .kn-card .kn-meta{margin-top:1.25rem;font-size:.75rem;color:var(--ink4);display:flex;align-items:center;gap:.5rem}
+    .kn-card .kn-arrow{color:var(--gold-ink);font-weight:600;font-size:.8rem;letter-spacing:.04em;margin-top:1rem}
+    /* Artikel */
+    .art-head{background:var(--cream2);padding:clamp(3.5rem,8vw,6rem) clamp(1.5rem,5vw,2rem) clamp(2.5rem,5vw,4rem)}
+    .art-head-in{max-width:760px;margin:0 auto}
+    .art-head .t-eyebrow{color:var(--gold-ink);display:block;margin-bottom:1.25rem}
+    .art-head h1{font-family:var(--serif);font-weight:300;color:var(--navy);line-height:1.08;letter-spacing:-.015em;font-size:clamp(2rem,5vw,3.2rem);margin:0}
+    .art-meta{margin-top:1.5rem;font-size:.78rem;color:var(--ink4);letter-spacing:.04em}
+    .art-body{max-width:760px;margin:0 auto;padding:clamp(2.5rem,5vw,4rem) clamp(1.5rem,5vw,2rem) clamp(3rem,6vw,5rem)}
+    .art-body .lead{font-size:1.18rem;font-weight:300;line-height:1.8;color:var(--ink2)}
+    .art-body h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);color:var(--navy);line-height:1.2;margin:2.75rem 0 1rem}
+    .art-body p{font-size:1.02rem;font-weight:300;line-height:1.9;color:var(--ink2);margin:0 0 1.25rem}
+    .art-body ul{margin:0 0 1.5rem;padding-left:0;list-style:none}
+    .art-body ul li{position:relative;padding-left:1.6rem;margin-bottom:.7rem;font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink2)}
+    .art-body ul li::before{content:'';position:absolute;left:0;top:.62em;width:7px;height:7px;background:var(--gold);transform:rotate(45deg)}
+    .art-disclaimer{background:var(--gold-light);border-left:3px solid var(--gold);padding:1.5rem 1.75rem;margin:2.5rem 0;font-size:.88rem;font-weight:300;line-height:1.75;color:var(--ink2)}
+    .art-disclaimer strong{font-weight:600;color:var(--gold-text)}
+    .art-faq{margin-top:3rem}
+    .art-faq details{border-bottom:1px solid var(--line)}
+    .art-faq summary{list-style:none;cursor:pointer;padding:1.2rem 2rem 1.2rem 0;position:relative;font-size:1.02rem;font-weight:400;color:var(--ink2)}
+    .art-faq summary::-webkit-details-marker{display:none}
+    .art-faq summary::after{content:'+';position:absolute;right:.1rem;top:50%;transform:translateY(-50%);font-size:1.3rem;font-weight:300;color:var(--gold)}
+    .art-faq details[open] summary::after{content:'\\2013'}
+    .art-faq .a{padding:0 0 1.3rem;font-size:.95rem;font-weight:300;line-height:1.8;color:var(--ink3)}
+    .art-related{max-width:760px;margin:0 auto;padding:0 clamp(1.5rem,5vw,2rem) clamp(3.5rem,7vw,5.5rem)}
+    .art-related h3{font-family:var(--serif);font-weight:300;font-size:1.4rem;color:var(--navy);margin:0 0 1.25rem}
+    .art-related a{display:block;color:var(--ink2);text-decoration:none;padding:.9rem 0;border-top:1px solid var(--line);font-weight:400}
+    .art-related a:hover{color:var(--gold-ink)}
+    .art-related a .c{font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--gold-ink);font-weight:600;display:block;margin-bottom:.2rem}
+  </style>
+</head>
+<body>
+  <header class="kn-top">
+    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <div class="right"><a class="tel" href="tel:${TEL_HREF}">Liever bellen? <strong>${TEL}</strong></a><a class="top-cta" href="kennis.html">Alle artikelen</a></div>
+  </header>`;
+}
+
+function foot() {
+  return `  <footer class="kn-foot"><div class="in">
+      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
+      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand verkopen</a><a href="homeinn-public.html?view=privacy">Privacy</a></nav>
+    </div></footer>
+</body>
+</html>
+`;
+}
+
+function ctaBand(ctaType) {
+  var c = CTA[ctaType] || CTA.gesprek;
+  return `<section style="background:var(--navy)"><div style="max-width:760px;margin:0 auto;padding:clamp(2.5rem,5vw,3.5rem) clamp(1.5rem,5vw,2rem);text-align:center">
+    <h2 style="font-family:var(--serif);font-weight:300;color:#fff;font-size:clamp(1.5rem,3vw,2rem);margin:0 0 .6rem">${esc(c.titel)}</h2>
+    <p style="color:rgba(255,255,255,.6);font-weight:300;line-height:1.7;max-width:52ch;margin:0 auto 1.75rem">${esc(c.sub)}</p>
+    <a class="btn btn-primary" href="${c.href}">${esc(c.label)} <span class="arr">→</span></a>
+  </div></section>`;
+}
+
+function articlePage(a, alle) {
+  const canonical = `https://home-inn.nl/kennis-${a.slug}`;
+  const intro = (a.intro || []).map((p, i) => `<p${i === 0 ? ' class="lead"' : ''}>${esc(p)}</p>`).join('\n      ');
+  const sections = (a.sections || []).map(s => {
+    var body = (s.body || []).map(p => `<p>${esc(p)}</p>`).join('\n      ');
+    var bullets = (s.bullets && s.bullets.length) ? `<ul>${s.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : '';
+    return `<h2>${esc(s.heading)}</h2>\n      ${body}\n      ${bullets}`;
+  }).join('\n      ');
+  const faq = (a.faq && a.faq.length)
+    ? `<div class="art-faq"><h2>Veelgestelde vragen</h2>${a.faq.map(f => `<details><summary>${esc(f.q)}</summary><div class="a">${esc(f.a)}</div></details>`).join('')}</div>`
+    : '';
+  const disclaimer = (a.disclaimer && a.disclaimer.trim())
+    ? `<div class="art-disclaimer"><strong>Let op:</strong> ${esc(a.disclaimer)}</div>` : '';
+  const related = alle.filter(x => x.slug !== a.slug).slice(0, 2);
+  const relatedHtml = related.length
+    ? `<section class="art-related"><h3>Lees ook</h3>${related.map(r => `<a href="kennis-${r.slug}.html"><span class="c">${esc(r.category)}</span>${esc(r.h1)}</a>`).join('')}</section>`
+    : '';
+
+  const faqLd = (a.faq && a.faq.length)
+    ? `,\n  {"@type":"FAQPage","mainEntity":[${a.faq.map(f => `{"@type":"Question","name":${JSON.stringify(f.q)},"acceptedAnswer":{"@type":"Answer","text":${JSON.stringify(f.a)}}}`).join(',')}]}`
+    : '';
+
+  return head(esc(a.title), a.metaDescription, canonical) + `
+  <main>
+    <header class="art-head"><div class="art-head-in">
+      <span class="t-eyebrow">${esc(a.category)}</span>
+      <h1>${esc(a.h1)}</h1>
+      <div class="art-meta">HomeINN · ${esc(a.category)} · ${esc(a.leestijd || '')} leestijd</div>
+    </div></header>
+    <article class="art-body">
+      ${intro}
+      ${sections}
+      ${disclaimer}
+      ${faq}
+    </article>
+    ${relatedHtml}
+    ${ctaBand(a.ctaType)}
+  </main>
+  <script type="application/ld+json">
+  [{"@context":"https://schema.org","@type":"Article","headline":${JSON.stringify(a.h1)},"description":${JSON.stringify(a.metaDescription)},"about":${JSON.stringify(a.category)},"inLanguage":"nl-NL","author":{"@type":"Organization","name":"HomeINN"},"publisher":{"@type":"Organization","name":"HomeINN"},"mainEntityOfPage":${JSON.stringify(canonical)}},
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://home-inn.nl/"},{"@type":"ListItem","position":2,"name":"Kennis","item":"https://home-inn.nl/kennis"},{"@type":"ListItem","position":3,"name":${JSON.stringify(a.category)},"item":${JSON.stringify(canonical)}}]}${faqLd}]
+  </script>
+` + foot();
+}
+
+function overviewPage(alle) {
+  const canonical = 'https://home-inn.nl/kennis';
+  const cards = alle.map(a => {
+    var snippet = (a.intro && a.intro[0]) ? a.intro[0] : (a.metaDescription || '');
+    snippet = snippet.length > 150 ? snippet.slice(0, 150) + '…' : snippet;
+    return `<a class="kn-card" href="kennis-${a.slug}.html">
+      <span class="kn-cat">${esc(a.category)}</span>
+      <h2>${esc(a.h1)}</h2>
+      <p>${esc(snippet)}</p>
+      <div class="kn-meta">${esc(a.leestijd || '')} leestijd</div>
+      <div class="kn-arrow">Lees het artikel →</div>
+    </a>`;
+  }).join('\n    ');
+
+  return head('Kennis & inzichten over vastgoed in Rotterdam — HomeINN',
+    'Praktische kennis over vastgoed in Rotterdam: direct verkopen, verhuren of verkopen, en verduurzamen naar energielabel A. Helder uitgelegd door HomeINN.',
+    canonical) + `
+  <main>
+    <section class="kn-hero"><div class="kn-hero-in">
+      <span class="t-eyebrow">Kennis &amp; inzichten</span>
+      <h1>Kennis &amp; inzichten over vastgoed in Rotterdam</h1>
+      <p>Praktische, eerlijke uitleg voor eigenaren en verkopers — over direct verkopen, de afweging tussen verhuren en verkopen, en verduurzaming naar energielabel A.</p>
+    </div></section>
+    <section class="kn-grid">
+    ${cards}
+    </section>
+    ${ctaBand('gesprek')}
+  </main>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"CollectionPage","name":"Kennis & inzichten — HomeINN","url":"${canonical}","inLanguage":"nl-NL","about":"Vastgoed in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
+  </script>
+` + foot();
+}
+
+function main() {
+  const articles = require('./kennis-content.json');
+  fs.writeFileSync(path.join(__dirname, 'kennis.html'), overviewPage(articles), 'utf8');
+  console.log('  ✓ kennis.html (overzicht)');
+  articles.forEach(a => {
+    fs.writeFileSync(path.join(__dirname, `kennis-${a.slug}.html`), articlePage(a, articles), 'utf8');
+    console.log(`  ✓ kennis-${a.slug}.html  (${a.h1})`);
+  });
+  console.log(`\nKlaar: overzicht + ${articles.length} artikel(en).`);
+}
+
+main();
+module.exports = { articlePage, overviewPage };
