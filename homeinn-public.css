@@ -21,7 +21,7 @@ body.no-scroll{overflow:hidden}
 .skip-link:focus{left:1rem;top:1rem;z-index:900;background:var(--navy);color:#fff;padding:.6rem 1rem;border:1px solid var(--gold2)}
 body.has-custom-cursor *{cursor:none!important}
 a{color:inherit;text-decoration:none}
-button{font-family:'Outfit',system-ui,sans-serif;cursor:none!important;border:none;background:none}
+button{font-family:'Outfit',system-ui,sans-serif;cursor:pointer;border:none;background:none}
 img{display:block;max-width:100%}
 
 /* ── CUSTOM CURSOR ── */
@@ -160,16 +160,17 @@ body.hero-ready .hb-cable{animation:hbDraw 1.3s var(--ease-out) 1.05s both}
 
 /* HERO-ENTREE (gestaffeld) */
 @keyframes heroUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-.hero-pill,.hero-sub,.hero-actions{opacity:0}
+.hero-pill,.hero-sub,.hero-actions,.hero-micro{opacity:0}
 body.hero-ready .hero-pill{animation:heroUp .7s var(--ease-out) .15s both}
 body.hero-ready .hero-sub{animation:heroUp .8s var(--ease-out) .52s both}
 body.hero-ready .hero-actions{animation:heroUp .8s var(--ease-out) .68s both}
+body.hero-ready .hero-micro{animation:heroUp .8s var(--ease-out) .82s both}
 .hero h1 .hl{display:block;opacity:0}
 body.hero-ready .hero h1 .hl{animation:heroUp .85s var(--ease-out) both}
 body.hero-ready .hero h1 .hl:nth-child(1){animation-delay:.28s}
 body.hero-ready .hero h1 .hl:nth-child(2){animation-delay:.4s}
 body.hero-ready .hero h1 .hl:nth-child(3){animation-delay:.54s}
-@media(scripting:none){.hero-pill,.hero-sub,.hero-actions,.hero h1 .hl{opacity:1}}
+@media(scripting:none){.hero-pill,.hero-sub,.hero-actions,.hero-micro,.hero h1 .hl{opacity:1}}
 
 /* MARQUEE */
 .mq{background:var(--gold);padding:14px 0;overflow:hidden}
@@ -323,7 +324,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .pstep-body span{font-size:.875rem;font-weight:300;color:var(--ink4);line-height:1.7}
 .proc-aside{background:var(--navy);padding:2.5rem;color:#fff}
 .proc-aside-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.45rem;font-weight:300;color:var(--gold2);margin-bottom:.4rem}
-.proc-aside-desc{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:2rem}
+.proc-aside-desc{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:2rem}
 .sla-row{display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.06)}
 .sla-row:last-child{border-bottom:none}
 .sla-row-label{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.55)}
@@ -504,20 +505,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .legal-doc a:hover{color:var(--gold2)}
 
 /* FOOTER */
-footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5rem) 2.5rem;color:rgba(255,255,255,.3)}
+footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5rem) 2.5rem;color:rgba(255,255,255,.55)}
 .footer-grid{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:5rem;padding-bottom:4rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:2.5rem}
 .f-logo{margin-bottom:.75rem;display:flex;align-items:center}
 .f-logo-img{height:42px;width:auto;display:block;max-width:220px}
-.f-tagline{font-size:.75rem;font-weight:300;color:rgba(255,255,255,.25);margin-bottom:1.5rem;letter-spacing:.03em}
-.f-desc{font-size:.8rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.3);max-width:280px}
+.f-tagline{font-size:.75rem;font-weight:300;color:rgba(255,255,255,.62);margin-bottom:1.5rem;letter-spacing:.03em}
+.f-desc{font-size:.8rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.62);max-width:280px}
 .f-social{display:flex;gap:.7rem;margin-top:1.6rem}
 .f-social-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid rgba(255,255,255,.14);border-radius:50%;color:rgba(255,255,255,.5);transition:color .25s,border-color .25s,background .25s,transform .25s}
 .f-social-btn svg{width:19px;height:19px}
 .f-social-btn:hover{color:var(--navy);background:var(--gold2);border-color:var(--gold2);transform:translateY(-2px)}
 .f-social-btn:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
-.f-col h5{font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1.25rem}
+.f-col h3,.f-col h5{font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:1.25rem}
 .f-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
-.f-col ul a{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.28);transition:color .2s;display:block}
+.f-col ul a{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.62);transition:color .2s;display:block}
 .f-col ul a:hover{color:var(--gold2)}
 .footer-bottom{max-width:1320px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
 .footer-bottom p{font-size:.72rem;font-weight:300}
@@ -611,7 +612,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 
 /* RESPONSIVE */
 @media(max-width:960px){
-  .nav-links,.nav-cta{display:none}
+  .nav-links,.nav-cta,.nav-right{display:none}
   .burger{display:flex}
   .nav-logo-img{height:36px;max-width:185px}
   .pk-grid,.tarief-cards,.wb-inner,.calc-inner,.over-hero-inner,.story-inner,.contact-hero-inner,.contact-inner,.testi-grid,.blog-grid,.statement-inner,.footer-grid,.values-grid{grid-template-columns:1fr}
@@ -725,7 +726,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .hero-pill,.hero-sub,.hero-actions,.hero h1 .hl{opacity:1!important}
+  .hero-pill,.hero-sub,.hero-actions,.hero-micro,.hero h1 .hl{opacity:1!important}
   .hero-bridge{opacity:1!important}
   .hero-bridge-m{opacity:.6!important}
   .hb-cable{stroke-dashoffset:0!important}
@@ -1087,3 +1088,85 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .btn:focus-visible,.nav-cta:focus-visible{outline-offset:4px}
 .nav-links a:focus-visible{outline:none}
 .nav-links a:focus-visible::after{transform:scaleX(1)}
+
+/* ============================================================================
+   STRAK-CUT — minimalistische landingscomponenten (juni 2026)
+   Alleen homepage-specifieke, nieuwe classes + nauwkeurig gescopete overrides.
+   Gedeelde stylesheet: niets wat andere pagina's gebruiken wordt aangeraakt.
+   ============================================================================ */
+
+/* Header — Inloggen als discrete tekstlink naast de knop (homepage) */
+.nav-right{display:flex;align-items:center;gap:1.4rem}
+.nav-right .nav-cta{margin-left:0}
+@media(max-width:960px){.nav-right{display:none}}
+.nav-login{font-size:.72rem;font-weight:450;letter-spacing:.155em;text-transform:uppercase;color:rgba(255,255,255,.72);text-shadow:0 1px 6px rgba(0,0,0,.35);transition:color .25s var(--ease);white-space:nowrap}
+.nav-login:hover{color:var(--gold2)}
+
+/* Hero — stille microregel + onopvallende tekstlink */
+.hero-micro{font-size:.72rem;letter-spacing:.04em;color:rgba(255,255,255,.5);margin-top:1.75rem}
+.hero-textlink{display:inline-flex;align-items:center;gap:.5rem;font-size:.8rem;font-weight:500;letter-spacing:.03em;color:rgba(255,255,255,.78);transition:color .25s var(--ease)}
+.hero-textlink .arr{display:inline-block;transition:transform .3s var(--ease)}
+.hero-textlink:hover{color:var(--gold2)}
+.hero-textlink:hover .arr{transform:translateX(5px)}
+
+/* Wat wij doen — disciplines als rustige haarlijnlijst (geen kaarten) */
+.disc-section{background:var(--cream)}
+.disc-wrap{max-width:var(--maxw,1140px);margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem)}
+.disc-head{max-width:46rem;margin-bottom:clamp(2.5rem,5vw,4.5rem)}
+.disc-head .rule{margin:1.25rem 0 1.75rem}
+.disc-head h2{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:300;line-height:1.12;letter-spacing:-.01em;color:var(--ink)}
+.disc-head h2 em{font-style:italic;color:var(--gold-text)}
+.disc-head p{margin-top:1.25rem;font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink3);max-width:54ch}
+.disc-list{border-top:1px solid var(--line)}
+.disc-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:clamp(1.25rem,3vw,2.75rem);padding:clamp(1.6rem,3.2vw,2.4rem) 0;border-bottom:1px solid var(--line);color:var(--ink);transition:padding-left .4s var(--ease)}
+.disc-row:hover{padding-left:.6rem}
+.disc-n{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--gold);letter-spacing:.04em;line-height:1}
+.disc-main{display:flex;flex-direction:column;gap:.45rem}
+.disc-title{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.1rem);font-weight:300;line-height:1.05;letter-spacing:-.01em;color:var(--ink);transition:color .25s var(--ease)}
+.disc-desc{font-size:.98rem;font-weight:300;line-height:1.55;color:var(--ink3);max-width:56ch}
+.disc-arr{font-size:1.3rem;color:var(--ink4);transition:color .25s var(--ease),transform .35s var(--ease)}
+.disc-row:hover .disc-title{color:var(--gold-text)}
+.disc-row:hover .disc-arr{color:var(--gold);transform:translateX(5px)}
+
+/* Eén getuigenis — groot, rustig, serif */
+.testi-single{max-width:880px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.75rem}
+.testi-single .t-eyebrow{color:var(--gold-ink)}
+.testi-single blockquote{font-family:var(--serif);font-size:clamp(1.7rem,3.4vw,2.55rem);font-weight:300;font-style:italic;line-height:1.32;letter-spacing:-.01em;color:var(--ink2);margin:0;text-wrap:balance}
+.testi-single figcaption{display:flex;flex-direction:column;gap:.25rem}
+.testi-single .testi-name{font-size:.85rem;font-weight:600;letter-spacing:.04em;color:var(--ink2)}
+.testi-single .testi-meta{font-size:.78rem;font-weight:300;color:var(--ink4)}
+
+/* Werkgebied — slanke variant zonder kaart, één kolom (homepage) */
+.wb-slim .wb-inner{grid-template-columns:1fr;max-width:760px;gap:0}
+
+/* Slot-CTA — navy variant, uitsluitend op de homepage (.cta-band blijft elders goud) */
+.cta-band--navy{background:var(--navy);position:relative}
+.cta-band--navy::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:48px;height:1px;background:var(--gold);opacity:.55}
+.cta-band--navy .cta-inner h2{color:#fff}
+.cta-band--navy .cta-inner h2 em{font-style:italic;color:var(--gold2)}
+
+/* Footer — contactregel + subtiel platformsignaal (homepage) */
+.f-contact{display:flex;flex-direction:column;gap:.35rem;margin-top:1.1rem;font-size:.85rem}
+.f-contact a{display:inline-block;padding:6px 0;color:rgba(255,255,255,.78);transition:color .25s var(--ease)}
+.f-contact a:hover{color:var(--gold2)}
+.f-platform{font-size:.72rem;color:rgba(255,255,255,.5);margin-top:.5rem;letter-spacing:.02em}
+
+/* Mobiel — disciplinelijst en getuigenis ademen, ruime tap-targets */
+@media(max-width:560px){
+  .disc-row{column-gap:1rem;padding:1.4rem 0}
+  .disc-title{font-size:1.4rem}
+  .testi-single blockquote{font-size:1.5rem}
+}
+
+/* Mobiele sticky CTA — stille balk onderaan (homepage) */
+.smcta{display:none}
+@media(max-width:600px){
+  .smcta{display:flex;align-items:stretch;position:fixed;left:0;right:0;bottom:0;z-index:850;gap:.5rem;background:rgba(11,30,48,.97);backdrop-filter:blur(12px) saturate(135%);-webkit-backdrop-filter:blur(12px) saturate(135%);border-top:1px solid rgba(var(--gold-rgb),.32);padding:.55rem .8rem calc(.55rem + env(safe-area-inset-bottom))}
+  .smcta-primary,.smcta-call{display:flex;align-items:center;justify-content:center;gap:.4rem;min-height:46px;font-size:.74rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:background .25s var(--ease),color .25s var(--ease)}
+  .smcta-primary{flex:1;background:var(--gold);color:var(--navy)}
+  .smcta-primary:hover{background:var(--gold2)}
+  .smcta-call{flex:0 0 30%;color:var(--gold2);border:1px solid rgba(var(--gold-rgb),.45)}
+  .smcta-call:hover{color:var(--gold);border-color:var(--gold)}
+  body.no-scroll .smcta{display:none}
+  #pg-home ~ footer{padding-bottom:5.5rem}
+}

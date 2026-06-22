@@ -44,5 +44,26 @@ cp -R assets website-online/assets
 rm -f website-online/assets/logo-light-fullres.png website-online/assets/logo-light-original.png website-online/assets/logo-dark-original.png website-online/assets/homeinn-logo-new.png
 cp -R fotos website-online/fotos 2>/dev/null || true
 cp -R fonts website-online/fonts 2>/dev/null || true
+
+# ── Minify CSS + publieke JS in de bundel (de bronbestanden blijven leesbaar) ──
+# Verkleint de render-blocking stylesheet → betere Lighthouse/LCP. Gebruikt esbuild
+# via npx en slaat NETJES over als esbuild/internet ontbreekt (bundel werkt dan
+# gewoon ongeminificeerd). app.js / cloud.js (portaal) worden bewust niet geraakt.
+if command -v npx >/dev/null 2>&1; then
+  echo "Minify CSS/JS in bundel…"
+  for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js; do
+    [ -f "website-online/$f" ] || continue
+    if npx --yes esbuild "website-online/$f" --minify --outfile="website-online/$f.min" >/dev/null 2>&1; then
+      mv "website-online/$f.min" "website-online/$f"
+      echo "  ✓ $f geminificeerd"
+    else
+      rm -f "website-online/$f.min"
+      echo "  ⤬ $f overgeslagen (esbuild niet beschikbaar)"
+    fi
+  done
+else
+  echo "npx/esbuild niet gevonden — minify overgeslagen (bundel werkt ongeminificeerd)."
+fi
+
 echo "Klaar: upload de inhoud van 'website-online' naar je hosting."
 open website-online

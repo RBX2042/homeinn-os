@@ -24,16 +24,51 @@
   <meta name="twitter:title" content="HomeINN — Aankoop, ontwikkeling, verkoop, verhuur &amp; beheer van vastgoed">
   <meta name="twitter:description" content="HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt, verhuurt of beheert ze. Voorstel binnen 48 uur.">
   <meta name="twitter:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "RealEstateAgent",
+        "@id": "https://home-inn.nl/#organisatie",
+        "name": "HomeINN",
+        "url": "https://home-inn.nl/",
+        "logo": "https://home-inn.nl/assets/favicon-512.png?v=20260616g",
+        "image": "https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g",
+        "description": "HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt, verhuurt of beheert ze. Voorstel binnen 48 uur.",
+        "telephone": "+31626257071",
+        "email": "info@homeinn.nl",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Rotterdam",
+          "addressRegion": "Zuid-Holland",
+          "addressCountry": "NL"
+        },
+        "areaServed": "Rotterdam en omstreken",
+        "sameAs": [
+          "https://www.facebook.com/profile.php?id=61591037544281",
+          "https://www.instagram.com/homeinn_b.v/"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://home-inn.nl/#website",
+        "url": "https://home-inn.nl/",
+        "name": "HomeINN",
+        "inLanguage": "nl-NL",
+        "publisher": { "@id": "https://home-inn.nl/#organisatie" }
+      }
+    ]
+  }
+  </script>
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260616g">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260622">
 </head>
 <body>
 <a class="skip-link" href="#main">Naar de inhoud</a>
-<div id="cur"><div id="cur-dot"></div></div>
-<div id="cur-ring"><div id="cur-ring-inner"></div></div>
 
 <!-- ═══ ICOON-SPRITE (line-art, currentColor, herbruikbaar via <use>) ═══ -->
 <svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
@@ -178,14 +213,13 @@
   <ul class="nav-links">
     <li><a href="pand-verkopen.html" data-p="verkopen">Pand verkopen</a></li>
     <li><a href="te-koop.html" data-p="aanbod">Te koop</a></li>
-    <li><a href="verhuur.html" data-p="huren">Te huur</a></li>
-    <li><a href="projecten.html" data-p="projecten">Projecten</a></li>
     <li><a href="#diensten" data-p="diensten">Diensten</a></li>
     <li><a href="over-ons.html" data-p="over">Over ons</a></li>
-    <li><a href="contact.html" data-p="contact">Contact</a></li>
-    <li><a href="inloggen.html">Inloggen</a></li>
   </ul>
-  <button class="nav-cta" onclick="openModal()">Gratis gesprek</button>
+  <div class="nav-right">
+    <a class="nav-login" href="inloggen.html">Inloggen</a>
+    <button class="nav-cta" onclick="openModal()">Gratis gesprek</button>
+  </div>
   <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
 </header>
 <div id="scrollbar"></div>
@@ -216,7 +250,7 @@
      HOME
 ══════════════════════════════════════ -->
 <span id="main" tabindex="-1"></span>
-<div class="pg on" id="pg-home">
+<div class="pg on" id="pg-home" role="main">
 
 <section class="hero">
   <div class="hero-bg"></div>
@@ -291,34 +325,16 @@
         <span>Aankoop · Ontwikkeling · Verkoop · Verhuur · Beheer — Rotterdam e.o.</span>
       </div>
       <h1><span class="hl">Van aankoop</span><span class="hl">tot oplevering.</span><span class="hl">Met <em>HomeINN.</em></span></h1>
-      <p class="hero-sub">HomeINN koopt panden direct aan, ontwikkelt ze tot hoogwaardige woningen en verkoopt, verhuurt of beheert ze daarna. Eén partner voor de hele vastgoedcyclus — met eigen kapitaal, een vast uitvoeringsteam en diepe Rotterdamse marktkennis.</p>
+      <p class="hero-sub">Wij kopen panden direct aan, ontwikkelen ze tot hoogwaardige woningen en verkopen, verhuren of beheren ze daarna.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="pand-verkopen.html">Verkoop uw pand aan ons <span class="arr">→</span></a>
-        <a class="btn btn-outline-light" href="#diensten">Bekijk wat wij doen</a>
+        <a class="hero-textlink" href="#diensten">Bekijk wat wij doen <span class="arr">→</span></a>
       </div>
+      <p class="hero-micro">Voorstel binnen 48 uur · Eigen kapitaal · Geen financieringsvoorbehoud</p>
     </div>
   </div>
   <div class="hero-scroll-ind"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
-
-<div class="mq">
-  <div class="mq-track">
-    <div class="mq-item">Directe aankoop<div class="mq-sep"></div>Voorstel binnen 48 uur</div>
-    <div class="mq-item">Projectontwikkeling<div class="mq-sep"></div>Van casco tot instapklaar</div>
-    <div class="mq-item">Verkoop<div class="mq-sep"></div>Gerenoveerd &amp; gekeurd aanbod</div>
-    <div class="mq-item">Verhuur<div class="mq-sep"></div>Eigen huurwoningen &amp; voor eigenaren</div>
-    <div class="mq-item">Vastgoedbeheer<div class="mq-sep"></div>Rust voor eigenaren</div>
-    <div class="mq-item">Eigen kapitaal<div class="mq-sep"></div>Geen financieringsvoorbehoud</div>
-    <div class="mq-item">Rotterdam &amp; regio<div class="mq-sep"></div>Lokaal verankerd</div>
-    <div class="mq-item">Directe aankoop<div class="mq-sep"></div>Voorstel binnen 48 uur</div>
-    <div class="mq-item">Projectontwikkeling<div class="mq-sep"></div>Van casco tot instapklaar</div>
-    <div class="mq-item">Verkoop<div class="mq-sep"></div>Gerenoveerd &amp; gekeurd aanbod</div>
-    <div class="mq-item">Verhuur<div class="mq-sep"></div>Eigen huurwoningen &amp; voor eigenaren</div>
-    <div class="mq-item">Vastgoedbeheer<div class="mq-sep"></div>Rust voor eigenaren</div>
-    <div class="mq-item">Eigen kapitaal<div class="mq-sep"></div>Geen financieringsvoorbehoud</div>
-    <div class="mq-item">Rotterdam &amp; regio<div class="mq-sep"></div>Lokaal verankerd</div>
-  </div>
-</div>
 
 <!-- STATEMENT -->
 <div class="statement">
@@ -345,44 +361,42 @@
 </section>
 
 
-<!-- PIJLERS -->
-<section class="values-section section-sm" id="diensten">
-  <div class="cyclus-wrap rv">
-    <div class="cyclus-copy">
+<!-- WAT WIJ DOEN -->
+<section class="disc-section section-sm" id="diensten">
+  <div class="disc-wrap">
+    <div class="disc-head rv">
       <span class="t-eyebrow">Wat wij doen</span>
       <div class="rule"></div>
       <h2>Vijf disciplines.<br>Eén <em>doorlopende cyclus.</em></h2>
-      <p>De meeste partijen pakken één schakel: de makelaar bemiddelt, de beheerder administreert, de ontwikkelaar bouwt. HomeINN doorloopt de héle cyclus zelf — met eigen kapitaal en één vast team. Elke fase voedt de volgende.</p>
-      <ul class="cyclus-legend">
-        <li><span class="cl-n">01</span><span><b>Aankoop</b> — wij kopen uw pand direct, in elke staat.</span></li>
-        <li><span class="cl-n">02</span><span><b>Ontwikkeling</b> — renovatie en verduurzaming naar label A.</span></li>
-        <li><span class="cl-n">03</span><span><b>Verkoop</b> — instapklaar, gekeurd en energiezuinig opgeleverd.</span></li>
-        <li><span class="cl-n">04</span><span><b>Verhuur</b> — eigen huurwoningen én verhuur namens eigenaren.</span></li>
-        <li><span class="cl-n">05</span><span><b>Beheer</b> — wij beheren het alsof het ons eigen pand is.</span></li>
-      </ul>
+      <p>De meeste partijen pakken één schakel. HomeINN doorloopt de héle cyclus zelf — met eigen kapitaal en één vast team. Elke fase voedt de volgende.</p>
     </div>
-    <div class="cyclus-stage" role="img" aria-label="De vijf disciplines van HomeINN: aankoop, ontwikkeling, verkoop, verhuur en beheer als één doorlopende cyclus">
-      <svg class="cyclus-ring-svg" viewBox="0 0 100 100" aria-hidden="true">
-        <circle class="cr-ring" cx="50" cy="50" r="42"/>
-        <circle class="cr-ring-dash" cx="50" cy="50" r="33"/>
-      </svg>
-      <div class="cyclus-ctr">
-        <span class="cc-eyebrow">HomeINN</span>
-        <span class="cc-word">Eén <em>huis</em></span>
-      </div>
-      <div class="cyc-node cn-1"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">01</span><span class="cyc-name">Aankoop</span></div></div>
-      <div class="cyc-node cn-2"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">02</span><span class="cyc-name">Ontwikkeling</span></div></div>
-      <div class="cyc-node cn-3"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-verkoop"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">03</span><span class="cyc-name">Verkoop</span></div></div>
-      <div class="cyc-node cn-4"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-sleutel"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">04</span><span class="cyc-name">Verhuur</span></div></div>
-      <div class="cyc-node cn-5"><div class="cyc-bubble"><span class="hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-beheer"/></svg></span></div><div class="cyc-cap"><span class="cyc-num">05</span><span class="cyc-name">Beheer</span></div></div>
+    <div class="disc-list rv-stagger">
+      <a class="disc-row" href="pand-verkopen.html">
+        <span class="disc-n">01</span>
+        <span class="disc-main"><span class="disc-title">Aankoop</span><span class="disc-desc">Wij kopen uw pand direct — in elke staat, ook verhuurd. Een onderbouwd voorstel binnen 48 uur.</span></span>
+        <span class="disc-arr" aria-hidden="true">→</span>
+      </a>
+      <a class="disc-row" href="projectontwikkeling.html">
+        <span class="disc-n">02</span>
+        <span class="disc-main"><span class="disc-title">Ontwikkeling</span><span class="disc-desc">Volledige renovatie, herindeling en verduurzaming naar energielabel A, met een vast uitvoeringsteam.</span></span>
+        <span class="disc-arr" aria-hidden="true">→</span>
+      </a>
+      <a class="disc-row" href="te-koop.html">
+        <span class="disc-n">03</span>
+        <span class="disc-main"><span class="disc-title">Verkoop</span><span class="disc-desc">Onze ontwikkelde woningen komen instapklaar, bouwkundig gekeurd en energiezuinig op de markt.</span></span>
+        <span class="disc-arr" aria-hidden="true">→</span>
+      </a>
+      <a class="disc-row" href="verhuur.html">
+        <span class="disc-n">04</span>
+        <span class="disc-main"><span class="disc-title">Verhuur</span><span class="disc-desc">Eigen huurwoningen én verhuur namens eigenaren — van advertentie tot getekend huurcontract.</span></span>
+        <span class="disc-arr" aria-hidden="true">→</span>
+      </a>
+      <a class="disc-row" href="vastgoedbeheer.html">
+        <span class="disc-n">05</span>
+        <span class="disc-main"><span class="disc-title">Beheer</span><span class="disc-desc">Wij beheren uw vastgoed met vaste pakketten en één aanspreekpunt, alsof het ons eigen pand is.</span></span>
+        <span class="disc-arr" aria-hidden="true">→</span>
+      </a>
     </div>
-  </div>
-  <div class="values-grid five rv-stagger">
-    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></div><div class="val-eyebrow">01 — Aankoop</div><h3>Wij kopen uw pand. Direct.</h3><p>Woningen, appartementen en portiekpanden — in elke staat, ook verhuurd. Geen makelaarskosten, geen bezichtigingscircus: een onderbouwd voorstel binnen 48 uur en passeren op het moment dat ú kiest.</p><a class="pillar-cta" href="pand-verkopen.html">Pand verkopen →</a></div>
-    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></div><div class="val-eyebrow">02 — Projectontwikkeling</div><h3>Van gedateerd naar instapklaar</h3><p>Volledige renovaties, herindelingen en verduurzaming naar energielabel A — met een vast team van aannemers en installateurs en strakke budget- en planningsbewaking.</p><a class="pillar-cta" href="projectontwikkeling.html">Bekijk projectontwikkeling →</a></div>
-    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-verkoop"/></svg></div><div class="val-eyebrow">03 — Verkoop</div><h3>Gerenoveerd &amp; gekeurd aanbod</h3><p>Onze ontwikkelde woningen komen instapklaar op de markt: bouwkundig gekeurd, energiezuinig en zonder verrassingen achter de muren. Interesse in ons aanbod? Laat het ons weten.</p><a class="pillar-cta" href="te-koop.html">Bekijk het aanbod →</a></div>
-    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-sleutel"/></svg></div><div class="val-eyebrow">04 — Verhuur</div><h3>Eigen huurwoningen &amp; verhuurservice</h3><p>Wij verhuren onze eigen woningen én vinden, screenen en plaatsen huurders namens eigenaren — van professionele advertentie tot getekend huurcontract en sleuteloverdracht.</p><a class="pillar-cta" href="verhuur.html">Bekijk huuraanbod →</a></div>
-    <div class="val-card"><div class="disc-ico hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-beheer"/></svg></div><div class="val-eyebrow">05 — Vastgoedbeheer</div><h3>Rust voor eigenaren</h3><p>Niet verkopen maar verhuren? Wij beheren uw vastgoed met vaste pakketten, transparante tarieven en één aanspreekpunt — van huurincasso tot 24/7 storingslijn.</p><a class="pillar-cta" href="vastgoedbeheer.html">Beheerpakketten →</a></div>
   </div>
 </section>
 
@@ -429,92 +443,14 @@
   <div style="max-width:1320px;margin:2.5rem auto 0"><a class="btn btn-outline-dark rv" href="te-koop.html">Bekijk het actuele aanbod <span class="arr">→</span></a></div>
 </section>
 
-<!-- PAKKETTEN -->
-<div class="pakketten-bg">
-  <div class="pakketten-head">
-    <div>
-      <span class="t-eyebrow rv" style="color:rgba(var(--gold-rgb),.7)">Vastgoedbeheer</span>
-      <h2 class="rv" style="margin-top:.75rem">Niet verkopen,<br>maar <em>verhuren?</em></h2>
-    </div>
-    <p class="rv d1">Dan beheren wij uw vastgoed met drie heldere pakketten. Elk pakket is gebouwd op het vorige — u start waar ú wilt en groeit wanneer u er klaar voor bent.</p>
-  </div>
-  <div class="pk-grid">
-    <div class="pk rv">
-      <div class="pk-top-line"></div>
-      <div class="pk-num">01 — Core Management</div>
-      <div class="pk-name">Administratief Beheer</div>
-      <div class="pk-sub">"De basis goed geregeld — elke maand opnieuw"</div>
-      <div class="pk-price"><span class="pk-pct">5%</span><span class="pk-pct-lbl">van de kale huur</span></div>
-      <div class="pk-min">Minimumtarief: <strong>€ 95,- per object per maand</strong> (excl. btw)</div>
-      <ul class="pk-list">
-        <li><span class="pk-check on"></span>Huurcontracten opstellen en beheren</li>
-        <li><span class="pk-check on"></span>Maandelijkse huurincasso</li>
-        <li><span class="pk-check on"></span>Debiteurenbeheer en aanmaningen</li>
-        <li><span class="pk-check on"></span>Jaarlijkse huurindexering (CBS-index)</li>
-        <li><span class="pk-check on"></span>Maandelijkse financiële rapportage</li>
-        <li><span class="pk-check on"></span>Eigenaar-portaal, 24/7 inzage</li>
-        <li><span class="pk-check on"></span>Communicatie huurder (administratief)</li>
-        <li><span class="pk-check on"></span>Document- en verzekeringsbeheer</li>
-        <li class="dim"><span class="pk-check"></span>Technisch en onderhoudsbeheer</li>
-        <li class="dim"><span class="pk-check"></span>24/7 storingslijn voor huurders</li>
-      </ul>
-      <button class="pk-cta" onclick="openModal()">Start met Core Management <span class="pk-cta-arr">→</span></button>
-    </div>
-    <div class="pk featured rv d1">
-      <div class="pk-top-line"></div>
-      <div class="pk-tag">Meest gekozen</div>
-      <div class="pk-num">02 — Full Operational</div>
-      <div class="pk-name">Volledig Beheer</div>
-      <div class="pk-sub">"Uw vastgoed werkt voor u — niet andersom"</div>
-      <div class="pk-price"><span class="pk-pct">8%</span><span class="pk-pct-lbl">van de kale huur</span></div>
-      <div class="pk-min">Minimumtarief: <strong>€ 135,- per object per maand</strong> (excl. btw)</div>
-      <ul class="pk-list">
-        <li><span class="pk-check on"></span>Alles uit Core Management</li>
-        <li><span class="pk-check on"></span>24/7 storingslijn voor huurders</li>
-        <li><span class="pk-check on"></span>Technisch en onderhoudsbeheer</li>
-        <li><span class="pk-check on"></span>Gegarandeerde responstijden (SLA)</li>
-        <li><span class="pk-check on"></span>In- en uittrede-inspecties — € 125,- p. inspectie</li>
-        <li><span class="pk-check on"></span>Sleutelbeheer en toegangscoördinatie</li>
-        <li><span class="pk-check on"></span>VvE- en leverancierscontact</li>
-        <li><span class="pk-check on"></span>Leegstandsbeheer en herplaatsing</li>
-        <li><span class="pk-check on"></span>Kwartaalrapportage per object</li>
-        <li><span class="pk-check on"></span>Jaarlijkse objectcontrole</li>
-      </ul>
-      <button class="pk-cta" onclick="openModal()">Start met Full Operational <span class="pk-cta-arr">→</span></button>
-    </div>
-    <div class="pk rv d2">
-      <div class="pk-top-line"></div>
-      <div class="pk-num">03 — Performance Partner</div>
-      <div class="pk-name">Strategisch Partnerschap</div>
-      <div class="pk-sub">"Wij investeren in uw vastgoed alsof het het onze is"</div>
-      <div class="pk-price"><span class="pk-pct" style="font-size:2.75rem">8%+</span><span class="pk-pct-lbl">beheer<br>+ 20% op huurstijging (jaar 1)<br>+ 10% op gerealiseerde meerwaarde</span></div>
-      <div class="pk-min">HomeINN draagt <strong>tot 50% van projectkosten</strong> — geen lening, co-investering</div>
-      <ul class="pk-list">
-        <li><span class="pk-check on"></span>Alles uit Full Operational</li>
-        <li><span class="pk-check on"></span>Grondige portefeuilleanalyse en benchmark</li>
-        <li><span class="pk-check on"></span>WWS-puntentelling en rendementsoptimalisatie</li>
-        <li><span class="pk-check on"></span>Begeleiding renovatie- en verbetertrajecten</li>
-        <li><span class="pk-check on"></span>Co-investering tot 50% projectkosten</li>
-        <li><span class="pk-check on"></span>Huurprijsoptimalisatie binnen wettelijk kader</li>
-        <li><span class="pk-check on"></span>Kwartaalgesprek strategie en rendement</li>
-        <li><span class="pk-check on"></span>Jaarlijks strategisch portefeuillerapport</li>
-      </ul>
-      <button class="pk-cta" onclick="openModal()">Performance Partner aanvragen <span class="pk-cta-arr">→</span></button>
-    </div>
-  </div>
-  <div class="pakketten-note rv">
-    <p>Pakketten 1 en 2 zijn standaard beheervormen. Pakket 3 wordt altijd gecombineerd met Pakket 2 (Full Operational) en is voor eigenaren die actief willen groeien. Alle tarieven zijn exclusief btw (21%). Uw persoonlijke tarief is afhankelijk van huurprijs en objecttype — vraag een vrijblijvende offerte aan.</p>
-  </div>
-</div>
-
 <!-- WERKGEBIED -->
-<section class="wb-section section">
+<section class="wb-section wb-slim section">
   <div class="wb-inner">
     <div class="wb-text">
       <span class="t-eyebrow rv">Werkgebied</span>
       <div class="rule rv" style="margin-top:1.25rem"></div>
-      <h2 class="rv">Rotterdam<br>& de <em>regio</em></h2>
-      <p class="lead rv d1">HomeINN is diep verankerd in Rotterdam en alle omliggende gemeenten. Lokale aanwezigheid betekent voor u: snellere respons, diepere marktkennis en een leveranciersnetwerk dat bewezen werkt.</p>
+      <h2 class="rv">Rotterdam & de <em>regio</em></h2>
+      <p class="lead rv d1">HomeINN is diep verankerd in Rotterdam en alle omliggende gemeenten. Lokale aanwezigheid betekent snellere respons, diepere marktkennis en een leveranciersnetwerk dat bewezen werkt.</p>
       <ul class="wb-list rv d2">
         <li class="wb-item">
           <div class="wb-item-l"><div class="wb-bullet gold"></div><div><div class="wb-item-name">Rotterdam — alle wijken</div><div class="wb-item-sub">Centrum, Noord, Zuid, Kralingen, Hillegersberg, IJsselmonde, Feijenoord</div></div></div>
@@ -537,96 +473,27 @@
           <span class="wb-pill navy">Actief</span>
         </li>
       </ul>
-    </div>
-    <div class="wb-map rv d1">
-      <svg viewBox="0 0 500 500" style="width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
-        <rect width="500" height="500" fill="#0b1e30"/>
-        <path d="M55 175 Q130 115 225 130 L300 120 Q375 110 425 158 L450 200 Q468 238 448 278 L408 318 Q358 355 292 338 L200 348 Q136 358 90 316 L60 268 Q38 232 50 198 Z" fill="#183450" stroke="#224060" stroke-width="1.2"/>
-        <path d="M150 118 L268 108 L276 158 L144 168 Z" fill="#142e4a" stroke="#224060" stroke-width=".8"/>
-        <path d="M172 298 L298 290 L305 348 L168 357 Z" fill="#142e4a" stroke="#224060" stroke-width=".8"/>
-        <path d="M45 228 Q165 212 298 220 Q390 225 462 248 L462 270 Q390 255 298 248 Q165 240 45 258 Z" fill="#1e5080" opacity=".85"/>
-        <circle cx="234" cy="208" r="16" fill="none" stroke="#b8933a" stroke-width="1.5" opacity=".9"/>
-        <circle cx="234" cy="208" r="6" fill="#b8933a"/>
-        <circle cx="234" cy="208" r="28" fill="none" stroke="#b8933a" stroke-width=".5" opacity=".25"/>
-        <circle cx="146" cy="218" r="7" fill="#2d6090" opacity=".8"/>
-        <circle cx="340" cy="215" r="7" fill="#2d6090" opacity=".8"/>
-        <circle cx="195" cy="314" r="6" fill="#2d6090" opacity=".7"/>
-        <circle cx="350" cy="298" r="6" fill="#2d6090" opacity=".7"/>
-        <circle cx="108" cy="255" r="5" fill="#2d6090" opacity=".6"/>
-        <text x="248" y="203" fill="#b8933a" font-size="10.5" font-weight="600" font-family="Cormorant Garamond,Georgia,serif" text-anchor="middle">Rotterdam</text>
-        <text x="142" y="235" fill="rgba(255,255,255,.42)" font-size="8.5" font-family="sans-serif" text-anchor="middle">Schiedam</text>
-        <text x="344" y="232" fill="rgba(255,255,255,.42)" font-size="8.5" font-family="sans-serif" text-anchor="middle">Capelle</text>
-        <text x="200" y="330" fill="rgba(255,255,255,.42)" font-size="8.5" font-family="sans-serif" text-anchor="middle">Barendrecht</text>
-        <text x="352" y="315" fill="rgba(255,255,255,.42)" font-size="8.5" font-family="sans-serif" text-anchor="middle">Ridderkerk</text>
-        <text x="100" y="272" fill="rgba(255,255,255,.35)" font-size="8" font-family="sans-serif" text-anchor="middle">Vlaardingen</text>
-        <circle cx="28" cy="445" r="5" fill="#b8933a"/><text x="40" y="449" fill="rgba(255,255,255,.42)" font-size="8.5" font-family="sans-serif">Kerngebied</text>
-        <circle cx="28" cy="464" r="5" fill="#2d6090"/><text x="40" y="468" fill="rgba(255,255,255,.42)" font-size="8.5" font-family="sans-serif">Actief werkgebied</text>
-      </svg>
+      <a class="btn btn-outline-dark rv d3" style="margin-top:2.25rem" href="werkgebied.html">Bekijk het volledige werkgebied <span class="arr">→</span></a>
     </div>
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
+<!-- GETUIGENIS -->
 <section class="testi-section section">
   <div class="testi-inner">
-    <div class="testi-head rv">
-      <div>
-        <span class="t-eyebrow">Ervaringen</span>
-        <h2 style="margin-top:.75rem">Wat verkopers en<br>eigenaren <em>zeggen</em></h2>
-      </div>
-    </div>
-    <div class="testi-grid">
-      <div class="testi-card rv">
-        <div class="testi-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-        <p class="testi-quote">"Ik wilde van mijn verhuurde appartement af zonder makelaarsgedoe. HomeINN deed binnen twee dagen een onderbouwd bod, de huurder kon gewoon blijven en vier weken later stond ik bij de notaris. Precies zoals beloofd."</p>
-        <div class="testi-person"><div class="testi-avatar">MV</div><div><div class="testi-name">Martijn V.</div><div class="testi-desc">Pand verkocht aan HomeINN · Rotterdam-Noord</div></div></div>
-      </div>
-      <div class="testi-card rv d1">
-        <div class="testi-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-        <p class="testi-quote">"Ik woon in Dubai en mijn woningen staan in Rotterdam. Voorheen had ik een makelaar die nauwelijks reageerde. HomeINN regelt alles — en ik hoef er niet meer naar om te kijken."</p>
-        <div class="testi-person"><div class="testi-avatar">SK</div><div><div class="testi-name">Sofie K.</div><div class="testi-desc">2 woningen · Rotterdam-Zuid</div></div></div>
-      </div>
-      <div class="testi-card rv d2">
-        <div class="testi-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
-        <p class="testi-quote">"Via Performance Partner renoveerden we een leegstaand appartement. HomeINN co-investeerde de helft, begeleidde het hele traject en de huur steeg van € 975,- naar € 1.380,-. Zo voelt echte samenwerking."</p>
-        <div class="testi-person"><div class="testi-avatar">RB</div><div><div class="testi-name">Robert B.</div><div class="testi-desc">7 objecten · Regio Rotterdam</div></div></div>
-      </div>
-    </div>
+    <figure class="testi-single rv">
+      <span class="t-eyebrow">Ervaring</span>
+      <blockquote>“Ik wilde van mijn verhuurde appartement af zonder makelaarsgedoe. HomeINN deed binnen twee dagen een onderbouwd bod, de huurder kon gewoon blijven en vier weken later stond ik bij de notaris. Precies zoals beloofd.”</blockquote>
+      <figcaption><span class="testi-name">Martijn V.</span><span class="testi-meta">Pand verkocht aan HomeINN · Rotterdam-Noord</span></figcaption>
+    </figure>
   </div>
 </section>
 
-<!-- CALCULATOR -->
-<section class="calc-section section">
-  <div class="calc-inner">
-    <div class="calc-text">
-      <span class="t-eyebrow rv" style="color:rgba(var(--gold-rgb),.7)">Bereken uw tarief</span>
-      <div class="rule rv" style="margin-top:1.25rem"></div>
-      <h2 class="rv">Hoeveel betaalt<br>u aan HomeINN<br>per <em>maand?</em></h2>
-      <p class="rv d1">Onze tarieven zijn altijd transparant. Stel uw huurprijs in, kies een pakket en zie direct uw maandkosten en netto-uitbetaling. U betaalt nooit meer dan het percentage of het minimumtarief rechtvaardigt.</p>
-    </div>
-    <div class="calc-box rv d1">
-      <div class="calc-row">
-        <div class="calc-row-label" id="c-slider-lbl">Kale huurprijs / maand <span id="c-huur">€ 1.200</span></div>
-        <input type="range" min="600" max="3000" step="50" value="1200" id="c-slider" aria-labelledby="c-slider-lbl">
-      </div>
-      <div class="calc-toggle">
-        <button class="calc-tog-btn" id="ct-p1" onclick="setPk('p1')">Core Management · 5%</button>
-        <button class="calc-tog-btn on" id="ct-p2" onclick="setPk('p2')">Full Operational · 8%</button>
-      </div>
-      <div class="calc-results">
-        <div class="cr-item"><div class="cr-val" id="c-fee">€ 135</div><div class="cr-lbl">Maandtarief</div></div>
-        <div class="cr-item"><div class="cr-val" id="c-pct">11,3%</div><div class="cr-lbl">Effectief tarief</div></div>
-        <div class="cr-item"><div class="cr-val" id="c-net">€ 1.065</div><div class="cr-lbl">Netto-uitbetaling</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="cta-band">
+<!-- SLOT-CTA -->
+<div class="cta-band cta-band--navy">
   <div class="cta-inner rv">
-    <h2>Uw pand verkopen — of uw vastgoed beter laten renderen?</h2>
-    <button class="btn btn-dark" onclick="openModal()">Gratis kennismakingsgesprek <span class="arr">→</span></button>
+    <h2>Uw pand verkopen — of uw vastgoed beter laten <em>renderen?</em></h2>
+    <button class="btn btn-primary" onclick="openModal()">Gratis kennismakingsgesprek <span class="arr">→</span></button>
   </div>
 </div>
 
@@ -639,46 +506,48 @@
       <div class="f-logo"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" class="f-logo-img" width="247" height="54" loading="lazy" decoding="async"></picture></div>
       <div class="f-tagline">Aankoop · Ontwikkeling · Verkoop · Verhuur · Beheer</div>
       <p class="f-desc">HomeINN koopt, ontwikkelt, verkoopt, verhuurt en beheert vastgoed in Rotterdam en omstreken. Met eigen kapitaal, een vast uitvoeringsteam en één aanspreekpunt.</p>
+      <p class="f-contact">
+        <a href="tel:+31626257071">+31 6 26 25 70 71</a>
+        <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>
+      </p>
       <div class="f-social" aria-label="Volg HomeINN op sociale media">
         <a class="f-social-btn" href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-facebook"/></svg></a>
         <a class="f-social-btn" href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-instagram"/></svg></a>
       </div>
     </div>
-    <div class="f-col"><h5>Diensten</h5><ul>
+    <div class="f-col"><h3>Diensten</h3><ul>
       <li><a href="pand-verkopen.html">Pand verkopen</a></li>
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="te-koop.html">Woningaanbod (te koop)</a></li>
       <li><a href="verhuur.html">Huuraanbod (te huur)</a></li>
-      <li><a href="projecten.html">Projecten volgen &amp; investeren</a></li>
       <li><a href="vastgoedbeheer.html">Vastgoedbeheer &amp; tarieven</a></li>
     </ul></div>
-    <div class="f-col"><h5>Werkgebied</h5><ul>
-      <li><a href="verkopen-kralingen.html">Verkopen in Kralingen</a></li>
-      <li><a href="verkopen-rotterdam-noord.html">Verkopen in Rotterdam-Noord</a></li>
-      <li><a href="verkopen-schiedam.html">Verkopen in Schiedam</a></li>
-      <li><a href="verkopen-capelle-aan-den-ijssel.html">Verkopen in Capelle a/d IJssel</a></li>
-      <li><a href="verkopen-vlaardingen.html">Verkopen in Vlaardingen</a></li>
-    </ul></div>
-    <div class="f-col"><h5>HomeINN</h5><ul>
+    <div class="f-col"><h3>HomeINN</h3><ul>
       <li><a href="over-ons.html">Over ons</a></li>
       <li><a href="werkgebied.html">Werkgebied</a></li>
-      <li><a href="vastgoedbeheer.html">Tarieven</a></li>
+      <li><a href="projecten.html">Projecten &amp; investeren</a></li>
       <li><a href="kennis.html">Kennis</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li><a href="#" onclick="openModal();return false">Gratis gesprek</a></li>
+    </ul></div>
+    <div class="f-col"><h3>Juridisch</h3><ul>
+      <li><a href="privacy.html">Privacybeleid</a></li>
+      <li><a href="voorwaarden.html">Algemene voorwaarden</a></li>
+      <li><a href="cookies.html">Cookiebeleid</a></li>
+      <li><a href="inloggen.html">Inloggen / portaal</a></li>
     </ul></div>
   </div>
   <div class="footer-bottom">
     <p>© 2026 HomeINN — Vastgoedpartner Rotterdam. Alle rechten voorbehouden.</p>
-    <p id="f-legal" style="display:none;font-size:.72rem;opacity:.7;margin-top:.4rem"></p>
-    <div class="footer-links">
-      <a href="privacy.html">Privacybeleid</a>
-      <a href="voorwaarden.html">Algemene voorwaarden</a>
-      <a href="cookies.html">Cookiebeleid</a>
-      <a href="inloggen.html">Inloggen / portaal</a>
-    </div>
+    <p id="f-legal" style="display:none;font-size:.72rem;color:rgba(255,255,255,.6);margin-top:.4rem"></p>
+    <p class="f-platform">Aangedreven door ons eigen platform.</p>
   </div>
 </footer>
+
+<!-- Mobiele sticky CTA — stil, alleen op kleine schermen -->
+<nav class="smcta" aria-label="Snelle acties">
+  <a class="smcta-primary" href="pand-verkopen.html">Pand verkopen <span class="arr">→</span></a>
+  <a class="smcta-call" href="tel:+31626257071" aria-label="Bellen met HomeINN">Bellen</a>
+</nav>
 
 
 <!-- ══════════════════════════════════════
@@ -720,6 +589,6 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="homeinn-public.js?v=20260616g"></script>
+<script src="homeinn-public.js?v=20260622"></script>
 </body>
 </html>

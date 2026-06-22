@@ -1,9 +1,5 @@
 var curPk = 'p2';
-var curX = 0, curY = 0, ringX = 0, ringY = 0;
-var hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 var prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var curEl = document.getElementById('cur');
-var ringEl = document.getElementById('cur-ring');
 var navEl = document.getElementById('nav');
 var mobEl = document.getElementById('mob');
 var burgerEl = document.getElementById('burger');
@@ -11,29 +7,7 @@ var modalEl = document.getElementById('modal');
 var modalFormEl = document.getElementById('mf');
 var modalSuccessEl = document.getElementById('ms');
 
-if (hasFinePointer) {
-  document.body.classList.add('has-custom-cursor');
-}
-
-/* CURSOR */
-if (hasFinePointer && curEl && ringEl) {
-  document.addEventListener('mousemove', e => { curX = e.clientX; curY = e.clientY; });
-  (function raf() {
-    ringX += (curX - ringX) * 0.12;
-    ringY += (curY - ringY) * 0.12;
-    curEl.style.transform = 'translate(' + curX + 'px,' + curY + 'px)';
-    ringEl.style.transform = 'translate(' + Math.round(ringX) + 'px,' + Math.round(ringY) + 'px)';
-    requestAnimationFrame(raf);
-  })();
-  document.querySelectorAll('a,button,.pk,.tc,.testi-card,.blog-card,.wb-item,.pstep').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('c-grow'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('c-grow'));
-  });
-  document.querySelectorAll('input,textarea').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('c-text'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('c-text'));
-  });
-}
+/* Aangepaste cursor verwijderd — een strakke, stille pagina gebruikt de native cursor. */
 
 /* NAV */
 window.addEventListener('scroll', () => {
@@ -175,8 +149,17 @@ function showModalSuccess() {
   document.body.classList.add('no-scroll');
 }
 
+var modalLastFocus = null;
+function getModalFocusable() {
+  if (!modalEl) return [];
+  return Array.prototype.filter.call(
+    modalEl.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]):not([type=hidden]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'),
+    function (el) { return el.offsetParent !== null && el.getAttribute('tabindex') !== '-1'; }
+  );
+}
 function openModal(subject, ref) {
   if (!modalEl || !modalFormEl || !modalSuccessEl) return;
+  modalLastFocus = document.activeElement;
   closeMob();
   modalEl.classList.add('on');
   modalFormEl.style.display = 'block';
@@ -194,12 +177,16 @@ function openModal(subject, ref) {
   }
   var refEl = modalFormEl.querySelector('input[name="meeting_ref"]');
   if (refEl) refEl.value = ref || '';
+  var firstField = modalFormEl.querySelector('#m-naam') || getModalFocusable()[0];
+  if (firstField) { try { firstField.focus(); } catch (_) {} }
 }
 function closeModal() {
   if (!modalEl) return;
   modalEl.classList.remove('on');
   var wdOpen = document.getElementById('woning-detail');
   if (!(wdOpen && wdOpen.classList.contains('on'))) document.body.classList.remove('no-scroll');
+  if (modalLastFocus && typeof modalLastFocus.focus === 'function') { try { modalLastFocus.focus(); } catch (_) {} }
+  modalLastFocus = null;
 }
 if (modalEl) {
   modalEl.addEventListener('click', e => {
@@ -210,6 +197,16 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (modalEl && modalEl.classList.contains('on')) closeModal();
     closeMob();
+    return;
+  }
+  // Focus-trap: houd Tab binnen de geopende modal
+  if (e.key === 'Tab' && modalEl && modalEl.classList.contains('on')) {
+    var f = getModalFocusable();
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (!modalEl.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
 });
 
