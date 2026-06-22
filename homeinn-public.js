@@ -142,6 +142,16 @@ document.addEventListener('DOMContentLoaded', () => {
   var params = new URLSearchParams(window.location.search);
   var formStatus = params.get('form_status');
   var initialView = params.get('view');
+  // De secundaire weergaven zijn nu losse pagina's. Oude ?view=-links netjes
+  // doorsturen naar de echte URL's (backwards compatible voor bookmarks/deellinks).
+  var VIEW_REDIRECT = {
+    verkopen: 'pand-verkopen.html', aanbod: 'te-koop.html', huren: 'verhuur.html',
+    projecten: 'projecten.html', tarieven: 'vastgoedbeheer.html', over: 'over-ons.html',
+    blog: 'kennis.html', contact: 'contact.html', privacy: 'privacy.html',
+    voorwaarden: 'voorwaarden.html', cookies: 'cookies.html'
+  };
+  if (initialView && VIEW_REDIRECT[initialView]) { location.replace(VIEW_REDIRECT[initialView]); return; }
+  if (initialView === 'diensten') { var d = document.getElementById('diensten'); if (d) d.scrollIntoView(); }
   if (document.querySelectorAll('.pg').length) {
     if (initialView && document.getElementById('pg-' + initialView)) {
       go(initialView, false, false);
