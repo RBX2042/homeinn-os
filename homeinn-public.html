@@ -407,7 +407,7 @@
         <div class="sla-row"><span class="sla-row-label">Makelaars- en verkoopkosten</span><span class="sla-tag sla-blue">€ 0</span></div>
         <div class="sla-row"><span class="sla-row-label">Verhuurde staat / onderhoud</span><span class="sla-tag sla-blue">Geen bezwaar</span></div>
         <div class="sla-row"><span class="sla-row-label">Financieringsvoorbehoud</span><span class="sla-tag sla-amber">Niet van toepassing</span></div>
-        <div style="margin-top:1.75rem"><button class="btn btn-primary" onclick="go('verkopen')">Vraag een voorstel aan <span class="arr">→</span></button></div>
+        <div style="margin-top:1.75rem"><a class="btn btn-primary" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div>
       </div>
     </div>
   </div>
@@ -677,7 +677,7 @@
         <div class="sla-row"><span class="sla-row-label">Bezichtigingen</span><span class="sla-tag sla-blue">Eén opname</span></div>
         <div class="sla-row"><span class="sla-row-label">Financieringsvoorbehoud</span><span class="sla-tag sla-amber">Niet van toepassing</span></div>
         <div class="sla-row"><span class="sla-row-label">Passeerdatum</span><span class="sla-tag sla-blue">U kiest</span></div>
-        <div style="margin-top:1.75rem"><button class="btn btn-primary" onclick="openModal()">Vraag een voorstel aan <span class="arr">→</span></button></div>
+        <div style="margin-top:1.75rem"><a class="btn btn-primary" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div>
       </div>
     </div>
   </div>
@@ -745,7 +745,31 @@
   </div>
 </section>
 
-<div class="cta-band"><div class="cta-inner rv"><h2>Vraag vandaag een vrijblijvend voorstel aan voor uw <em>pand.</em></h2><button class="btn btn-dark" onclick="openModal()">Voorstel binnen 48 uur <span class="arr">→</span></button></div></div>
+<section class="wijk-section" style="max-width:1320px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(1.5rem,5vw,5.5rem)">
+  <style>
+    .wijk-grid{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.75rem}
+    .wijk-chip{display:inline-flex;align-items:center;padding:.6rem 1.05rem;border:1px solid var(--cream3);background:var(--panel);color:var(--ink2);font-size:.82rem;font-weight:400;text-decoration:none;transition:border-color .2s,color .2s}
+    .wijk-chip:hover{border-color:var(--gold);color:var(--navy)}
+  </style>
+  <div class="proc-head"><span class="t-eyebrow rv">Werkgebied</span><h2 class="rv">Pand verkopen in <em>uw wijk.</em></h2></div>
+  <p class="rv" style="max-width:60ch;margin-top:1rem;font-weight:300;color:var(--ink3);line-height:1.8">Wij kopen door heel Rotterdam en omstreken. Bekijk hoe een directe verkoop in uw gebied werkt:</p>
+  <div class="wijk-grid rv">
+    <a class="wijk-chip" href="verkopen-rotterdam-noord.html">Rotterdam-Noord</a>
+    <a class="wijk-chip" href="verkopen-rotterdam-zuid.html">Rotterdam-Zuid</a>
+    <a class="wijk-chip" href="verkopen-kralingen.html">Kralingen</a>
+    <a class="wijk-chip" href="verkopen-hillegersberg.html">Hillegersberg</a>
+    <a class="wijk-chip" href="verkopen-ijsselmonde.html">IJsselmonde</a>
+    <a class="wijk-chip" href="verkopen-feijenoord.html">Feijenoord</a>
+    <a class="wijk-chip" href="verkopen-centrum.html">Centrum</a>
+    <a class="wijk-chip" href="verkopen-schiedam.html">Schiedam</a>
+    <a class="wijk-chip" href="verkopen-capelle-aan-den-ijssel.html">Capelle a/d IJssel</a>
+    <a class="wijk-chip" href="verkopen-barendrecht.html">Barendrecht</a>
+    <a class="wijk-chip" href="verkopen-ridderkerk.html">Ridderkerk</a>
+    <a class="wijk-chip" href="verkopen-vlaardingen.html">Vlaardingen</a>
+  </div>
+</section>
+
+<div class="cta-band"><div class="cta-inner rv"><h2>Vraag vandaag een vrijblijvend voorstel aan voor uw <em>pand.</em></h2><a class="btn btn-dark" href="pand-verkopen.html">Voorstel binnen 48 uur <span class="arr">→</span></a></div></div>
 </div><!-- /verkopen -->
 
 
@@ -1612,11 +1636,11 @@
       <li><a href="#" onclick="go('tarieven');return false">Vastgoedbeheer &amp; tarieven</a></li>
     </ul></div>
     <div class="f-col"><h5>Werkgebied</h5><ul>
-      <li><a href="#" onclick="go('contact');return false">Rotterdam</a></li>
-      <li><a href="#" onclick="go('contact');return false">Schiedam</a></li>
-      <li><a href="#" onclick="go('contact');return false">Capelle a/d IJssel</a></li>
-      <li><a href="#" onclick="go('contact');return false">Barendrecht</a></li>
-      <li><a href="#" onclick="go('contact');return false">Vlaardingen</a></li>
+      <li><a href="verkopen-kralingen.html">Verkopen in Kralingen</a></li>
+      <li><a href="verkopen-rotterdam-noord.html">Verkopen in Rotterdam-Noord</a></li>
+      <li><a href="verkopen-schiedam.html">Verkopen in Schiedam</a></li>
+      <li><a href="verkopen-capelle-aan-den-ijssel.html">Verkopen in Capelle a/d IJssel</a></li>
+      <li><a href="verkopen-vlaardingen.html">Verkopen in Vlaardingen</a></li>
     </ul></div>
     <div class="f-col"><h5>HomeINN</h5><ul>
       <li><a href="#" onclick="go('over');return false">Over ons</a></li>
