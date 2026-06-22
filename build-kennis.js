@@ -24,7 +24,7 @@ function esc(s) {
 const CTA = {
   verkopen: { titel: 'Overweegt u uw pand te verkopen?', sub: 'HomeINN koopt direct aan met eigen kapitaal — voorstel binnen 48 uur, zonder makelaarskosten.', label: 'Vraag een voorstel aan', href: 'pand-verkopen.html' },
   beheer:   { titel: 'Uw vastgoed zorgeloos laten beheren?', sub: 'Vaste percentages, één aanspreekpunt en een 24/7 storingslijn. Vraag vrijblijvend advies aan.', label: 'Vraag een offerte aan', href: 'vastgoedbeheer.html#offerte' },
-  gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een gesprek', href: 'homeinn-public.html?view=contact' },
+  gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een gesprek', href: 'contact.html' },
 };
 
 function head(titel, desc, canonical) {
@@ -124,7 +124,7 @@ function head(titel, desc, canonical) {
 function foot() {
   return `  <footer class="kn-foot"><div class="in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand verkopen</a><a href="homeinn-public.html?view=privacy">Privacy</a></nav>
+      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand verkopen</a><a href="privacy.html">Privacy</a></nav>
     </div></footer>
 </body>
 </html>

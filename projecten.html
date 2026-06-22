@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Onze projecten in Rotterdam — van aankoop tot oplevering | HomeINN</title>
+  <meta name="description" content="Volg de vastgoedprojecten van HomeINN in Rotterdam: locatie, planning en voortgang per project — van aankoop tot oplevering. Of doe mee als investeerder.">
+  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <meta name="theme-color" content="#0b1e30">
+  <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="canonical" href="https://home-inn.nl/projecten">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://home-inn.nl/projecten">
+  <meta property="og:site_name" content="HomeINN">
+  <meta property="og:title" content="Onze projecten in Rotterdam — HomeINN">
+  <meta property="og:description" content="Volg locatie, planning en voortgang per project — van aankoop tot oplevering. Of doe mee.">
+  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="tokens.css?v=20260618">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260616g">
+  <style>
+    .pj-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
+    .pj-top .brand img{height:34px;width:auto;display:block}
+    .pj-top .right{display:flex;align-items:center;gap:1.25rem}
+    .pj-top .tel{color:#eaf0f5;text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:.02em;white-space:nowrap}
+    .pj-top .tel strong{color:#fff;font-weight:600}
+    .pj-top .top-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--navy);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:11px 20px}
+    @media(max-width:620px){.pj-top .tel{display:none}}
+    .pj-sec{max-width:1320px;margin:0 auto;padding:clamp(3rem,6vw,5rem) clamp(1.5rem,5vw,5.5rem)}
+    .pj-progress{margin:1rem 0 .4rem;height:5px;background:var(--cream3);overflow:hidden}
+    .pj-progress span{display:block;height:100%;background:var(--gold)}
+    .pj-progress-lbl{font-size:.72rem;color:var(--ink4);letter-spacing:.04em}
+    .pj-plan{font-size:.78rem;color:var(--ink3);margin:.75rem 0 0}
+    .pj-disclaimer{max-width:1320px;margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem)}
+    .pj-disclaimer p{font-size:.82rem;font-weight:300;line-height:1.7;color:var(--ink4);max-width:80ch}
+    .pj-foot{border-top:1px solid var(--line);background:var(--panel)}
+    .pj-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
+    .pj-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
+    .pj-foot .in a:first-child{margin-left:0}
+  </style>
+</head>
+<body>
+  <header class="pj-top">
+    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <div class="right"><a class="tel" href="tel:+31626257071">Liever bellen? <strong>+31 6 26 25 70 71</strong></a><a class="top-cta" href="investeren.html">Meedoen als investeerder</a></div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Projecten · Rotterdam</span>
+        <h1>Onze projecten in Rotterdam — van aankoop tot <em>oplevering</em></h1>
+        <p>Wij ontwikkelen panden van aankoop tot verkoop — en u kijkt mee. Volg de voortgang per project, of doe mee en deel in het resultaat. Transparant, met locatie, planning en updates.</p>
+      </div>
+    </section>
+
+    <section class="pj-sec">
+      <div class="proc-head"><span class="t-eyebrow">Lopend &amp; afgerond</span><h2>Wat wij nu <em>bouwen.</em></h2></div>
+      <div class="blog-grid" id="projecten-grid" style="margin-top:2.5rem"></div>
+    </section>
+
+    <div class="pj-disclaimer"><p>Deelname in een project gebeurt op basis van een onderhandse overeenkomst en persoonlijke kennismaking. Genoemde rendementen zijn indicatief en geen garantie; dit is geen aanbieding van effecten. Vraag altijd de volledige projectinformatie op.</p></div>
+
+    <!-- INVESTEREN-TEASER -->
+    <section class="pj-sec" style="background:var(--cream2);margin-top:clamp(3rem,6vw,5rem)">
+      <div style="max-width:760px">
+        <div class="proc-head"><span class="t-eyebrow">Meedoen</span><h2>Liever niet alleen kijken,<br>maar <em>meedoen?</em></h2></div>
+        <p style="margin:1.5rem 0;font-weight:300;color:var(--ink3);line-height:1.85">U investeert in stenen die wij zelf aankopen, verbouwen met onze vaste bouwpartner en verkopen. Geen fonds, geen tussenlagen — één project, één overeenkomst, één resultaat. Lees hoe meedoen werkt.</p>
+        <a class="btn btn-primary" href="investeren.html">Zo werkt investeren <span class="arr">→</span></a>
+      </div>
+    </section>
+
+    <div class="cta-band"><div class="cta-inner"><h2>Meedoen in ons volgende <em>project?</em></h2><a class="btn btn-dark" href="contact.html">Plan een kennismaking <span class="arr">→</span></a></div></div>
+  </main>
+
+  <footer class="pj-foot">
+    <div class="in">
+      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
+      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="investeren.html">Investeren</a><a href="projectontwikkeling.html">Projectontwikkeling</a><a href="privacy.html">Privacy</a></nav>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"CollectionPage","name":"Projecten — HomeINN Rotterdam","url":"https://home-inn.nl/projecten","inLanguage":"nl-NL","about":"Vastgoedprojecten in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
+  </script>
+
+  <script>
+  (function(){
+    'use strict';
+    function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+    var grid=document.getElementById('projecten-grid');
+    var leeg='<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy);margin:0 0 .5rem">Binnenkort meer projecten</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Wij werken aan onze volgende ontwikkelingen. Plan een kennismaking om als eerste op de hoogte te zijn.</p></div>';
+    if(!grid) return;
+    grid.innerHTML = leeg;
+    fetch('aanbod.json',{cache:'no-store'})
+      .then(function(r){if(!r.ok)throw new Error('geen aanbod.json');return r.json();})
+      .then(function(data){
+        var items=(data&&Array.isArray(data.projecten))?data.projecten:[];
+        if(!items.length){grid.innerHTML=leeg;return;}
+        grid.innerHTML=items.map(function(p){
+          var fotos=Array.isArray(p.fotos)?p.fotos:[];
+          var visual=fotos.length?'<div class="card-visual"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="'+escHtml(fotos[0])+'" alt="'+escHtml(p.titel||p.adres)+'"></div>':'<div class="card-visual" style="background:var(--cream2)"></div>';
+          var vp=Math.max(0,Math.min(100,Number(p.voortgang)||0));
+          var plan=[p.start?('Start '+escHtml(p.start)):'',p.oplevering?('oplevering '+escHtml(p.oplevering)):''].filter(Boolean).join(' · ');
+          var kenmerken=[escHtml(p.plaats),escHtml(p.type)].filter(Boolean).join(' · ');
+          return '<article class="blog-card rv in">'+visual+'<div class="blog-body">'+
+            '<div class="proj-status">'+escHtml(p.status||'In ontwikkeling')+'</div>'+
+            '<h3>'+escHtml(p.titel||p.adres)+'</h3>'+
+            '<p class="aanbod-kenmerken">'+escHtml(p.adres||'')+(kenmerken?(' · '+kenmerken):'')+'</p>'+
+            '<p>'+escHtml((p.omschrijving||'').slice(0,150)+((p.omschrijving||'').length>150?'…':''))+'</p>'+
+            (p.voortgang!=null?'<div class="pj-progress-lbl">Voortgang '+vp+'%</div><div class="pj-progress"><span style="width:'+vp+'%"></span></div>':'')+
+            (plan?'<p class="pj-plan">'+plan+'</p>':'')+
+            '<a class="pillar-cta" href="investeren.html" style="margin-top:1rem">Meedoen in een project →</a>'+
+            '</div></article>';
+        }).join('');
+      })
+      .catch(function(){grid.innerHTML=leeg;});
+  })();
+  </script>
+</body>
+</html>

@@ -18,6 +18,8 @@ cp projectontwikkeling.html website-online/            # dienstenpagina projecto
 cp verhuur.html website-online/                        # dienstenpagina verhuur (huuraanbod + verhuurservice)
 cp kennis.html kennis-*.html website-online/ 2>/dev/null || true # kennis/blog: overzicht + artikelpagina's (build-kennis.js)
 cp te-koop.html woning.html over-ons.html werkgebied.html website-online/ 2>/dev/null || true # aanbod (te koop) + objectdetail + bedrijf
+cp projecten.html investeren.html contact.html website-online/ 2>/dev/null || true # projecten + investeren + contact
+cp privacy.html voorwaarden.html cookies.html website-online/ 2>/dev/null || true # juridisch (build-legal.js)
 cp verkopen-*.html website-online/ 2>/dev/null || true # wijk-/gemeente-spokes (SEO-motor, gegenereerd via build-spokes.js)
 cp inloggen.html inloggen.js website-online/ 2>/dev/null || true
 cp investeerders.html investeerders.js website-online/ 2>/dev/null || true
