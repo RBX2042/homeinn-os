@@ -66,6 +66,8 @@
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
   <link rel="stylesheet" href="homeinn-public.css?v=20260622">
+  <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
+  <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
 <a class="skip-link" href="#main">Naar de inhoud</a>
@@ -343,9 +345,7 @@
     <div class="statement-body">
       <div class="rule rv"></div>
       <h2 class="rv">Eén partner voor de hele vastgoedcyclus. <em>Dat is nieuw.</em></h2>
-      <p class="rv d1">Makelaars bemiddelen. Beheerders administreren. Ontwikkelaars bouwen. Maar geen enkele Rotterdamse partij deed het allemaal — met eigen kapitaal, een vast uitvoeringsteam en eigen verantwoordelijkheid voor het resultaat.</p>
-      <p class="rv d2">HomeINN <strong>koopt panden direct aan</strong> — ook verhuurd of met achterstallig onderhoud — <strong>ontwikkelt</strong> ze tot hoogwaardige, energiezuinige woningen en <strong>verkoopt of verhuurt</strong> ze daarna. Een deel houden we zelf aan en verhuren we; voor eigenaren die niet willen verkopen <strong>beheren</strong> wij de portefeuille alsof het onze eigen panden zijn.</p>
-      <p class="rv d2">Wij zijn geen tussenpartij. Wij zijn de koper, de ontwikkelaar én de beheerder. Dat maakt ons snel, zeker en aanspreekbaar op resultaat.</p>
+      <p class="rv d1">Geen tussenpartij, maar de koper, ontwikkelaar én beheerder in één — met eigen kapitaal en één vast team. Dat maakt ons snel, zeker en aanspreekbaar op resultaat.</p>
       <a class="btn btn-outline-dark rv d3" style="margin-top:.5rem" href="over-ons.html">Ons verhaal <span class="arr">→</span></a>
     </div>
   </div>
@@ -400,33 +400,6 @@
   </div>
 </section>
 
-<!-- PAND VERKOPEN (funnel) -->
-<section class="proc-section" style="background:#fff">
-  <div class="proc-inner">
-    <div class="proc-head">
-      <span class="t-eyebrow rv">Uw pand verkopen</span>
-      <h2 class="rv">Verkocht zonder gedoe.<br><em>In vier stappen.</em></h2>
-    </div>
-    <div class="proc-panel on">
-      <div class="proc-steps">
-        <div class="pstep"><div class="pstep-n">01</div><div class="pstep-body"><strong>Vertel ons over uw pand</strong><span>Telefonisch of via het formulier — adres, staat en uw situatie volstaan</span></div></div>
-        <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Opname binnen enkele dagen</strong><span>Eén bezoek, discreet en zonder verplichtingen — ook bij verhuurde staat</span></div></div>
-        <div class="pstep"><div class="pstep-n">03</div><div class="pstep-body"><strong>Onderbouwd voorstel binnen 48 uur</strong><span>Marktconform en transparant opgebouwd — u beslist in alle rust</span></div></div>
-        <div class="pstep"><div class="pstep-n">04</div><div class="pstep-body"><strong>Passeren bij de notaris</strong><span>Op het moment dat ú kiest — vaak al binnen enkele weken</span></div></div>
-      </div>
-      <div class="proc-aside">
-        <div class="proc-aside-title">Waarom verkopen aan HomeINN?</div>
-        <p class="proc-aside-desc">Wij kopen met eigen kapitaal en zonder financieringsvoorbehoud. Wat wij bieden, betalen wij — zonder makelaarscourtage of verkoopkosten voor u.</p>
-        <div class="sla-row"><span class="sla-row-label">Voorstel</span><span class="sla-tag sla-blue">Binnen 48 uur</span></div>
-        <div class="sla-row"><span class="sla-row-label">Makelaars- en verkoopkosten</span><span class="sla-tag sla-blue">€ 0</span></div>
-        <div class="sla-row"><span class="sla-row-label">Verhuurde staat / onderhoud</span><span class="sla-tag sla-blue">Geen bezwaar</span></div>
-        <div class="sla-row"><span class="sla-row-label">Financieringsvoorbehoud</span><span class="sla-tag sla-amber">Niet van toepassing</span></div>
-        <div style="margin-top:1.75rem"><a class="btn btn-primary" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- RECENT WERK -->
 <section class="blog-section">
   <div style="max-width:1320px;margin:0 auto;padding-bottom:.5rem">
@@ -450,26 +423,26 @@
       <span class="t-eyebrow rv">Werkgebied</span>
       <div class="rule rv" style="margin-top:1.25rem"></div>
       <h2 class="rv">Rotterdam & de <em>regio</em></h2>
-      <p class="lead rv d1">HomeINN is diep verankerd in Rotterdam en alle omliggende gemeenten. Lokale aanwezigheid betekent snellere respons, diepere marktkennis en een leveranciersnetwerk dat bewezen werkt.</p>
+      <p class="lead rv d1">Diep verankerd in Rotterdam en omstreken — lokale kennis en snelle respons.</p>
       <ul class="wb-list rv d2">
         <li class="wb-item">
-          <div class="wb-item-l"><div class="wb-bullet gold"></div><div><div class="wb-item-name">Rotterdam — alle wijken</div><div class="wb-item-sub">Centrum, Noord, Zuid, Kralingen, Hillegersberg, IJsselmonde, Feijenoord</div></div></div>
+          <div class="wb-item-l"><div class="wb-bullet gold"></div><div class="wb-item-name">Rotterdam — alle wijken</div></div>
           <span class="wb-pill gold">Kerngebied</span>
         </li>
         <li class="wb-item">
-          <div class="wb-item-l"><div class="wb-bullet gold"></div><div><div class="wb-item-name">Schiedam</div><div class="wb-item-sub">Direct aansluitend, betaalbaar segment met hoge vraag</div></div></div>
+          <div class="wb-item-l"><div class="wb-bullet gold"></div><div class="wb-item-name">Schiedam</div></div>
           <span class="wb-pill gold">Actief</span>
         </li>
         <li class="wb-item">
-          <div class="wb-item-l"><div class="wb-bullet navy"></div><div><div class="wb-item-name">Capelle aan den IJssel</div><div class="wb-item-sub">Gezinsmarkt, stabiele huurvraag en lage leegstand</div></div></div>
+          <div class="wb-item-l"><div class="wb-bullet navy"></div><div class="wb-item-name">Capelle aan den IJssel</div></div>
           <span class="wb-pill navy">Actief</span>
         </li>
         <li class="wb-item">
-          <div class="wb-item-l"><div class="wb-bullet navy"></div><div><div class="wb-item-name">Barendrecht &amp; Ridderkerk</div><div class="wb-item-sub">Suburbaan, groeiende beleggersmarkt</div></div></div>
+          <div class="wb-item-l"><div class="wb-bullet navy"></div><div class="wb-item-name">Barendrecht &amp; Ridderkerk</div></div>
           <span class="wb-pill navy">Actief</span>
         </li>
         <li class="wb-item">
-          <div class="wb-item-l"><div class="wb-bullet navy"></div><div><div class="wb-item-name">Vlaardingen</div><div class="wb-item-sub">Hoge brutorendementen, toenemende huurvraag</div></div></div>
+          <div class="wb-item-l"><div class="wb-bullet navy"></div><div class="wb-item-name">Vlaardingen</div></div>
           <span class="wb-pill navy">Actief</span>
         </li>
       </ul>
@@ -589,6 +562,6 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="homeinn-public.js?v=20260622"></script>
+<script src="homeinn-public.js?v=20260625"></script>
 </body>
 </html>

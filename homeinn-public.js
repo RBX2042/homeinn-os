@@ -210,8 +210,12 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* REVEAL */
+/* REVEAL — valt "fail-open" terug op zichtbaar als er geen IntersectionObserver is */
 function doReveal() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.rv:not(.in), .rv-stagger:not(.in)').forEach(el => el.classList.add('in'));
+    return;
+  }
   var obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
   }, {threshold: 0.08});
