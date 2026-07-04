@@ -634,6 +634,7 @@
         <label>Adres<input name="address"></label>
       </div>
       <label>Notitie<textarea name="note" rows="2" placeholder="Afspraken, tarieven, specialiteit…"></textarea></label>
+      <label class="check-label"><input type="checkbox" name="geenMailing"> Geen mailings sturen (afgemeld)</label>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
         <button class="btn primary" value="save">Opslaan</button>
@@ -695,7 +696,7 @@
     <form method="dialog" class="modal-card" id="bid-form">
       <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
       <p class="eyebrow">Bod uitbrengen</p>
-      <h2>Bod registreren</h2>
+      <h2 id="bid-modal-title">Bod registreren</h2>
       <input type="hidden" name="dealId">
       <input type="hidden" name="id">
       <div class="form-grid">
@@ -1002,6 +1003,7 @@
         <label>Herhalen t/m<input name="recurrenceEnd" type="date"></label>
       </div>
       <menu>
+        <button class="btn danger" value="delete" id="plan-delete-btn" hidden formnovalidate>Verwijderen</button>
         <button class="btn secondary" value="cancel">Annuleren</button>
         <button class="btn primary" value="save">Opslaan</button>
       </menu>
@@ -1098,7 +1100,7 @@
         <label>Factuurdatum<input name="date" type="date" required></label>
         <label>Vervaldatum<input name="due" type="date"></label>
         <label>Status
-          <select name="status"><option>Concept</option><option>Verzonden</option><option>Betaald</option></select>
+          <select name="status"><option>Concept</option><option>Verzonden</option><option>Herinnering verzonden</option><option>Aanmaning 1</option><option>Aanmaning 2</option><option>Betaald</option></select>
         </label>
       </div>
       <menu>
@@ -1197,6 +1199,27 @@
       </div>
       <label>Notitie<input name="note" placeholder="Bijv. rente Q2 2026"></label>
       <p class="hint">Verschijnt na "Synchroniseer nu" in het portaal van de investeerder.</p>
+      <menu>
+        <button class="btn danger" value="delete" id="payout-delete-btn" hidden formnovalidate>Verwijderen</button>
+        <button class="btn secondary" value="cancel">Annuleren</button>
+        <button class="btn primary" value="save">Opslaan</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="investor-modal">
+    <form method="dialog" class="modal-card" id="investor-form">
+      <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
+      <p class="eyebrow">Investeerder</p>
+      <h2 id="investor-modal-title">Investeerder bewerken</h2>
+      <input type="hidden" name="projectId">
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label>Naam<input name="naam" required></label>
+        <label>E-mail (voor login portaal)<input name="email" type="email"></label>
+        <label>Inleg (€)<input name="bedrag" type="number" min="0" step="any" required></label>
+        <label>Datum van inleg<input name="datum" type="date" required></label>
+      </div>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
         <button class="btn primary" value="save">Opslaan</button>

@@ -299,6 +299,10 @@ tbody tr[data-action]:hover td { background: rgba(var(--gold-rgb),.05); }
 .late-row td { background: rgba(176,58,58,.05); }
 .row-actions { white-space: nowrap; text-align: right; }
 .row-actions .icon-btn { margin-left: 4px; }
+.sub-row td { background: var(--cream2); padding: 6px 10px 12px 28px; border-bottom: 1px solid var(--line); }
+.mini-table { width: 100%; }
+.mini-table th, .mini-table td { padding: 6px 8px; font-size: .84rem; }
+.mini-table th { font-size: .68rem; }
 .row-status { padding: 7px 9px; font-size: .85rem; border-radius: 7px; }
 tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
 

@@ -16,6 +16,8 @@ window.addEventListener('scroll', () => {
     var h = document.documentElement;
     sb.style.transform = 'scaleX(' + Math.min(1, h.scrollTop / ((h.scrollHeight - h.clientHeight) || 1)).toFixed(3) + ')';
   }
+  // Sticky mobiele CTA pas tonen voorbij de hero (de hero heeft zelf al een verkoop-CTA)
+  document.body.classList.toggle('smcta-on', window.scrollY > window.innerHeight * 0.6);
   var n = document.getElementById('nav');
   if (!n) return;
   n.classList.toggle('scrolled', window.scrollY > 50);

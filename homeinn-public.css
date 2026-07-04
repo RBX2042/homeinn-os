@@ -165,11 +165,11 @@ body.hero-ready .hero-pill{animation:heroUp .7s var(--ease-out) .15s both}
 body.hero-ready .hero-sub{animation:heroUp .8s var(--ease-out) .52s both}
 body.hero-ready .hero-actions{animation:heroUp .8s var(--ease-out) .68s both}
 body.hero-ready .hero-micro{animation:heroUp .8s var(--ease-out) .82s both}
-.hero h1 .hl{display:block;opacity:0}
-body.hero-ready .hero h1 .hl{animation:heroUp .85s var(--ease-out) both}
-body.hero-ready .hero h1 .hl:nth-child(1){animation-delay:.28s}
-body.hero-ready .hero h1 .hl:nth-child(2){animation-delay:.4s}
-body.hero-ready .hero h1 .hl:nth-child(3){animation-delay:.54s}
+/* LCP: de h1 is bewust NIET JS-gated — animatie start bij first paint, ook zonder JS */
+.hero h1 .hl{display:block;animation:heroUp .85s var(--ease-out) both}
+.hero h1 .hl:nth-child(1){animation-delay:.28s}
+.hero h1 .hl:nth-child(2){animation-delay:.4s}
+.hero h1 .hl:nth-child(3){animation-delay:.54s}
 @media(scripting:none){.hero-pill,.hero-sub,.hero-actions,.hero-micro,.hero h1 .hl{opacity:1}}
 
 /* MARQUEE */
@@ -540,8 +540,8 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .m2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .m-group{margin-bottom:1.15rem}
 .m-group label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.5rem}
-.m-group input,.m-group select{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--white);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:300;outline:none;transition:border .2s}
-.m-group input:focus,.m-group select:focus{border-color:var(--gold)}
+.m-group input,.m-group select{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--white);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:300;outline:none;transition:border .2s,box-shadow .2s}
+.m-group input:focus,.m-group select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(var(--gold-rgb),.16)}
 .m-submit{width:100%;padding:14px;background:var(--gold);color:var(--navy);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:none!important;margin-top:.75rem;transition:background .25s}
 .m-submit:hover{background:var(--gold2)}
 .m-note{text-align:center;font-size:.7rem;font-weight:300;color:var(--ink4);margin-top:.85rem}
@@ -1114,24 +1114,24 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .disc-wrap{max-width:var(--maxw,1140px);margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem)}
 .disc-head{max-width:46rem;margin-bottom:clamp(2.5rem,5vw,4.5rem)}
 .disc-head .rule{margin:1.25rem 0 1.75rem}
-.disc-head h2{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:300;line-height:1.12;letter-spacing:-.01em;color:var(--ink)}
+.disc-head h2{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:300;line-height:1.12;letter-spacing:-.01em;color:var(--ink2)}
 .disc-head h2 em{font-style:italic;color:var(--gold-text)}
 .disc-head p{margin-top:1.25rem;font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink3);max-width:54ch}
 .disc-list{border-top:1px solid var(--line)}
-.disc-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:clamp(1.25rem,3vw,2.75rem);padding:clamp(1.6rem,3.2vw,2.4rem) 0;border-bottom:1px solid var(--line);color:var(--ink);transition:padding-left .4s var(--ease)}
+.disc-row{display:grid;grid-template-columns:auto 1fr auto;align-items:start;column-gap:clamp(1.25rem,3vw,2.75rem);padding:clamp(1.6rem,3.2vw,2.4rem) 0;border-bottom:1px solid var(--line);color:var(--ink);transition:padding-left .4s var(--ease)}
 .disc-row:hover{padding-left:.6rem}
-.disc-n{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--gold);letter-spacing:.04em;line-height:1}
+.disc-n{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--gold);letter-spacing:.04em;line-height:1;padding-top:.55em}
 .disc-main{display:flex;flex-direction:column;gap:.45rem}
-.disc-title{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.1rem);font-weight:300;line-height:1.05;letter-spacing:-.01em;color:var(--ink);transition:color .25s var(--ease)}
+.disc-title{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.1rem);font-weight:300;line-height:1.05;letter-spacing:-.01em;color:var(--ink2);transition:color .25s var(--ease)}
 .disc-desc{font-size:.98rem;font-weight:300;line-height:1.55;color:var(--ink3);max-width:56ch}
-.disc-arr{font-size:1.3rem;color:var(--ink4);transition:color .25s var(--ease),transform .35s var(--ease)}
+.disc-arr{font-size:1.3rem;color:var(--ink4);align-self:center;transition:color .25s var(--ease),transform .35s var(--ease)}
 .disc-row:hover .disc-title{color:var(--gold-text)}
 .disc-row:hover .disc-arr{color:var(--gold);transform:translateX(5px)}
 
 /* Eén getuigenis — groot, rustig, serif */
 .testi-single{max-width:880px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.75rem}
 .testi-single .t-eyebrow{color:var(--gold-ink)}
-.testi-single blockquote{font-family:var(--serif);font-size:clamp(1.7rem,3.4vw,2.55rem);font-weight:300;font-style:italic;line-height:1.32;letter-spacing:-.01em;color:var(--ink2);margin:0;text-wrap:balance}
+.testi-single blockquote{font-family:var(--serif);font-size:clamp(1.7rem,3.4vw,2.55rem);font-weight:300;font-style:italic;line-height:1.32;letter-spacing:-.01em;color:var(--ink2);margin:0;text-wrap:balance;hanging-punctuation:first allow-end}
 .testi-single figcaption{display:flex;flex-direction:column;gap:.25rem}
 .testi-single .testi-name{font-size:.85rem;font-weight:600;letter-spacing:.04em;color:var(--ink2)}
 .testi-single .testi-meta{font-size:.78rem;font-weight:300;color:var(--ink4)}
@@ -1144,6 +1144,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .cta-band--navy::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:48px;height:1px;background:var(--gold);opacity:.55}
 .cta-band--navy .cta-inner h2{color:#fff}
 .cta-band--navy .cta-inner h2 em{font-style:italic;color:var(--gold2)}
+.cta-band--navy .cta-micro{margin-top:1.1rem;font-size:.8rem;font-weight:300;letter-spacing:.02em;color:rgba(255,255,255,.55)}
 
 /* Footer — contactregel + subtiel platformsignaal (homepage) */
 .f-contact{display:flex;flex-direction:column;gap:.35rem;margin-top:1.1rem;font-size:.85rem}
@@ -1161,7 +1162,8 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 /* Mobiele sticky CTA — stille balk onderaan (homepage) */
 .smcta{display:none}
 @media(max-width:600px){
-  .smcta{display:flex;align-items:stretch;position:fixed;left:0;right:0;bottom:0;z-index:850;gap:.5rem;background:rgba(11,30,48,.97);backdrop-filter:blur(12px) saturate(135%);-webkit-backdrop-filter:blur(12px) saturate(135%);border-top:1px solid rgba(var(--gold-rgb),.32);padding:.55rem .8rem calc(.55rem + env(safe-area-inset-bottom))}
+  .smcta{display:flex;align-items:stretch;position:fixed;left:0;right:0;bottom:0;z-index:850;gap:.5rem;background:rgba(11,30,48,.97);backdrop-filter:blur(12px) saturate(135%);-webkit-backdrop-filter:blur(12px) saturate(135%);border-top:1px solid rgba(var(--gold-rgb),.32);padding:.55rem .8rem calc(.55rem + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .35s var(--ease)}
+  body.smcta-on .smcta{transform:translateY(0)}
   .smcta-primary,.smcta-call{display:flex;align-items:center;justify-content:center;gap:.4rem;min-height:46px;font-size:.74rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:background .25s var(--ease),color .25s var(--ease)}
   .smcta-primary{flex:1;background:var(--gold);color:var(--navy)}
   .smcta-primary:hover{background:var(--gold2)}

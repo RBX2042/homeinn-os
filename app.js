@@ -68,7 +68,12 @@ function fmtMoneyK(n) {
 }
 
 function fmtNum(n, dec = 1) {
-  return (Number(n) || 0).toLocaleString('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: dec });
+  // Rond eerst af op de weergaveprecisie zodat kleine negatieve waarden geen "-0" tonen.
+  let v = Number(n) || 0;
+  const f = Math.pow(10, dec);
+  v = Math.round(v * f) / f;
+  if (v === 0) v = 0; // normaliseert -0 → 0
+  return v.toLocaleString('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: dec });
 }
 
 function daysBetween(isoA, isoB) {
@@ -687,6 +692,7 @@ let currentView = 'dashboard';
 let detailId = { deal: null, property: null, project: null };
 let weekOffset = 0;
 let filters = { portfolio: 'bezit', project: 'actief', cost: 'all', relation: 'all' };
+let pendingLeadForDeal = null; // lead-id dat pas op 'afgehandeld' gaat ná succesvol opslaan van de deal (niet vooraf)
 
 function setView(view, kind = null, id = null) {
   if (!VIEWS[view]) view = 'dashboard';
@@ -747,7 +753,7 @@ function logAudit(action, detail) {
   state.audit.unshift({ id: uid('au'), ts: new Date().toISOString(), user: (window.HCloud && HCloud.status().email) || 'lokaal', action, detail });
   if (state.audit.length > 800) state.audit.length = 800;
 }
-const FORM_LABEL = { 'deal-form': 'aankoopkans', 'property-form': 'pand', 'project-form': 'project', 'cost-form': 'kostenpost', 'invoice-form': 'factuur', 'loan-form': 'lening', 'account-form': 'rekening', 'contact-form': 'relatie', 'plan-form': 'planning', 'contract-form': 'contract', 'sale-form': 'verkoop', 'acquire-form': 'aankoop', 'payout-form': 'uitkering', 'insurance-form': 'verzekering', 'ad-form': 'advertentie' };
+const FORM_LABEL = { 'deal-form': 'aankoopkans', 'property-form': 'pand', 'project-form': 'project', 'cost-form': 'kostenpost', 'invoice-form': 'factuur', 'loan-form': 'lening', 'account-form': 'rekening', 'contact-form': 'relatie', 'plan-form': 'planning', 'contract-form': 'contract', 'sale-form': 'verkoop', 'acquire-form': 'aankoop', 'payout-form': 'uitkering', 'insurance-form': 'verzekering', 'ad-form': 'advertentie', 'offer-form': 'bod', 'bid-form': 'bod', 'viewing-form': 'bezichtiging', 'investor-form': 'investeerder' };
 
 function goTo(target) {
   $('#search-results').hidden = true;
@@ -831,8 +837,10 @@ function renderDashboard() {
   const t = todayISO();
   const inBezit = state.properties.filter(p => p.status !== 'Verkocht');
   const investTotaal = inBezit.reduce((sum, p) => sum + propertyFinance(p).investering, 0);
-  const activeDeals = state.deals.filter(d => !['Aangekocht', 'Afgehaakt'].includes(d.status));
-  const pipelineWinst = activeDeals.reduce((sum, d) => sum + Math.max(0, computeDeal(d.calc).winst), 0);
+  const activeDeals = state.deals.filter(d => DEAL_STAGES.includes(d.status));
+  // Rauwe som (zelfde als de KPI in Aankoopkansen) i.p.v. per-deal geclampt op 0 — anders tonen
+  // dashboard en Aankoopkansen twee verschillende cijfers voor dezelfde pijplijn.
+  const pipelineWinst = activeDeals.reduce((sum, d) => sum + computeDeal(d.calc).winst, 0);
   const teKoop = state.properties.filter(p => p.status === 'Te koop' || p.status === 'Onder bod');
   const teKoopSom = teKoop.reduce((sum, p) => sum + (Number(p.vraagprijs) || Number(p.taxatie) || 0), 0);
   const verkochtDitJaar = state.properties.filter(p => p.status === 'Verkocht' && (p.sale?.date || '').startsWith(String(new Date().getFullYear())));
@@ -862,9 +870,10 @@ function renderDashboard() {
     </article>`).join('')
     : '<p class="empty">Geen openstaande acties. 👌</p>';
 
-  // Planning deze week
-  const weekEnd = addDaysISO(weekStartISO(0), 6);
-  const week = state.planning.filter(pl => pl.date >= weekStartISO(0) && pl.date <= weekEnd)
+  // Planning deze week — via planningOnDay zodat herhalende items ook meetellen
+  const weekStart = weekStartISO(0);
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDaysISO(weekStart, i));
+  const week = weekDays.flatMap(day => planningOnDay(day).map(pl => ({ ...pl, date: day })))
     .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   $('#today-plan').innerHTML = week.length ? week.map(pl => `
     <article class="priority">
@@ -1080,7 +1089,8 @@ function renderDealDetail() {
             <td><select class="row-status" data-action="bid-status" data-id="${d.id}" data-item="${b.id}">
               ${['Uitgebracht', 'Geaccepteerd', 'Afgewezen', 'Verlopen'].map(s => `<option ${b.status === s ? 'selected' : ''}>${s}</option>`).join('')}
             </select></td>
-            <td class="row-actions"><button class="icon-btn" data-action="del-bid" data-id="${d.id}" data-item="${b.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(5, 'Nog geen biedingen uitgebracht.')}</tbody>
+            <td class="row-actions"><button class="icon-btn" data-action="edit-bid" data-id="${d.id}" data-item="${b.id}" title="Bewerken">✎</button>
+            <button class="icon-btn" data-action="del-bid" data-id="${d.id}" data-item="${b.id}" title="Verwijderen">🗑</button></td></tr>`).join('') || emptyRow(5, 'Nog geen biedingen uitgebracht.')}</tbody>
         </table></div>
         <p class="hint">Geaccepteerd bod? Zet de status op "Onder voorbehoud" en rond de aankoop af via "Aangekocht →".</p>
       </section>
@@ -1653,9 +1663,15 @@ const CC_STATES = ['Verstuurd', 'Toegezegd', 'Gestort', 'Te laat'];
 function capitalCallSplit(pr, bedrag) {
   const invs = pr.investeerders || [];
   const totaalInleg = invs.reduce((s, i) => s + (Number(i.bedrag) || 0), 0);
-  return invs.map(i => {
+  let toegewezen = 0;
+  return invs.map((i, idx) => {
     const aandeel = totaalInleg > 0 ? (Number(i.bedrag) || 0) / totaalInleg : (invs.length ? 1 / invs.length : 0);
-    return { investorKey: i.id || i.email || i.naam, naam: i.naam, email: i.email || '', aandeelPct: aandeel * 100, bedragVerschuldigd: Math.round(bedrag * aandeel), status: 'Verstuurd', respondedAt: '' };
+    // De laatste rij krijgt het restbedrag, zodat de som altijd exact het opgeroepen bedrag is
+    // (i.p.v. elk aandeel los af te ronden, wat structureel een paar euro's kan laten verdwijnen).
+    const isLast = idx === invs.length - 1;
+    const bedragVerschuldigd = isLast ? (bedrag - toegewezen) : Math.round(bedrag * aandeel);
+    toegewezen += bedragVerschuldigd;
+    return { investorKey: i.id || i.email || i.naam, naam: i.naam, email: i.email || '', aandeelPct: aandeel * 100, bedragVerschuldigd, status: 'Verstuurd', respondedAt: '' };
   });
 }
 
@@ -1916,13 +1932,21 @@ function renderProjectDetail() {
         <div class="table-wrap"><table>
           <thead><tr><th>Naam</th><th>Inleg</th><th>Rendement/jr</th><th>Uitgekeerd</th><th>Wwft</th><th></th></tr></thead>
           <tbody>${inv.map(i => {
-            const uitbetaald = (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald').reduce((s, u) => s + (Number(u.amount) || 0), 0);
+            const uitkeringen = i.uitkeringen || [];
+            const uitbetaald = uitkeringen.filter(u => u.status === 'Uitbetaald').reduce((s, u) => s + (Number(u.amount) || 0), 0);
+            const uitkRows = uitkeringen.length ? `<tr class="sub-row"><td colspan="6"><div class="table-wrap"><table class="mini-table">
+              <thead><tr><th>Type</th><th>Bedrag</th><th>Datum</th><th>Status</th><th></th></tr></thead>
+              <tbody>${uitkeringen.map(u => `<tr><td>${esc(u.kind || '—')}</td><td>${fmtMoney(u.amount)}</td><td>${fmtDate(u.date)}</td><td>${esc(u.status || '—')}</td>
+                <td class="row-actions"><button class="icon-btn" data-action="edit-payout" data-id="${pr.id}" data-item="${i.id}" data-payout="${u.id}" title="Bewerken">✎</button>
+                <button class="icon-btn" data-action="del-payout" data-id="${pr.id}" data-item="${i.id}" data-payout="${u.id}" title="Verwijderen">🗑</button></td></tr>`).join('')}</tbody>
+            </table></div></td></tr>` : '';
             return `<tr><td>${esc(i.naam)}<br><span class="sub">${fmtDate(i.datum)}</span></td><td><strong>${fmtMoney(i.bedrag)}</strong></td>
             <td>${fmtMoney(Math.round((Number(i.bedrag) || 0) * (rPct || 0) / 100))}</td>
-            <td>${fmtMoney(uitbetaald)}${(i.uitkeringen || []).length ? `<br><span class="sub">${(i.uitkeringen || []).length} uitkering(en)</span>` : ''}</td>
+            <td>${fmtMoney(uitbetaald)}${uitkeringen.length ? `<br><span class="sub">${uitkeringen.length} uitkering(en)</span>` : ''}</td>
             <td><button class="link-toggle ${i.wwft ? 'maint-done' : 'maint-open'}" data-action="wwft-toggle" data-id="${pr.id}" data-item="${i.id}" title="Klik om te wisselen">${i.wwft ? '✔ Geverifieerd' : '⚠ Te doen'}</button></td>
-            <td class="row-actions"><button class="icon-btn" data-action="add-payout" data-id="${pr.id}" data-item="${i.id}" title="Uitkering registreren">€+</button>
-            <button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>`;
+            <td class="row-actions"><button class="icon-btn" data-action="edit-investor" data-id="${pr.id}" data-item="${i.id}" title="Bewerken">✎</button>
+            <button class="icon-btn" data-action="add-payout" data-id="${pr.id}" data-item="${i.id}" title="Uitkering registreren">€+</button>
+            <button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>${uitkRows}`;
           }).join('') || emptyRow(6, 'Nog geen investeerders geregistreerd.')}</tbody>
         </table></div>`;
         })()}
@@ -1930,6 +1954,7 @@ function renderProjectDetail() {
           <input name="naam" placeholder="Naam investeerder…" required>
           <input name="email" type="email" placeholder="E-mail (voor login portaal)">
           <input name="bedrag" type="number" step="any" placeholder="€ inleg" required>
+          <input name="datum" type="date" value="${todayISO()}" title="Datum van inleg">
           <button class="btn primary slim" type="submit">+</button>
         </form>
       </section>
@@ -2058,7 +2083,11 @@ function planningOnDay(day) {
       if (diff >= 0 && diff % step === 0) out.push(pl);
     } else if (pl.recurrence === 'monthly' || pl.recurrence === 'quarterly') {
       const a = new Date(pl.date + 'T12:00:00'), b = new Date(day + 'T12:00:00');
-      if (b.getDate() === a.getDate()) {
+      // Clamp naar de laatste dag van b's maand, zodat een item op de 29e/30e/31e
+      // ook meetelt in kortere maanden (bijv. februari) i.p.v. geruisloos te verdwijnen.
+      const lastDayOfMonth = new Date(b.getFullYear(), b.getMonth() + 1, 0).getDate();
+      const targetDay = Math.min(a.getDate(), lastDayOfMonth);
+      if (b.getDate() === targetDay) {
         const months = (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
         const mstep = pl.recurrence === 'monthly' ? 1 : 3;
         if (months >= 0 && months % mstep === 0) out.push(pl);
@@ -2210,12 +2239,28 @@ function reportData() {
   const soldThisYear = state.properties.filter(p => p.status === 'Verkocht' && (p.sale?.date || '').startsWith(jaar));
 
   const fins = inBezit.map(p => ({ p, f: propertyFinance(p) }));
+  // Leningen die uitsluitend via de Financieringsmodule zijn geregistreerd (geen p.financing op
+  // het pand, of het pand is niet meer in bezit) staan los van propertyFinance() en moeten hier
+  // apart worden meegeteld — anders mist Rapportage/Liquiditeit ze volledig (schuld, rente, eigen
+  // geld ingelegd). Leningen die WEL bij een p.financing-pand horen tellen al mee via fins/propertyFinance
+  // en worden hier overgeslagen om dubbeltelling te voorkomen.
+  const financedPropertyIds = new Set(inBezit.filter(p => p.financing && Number(p.financing.bedrag) > 0).map(p => p.id));
+  const looseLoans = state.loans.filter(l => {
+    if (financedPropertyIds.has(l.propertyId)) return false;
+    const p = propertyById(l.propertyId);
+    if (p && p.status === 'Verkocht') return false;
+    if (l.eind && l.eind < t) return false;
+    return true;
+  });
+  const looseLoanBedrag = looseLoans.reduce((s, l) => s + (Number(l.bedrag) || 0), 0);
+  const looseLoanRenteMnd = looseLoans.reduce((s, l) => s + (Number(l.bedrag) || 0) * (Number(l.rentePct) || 0) / 100 / 12, 0);
+  const looseLoanAflossingMnd = looseLoans.reduce((s, l) => s + (Number(l.aflossing) || 0), 0);
   const totaalGeinvesteerd = fins.reduce((s, x) => s + x.f.investVerwacht, 0);
-  const openFinanciering = inBezit.reduce((s, p) => s + (Number(p.financing?.bedrag) || 0), 0);
+  const openFinanciering = inBezit.reduce((s, p) => s + (Number(p.financing?.bedrag) || 0), 0) + looseLoanBedrag;
   const pijplijnWinst = fins.reduce((s, x) => s + (x.f.winst || 0), 0);
   const gerealiseerdWinst = soldThisYear.reduce((s, p) => s + (propertyFinance(p).winst || 0), 0);
   const huurPerJaar = verhuurd.reduce((s, p) => s + (Number(p.maandhuur) || 0) * 12, 0);
-  const renteLastenMnd = fins.reduce((s, x) => s + x.f.renteMnd + x.f.lastenMnd, 0);
+  const renteLastenMnd = fins.reduce((s, x) => s + x.f.renteMnd + x.f.lastenMnd, 0) + looseLoanRenteMnd;
   const eigenVermogenIngelegd = totaalGeinvesteerd - openFinanciering;
 
   // Cashflow-forecast: 6 maanden vooruit
@@ -2226,15 +2271,17 @@ function reportData() {
     const key = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
     const huurIn = Math.round(verhuurd.reduce((s, p) => s + (Number(p.maandhuur) || 0), 0));
     const vasteUit = Math.round(renteLastenMnd);
+    // Achterstallige, nog niet betaalde kosten (datum vóór de huidige maand) drukken al op de
+    // eerste maand mee — anders vallen ze buiten elke bucket en oogt de prognose te optimistisch.
     const geplandUit = state.costs
-      .filter(k => k.status !== 'Betaald' && (k.date || '').startsWith(key))
+      .filter(k => k.status !== 'Betaald' && ((k.date || '').startsWith(key) || (i === 0 && (k.date || '') < key)))
       .reduce((s, k) => s + (Number(k.amount) || 0), 0);
     const events = [];
     inBezit.forEach(p => { if ((p.financing?.einddatum || '').startsWith(key)) events.push(`Herfinanciering ${p.address}`); });
     state.projects.filter(pr => pr.status !== 'Afgerond').forEach(pr => { if ((pr.endDate || '').startsWith(key)) events.push(`Oplevering ${propertyLabel(pr.propertyId)}`); });
     months.push({ key, label: d.toLocaleDateString('nl-NL', { month: 'short', year: '2-digit' }), huurIn, vasteUit, geplandUit, netto: huurIn - vasteUit - geplandUit, events });
   }
-  return { fins, totaalGeinvesteerd, openFinanciering, eigenVermogenIngelegd, pijplijnWinst, gerealiseerdWinst, huurPerJaar, renteLastenMnd, months, soldThisYear, jaar };
+  return { fins, totaalGeinvesteerd, openFinanciering, eigenVermogenIngelegd, pijplijnWinst, gerealiseerdWinst, huurPerJaar, renteLastenMnd, looseLoanAflossingMnd, months, soldThisYear, jaar };
 }
 
 /* ---------- Visuele rapportage (pure SVG/HTML, geen dependencies) ---------- */
@@ -2427,13 +2474,16 @@ function investorReportData() {
       const bedrag = Number(i.bedrag) || 0;
       e.inleg += bedrag;
       e.gewogenRendement += bedrag * rPct;
-      e.verwachtJaar += bedrag * rPct / 100;
+      if (!afgerond) e.verwachtJaar += bedrag * rPct / 100; // afgeronde projecten keren niet langer jaarlijks uit
       if (!i.wwft) e.wwft = false;
       e.projecten.push({ project: pr.name, bedrag, rPct, datum: i.datum, uitkeringen: i.uitkeringen || [] });
       // Cashflows voor IRR/MOIC: inleg negatief op instapdatum, uitbetaalde uitkeringen positief.
       if (bedrag) e.cashflows.push({ date: i.datum || pr.startDate || todayISO(), amount: -bedrag });
-      // Lopende projecten houden de inleg als huidige waarde (NAV); afgeronde zijn afgewikkeld.
-      if (!afgerond) e.nav += bedrag;
+      // Lopende projecten houden de inleg als huidige waarde (NAV) — MINUS al uitbetaalde
+      // aflossingen op ditzelfde project. Zonder deze correctie telt een aflossing dubbel: eenmaal
+      // als uitbetaling (uitbetaaldTotaal) én nogmaals in de volledige NAV, wat MOIC/IRR opblaast.
+      const afgelostOpDitProject = (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald' && u.kind === 'aflossing').reduce((s, u) => s + (Number(u.amount) || 0), 0);
+      if (!afgerond) e.nav += Math.max(0, bedrag - afgelostOpDitProject);
       (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald').forEach(u => {
         const jr = (u.date || '').slice(0, 4) || '—';
         const bedr = Number(u.amount) || 0;
@@ -2652,7 +2702,8 @@ function renderAds() {
 
 /* ---------- Geld-in: facturatie & huurincasso ---------- */
 function openInvoiceModal(id = null) {
-  if (!state.properties.length) { showToast('Voeg eerst een pand toe.'); return; }
+  // Géén panden-guard: het pandveld is optioneel ('— Algemeen —'), dus een factuur zonder
+  // gekoppeld pand (bijv. een algemene of eenmalige factuur) moet ook zonder panden mogelijk zijn.
   const form = $('#invoice-form');
   form.reset();
   form.elements.id.value = id || '';
@@ -2739,6 +2790,11 @@ function renderMaintenance() {
         <div><h2>Onderhoud &amp; meldingen — hele portefeuille</h2><p>Eigen notities én meldingen die huurders via het portaal insturen. Klik "Synchroniseer cloud" voor de nieuwste portaal-meldingen.</p></div>
         <button class="btn secondary slim" data-action="cloud-sync">Synchroniseer cloud</button>
       </div>
+      <form class="inline-form" data-form="add-maint-any">
+        <select name="propertyId" required>${state.properties.map(p => `<option value="${p.id}">${esc(p.address)}</option>`).join('')}</select>
+        <input name="desc" placeholder="Nieuwe melding (elk pand, ongeacht status)…" required>
+        <button class="btn primary slim" type="submit">+</button>
+      </form>
       <div class="table-wrap"><table>
         <thead><tr><th>Datum</th><th>Pand</th><th>Melding</th><th>Bron</th><th>Status</th></tr></thead>
         <tbody>${items.map(i => `<tr>
@@ -2826,11 +2882,14 @@ function openLoanModal(id = null) {
 function renderFinance() {
   const t = todayISO();
   const loans = state.loans.slice().sort((a, b) => (a.eind || '9999').localeCompare(b.eind || '9999'));
-  const totaalSchuld = loans.reduce((s, l) => s + (Number(l.bedrag) || 0), 0);
-  const renteJaar = loans.reduce((s, l) => s + (Number(l.bedrag) || 0) * (Number(l.rentePct) || 0) / 100, 0);
+  // Leningen op verkochte panden tellen niet mee in schuld/rentelast/LTV — anders wordt de
+  // LTV structureel overschat (teller telt ze mee, de waarde-noemer sluit verkochte panden al uit).
+  const actieveLoans = loans.filter(l => { const p = propertyById(l.propertyId); return !p || p.status !== 'Verkocht'; });
+  const totaalSchuld = actieveLoans.reduce((s, l) => s + (Number(l.bedrag) || 0), 0);
+  const renteJaar = actieveLoans.reduce((s, l) => s + (Number(l.bedrag) || 0) * (Number(l.rentePct) || 0) / 100, 0);
   const waarde = state.properties.filter(p => p.status !== 'Verkocht').reduce((s, p) => s + (Number(p.vraagprijs) || Number(p.taxatie) || 0), 0);
   const ltv = waarde ? totaalSchuld / waarde * 100 : 0;
-  const binnenkort = loans.filter(l => l.eind && daysBetween(t, l.eind) >= 0 && daysBetween(t, l.eind) <= 90);
+  const binnenkort = actieveLoans.filter(l => l.eind && daysBetween(t, l.eind) >= 0 && daysBetween(t, l.eind) <= 90);
   $('#finance-body').innerHTML = `
     <div class="kpi-grid">
       <article class="kpi"><span>Totale financiering</span><strong>${fmtMoney(totaalSchuld)}</strong><small>${loans.length} leningen</small></article>
@@ -2872,7 +2931,20 @@ function openPayoutModal(projectId, investorId, id = null) {
   const u = id ? (inv.uitkeringen || []).find(x => x.id === id) : null;
   if (u) ['kind', 'amount', 'date', 'status', 'note'].forEach(k => form.elements[k].value = u[k] ?? '');
   else form.elements.date.value = todayISO();
+  $('#payout-delete-btn').hidden = !id;
   $('#payout-modal').showModal();
+}
+
+function openInvestorModal(projectId, investorId) {
+  const pr = projectById(projectId);
+  const inv = pr && (pr.investeerders || []).find(x => x.id === investorId);
+  if (!inv) return;
+  const form = $('#investor-form');
+  form.reset();
+  form.elements.projectId.value = projectId;
+  form.elements.id.value = investorId;
+  ['naam', 'email', 'bedrag', 'datum'].forEach(k => form.elements[k].value = inv[k] ?? '');
+  $('#investor-modal').showModal();
 }
 
 /* ---------- Liquiditeit ---------- */
@@ -2891,7 +2963,13 @@ function renderLiquidity() {
   const totaal = accounts.reduce((s, a) => s + (Number(a.saldo) || 0), 0);
   const buffer = accounts.filter(a => a.type === 'Spaar').reduce((s, a) => s + (Number(a.saldo) || 0), 0);
   const r = reportData();
-  const aflossingMnd = state.loans.reduce((s, l) => s + (Number(l.aflossing) || 0), 0);
+  // reportData() telt rente van álle actieve leningen al mee in r.renteLastenMnd/m.vasteUit
+  // (inclusief losse leningen zonder p.financing-tegenhanger). Aflossing zit daar nergens in —
+  // die tellen we hier apart op, over alle leningen op een niet-verkocht, niet-verlopen pand.
+  const aflossingMnd = state.loans.filter(l => {
+    const p = propertyById(l.propertyId);
+    return (!p || p.status !== 'Verkocht') && !(l.eind && l.eind < todayISO());
+  }).reduce((s, l) => s + (Number(l.aflossing) || 0), 0);
   let bal = totaal;
   const proj = r.months.map(m => {
     const net = m.huurIn - m.vasteUit - m.geplandUit - aflossingMnd;
@@ -2956,8 +3034,8 @@ function renderLiquidity() {
 function mailingAudienceEmails(audiences) {
   const out = [];
   if (audiences.includes('investeerders')) state.projects.forEach(p => (p.investeerders || []).forEach(i => { if (i.email) out.push(i.email); }));
-  if (audiences.includes('relaties')) state.contacts.forEach(c => { if (c.email) out.push(c.email); });
-  if (audiences.includes('leads')) loadInbox().forEach(l => { if (l.email) out.push(l.email); });
+  if (audiences.includes('relaties')) state.contacts.forEach(c => { if (c.email && !c.geenMailing) out.push(c.email); });
+  if (audiences.includes('leads')) loadInbox().forEach(l => { if (l.email && !l.handled) out.push(l.email); });
   return [...new Set(out.map(e => String(e).trim().toLowerCase()).filter(e => /.+@.+\..+/.test(e)))];
 }
 
@@ -3182,6 +3260,15 @@ function fillRefSelect(select, selected = '') {
   select.innerHTML = html;
 }
 
+function renderActivityHistory(contactId) {
+  const c = contactById(contactId); if (!c) return;
+  const acts = (c.activities || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  $('#activity-history').innerHTML = acts.length
+    ? `<div class="check-list" style="max-height:170px;overflow:auto;margin-bottom:10px">${acts.map(a => `<div class="check-item"><span class="badge gray">${fmtDate(a.date)}</span><span><strong>${esc(a.type)}</strong> — ${esc(a.description)}${a.nextFollowUp ? ` · <span class="alert">vervolg ${fmtDate(a.nextFollowUp)}</span>` : ''}</span>
+      <button class="icon-btn" data-action="del-activity" data-id="${contactId}" data-item="${a.id}" title="Verwijderen">🗑</button></div>`).join('')}</div>`
+    : '<p class="hint">Nog geen contactmomenten vastgelegd.</p>';
+}
+
 function openActivityModal(contactId) {
   const c = contactById(contactId); if (!c) return;
   const form = $('#activity-form');
@@ -3189,10 +3276,7 @@ function openActivityModal(contactId) {
   form.elements.contactId.value = contactId;
   form.elements.date.value = todayISO();
   $('#activity-modal-title').textContent = `Contactmoment — ${c.name}`;
-  const acts = (c.activities || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-  $('#activity-history').innerHTML = acts.length
-    ? `<div class="check-list" style="max-height:170px;overflow:auto;margin-bottom:10px">${acts.map(a => `<div class="check-item"><span class="badge gray">${fmtDate(a.date)}</span><span><strong>${esc(a.type)}</strong> — ${esc(a.description)}${a.nextFollowUp ? ` · <span class="alert">vervolg ${fmtDate(a.nextFollowUp)}</span>` : ''}</span></div>`).join('')}</div>`
-    : '<p class="hint">Nog geen contactmomenten vastgelegd.</p>';
+  renderActivityHistory(contactId);
   $('#activity-modal').showModal();
 }
 
@@ -3204,6 +3288,7 @@ function openContactModal(id = null) {
   if (id) {
     const c = contactById(id);
     ['type', 'name', 'contact', 'email', 'phone', 'address', 'note'].forEach(k => form.elements[k].value = c[k] || '');
+    form.elements.geenMailing.checked = !!c.geenMailing;
   } else if (filters.relation !== 'all' && currentView === 'relations') {
     form.elements.type.value = filters.relation;
   }
@@ -3242,15 +3327,21 @@ function openDealModal(id = null, preset = {}) {
   $('#deal-modal').showModal();
 }
 
-function openBidModal(dealId) {
+function openBidModal(dealId, bidId = null) {
   const form = $('#bid-form');
   form.reset();
   form.elements.dealId.value = dealId;
-  form.elements.id.value = '';
-  form.elements.date.value = todayISO();
-  form.elements.validUntil.value = addDaysISO(todayISO(), 5);
+  form.elements.id.value = bidId || '';
   const d = dealById(dealId);
-  if (d?.calc?.koopsom) form.elements.amount.value = d.calc.koopsom;
+  const bid = bidId ? (d?.biedingen || []).find(x => x.id === bidId) : null;
+  $('#bid-modal-title').textContent = bid ? 'Bod bewerken' : 'Bod registreren';
+  if (bid) {
+    ['date', 'amount', 'validUntil', 'note'].forEach(k => form.elements[k].value = bid[k] ?? '');
+  } else {
+    form.elements.date.value = todayISO();
+    form.elements.validUntil.value = addDaysISO(todayISO(), 5);
+    if (d?.calc?.koopsom) form.elements.amount.value = d.calc.koopsom;
+  }
   $('#bid-modal').showModal();
 }
 
@@ -3268,8 +3359,10 @@ function openAcquireModal(dealId) {
   form.elements.notaris.value = s.notaris;
   form.elements.makelaar.value = Math.round(koopsom * s.makelaarPct / 100);
   const financiers = state.contacts.filter(c => c.type === 'Financier');
-  fillSelect(form.elements.financierId, financiers, { empty: '— Geen financiering —', selected: financiers[0]?.id || '' });
-  form.elements.finBedrag.value = Math.round((koopsom + (Number(d.calc?.verbouwing) || 0)) * 0.8);
+  // Geen automatische keuze: wie cash koopt moet niet per ongeluk een fictieve financiering
+  // (met bijbehorende rentelast/eigen-vermogen-KPI's) meekrijgen door alleen de defaults te laten staan.
+  fillSelect(form.elements.financierId, financiers, { empty: '— Geen financiering —', selected: '' });
+  form.elements.finBedrag.value = '';
   form.elements.finRente.value = s.rentePct;
   $('#acquire-modal').showModal();
 }
@@ -3417,6 +3510,7 @@ function openPlanModal(id = null, presetDate = '', presetRef = '') {
   } else {
     form.elements.date.value = presetDate || todayISO();
   }
+  $('#plan-delete-btn').hidden = !id;
   $('#plan-modal').showModal();
 }
 
@@ -3519,8 +3613,30 @@ function handleDocUpload(input) {
 /* ---------- Opslaan vanuit modals ---------- */
 function handleModalSubmit(event) {
   const form = event.target;
-  if (event.submitter && event.submitter.value !== 'save') return; // annuleren / sluiten
   const formId = form.getAttribute('id'); // let op: form.id wordt overschaduwd door <input name="id">
+  if (event.submitter && event.submitter.value === 'delete') {
+    const delData = new FormData(form);
+    const delId = delData.get('id');
+    if (formId === 'plan-form' && delId) {
+      if (!confirmDel('Planning-item verwijderen?')) { event.preventDefault(); return; }
+      state.planning = state.planning.filter(x => x.id !== delId);
+      rerender();
+      showToast('Planning verwijderd.');
+    }
+    if (formId === 'payout-form' && delId) {
+      if (!confirmDel('Uitkering verwijderen?')) { event.preventDefault(); return; }
+      const pr = projectById(delData.get('projectId'));
+      const inv = pr && (pr.investeerders || []).find(x => x.id === delData.get('investorId'));
+      if (inv) inv.uitkeringen = (inv.uitkeringen || []).filter(x => x.id !== delId);
+      rerender();
+      showToast('Uitkering verwijderd.');
+    }
+    return;
+  }
+  if (event.submitter && event.submitter.value !== 'save') {
+    if (formId === 'deal-form') pendingLeadForDeal = null; // annuleren: lead blijft terecht 'Nieuw'
+    return;
+  }
   const data = new FormData(form);
   const id = data.get('id');
   const str = key => String(data.get(key) || '').trim();
@@ -3536,7 +3652,7 @@ function handleModalSubmit(event) {
   }
 
   if (formId === 'contact-form') {
-    const obj = { id: id || uid('r'), type: str('type'), name: str('name'), contact: str('contact'), email: str('email'), phone: str('phone'), address: str('address'), note: str('note') };
+    const obj = { id: id || uid('r'), type: str('type'), name: str('name'), contact: str('contact'), email: str('email'), phone: str('phone'), address: str('address'), note: str('note'), geenMailing: data.get('geenMailing') === 'on' };
     if (id) Object.assign(contactById(id), obj); else state.contacts.push(obj);
     showToast(`Relatie ${obj.name} opgeslagen.`);
   }
@@ -3552,6 +3668,7 @@ function handleModalSubmit(event) {
     };
     if (id) Object.assign(dealById(id), base);
     else state.deals.push(Object.assign({ id: uid('d'), ref: nextRef('AK', state.deals), createdAt: todayISO(), biedingen: [] }, base));
+    if (pendingLeadForDeal) { setLeadHandled(pendingLeadForDeal, true); pendingLeadForDeal = null; }
     showToast(`Aankoopkans ${base.address} opgeslagen.`);
   }
 
@@ -3559,9 +3676,15 @@ function handleModalSubmit(event) {
     const d = dealById(data.get('dealId'));
     if (d) {
       d.biedingen = d.biedingen || [];
-      d.biedingen.push({ id: uid('b'), date: data.get('date'), amount: num('amount'), validUntil: data.get('validUntil') || '', status: 'Uitgebracht', note: str('note') });
-      if (d.status === 'Lead' || d.status === 'Bezichtiging') d.status = 'Bod uitgebracht';
-      showToast(`Bod van ${fmtMoney(num('amount'))} geregistreerd op ${d.address}.`);
+      if (id) {
+        const b = d.biedingen.find(x => x.id === id);
+        if (b) Object.assign(b, { date: data.get('date'), amount: num('amount'), validUntil: data.get('validUntil') || '', note: str('note') });
+        showToast(`Bod bijgewerkt op ${d.address}.`);
+      } else {
+        d.biedingen.push({ id: uid('b'), date: data.get('date'), amount: num('amount'), validUntil: data.get('validUntil') || '', status: 'Uitgebracht', note: str('note') });
+        if (d.status === 'Lead' || d.status === 'Bezichtiging') d.status = 'Bod uitgebracht';
+        showToast(`Bod van ${fmtMoney(num('amount'))} geregistreerd op ${d.address}.`);
+      }
     }
   }
 
@@ -3677,10 +3800,12 @@ function handleModalSubmit(event) {
       p.sale = { verkoopprijs: num('verkoopprijs'), date: data.get('date'), kosten: num('kosten'), koper: str('koper') };
       p.status = 'Verkocht';
       (p.offers || []).forEach(o => { if (o.status === 'Ontvangen') o.status = 'Afgewezen'; });
+      const geplaatsteAds = (p.advertenties || []).filter(a => a.status === 'Geplaatst');
+      geplaatsteAds.forEach(a => { a.status = 'Verlopen'; });
       const fin = propertyFinance(p);
       save();
       logAudit('verkocht', `${p.address} voor ${fmtMoney(p.sale.verkoopprijs)}`);
-      showToast(`${p.address} verkocht voor ${fmtMoney(p.sale.verkoopprijs)} — winst ${fmtMoney(fin.winst)} (${fmtNum(fin.roi, 1)}% ROI).`);
+      showToast(`${p.address} verkocht voor ${fmtMoney(p.sale.verkoopprijs)} — winst ${fmtMoney(fin.winst)} (${fmtNum(fin.roi, 1)}% ROI).${geplaatsteAds.length ? ' Vergeet niet de advertenties offline te halen.' : ''}`);
       setView('sales');
       return;
     }
@@ -3706,7 +3831,11 @@ function handleModalSubmit(event) {
 
   if (formId === 'invoice-form') {
     const base = { soort: str('soort'), propertyId: data.get('propertyId') || '', debiteur: str('debiteur'), desc: str('desc'), amount: num('amount'), date: data.get('date'), due: data.get('due') || '', status: str('status') };
-    if (id) Object.assign(state.invoices.find(x => x.id === id), base);
+    if (id) {
+      const inv = state.invoices.find(x => x.id === id);
+      if (!base.status) base.status = inv.status; // vangnet: verlies nooit de aanmaning-status
+      Object.assign(inv, base);
+    }
     else state.invoices.push(Object.assign({ id: uid('f') }, base));
     showToast('Factuur opgeslagen.');
   }
@@ -3730,6 +3859,18 @@ function handleModalSubmit(event) {
         HCloud.notify({ to: inv.email, subject: `Uitkering van HomeINN — ${pr.name}`, html: `<p>Beste ${esc(inv.naam)},</p><p>Er is een uitkering geregistreerd voor je investering in <strong>${esc(pr.name)}</strong>:</p><p>${esc(base.kind)} · <strong>${fmtMoney(base.amount)}</strong> · ${fmtDate(base.date)}</p><p>Bekijk je overzicht in het investeerdersportaal.</p><p>Met vriendelijke groet,<br>HomeINN</p>` });
       }
       showToast('Uitkering opgeslagen.');
+    }
+  }
+
+  if (formId === 'investor-form') {
+    const pr = projectById(data.get('projectId'));
+    const inv = pr && (pr.investeerders || []).find(x => x.id === id);
+    if (inv) {
+      inv.naam = str('naam');
+      inv.email = str('email');
+      inv.bedrag = num('bedrag');
+      inv.datum = data.get('datum') || inv.datum;
+      showToast('Investeerder bijgewerkt.');
     }
   }
 
@@ -4349,7 +4490,7 @@ document.addEventListener('click', event => {
     if (!event.target.closest('.search')) $('#search-results').hidden = true;
     return;
   }
-  const { action, id, item, phase, date, go } = el.dataset;
+  const { action, id, item, phase, date, go, payout } = el.dataset;
 
   switch (action) {
     // Aankoop
@@ -4360,10 +4501,13 @@ document.addEventListener('click', event => {
       if (confirmDel('Aankoopkans definitief verwijderen?')) { state.deals = state.deals.filter(x => x.id !== id); rerender(); showToast('Aankoopkans verwijderd.'); }
       break;
     case 'bid-for-deal': openBidModal(id); break;
+    case 'edit-bid': openBidModal(id, item); break;
     case 'del-bid': {
       const d = dealById(id);
+      if (!confirmDel('Bod verwijderen?')) break;
       d.biedingen = (d.biedingen || []).filter(b => b.id !== item);
       rerender();
+      showToast('Bod verwijderd.');
       break;
     }
     case 'acquire-deal': openAcquireModal(id); break;
@@ -4393,8 +4537,8 @@ document.addEventListener('click', event => {
     case 'del-property': {
       const p = propertyById(id);
       if (!p) break;
-      const linked = state.projects.some(pr => pr.propertyId === id) || state.costs.some(k => k.propertyId === id);
-      if (linked) { showToast(`${p.address} heeft gekoppelde projecten of kosten — verwijder die eerst.`); break; }
+      const linked = state.projects.some(pr => pr.propertyId === id) || state.costs.some(k => k.propertyId === id) || state.loans.some(l => l.propertyId === id) || state.invoices.some(f => f.propertyId === id) || state.planning.some(pl => pl.ref === 'p:' + id);
+      if (linked) { showToast(`${p.address} heeft gekoppelde projecten, kosten, leningen, facturen of planning — verwijder die eerst.`); break; }
       if (confirmDel(`Pand "${p.address}" verwijderen?`)) { state.properties = state.properties.filter(x => x.id !== id); rerender(); showToast('Pand verwijderd.'); }
       break;
     }
@@ -4436,8 +4580,9 @@ document.addEventListener('click', event => {
     case 'del-project': {
       const pr = projectById(id);
       if (!pr) break;
-      if (confirmDel(`Project "${pr.name}" verwijderen? Gekoppelde kosten blijven op het pand staan.`)) {
+      if (confirmDel(`Project "${pr.name}" verwijderen? Gekoppelde kosten blijven op het pand staan; open kapitaaloproepen worden verwijderd.`)) {
         state.costs.forEach(k => { if (k.projectId === id) k.projectId = ''; });
+        state.capitalCalls = (state.capitalCalls || []).filter(c => c.projectId !== id);
         state.projects = state.projects.filter(x => x.id !== id);
         if (detailId.project === id) detailId.project = null;
         rerender(); showToast('Project verwijderd.');
@@ -4486,12 +4631,22 @@ document.addEventListener('click', event => {
     case 'add-plan': openPlanModal(null, date); break;
     // Relaties
     case 'log-activity': openActivityModal(id); break;
+    case 'del-activity': {
+      const c = contactById(id);
+      if (c && confirmDel('Contactmoment verwijderen?')) {
+        c.activities = (c.activities || []).filter(a => a.id !== item);
+        rerender(); // ververst ook een eventueel dashboard-signaal 'vervolgactie'
+        renderActivityHistory(id); // de open modal-historie apart verversen (rerender raakt 'm niet)
+        showToast('Contactmoment verwijderd.');
+      }
+      break;
+    }
     case 'edit-contact': openContactModal(id); break;
     case 'del-contact': {
       const c = contactById(id);
       if (!c) break;
-      const used = state.deals.some(d => d.makelaarId === id) || state.costs.some(k => k.contactId === id) || state.properties.some(p => p.financing?.financierId === id);
-      if (used) { showToast(`${c.name} is gekoppeld aan kansen, panden of kosten en kan niet worden verwijderd.`); break; }
+      const used = state.deals.some(d => d.makelaarId === id) || state.costs.some(k => k.contactId === id) || state.properties.some(p => p.financing?.financierId === id) || state.contracten.some(x => x.contactId === id) || state.loans.some(l => l.financierId === id);
+      if (used) { showToast(`${c.name} is gekoppeld aan kansen, panden, kosten, contracten of leningen en kan niet worden verwijderd.`); break; }
       if (confirmDel(`Relatie "${c.name}" verwijderen?`)) { state.contacts = state.contacts.filter(x => x.id !== id); rerender(); showToast('Relatie verwijderd.'); }
       break;
     }
@@ -4529,6 +4684,14 @@ document.addEventListener('click', event => {
       break;
     }
     case 'add-payout': openPayoutModal(id, item); break;
+    case 'edit-payout': openPayoutModal(id, item, payout); break;
+    case 'del-payout': {
+      const pr = projectById(id);
+      const inv = pr && (pr.investeerders || []).find(x => x.id === item);
+      if (inv && confirmDel('Uitkering verwijderen?')) { inv.uitkeringen = (inv.uitkeringen || []).filter(x => x.id !== payout); rerender(); showToast('Uitkering verwijderd.'); }
+      break;
+    }
+    case 'edit-investor': openInvestorModal(id, item); break;
     case 'wwft-toggle': {
       const pr = projectById(id);
       const inv = (pr.investeerders || []).find(x => x.id === el.dataset.item);
@@ -4599,7 +4762,7 @@ document.addEventListener('click', event => {
       const email = (p && p.huurderEmail) || '';
       const niveau = f.status === 'Herinnering verzonden' ? 'Aanmaning 1' : (f.status === 'Aanmaning 1' ? 'Aanmaning 2' : 'Herinnering verzonden');
       const dgn = f.due ? daysBetween(f.due, todayISO()) : 0;
-      if (email && window.HCloud) {
+      if (email && window.HCloud && HCloud.status().ready) {
         HCloud.notify({ to: email, subject: `${niveau} — openstaande betaling HomeINN`, html: `<p>Beste ${esc(f.debiteur || '')},</p><p>Onze administratie laat zien dat de volgende betaling nog openstaat:</p><p><strong>${esc(f.desc)}</strong><br>Bedrag: <strong>${fmtMoney(f.amount)}</strong><br>Vervaldatum: ${fmtDate(f.due)} (${dgn} dagen geleden)</p><p>Wij verzoeken u vriendelijk het bedrag zo spoedig mogelijk te voldoen. Heeft u al betaald? Dan kunt u deze ${niveau.toLowerCase()} als niet verzonden beschouwen.</p><p>Met vriendelijke groet,<br>HomeINN</p>` });
         f.status = niveau;
         rerender();
@@ -4760,9 +4923,12 @@ document.addEventListener('click', event => {
     case 'inbox-to-deal': {
       const lead = loadInbox().find(l => l.id === id);
       if (lead) {
-        setLeadHandled(id, true);
+        // Pas ná succesvol opslaan van de deal (zie handleModalSubmit) markeren we de lead als
+        // afgehandeld — annuleert de gebruiker de modal, dan blijft de lead terecht op 'Nieuw'.
+        pendingLeadForDeal = id;
         openDealModal(null, {
           source: 'Website-aanvraag',
+          verkoperEmail: lead.email || (String(lead.contact || '').includes('@') ? lead.contact : ''),
           note: `Aanvraag ${fmtDateTime(lead.date)} van ${lead.name || 'onbekend'} (${leadContactInfo(lead) || 'geen contactgegevens'}). ${lead.subject || ''} ${lead.message || ''}`.trim()
         });
       }
@@ -4868,7 +5034,24 @@ document.addEventListener('change', event => {
       const call = (state.capitalCalls || []).find(c => c.id === id);
       if (!call) return;
       const row = (call.perInvesteerder || []).find(r => r.investorKey === el.dataset.item);
-      if (row) { row.status = el.value; if (el.value !== 'Verstuurd' && !row.respondedAt) row.respondedAt = todayISO(); }
+      if (row) {
+        row.status = el.value;
+        if (el.value !== 'Verstuurd' && !row.respondedAt) row.respondedAt = todayISO();
+        // Gestort kapitaal moet de investeerders-ledger bereiken (inleg, IRR, MOIC, CSV-export,
+        // rapportage-donut) — anders blijft een storting via een kapitaaloproep daar onzichtbaar.
+        // De vlag voorkomt dubbel bijtellen als de status heen-en-weer wordt gewisseld.
+        const pr = projectById(call.projectId);
+        const inv = pr && (pr.investeerders || []).find(i => (i.id || i.email || i.naam) === row.investorKey);
+        if (inv) {
+          if (el.value === 'Gestort' && !row.ledgerToegepast) {
+            inv.bedrag = (Number(inv.bedrag) || 0) + (Number(row.bedragVerschuldigd) || 0);
+            row.ledgerToegepast = true;
+          } else if (el.value !== 'Gestort' && row.ledgerToegepast) {
+            inv.bedrag = Math.max(0, (Number(inv.bedrag) || 0) - (Number(row.bedragVerschuldigd) || 0));
+            row.ledgerToegepast = false;
+          }
+        }
+      }
       // Alle gestort → oproep automatisch afronden
       if ((call.perInvesteerder || []).every(r => r.status === 'Gestort')) call.status = 'Afgerond';
       rerender();
@@ -4889,13 +5072,18 @@ document.addEventListener('change', event => {
     }
     case 'cloud-maint-status': {
       const m = (state.cloudMaintenance || []).find(x => x.id === id);
+      const vorige = m ? m.status : null;
       const nieuw = el.value;
       if (m) m.status = nieuw; // optimistisch
-      save();
+      rerender();
       if (window.HCloud) {
         HCloud.setMaintenanceStatus(id, nieuw)
           .then(() => showToast('Status bijgewerkt — de huurder ziet dit in zijn portaal.'))
-          .catch(e => { showToast('Bijwerken in cloud mislukt: ' + (e.message || e)); });
+          .catch(e => {
+            if (m) m.status = vorige; // terugdraaien: de cloud-update is niet gelukt
+            rerender();
+            showToast('Bijwerken in cloud mislukt: ' + (e.message || e));
+          });
       }
       break;
     }
@@ -4909,6 +5097,10 @@ document.addEventListener('change', event => {
     }
   }
 });
+
+// Vangnet: sluit de gebruiker de deal-modal via Escape (geen submit-event), dan moet een
+// eventueel nog openstaande "→ Kans"-lead alsnog 'Nieuw' blijven i.p.v. voor altijd vast te zitten.
+$('#deal-modal')?.addEventListener('close', () => { pendingLeadForDeal = null; });
 
 /* Inline-formulieren (fases, opleverpunten, documenten) + taken + instellingen */
 document.addEventListener('submit', event => {
@@ -4930,6 +5122,7 @@ document.addEventListener('submit', event => {
     if (form.dataset.form === 'add-phase') {
       const pr = projectById(form.dataset.id);
       if (!pr) return;
+      pr.phases = pr.phases || [];
       pr.phases.push({ id: uid('ph'), name: String(data.get('name')).trim(), status: 'Te doen' });
     }
     if (form.dataset.form === 'add-phase-task') {
@@ -4940,11 +5133,13 @@ document.addEventListener('submit', event => {
     if (form.dataset.form === 'add-oplever') {
       const pr = projectById(form.dataset.id);
       if (!pr) return;
+      pr.opleverpunten = pr.opleverpunten || [];
       pr.opleverpunten.push({ id: uid('op'), desc: String(data.get('desc')).trim(), done: false });
     }
     if (form.dataset.form === 'add-doc') {
       const p = propertyById(form.dataset.id);
       if (!p) return;
+      p.docs = p.docs || [];
       const v = String(data.get('name')).trim();
       const isPad = /^https?:\/\//i.test(v) || v.includes('/');
       p.docs.push(isPad
@@ -4963,6 +5158,14 @@ document.addEventListener('submit', event => {
       p.onderhoud = p.onderhoud || [];
       p.onderhoud.push({ id: uid('mnt'), date: todayISO(), desc: String(data.get('desc')).trim(), status: 'Open' });
     }
+    if (form.dataset.form === 'add-maint-any') {
+      // Vanuit de Onderhoud-view zelf, voor élk pand — niet alleen verhuurde panden hebben onderhoud nodig.
+      const p = propertyById(data.get('propertyId'));
+      if (!p) return;
+      p.onderhoud = p.onderhoud || [];
+      p.onderhoud.push({ id: uid('mnt'), date: todayISO(), desc: String(data.get('desc')).trim(), status: 'Open' });
+      showToast(`Melding vastgelegd bij ${p.address}.`);
+    }
     if (form.dataset.form === 'add-update') {
       const pr = projectById(form.dataset.id);
       if (!pr) return;
@@ -4973,7 +5176,7 @@ document.addEventListener('submit', event => {
       const pr = projectById(form.dataset.id);
       if (!pr) return;
       pr.investeerders = pr.investeerders || [];
-      const nieuweInv = { id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, wwft: false, datum: todayISO() };
+      const nieuweInv = { id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, wwft: false, datum: data.get('datum') || todayISO() };
       pr.investeerders.push(nieuweInv);
       if (nieuweInv.email && window.HCloud) {
         HCloud.notify({ to: nieuweInv.email, subject: 'Welkom als investeerder bij HomeINN', html: `<p>Beste ${esc(nieuweInv.naam)},</p><p>Je investering van <strong>${fmtMoney(nieuweInv.bedrag)}</strong> in het project <strong>${esc(pr.name)}</strong> is geregistreerd. Welkom!</p><p>Volg je investering, rendement en projectupdates in je persoonlijke portaal — log in met dit e-mailadres (je ontvangt een beveiligde inloglink, geen wachtwoord nodig):</p><p><a href="${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html">Inloggen op het HomeINN-portaal</a></p><p>Met vriendelijke groet,<br>HomeINN</p>` });
