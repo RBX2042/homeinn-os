@@ -65,7 +65,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260622">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260704d">
   <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
   <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -336,6 +336,26 @@
     </div>
   </div>
   <div class="hero-scroll-ind"><span>Scroll</span><div class="scroll-line"></div></div>
+
+  <!-- HOE WIJ WERKEN — auto-cyclende glass strip, vastgeprikt aan de onderrand van de hero (altijd meteen zichtbaar, geen scroll nodig) -->
+  <div class="mvw-strip">
+    <div class="mvw-strip-inner">
+      <span class="mvw-strip-tag"><span class="mvw-strip-pulse" aria-hidden="true"></span>Hoe wij werken</span>
+      <span class="mvw-strip-sep" aria-hidden="true"></span>
+      <div class="mvw-strip-track">
+        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-euro"/></svg></span><span><strong>Transparantie</strong> — geen kleine lettertjes, vaste percentages.</span></div>
+        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-klok"/></svg></span><span><strong>Betrouwbaarheid</strong> — één vast aanspreekpunt, altijd bereikbaar.</span></div>
+        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-grafiek"/></svg></span><span><strong>Resultaat</strong> — wij verdienen mee op wat u extra verdient.</span></div>
+        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-pin"/></svg></span><span><strong>Lokale kennis</strong> — Rotterdam door en door, wijk voor wijk.</span></div>
+        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-gesprek"/></svg></span><span><strong>Partnerschap</strong> — wij investeren en groeien mee met u.</span></div>
+        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-schaal"/></svg></span><span><strong>Compliance</strong> — altijd regelgevingsklaar, automatisch bijgewerkt.</span></div>
+      </div>
+      <div class="mvw-strip-dots" aria-hidden="true">
+        <span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span>
+      </div>
+      <a class="mvw-strip-more" href="over-ons.html">Meer over ons <span class="arr">→</span></a>
+    </div>
+  </div>
 </section>
 
 <!-- STATEMENT -->
@@ -359,7 +379,6 @@
     <div class="jstat rv d3"><div class="jstat-val" data-count="1000" data-suffix=" m²+" data-sep="1">1.000 m²+</div><div class="jstat-lbl">Woonoppervlak in actief beheer</div></div>
   </div>
 </section>
-
 
 <!-- WAT WIJ DOEN -->
 <section class="disc-section section-sm" id="diensten">
