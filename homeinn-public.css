@@ -516,6 +516,10 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .f-social-btn svg{width:19px;height:19px}
 .f-social-btn:hover{color:var(--navy);background:var(--gold2);border-color:var(--gold2);transform:translateY(-2px)}
 .f-social-btn:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+.mini-f-social{display:inline-flex;align-items:center;gap:.65rem;margin-left:1.4rem}
+.mini-f-social a{display:inline-flex;color:var(--ink3);transition:color .2s}
+.mini-f-social a:hover{color:var(--gold-ink)}
+.mini-f-social svg{width:16px;height:16px}
 .f-col h3,.f-col h5{font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:1.25rem}
 .f-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
 .f-col ul a{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.62);transition:color .2s;display:block}
