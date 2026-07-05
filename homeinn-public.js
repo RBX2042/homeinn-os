@@ -330,6 +330,7 @@ function saveLead(type, data) {
     localStorage.setItem(INBOX_KEY, JSON.stringify(list));
   } catch (err) { console.warn('Aanvraag kon niet worden opgeslagen:', err); }
   stuurLeadDoor(type, data);
+  if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'homeinn-public.html');
 }
 
 document.addEventListener('DOMContentLoaded', function () {

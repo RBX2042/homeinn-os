@@ -369,6 +369,9 @@ function save() {
 }
 
 /* ---------- Aanvragen (website-inbox) ---------- */
+let cloudLeadsCache = [];
+let cloudLeadsLoaded = false;
+
 function loadInbox() {
   try {
     const list = JSON.parse(localStorage.getItem(INBOX_KEY) || '[]');
@@ -380,11 +383,51 @@ function saveInbox(list) {
   try { localStorage.setItem(INBOX_KEY, JSON.stringify(list)); } catch { /* opslag vol */ }
 }
 
+// Voegt leads die rechtstreeks (via andere apparaten/browsers) in Supabase (hios_leads) zijn
+// binnengekomen samen met de lokale inbox. Dedup op local_id, zodat een aanvraag die op dít
+// apparaat is ingevuld — en dus al lokaal staat — niet dubbel in de lijst verschijnt.
+function combinedInbox() {
+  const local = loadInbox();
+  if (!cloudLeadsCache.length) return local;
+  const localIds = new Set(local.map(l => l.id));
+  const cloudOnly = cloudLeadsCache
+    .filter(cl => !localIds.has(cl.local_id))
+    .map(cl => ({
+      id: cl.local_id || cl.id, cloudId: cl.id, fromCloud: true,
+      type: cl.type, name: cl.name, email: cl.email, phone: cl.phone,
+      subject: cl.subject, message: cl.message, portfolio: cl.portfolio,
+      date: cl.created_at, handled: !!cl.handled
+    }));
+  return local.concat(cloudOnly);
+}
+
+// Haalt eenmalig per portaalsessie de leads op die via andere apparaten zijn binnengekomen.
+// Faalt stil zonder cloud-login/staff-rol — de lokale inbox blijft dan gewoon leidend.
+function fetchCloudLeads() {
+  if (cloudLeadsLoaded || !window.HCloud || !HCloud.available() || !HCloud.status().staff) return;
+  cloudLeadsLoaded = true;
+  HCloud.fetchLeads().then(rows => {
+    cloudLeadsCache = rows || [];
+    if (currentView === 'inbox' || currentView === 'dashboard') renderCurrent();
+  }).catch(() => {});
+}
+
 function setLeadHandled(id, value) {
   const list = loadInbox();
   const lead = list.find(l => l.id === id);
-  if (lead) { lead.handled = value; saveInbox(list); }
-  return lead;
+  if (lead) {
+    lead.handled = value; saveInbox(list);
+    const cl = cloudLeadsCache.find(c => c.local_id === id);
+    if (cl && window.HCloud && HCloud.available()) { cl.handled = value; HCloud.setLeadHandled(cl.id, value).catch(() => {}); }
+    return lead;
+  }
+  const cloudLead = cloudLeadsCache.find(cl => (cl.local_id || cl.id) === id);
+  if (cloudLead) {
+    cloudLead.handled = value;
+    if (window.HCloud && HCloud.available()) HCloud.setLeadHandled(cloudLead.id, value).catch(() => {});
+    return { id, handled: value, name: cloudLead.name, email: cloudLead.email, phone: cloudLead.phone, subject: cloudLead.subject, message: cloudLead.message, date: cloudLead.created_at };
+  }
+  return null;
 }
 
 function leadContactInfo(lead) {
@@ -645,7 +688,7 @@ function buildSignals() {
     signals.push({ level: 'hoog', text: `Laatste backup is ${daysBetween(state.lastBackup, t)} dagen oud — download een nieuwe via Instellingen.`, go: 'settings' });
   }
   // Website-aanvragen
-  const nieuweLeads = loadInbox().filter(l => !l.handled).length;
+  const nieuweLeads = combinedInbox().filter(l => !l.handled).length;
   if (nieuweLeads) {
     signals.push({ level: 'hoog', text: `${nieuweLeads} nieuwe aanvra${nieuweLeads === 1 ? 'ag' : 'gen'} via de website (lokaal getest) — bekijk en volg op. Live aanvragen komen per e-mail binnen.`, go: 'inbox' });
   }
@@ -807,7 +850,8 @@ function fmtDateTime(iso) {
 }
 
 function renderInbox() {
-  const list = loadInbox().slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  fetchCloudLeads();
+  const list = combinedInbox().slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const open = list.filter(l => !l.handled);
   const verkoop = open.filter(l => (l.subject || '').toLowerCase().includes('verkopen')).length;
   $('#inbox-kpis').innerHTML = `
@@ -3035,7 +3079,7 @@ function mailingAudienceEmails(audiences) {
   const out = [];
   if (audiences.includes('investeerders')) state.projects.forEach(p => (p.investeerders || []).forEach(i => { if (i.email) out.push(i.email); }));
   if (audiences.includes('relaties')) state.contacts.forEach(c => { if (c.email && !c.geenMailing) out.push(c.email); });
-  if (audiences.includes('leads')) loadInbox().forEach(l => { if (l.email && !l.handled) out.push(l.email); });
+  if (audiences.includes('leads')) combinedInbox().forEach(l => { if (l.email && !l.handled) out.push(l.email); });
   return [...new Set(out.map(e => String(e).trim().toLowerCase()).filter(e => /.+@.+\..+/.test(e)))];
 }
 
@@ -4027,7 +4071,7 @@ function exportCurrentView() {
       name = 'relaties'; break;
     case 'inbox':
       rows = [['Datum', 'Type', 'Naam', 'Contact', 'E-mail', 'Telefoon', 'Portfolio', 'Betreft', 'Bericht', 'Status']];
-      loadInbox().forEach(l => rows.push([l.date, l.type, l.name, l.contact, l.email, l.phone, l.portfolio, l.subject, l.message, l.handled ? 'Afgehandeld' : 'Nieuw']));
+      combinedInbox().forEach(l => rows.push([l.date, l.type, l.name, l.contact, l.email, l.phone, l.portfolio, l.subject, l.message, l.handled ? 'Afgehandeld' : 'Nieuw']));
       name = 'aanvragen'; break;
     case 'money':
       rows = [['Datum', 'Soort', 'Pand', 'Aan', 'Omschrijving', 'Bedrag', 'Vervaldatum', 'Status']];
@@ -4921,7 +4965,7 @@ document.addEventListener('click', event => {
       break;
     // Aanvragen
     case 'inbox-to-deal': {
-      const lead = loadInbox().find(l => l.id === id);
+      const lead = combinedInbox().find(l => l.id === id);
       if (lead) {
         // Pas ná succesvol opslaan van de deal (zie handleModalSubmit) markeren we de lead als
         // afgehandeld — annuleert de gebruiker de modal, dan blijft de lead terecht op 'Nieuw'.
@@ -4935,7 +4979,7 @@ document.addEventListener('click', event => {
       break;
     }
     case 'inbox-to-contact': {
-      const lead = loadInbox().find(l => l.id === id);
+      const lead = combinedInbox().find(l => l.id === id);
       if (lead) {
         const heeftMail = (lead.contact || '').includes('@');
         state.contacts.push({
@@ -4954,12 +4998,24 @@ document.addEventListener('click', event => {
       break;
     }
     case 'inbox-handled': {
-      const lead = loadInbox().find(l => l.id === id);
+      const lead = combinedInbox().find(l => l.id === id);
       if (lead) { setLeadHandled(id, !lead.handled); renderCurrent(); }
       break;
     }
     case 'inbox-del':
-      if (confirmDel('Aanvraag verwijderen?')) { saveInbox(loadInbox().filter(l => l.id !== id)); renderCurrent(); }
+      if (confirmDel('Aanvraag verwijderen?')) {
+        const local = loadInbox();
+        if (local.some(l => l.id === id)) {
+          saveInbox(local.filter(l => l.id !== id));
+        } else {
+          const cl = cloudLeadsCache.find(c => (c.local_id || c.id) === id);
+          if (cl) {
+            cloudLeadsCache = cloudLeadsCache.filter(c => c !== cl);
+            if (window.HCloud && HCloud.available()) HCloud.deleteLead(cl.id).catch(() => {});
+          }
+        }
+        renderCurrent();
+      }
       break;
     case 'signal-go':
     case 'search-go': goTo(go); break;
@@ -5403,7 +5459,7 @@ if (_gateLocalBtn) _gateLocalBtn.addEventListener('click', () => {
 
 /* Cloud-laag (optioneel): init + paneel verversen bij in-/uitloggen. */
 if (window.HCloud) {
-  HCloud.onChange(() => { if (currentView === 'settings') renderCloudPanel(); updatePortalGate(); });
+  HCloud.onChange(() => { if (currentView === 'settings') renderCloudPanel(); updatePortalGate(); fetchCloudLeads(); });
   HCloud.init();
   // Real-time: pollt ondertekenstatus terwijl je in de Contracten-view bent
   setInterval(() => {

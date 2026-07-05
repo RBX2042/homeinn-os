@@ -127,6 +127,8 @@
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Woningaanbod te koop — HomeINN Rotterdam","url":"https://home-inn.nl/te-koop","inLanguage":"nl-NL","about":"Te koop staande woningen in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="lead-cloud.js?v=20260702" defer></script>
   <script>
   (function(){
     'use strict';
@@ -173,7 +175,7 @@
     /* Lead-pipeline */
     var INBOX_KEY='homeinn-inbox-v1', LEAD_EMAIL_ENDPOINT='https://formsubmit.co/ajax/info@homeinn.nl';
     function stuurLeadDoor(type,data){try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return;fetch(LEAD_EMAIL_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+(data.subject||type),_template:'table',Type:type,Naam:data.name||'',Email:data.email||'',Telefoon:data.phone||'',Onderwerp:data.subject||'',Bericht:data.message||''})}).catch(function(){});}catch(e){}}
-    function saveLead(type,data){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];data.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);data.type=type;data.date=new Date().toISOString();data.handled=false;l.push(data);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}stuurLeadDoor(type,data);}
+    function saveLead(type,data){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];data.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);data.type=type;data.date=new Date().toISOString();data.handled=false;l.push(data);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}stuurLeadDoor(type,data);if(window.pushLeadToCloud)window.pushLeadToCloud(type,data,'te-koop.html');}
     var form=document.getElementById('tk-form');
     if(form) form.addEventListener('submit',function(e){
       e.preventDefault();

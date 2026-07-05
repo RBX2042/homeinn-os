@@ -288,6 +288,26 @@
       var r = await c.from('hios_contracts').select('local_id, status, signed_at, signed_name, party_email');
       if (r.error) throw r.error;
       return r.data || [];
+    },
+
+    /* Aanvragen die de publieke site rechtstreeks naar Supabase pusht (hios_leads) — zo komen
+       leads ook binnen als ze op een ander apparaat/browser dan het portaal zijn ingevuld. */
+    fetchLeads: async function () {
+      var c = get(); if (!c) return [];
+      if (!window.HCloud.status().staff) return [];
+      var r = await c.from('hios_leads').select('*').order('created_at', { ascending: false });
+      if (r.error) throw r.error;
+      return r.data || [];
+    },
+    setLeadHandled: async function (cloudId, value) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      var r = await c.from('hios_leads').update({ handled: value }).eq('id', cloudId);
+      if (r.error) throw r.error;
+    },
+    deleteLead: async function (cloudId) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      var r = await c.from('hios_leads').delete().eq('id', cloudId);
+      if (r.error) throw r.error;
     }
   };
 })();

@@ -78,6 +78,8 @@
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="lead-cloud.js?v=20260702" defer></script>
   <script>
   (function(){
     'use strict';
@@ -165,6 +167,7 @@
         function saveLead(type,d){
           try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];d.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);d.type=type;d.date=new Date().toISOString();d.handled=false;l.push(d);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}
           try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return;fetch(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+d.subject,_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||''})}).catch(function(){});}catch(e){}
+          if(window.pushLeadToCloud) window.pushLeadToCloud(type,d,'woning.html');
         }
         var form = document.getElementById('wd-form');
         if (form) form.addEventListener('submit', function(e){
