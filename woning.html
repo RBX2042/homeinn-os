@@ -13,7 +13,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260622">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260705a">
   <style>
     .wd-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .wd-top .brand img{height:34px;width:auto;display:block}
@@ -31,6 +31,15 @@
     .wd-gallery{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:2.5rem}
     @media(min-width:640px){.wd-gallery{grid-template-columns:2fr 1fr}.wd-gallery .g0{grid-row:span 2}}
     .wd-gallery img{width:100%;height:100%;object-fit:cover;background:var(--cream2);display:block;min-height:180px}
+    .wd-gallery img{cursor:zoom-in;transition:transform .6s var(--ease),opacity .3s var(--ease);will-change:transform}
+    .wd-gallery{overflow:hidden}
+    .wd-gallery img:hover{transform:scale(1.035);opacity:.96}
+    .wd-more{display:inline-flex;align-items:center;gap:.4rem;margin:-1.6rem 0 2.5rem;padding:11px 22px;cursor:pointer;
+      background:transparent;border:1px solid rgba(var(--gold-rgb),.5);color:var(--gold-ink);font:inherit;font-size:.72rem;
+      font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+      transition:background var(--t-fast),border-color var(--t-fast),color var(--t-fast),transform var(--t-fast)}
+    .wd-more:hover{background:rgba(var(--gold-rgb),.1);border-color:var(--gold);color:var(--gold-text)}
+    .wd-more:active{transform:translateY(1px)}
     .wd-cols{display:grid;grid-template-columns:1fr;gap:2.5rem}
     @media(min-width:880px){.wd-cols{grid-template-columns:1.6fr 1fr;align-items:start}}
     .wd-specs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--cream3);margin-bottom:2rem}
@@ -80,6 +89,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="lead-cloud.js?v=20260702" defer></script>
+  <script src="lightbox.js?v=20260705" defer></script>
   <script>
   (function(){
     'use strict';
@@ -108,7 +118,12 @@
         var prijs = isHuur ? ('€ ' + (Number(w.huur)||0).toLocaleString('nl-NL') + ' /mnd') : ('€ ' + (Number(w.prijs)||0).toLocaleString('nl-NL') + ' k.k.');
         var fotos = Array.isArray(w.fotos) ? w.fotos : [];
         var gallery = fotos.length
-          ? '<div class="wd-gallery">' + fotos.slice(0,3).map(function(f,i){ return '<img class="g'+i+'" loading="'+(i===0?'eager':'lazy')+'" onerror="this.style.display=&quot;none&quot;" src="'+escHtml(f)+'" alt="'+escHtml(w.adres)+' foto '+(i+1)+'">'; }).join('') + '</div>'
+          ? '<div class="wd-gallery" data-titel="'+escHtml(w.adres)+'" data-fotos="'+escHtml(JSON.stringify(fotos))+'">'
+            + fotos.slice(0,3).map(function(f,i){ return '<img class="g'+i+'" loading="'+(i===0?'eager':'lazy')+'" onerror="this.style.display=&quot;none&quot;" src="'+escHtml(f)+'" alt="'+escHtml(w.adres)+' foto '+(i+1)+'">'; }).join('')
+            + '</div>'
+            + '<button class="wd-more" type="button" data-lb-open="0">'
+              + (fotos.length > 3 ? 'Alle ' + fotos.length + ' foto\'s bekijken' : 'Foto\'s groot bekijken')
+              + '<span aria-hidden="true"> ↗</span></button>'
           : '';
         var mapsQ = encodeURIComponent((w.adres||'') + ', ' + (w.plaats||'Rotterdam'));
         var specs = [

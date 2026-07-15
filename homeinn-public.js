@@ -640,3 +640,28 @@ document.addEventListener('click', function (e) {
   item.parentElement.querySelectorAll('.faq-item.open').forEach(function (el) { el.classList.remove('open'); });
   if (!open) item.classList.add('open');
 });
+
+/* ===== Hero-parallax: subtiele diepte bij scrollen ===== */
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var lagen = [];
+  document.querySelectorAll('.hero-bridge, .hero-bridge-m').forEach(function (el) { lagen.push([el, 0.13]); });
+  var glow = document.querySelector('.hero-glow');
+  if (glow) lagen.push([glow, 0.06]);
+  var grain = document.querySelector('.hero-grain');
+  if (grain) lagen.push([grain, 0.04]);
+  if (!lagen.length) return;
+  var tick = false;
+  function upd() {
+    var y = window.scrollY || window.pageYOffset || 0;
+    // robuuste viewporthoogte — innerHeight kan 0/undefined zijn in sommige omgevingen
+    var vh = window.innerHeight || document.documentElement.clientHeight || 800;
+    if (y <= vh * 1.25) {
+      lagen.forEach(function (l) { l[0].style.transform = 'translate3d(0,' + (y * l[1]).toFixed(1) + 'px,0)'; });
+    }
+    tick = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!tick) { tick = true; requestAnimationFrame(upd); }
+  }, { passive: true });
+})();
