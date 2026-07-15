@@ -43,7 +43,7 @@ const PAGES = [
     versie: '',
     secties: [
       ['Toepasselijkheid', 'Deze voorwaarden zijn van toepassing op offertes, overeenkomsten en dienstverlening van HomeINN, tenzij schriftelijk anders is overeengekomen.'],
-      ['Dienstverlening', 'HomeINN houdt zich bezig met de aan- en verkoop van onroerend goed, projectontwikkeling, vastgoedbeheer en aanverwante diensten. De exacte inhoud van een opdracht of overeenkomst volgt uit de offerte, koopovereenkomst of opdrachtbevestiging.'],
+      ['Dienstverlening', 'HomeINN houdt zich bezig met de aan- en verkoop van onroerend goed, projectontwikkeling, verhuur en verhuurbemiddeling, vastgoedbeheer en aanverwante diensten. De exacte inhoud van een opdracht of overeenkomst volgt uit de offerte, koopovereenkomst of opdrachtbevestiging.'],
       ['Tarieven en betaling', 'Tarieven worden vooraf transparant gecommuniceerd. Facturen dienen te worden voldaan binnen de overeengekomen termijn. Eventuele aanvullende werkzaamheden worden alleen in rekening gebracht als deze vooraf zijn afgestemd of logisch uit de opdracht voortvloeien.'],
       ['Aansprakelijkheid', 'HomeINN spant zich in om haar werkzaamheden zorgvuldig uit te voeren. Aansprakelijkheid is beperkt tot directe schade die aantoonbaar voortvloeit uit een toerekenbare tekortkoming en voor zover wettelijk toegestaan.'],
     ],
@@ -81,7 +81,7 @@ function page(p, alle) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260715">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260716">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
