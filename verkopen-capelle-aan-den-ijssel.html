@@ -23,7 +23,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260705a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260715">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -43,6 +43,12 @@
     .spoke-lokaal{max-width:1320px;margin:0 auto;padding:clamp(3.5rem,7vw,6rem) clamp(1.5rem,5vw,5.5rem)}
     .spoke-lokaal .lokaal-body{max-width:760px}
     .spoke-lokaal .lokaal-body p{font-size:1.02rem;font-weight:300;line-height:1.9;color:var(--ink3);margin:0 0 1.25rem}
+    .spoke-buurten{max-width:760px;margin:2.75rem 0 0;padding:1.75rem 0 0;border-top:1px solid var(--line)}
+    .spoke-buurten h3{font-family:var(--serif);font-weight:300;font-size:1.35rem;color:var(--navy);margin:0 0 1.1rem;letter-spacing:-.01em}
+    .buurt-lijst{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0}
+    .buurt-lijst li{font-size:.84rem;color:var(--ink3);background:rgba(var(--gold-rgb),.06);
+      border:1px solid rgba(var(--gold-rgb),.22);border-radius:100px;padding:.4rem .9rem}
+    .buurt-note{font-size:.84rem;font-weight:300;color:var(--ink4);margin:1.1rem 0 0}
     .spoke-buren{max-width:1320px;margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem) clamp(3rem,6vw,5rem);
       display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
     .spoke-buren span{font-size:.8rem;color:var(--ink4);font-weight:400}
@@ -86,6 +92,11 @@
     <section class="spoke-lokaal">
       <div class="proc-head"><span class="t-eyebrow">Capelle aan den IJssel</span><h2>De woningmarkt in Capelle aan den IJssel</h2></div>
       <div class="lokaal-body"><p>Capelle aan den IJssel groeide in de naoorlogse decennia uit van dorp aan de Hollandsche IJssel tot zelfstandige groeikern naast Rotterdam-Oost. Daardoor bestaat de woningvoorraad voor een groot deel uit planmatig gebouwde wijken zoals Schollevaar, Oostgaarde en Schenkel: rijen eengezinswoningen, portiek- en galerijflats en hier en daar hoogbouw langs de Capelseweg. Rond de oude Dorpsstraat en de historische kern aan de rivier vindt u juist het kleinschaliger, oudere deel van Capelle.</p><p>Die opbouw maakt dat een verkooptraject sterk verschilt per wijk en pandtype — een instapklare eengezinswoning in Schollevaar vraagt iets heel anders dan een gedateerd flatappartement of een te renoveren woning uit de eerste bouwfase. Wij kopen in elke staat en nemen bij verhuurde portiek- of galerijflats de lopende huurovereenkomst volledig over, zodat u niet hoeft te wachten op een lege woning of op een onzeker verkoopproces via Funda.</p></div>
+      <div class="spoke-buurten">
+        <h3>Wij kopen in heel Capelle aan den IJssel</h3>
+        <ul class="buurt-lijst"><li>Schollevaar</li><li>Oostgaarde</li><li>Middelwatering</li><li>’s-Gravenland</li><li>Schenkel</li><li>Capelle-West</li></ul>
+        <p class="buurt-note">Staat uw buurt er niet bij? Wij kijken naar ieder pand in Capelle aan den IJssel en omgeving.</p>
+      </div>
     </section>
 
     <section class="vgl-section">
@@ -108,7 +119,7 @@
       </div>
     </section>
 
-    <nav class="spoke-buren" aria-label="Andere werkgebieden"><span>Ook actief in de regio:</span><a href="verkopen-rotterdam-noord.html">Pand verkopen in Rotterdam-Noord</a><a href="verkopen-ridderkerk.html">Pand verkopen in Ridderkerk</a></nav>
+    <nav class="spoke-buren" aria-label="Andere werkgebieden"><span>Ook actief in de regio:</span><a href="verkopen-kralingen.html">Pand verkopen in Kralingen</a><a href="verkopen-ridderkerk.html">Pand verkopen in Ridderkerk</a></nav>
 
     <div class="cta-band"><div class="cta-inner"><h2>Uw pand in Capelle aan den IJssel verkopen? Vraag een vrijblijvend <em>voorstel</em> aan.</h2><a class="btn btn-dark" href="pand-verkopen.html">Voorstel binnen 48 uur <span class="arr">→</span></a></div></div>
   </main>
@@ -121,7 +132,7 @@
         <a href="pand-verkopen.html">Pand verkopen</a>
         <a href="privacy.html">Privacy</a>
       </nav>
-      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
+    </div>
   </footer>
 
   <script type="application/ld+json">

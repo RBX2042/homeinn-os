@@ -30,7 +30,7 @@ const PAGES = [
     secties: [
       ['Wie is verantwoordelijk', 'HomeINN, gevestigd te Rotterdam, is verwerkingsverantwoordelijke voor de verwerking van persoonsgegevens via deze website. Contact: <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.'],
       ['Welke gegevens wij verwerken en waarom', 'Vult u een formulier in (kennismakingsgesprek, pand verkopen, project volgen, investeren of contact), dan verwerken wij de gegevens die u opgeeft: naam, e-mailadres en/of telefoonnummer, het onderwerp van uw aanvraag en uw bericht. Grondslag: uitvoering van (precontractuele) maatregelen op uw verzoek (art. 6 lid 1 sub b AVG) en ons gerechtvaardigd belang om aanvragen op te volgen.'],
-      ['Doorsturen van uw aanvraag', 'Formulierinzendingen worden per e-mail aan ons bezorgd via de verwerkersdienst FormSubmit. Daarbij worden uw formuliergegevens door deze dienst verwerkt ten behoeve van de bezorging. Wij verkopen of delen uw gegevens niet voor marketingdoeleinden van derden.'],
+      ['Doorsturen en opslaan van uw aanvraag', 'Formulierinzendingen worden per e-mail aan ons bezorgd via de verwerkersdienst FormSubmit. Daarnaast slaan wij uw aanvraag op in onze eigen beveiligde database bij Supabase (hostingregio: EU), zodat wij hem in ons beheerportaal kunnen opvolgen. Beide partijen treden op als verwerker en verwerken uw gegevens uitsluitend in onze opdracht. Wij verkopen of delen uw gegevens niet voor marketingdoeleinden van derden.'],
       ['Kaarten van Google Maps', 'Kaarten op deze site laden pas nadat u daarop klikt. Op dat moment worden gegevens (zoals uw IP-adres) door Google verwerkt; daarop is het privacybeleid van Google van toepassing. Klikt u niet, dan worden er geen gegevens met Google gedeeld. Lettertypen worden vanaf onze eigen server geladen.'],
       ['Bewaartermijnen', 'Aanvragen bewaren wij maximaal 12 maanden na afronding van het contact, tenzij er een overeenkomst tot stand komt — dan gelden de wettelijke (fiscale) bewaartermijnen van 7 jaar voor administratie.'],
       ['Uw rechten', 'U heeft recht op inzage, rectificatie, verwijdering, beperking, overdraagbaarheid en bezwaar. Mail daarvoor naar <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>; wij reageren binnen vier weken. U kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl).'],
@@ -55,7 +55,7 @@ const PAGES = [
     versie: 'Versie 2.0 · ingangsdatum 11 juni 2026',
     secties: [
       ['Geen cookies', 'Deze website plaatst geen cookies en gebruikt geen analytische of advertentietrackers. Er is daarom geen cookiebanner nodig.'],
-      ['Lokale opslag', 'Vult u een formulier in, dan kan uw browser de inzending tijdelijk lokaal bewaren (localStorage) zodat de aanvraag goed wordt verwerkt. Deze gegevens blijven op uw eigen apparaat en zijn voor ons niet op afstand toegankelijk.'],
+      ['Lokale opslag', 'Vult u een formulier in, dan bewaart uw browser de inzending ook lokaal (localStorage), zodat de aanvraag niet verloren gaat. Die lokale kopie blijft op uw eigen apparaat. De aanvraag zelf sturen wij daarnaast per e-mail en naar onze eigen database, zodat wij hem kunnen opvolgen — zie het privacybeleid voor wie die gegevens ontvangt en hoe lang wij ze bewaren.'],
       ['Kaarten', 'Google Maps-kaarten laden uitsluitend nadat u daarop klikt. Pas op dat moment maakt uw browser verbinding met Google; tot die tijd wordt er niets met Google gedeeld. Lettertypen laden wij van onze eigen server, niet via Google Fonts.'],
       ['Vragen', 'Vragen over cookies of privacy? Mail <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.'],
     ],
@@ -81,7 +81,7 @@ function page(p, alle) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260616g">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260715">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}

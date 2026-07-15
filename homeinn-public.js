@@ -270,7 +270,15 @@ document.addEventListener('click', e => {
 });
 if (mobEl) {
   mobEl.addEventListener('click', e => {
-    if (e.target.id === 'mob') closeMob();
+    if (e.target.id === 'mob') { closeMob(); return; }
+    // Anker-links binnen het mobiele menu: eerst sluiten (body is scroll-locked),
+    // daarna pas scrollen — anders vuurt de native hash-scroll in een gelockte body.
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    e.preventDefault();
+    closeMob();
+    var doel = document.getElementById(a.getAttribute('href').slice(1));
+    if (doel) setTimeout(function () { doel.scrollIntoView({ behavior: 'smooth' }); }, 0);
   });
 }
 

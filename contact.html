@@ -23,7 +23,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260705a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260715">
   <style>
     .ct-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .ct-top .brand img{height:34px;width:auto;display:block}
@@ -145,7 +145,7 @@
       var f=new FormData(form);
       if(f.get('company_website'))return;
       var naam=(String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
-      if(!naam){var fr=document.getElementById('ct-first');if(fr)fr.focus();return;}
+      if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){var fr=document.getElementById('ct-first');if(fr)fr.focus();return;}
       saveLead('Contact',{name:naam,email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),portfolio:String(f.get('portfolio_size')||''),subject:String(f.get('package_interest')||''),message:String(f.get('message')||'').trim()});
       form.style.display='none';
       var ok=document.getElementById('ct-success'); if(ok){ok.style.display='block';ok.scrollIntoView({behavior:'smooth',block:'center'});}

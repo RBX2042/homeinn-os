@@ -32,12 +32,12 @@ const META = {
   'rotterdam-noord':        { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['hillegersberg', 'centrum'] },
   'rotterdam-zuid':         { soort: 'stadsdeel van Rotterdam', areaType: 'neighborhood', buren: ['feijenoord', 'ijsselmonde'] },
   'kralingen':              { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['centrum', 'rotterdam-noord'] },
-  'hillegersberg':          { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-noord', 'schiedam'] },
+  'hillegersberg':          { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-noord', 'kralingen'] },
   'ijsselmonde':            { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-zuid', 'barendrecht'] },
   'feijenoord':             { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-zuid', 'centrum'] },
   'centrum':                { soort: 'centrum van Rotterdam', areaType: 'neighborhood', buren: ['kralingen', 'rotterdam-noord'] },
   'schiedam':              { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['vlaardingen', 'rotterdam-noord'] },
-  'capelle-aan-den-ijssel': { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['rotterdam-noord', 'ridderkerk'] },
+  'capelle-aan-den-ijssel': { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['kralingen', 'ridderkerk'] },
   'barendrecht':            { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['ijsselmonde', 'ridderkerk'] },
   'ridderkerk':             { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['barendrecht', 'ijsselmonde'] },
   'vlaardingen':            { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['schiedam', 'rotterdam-zuid'] },
@@ -91,6 +91,18 @@ function page(w) {
   ].map(t => `<div class="usp"><span class="usp-check">${CHECK}</span>${t}</div>`).join('');
 
   const lokaal = w.lokaalTekst.map(p => `<p>${esc(p)}</p>`).join('');
+
+  // Buurtenlijst: concrete, controleerbare dekking per gebied. Geeft elke spoke eigen
+  // inhoud (long-tail: "pand verkopen Blijdorp") zonder marktclaims te doen die wij
+  // niet kunnen onderbouwen.
+  const buurten = (w.buurten || []).length
+    ? `<div class="spoke-buurten">
+        <h3>Wij kopen in heel ${esc(w.naam)}</h3>
+        <ul class="buurt-lijst">${w.buurten.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+        <p class="buurt-note">Staat uw buurt er niet bij? Wij kijken naar ieder pand in ${esc(w.naam)} en omgeving.</p>
+      </div>`
+    : '';
+
   const vglRows = VERGELIJK.map(r =>
     `<tr><td>${esc(r[0])}</td><td class="vgl-hi">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('');
   const stappen = STAPPEN.map(s =>
@@ -121,7 +133,7 @@ function page(w) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260616g">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260715">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -141,6 +153,12 @@ function page(w) {
     .spoke-lokaal{max-width:1320px;margin:0 auto;padding:clamp(3.5rem,7vw,6rem) clamp(1.5rem,5vw,5.5rem)}
     .spoke-lokaal .lokaal-body{max-width:760px}
     .spoke-lokaal .lokaal-body p{font-size:1.02rem;font-weight:300;line-height:1.9;color:var(--ink3);margin:0 0 1.25rem}
+    .spoke-buurten{max-width:760px;margin:2.75rem 0 0;padding:1.75rem 0 0;border-top:1px solid var(--line)}
+    .spoke-buurten h3{font-family:var(--serif);font-weight:300;font-size:1.35rem;color:var(--navy);margin:0 0 1.1rem;letter-spacing:-.01em}
+    .buurt-lijst{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0}
+    .buurt-lijst li{font-size:.84rem;color:var(--ink3);background:rgba(var(--gold-rgb),.06);
+      border:1px solid rgba(var(--gold-rgb),.22);border-radius:100px;padding:.4rem .9rem}
+    .buurt-note{font-size:.84rem;font-weight:300;color:var(--ink4);margin:1.1rem 0 0}
     .spoke-buren{max-width:1320px;margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem) clamp(3rem,6vw,5rem);
       display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:center}
     .spoke-buren span{font-size:.8rem;color:var(--ink4);font-weight:400}
@@ -184,6 +202,7 @@ function page(w) {
     <section class="spoke-lokaal">
       <div class="proc-head"><span class="t-eyebrow">${esc(w.naam)}</span><h2>${esc(w.lokaalTitel)}</h2></div>
       <div class="lokaal-body">${lokaal}</div>
+      ${buurten}
     </section>
 
     <section class="vgl-section">
