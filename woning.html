@@ -13,7 +13,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260716">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260716a">
   <style>
     .wd-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .wd-top .brand img{height:34px;width:auto;display:block}
@@ -28,7 +28,7 @@
     .wd-status{display:inline-block;font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--gold-ink);border:1px solid var(--gold);padding:5px 12px;margin-bottom:1rem}
     .wd-title{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,5vw,3rem);color:var(--navy);line-height:1.1;margin:0 0 .4rem}
     .wd-sub{color:var(--ink3);font-weight:300;font-size:1.05rem;margin:0 0 2rem}
-    .wd-gallery{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:2.5rem}
+    .wd-gallery{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:2.5rem;background:transparent}
     @media(min-width:640px){.wd-gallery{grid-template-columns:2fr 1fr}.wd-gallery .g0{grid-row:span 2}}
     .wd-gallery img{width:100%;height:100%;object-fit:cover;background:var(--cream2);display:block;min-height:180px}
     .wd-gallery img{cursor:zoom-in;transition:transform .6s var(--ease),opacity .3s var(--ease);will-change:transform}
@@ -41,6 +41,7 @@
     .wd-more:hover{background:rgba(var(--gold-rgb),.1);border-color:var(--gold);color:var(--gold-text)}
     .wd-more:active{transform:translateY(1px)}
     .wd-cols{display:grid;grid-template-columns:1fr;gap:2.5rem}
+    .wd-cols .wd-body{padding:0} /* reset: homeinn-public.css definieert .wd-body als modal-component met padding */
     @media(min-width:880px){.wd-cols{grid-template-columns:1.6fr 1fr;align-items:start}}
     .wd-specs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--cream3);margin-bottom:2rem}
     .wd-spec{padding:1rem 1.25rem;border-bottom:1px solid var(--cream3)}
@@ -99,7 +100,7 @@
     var id = getParam('id');
 
     function notFound(){
-      main.innerHTML = '<div class="wd-msg"><h1>Deze woning is niet (meer) beschikbaar</h1><p>Mogelijk is de woning inmiddels verkocht of verhuurd. Bekijk ons actuele aanbod of laat weten wat u zoekt.</p><a class="btn btn-primary" href="te-koop.html">Bekijk het aanbod →</a></div>';
+      main.innerHTML = '<div class="wd-msg"><h1>Deze woning is niet (meer) beschikbaar</h1><p>Mogelijk is de woning inmiddels verkocht of verhuurd. Bekijk ons actuele aanbod of <a href="te-koop.html#inschrijf" style="color:var(--gold);text-decoration:underline">laat weten wat u zoekt</a>.</p><a class="btn btn-primary" href="te-koop.html">Bekijk het aanbod →</a></div>';
     }
 
     if (!id) { notFound(); return; }

@@ -281,6 +281,10 @@ body.hero-ready .hero-micro{animation:heroUp .8s var(--ease-out) .82s both}
 .calc-row-label span{font-size:1.1rem;font-weight:300;color:var(--gold2);text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif}
 input[type=range]{-webkit-appearance:none;width:100%;height:1px;background:rgba(255,255,255,.15);outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--gold);border-radius:0;cursor:none!important}
+@media(hover:none),(pointer:coarse){
+  input[type=range]{height:44px;background:linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.15)) 50% 50%/100% 1px no-repeat}
+  input[type=range]::-webkit-slider-thumb{width:28px;height:28px}
+}
 .calc-toggle{display:flex;border:1px solid rgba(255,255,255,.08);margin-bottom:2.25rem;overflow:hidden}
 .calc-tog-btn{flex:1;padding:11px;font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);background:none;border:none;cursor:none!important;transition:all .2s}
 .calc-tog-btn.on{background:var(--gold);color:var(--navy)}
@@ -516,8 +520,8 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .f-social-btn svg{width:19px;height:19px}
 .f-social-btn:hover{color:var(--navy);background:var(--gold2);border-color:var(--gold2);transform:translateY(-2px)}
 .f-social-btn:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
-.mini-f-social{display:inline-flex;align-items:center;gap:.65rem;margin-left:1.4rem}
-.mini-f-social a{display:inline-flex;color:var(--ink3);transition:color .2s}
+.mini-f-social{display:inline-flex;align-items:center;margin-left:.7rem}
+.mini-f-social a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-left:0!important;color:var(--ink3);transition:color .2s}
 .mini-f-social a:hover{color:var(--gold-ink)}
 .mini-f-social svg{width:16px;height:16px}
 .f-col h3,.f-col h5{font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:1.25rem}
@@ -538,7 +542,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .modal-nav{background:var(--navy);padding:2.25rem 2.5rem 2rem;position:relative}
 .modal-nav h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.65rem;font-weight:300;color:#fff;margin-bottom:.3rem}
 .modal-nav p{font-size:.78rem;font-weight:300;color:rgba(255,255,255,.38)}
-.modal-x{position:absolute;top:1.5rem;right:1.5rem;width:34px;height:34px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:1rem;color:rgba(255,255,255,.45);transition:all .2s}
+.modal-x{position:absolute;top:1.25rem;right:1.25rem;width:44px;height:44px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:1rem;color:rgba(255,255,255,.45);transition:all .2s}
 .modal-x:hover{background:rgba(255,255,255,.12);color:#fff}
 .modal-body{padding:2.25rem 2.5rem}
 .m2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -723,8 +727,10 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 @media(hover:none),(pointer:coarse){
   *{cursor:auto!important}
   button,input[type=range],.calc-tog-btn,.cf-submit,.m-submit{cursor:pointer!important}
+  .cf-group input,.cf-group select,.cf-group textarea,.m-group input,.m-group select{font-size:16px}
   #cur,#cur-ring{display:none!important}
   .pk-cta,.pillar-cta{padding:12px 0;min-height:44px}
+  .btn,.tc-btn,.cf-submit,.m-submit,.wd-more{min-height:44px}
   .f-col ul a,.footer-links a{padding:8px 0;display:inline-block}
 }
 

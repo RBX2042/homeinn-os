@@ -135,7 +135,7 @@
     .step-actions{display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-10);flex-wrap:wrap}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;font-family:var(--sans);
       font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
-      border:1px solid transparent;border-radius:0;padding:15px 30px;position:relative;overflow:hidden;transition:all .3s var(--ease)}
+      border:1px solid transparent;border-radius:0;padding:14px 33px;position:relative;overflow:hidden;transition:all .3s var(--ease)}
     .btn::after{content:'';position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity .25s}
     .btn:hover::after{opacity:.06}
     .btn:active{transform:translateY(1px)}
@@ -195,11 +195,12 @@
     footer .f-in nav a{color:var(--ink3);text-decoration:none;margin-left:var(--space-4)}
     footer .f-in nav a:first-child{margin-left:0}
     footer .f-in nav a:hover{color:var(--gold-ink)}
-    .mini-f-social{display:inline-flex;align-items:center;gap:.65rem;margin-left:1.4rem}
-    .mini-f-social a{display:inline-flex;color:var(--ink3);transition:color .2s}
+    .mini-f-social{display:inline-flex;align-items:center;gap:0;margin-left:1.4rem}
+    .mini-f-social a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;color:var(--ink3);transition:color .2s}
     .mini-f-social a:hover{color:var(--gold-ink)}
     .mini-f-social svg{width:16px;height:16px}
 
+    @media(hover:none) and (pointer:coarse){input[type=text],input[type=tel],input[type=email],select,textarea{font-size:16px}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
   </style>
 </head>
@@ -377,7 +378,7 @@
             <div class="grid-2">
               <div class="field">
                 <label class="lbl" for="telefoon">Telefoonnummer</label>
-                <input type="tel" id="telefoon" name="telefoon" autocomplete="tel" placeholder="+31 6 12 34 56 78" required>
+                <input type="tel" id="telefoon" name="telefoon" autocomplete="tel" placeholder="+31 6 12 34 56 78">
                 <p class="field-err" data-for="telefoon">Vul een telefoonnummer of e-mailadres in.</p>
               </div>
               <div class="field">

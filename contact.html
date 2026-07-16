@@ -23,7 +23,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260716">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260716a">
   <style>
     .ct-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .ct-top .brand img{height:34px;width:auto;display:block}
@@ -34,7 +34,7 @@
     .ct-grid{display:grid;grid-template-columns:1fr;gap:clamp(2rem,4vw,3.5rem)}
     @media(min-width:900px){.ct-grid{grid-template-columns:1.1fr 1fr}}
     .ci-wrap{display:flex;flex-direction:column;gap:1.1rem}
-    .ci-item{display:flex;gap:1rem;align-items:flex-start}
+    .ci-item{display:flex;gap:1rem;align-items:flex-start;padding:0;border-bottom:none}
     .ci-tag{flex:0 0 52px;font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;font-weight:600;color:var(--gold-ink);padding-top:.2rem}
     .ci-body strong{display:block;color:var(--navy);font-weight:600;font-size:.95rem}
     .ci-body span{font-size:.88rem;font-weight:300;color:var(--ink3);line-height:1.6}
@@ -85,7 +85,7 @@
               <div class="cf-group"><label for="ct-portfolio">Aantal objecten</label><select id="ct-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
               <div class="cf-group"><label for="ct-interest">Waar gaat het om?</label><select id="ct-interest" name="package_interest"><option>Pand verkopen aan HomeINN</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Interesse in woningaanbod</option><option>Mijn woning laten verhuren</option><option>Huurwoning zoeken</option><option>Investeren in een project</option><option>Anders / advies</option></select></div>
             </div>
-            <div class="cf-group"><label for="ct-message">Uw bericht (optioneel)</label><textarea id="ct-message" name="message" placeholder="Vertel ons over uw vastgoed of stel een vraag..."></textarea></div>
+            <div class="cf-group"><label for="ct-message">Uw bericht (optioneel)</label><textarea id="ct-message" name="message" placeholder="Verkoopt u? Vermeld hier het adres van uw pand — of stel uw vraag..."></textarea></div>
             <button class="cf-submit" type="submit">Verstuur bericht →</button>
             <p class="m-note" style="margin-top:.9rem">Met verzenden gaat u akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>.</p>
           </form>
@@ -100,7 +100,7 @@
           <div class="ci-item"><div class="ci-tag">Tel</div><div class="ci-body"><strong>Telefoon</strong><span><a href="tel:+31626257071">+31 6 26 25 70 71</a><br>Maandag t/m vrijdag, 08:00 – 18:00</span></div></div>
           <div class="ci-item"><div class="ci-tag">Mail</div><div class="ci-body"><strong>E-mail</strong><span><a href="mailto:info@homeinn.nl">info@homeinn.nl</a><br>Reactie binnen vier uur op werkdagen</span></div></div>
           <div class="ci-item"><div class="ci-tag">Adres</div><div class="ci-body"><strong>Vestiging</strong><span>Rotterdam, Nederland<br>Werkgebied: Rotterdam en omstreken</span></div></div>
-          <div class="ci-item"><div class="ci-tag">Spoed</div><div class="ci-body"><strong>Storingen 24/7</strong><span>Uitsluitend voor huurders van Pakket 2 en 3<br>Dag en nacht bereikbaar</span></div></div>
+          <div class="ci-item"><div class="ci-tag">Spoed</div><div class="ci-body"><strong>Storingen 24/7</strong><span>Voor huurders van panden in beheer (vanaf Full Operational)<br>Dag en nacht bereikbaar</span></div></div>
           <div class="ci-item"><div class="ci-tag">Volg</div><div class="ci-body"><strong>Sociale media</strong><span><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer">Facebook</a> · <a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer">Instagram</a></span></div></div>
           <button class="map-load" type="button" id="ct-map"><strong>📍 Toon HomeINN in Rotterdam</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik (privacy)</span></button>
         </div>
@@ -145,7 +145,7 @@
       var f=new FormData(form);
       if(f.get('company_website'))return;
       var naam=(String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
-      if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){var fr=document.getElementById('ct-first');if(fr)fr.focus();return;}
+      if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){var err=document.getElementById('ct-form-err');if(!err){err=document.createElement('p');err.id='ct-form-err';err.setAttribute('role','alert');err.style.cssText='color:var(--red);font-size:var(--text-xs);font-weight:500;margin:var(--space-2) 0 0';form.appendChild(err);}err.textContent=!naam?'Vul uw voornaam in.':'Vul een telefoonnummer of e-mailadres in.';var fr=document.getElementById(!naam?'ct-first':'ct-email');if(fr)fr.focus();return;}
       saveLead('Contact',{name:naam,email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),portfolio:String(f.get('portfolio_size')||''),subject:String(f.get('package_interest')||''),message:String(f.get('message')||'').trim()});
       form.style.display='none';
       var ok=document.getElementById('ct-success'); if(ok){ok.style.display='block';ok.scrollIntoView({behavior:'smooth',block:'center'});}
