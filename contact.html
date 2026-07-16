@@ -23,7 +23,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260716a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260717">
   <style>
     .ct-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .ct-top .brand img{height:34px;width:auto;display:block}
@@ -51,6 +51,8 @@
     .ct-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
     .ct-foot .in a:first-child{margin-left:0}
     .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+    .page-hero{padding-top:calc(clamp(7rem,14vw,14rem) - 72px)}
+    @media(max-width:480px){.page-hero{padding-top:2.5rem}}
   </style>
 </head>
 <body>
@@ -72,7 +74,7 @@
       <div class="ct-grid">
         <!-- FORMULIER -->
         <div class="cf" id="ct-form-box">
-          <h3 style="font-family:var(--serif);font-weight:300;font-size:1.6rem;color:var(--navy);margin:0 0 1.25rem">Stuur ons een bericht</h3>
+          <h2 style="font-family:var(--serif);font-weight:300;font-size:1.6rem;color:var(--navy);margin:0 0 1.25rem">Stuur ons een bericht</h2>
           <form method="post" action="#" id="ct-form" novalidate>
             <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="cf-2col">

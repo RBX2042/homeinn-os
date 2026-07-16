@@ -23,7 +23,7 @@ function esc(s) {
 
 const CTA = {
   verkopen: { titel: 'Overweegt u uw pand te verkopen?', sub: 'HomeINN koopt direct aan met eigen kapitaal — voorstel binnen 48 uur, zonder makelaarskosten.', label: 'Vraag een voorstel aan', href: 'pand-verkopen.html' },
-  beheer:   { titel: 'Uw vastgoed zorgeloos laten beheren?', sub: 'Vaste percentages, één aanspreekpunt en een 24/7 storingslijn. Vraag vrijblijvend advies aan.', label: 'Vraag een offerte aan', href: 'vastgoedbeheer.html#offerte' },
+  beheer:   { titel: 'Uw vastgoed zorgeloos laten beheren?', sub: 'Vaste percentages, één aanspreekpunt en een 24/7 storingslijn voor huurders (vanaf Full Operational). Vraag vrijblijvend advies aan.', label: 'Vraag een offerte aan', href: 'vastgoedbeheer.html#offerte' },
   gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een gesprek', href: 'contact.html' },
 };
 
@@ -53,7 +53,7 @@ function head(titel, desc, canonical) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260716a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260717">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}

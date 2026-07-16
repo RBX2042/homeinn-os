@@ -690,7 +690,7 @@ function buildSignals() {
   // Website-aanvragen
   const nieuweLeads = combinedInbox().filter(l => !l.handled).length;
   if (nieuweLeads) {
-    signals.push({ level: 'hoog', text: `${nieuweLeads} nieuwe aanvra${nieuweLeads === 1 ? 'ag' : 'gen'} via de website (lokaal getest) — bekijk en volg op. Live aanvragen komen per e-mail binnen.`, go: 'inbox' });
+    signals.push({ level: 'hoog', text: `${nieuweLeads} nieuwe aanvra${nieuweLeads === 1 ? 'ag' : 'gen'} via de website — bekijk en volg op.`, go: 'inbox' });
   }
   // Taken
   state.tasks.filter(task => !task.done && task.due && task.due <= t).forEach(task => {
@@ -2270,7 +2270,7 @@ function renderCloudPanel() {
         <button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button>
       </div>
       <p class="hint">"Backup naar cloud" bewaart je volledige werkstaat (multi-device). "Herstel van cloud" haalt 'm terug op een ander apparaat — dat overschrijft je lokale gegevens, dus vraagt eerst bevestiging.</p>`
-    : `<p class="hint">Dit account heeft geen eigenaar/team-rol; synchroniseren is daarom niet beschikbaar. Een investeerder logt in op de portaal-pagina voor investeerders (volgt in Fase 3).</p>
+    : `<p class="hint">Dit account heeft geen eigenaar/team-rol; synchroniseren is daarom niet beschikbaar. Een investeerder logt in via <a href="inloggen.html">de inlogpagina</a> en komt automatisch in het investeerdersportaal.</p>
       <div class="head-actions"><button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button></div>`}`;
 }
 
@@ -2780,7 +2780,7 @@ function renderMoney() {
     </div>
     <div class="panel">
       <div class="panel-head">
-        <div><h2>Inkomende facturen &amp; huur</h2><p>Huurnota's, servicekosten, verkoopopbrengsten en rente-uitkeringen aan investeerders.</p></div>
+        <div><h2>Uitgaande facturen &amp; huur</h2><p>Huurnota's, servicekosten, verkoopopbrengsten en rente-uitkeringen aan investeerders.</p></div>
         <div class="head-actions">
           <button class="btn secondary slim" id="gen-rent" data-action="gen-rent">Huurnota's deze maand</button>
           <button class="btn primary slim" data-action="new-invoice">+ Factuur</button>
@@ -2831,7 +2831,7 @@ function renderMaintenance() {
     </div>
     <div class="panel">
       <div class="panel-head">
-        <div><h2>Onderhoud &amp; meldingen — hele portefeuille</h2><p>Eigen notities én meldingen die huurders via het portaal insturen. Klik "Synchroniseer cloud" voor de nieuwste portaal-meldingen.</p></div>
+        <div><h2>Onderhoud &amp; meldingen — hele portfolio</h2><p>Eigen notities én meldingen die huurders via het portaal insturen. Klik "Synchroniseer cloud" voor de nieuwste portaal-meldingen.</p></div>
         <button class="btn secondary slim" data-action="cloud-sync">Synchroniseer cloud</button>
       </div>
       <form class="inline-form" data-form="add-maint-any">
@@ -4810,11 +4810,11 @@ document.addEventListener('click', event => {
         HCloud.notify({ to: email, subject: `${niveau} — openstaande betaling HomeINN`, html: `<p>Beste ${esc(f.debiteur || '')},</p><p>Onze administratie laat zien dat de volgende betaling nog openstaat:</p><p><strong>${esc(f.desc)}</strong><br>Bedrag: <strong>${fmtMoney(f.amount)}</strong><br>Vervaldatum: ${fmtDate(f.due)} (${dgn} dagen geleden)</p><p>Wij verzoeken u vriendelijk het bedrag zo spoedig mogelijk te voldoen. Heeft u al betaald? Dan kunt u deze ${niveau.toLowerCase()} als niet verzonden beschouwen.</p><p>Met vriendelijke groet,<br>HomeINN</p>` });
         f.status = niveau;
         rerender();
-        showToast(`${niveau} verstuurd naar ${email}.`);
+        showToast(`${niveau} verstuurd naar ${email}. Geen mail aangekomen? Controleer de Resend-instelling (Instellingen → Cloud).`);
       } else {
         f.status = niveau;
         rerender();
-        showToast(`Status op "${niveau}" gezet. Geen e-mail van de huurder bekend (vul die in bij het pand) — verstuur de herinnering handmatig.`);
+        showToast(email ? `Status op "${niveau}" gezet. Cloud niet beschikbaar — log eerst in via Instellingen → Cloud en verstuur de herinnering handmatig.` : `Status op "${niveau}" gezet. Geen e-mail van de huurder bekend (vul die in bij het pand) — verstuur de herinnering handmatig.`);
       }
       break;
     }

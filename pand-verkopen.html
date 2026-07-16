@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pand verkopen Rotterdam | Vrijblijvend voorstel binnen 48 uur — HomeINN</title>
+  <title>Pand verkopen Rotterdam | Voorstel binnen 48 uur — HomeINN</title>
   <meta name="description" content="Vraag een vrijblijvend voorstel aan voor uw woning, appartement of portiekpand in Rotterdam. HomeINN koopt met eigen kapitaal — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, geen kosten.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
@@ -40,7 +40,7 @@
 
     /* ─── Topbar (logo + telefoon, géén navigatie) ─── */
     .topbar{position:sticky;top:0;z-index:var(--z-nav);display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);
-      padding:var(--space-4) clamp(var(--space-5),5vw,var(--space-12));background:var(--navy);
+      padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);
       border-bottom:1px solid rgba(var(--gold-rgb),.35)}
     .topbar a.brand{display:inline-flex;align-items:center}
     .topbar .brand img{height:34px;width:auto}
@@ -191,7 +191,7 @@
     /* ─── Footer ─── */
     footer{border-top:1px solid var(--cream3);background:var(--panel)}
     footer .f-in{max-width:1140px;margin:0 auto;padding:var(--space-8) clamp(var(--space-5),5vw,var(--space-12));
-      display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;align-items:center;font-size:var(--text-xs);color:var(--ink4)}
+      display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
     footer .f-in nav a{color:var(--ink3);text-decoration:none;margin-left:var(--space-4)}
     footer .f-in nav a:first-child{margin-left:0}
     footer .f-in nav a:hover{color:var(--gold-ink)}
@@ -224,7 +224,7 @@
     <!-- ─── Bevestiging (na verzenden) ─── -->
     <div class="done-card" id="done" aria-live="polite">
       <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
-      <h2>Uw aanvraag is ontvangen.</h2>
+      <h2 tabindex="-1">Uw aanvraag is ontvangen.</h2>
       <p>Bedankt voor uw vertrouwen. Wij nemen binnen <strong>vier uur op werkdagen</strong> persoonlijk contact met u op en doen binnen <strong>48 uur</strong> een onderbouwd voorstel voor uw pand.</p>
       <div class="done-steps">
         <div class="ds"><span class="ds-n">1</span><span class="ds-t"><strong>Wij bellen u</strong>Binnen vier uur op werkdagen, voor een korte toelichting en het inplannen van één discrete opname.</span></div>
@@ -270,7 +270,7 @@
               <div class="field">
                 <label class="lbl" for="straat">Straat</label>
                 <input type="text" id="straat" name="straat" autocomplete="address-line1" placeholder="Bijv. Mathenesserlaan" required>
-                <p class="field-err" data-for="straat">Vul de straatnaam in.</p>
+                <p class="field-err" data-for="straat" role="alert">Vul de straatnaam in.</p>
               </div>
               <div class="field">
                 <label class="lbl" for="huisnr">Huisnummer</label>

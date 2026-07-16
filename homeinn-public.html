@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HomeINN | Vastgoed in Rotterdam — aankoop, ontwikkeling, verkoop, verhuur &amp; beheer</title>
+  <title>HomeINN — Vastgoed in Rotterdam | Van aankoop tot beheer</title>
   <meta name="description" content="HomeINN koopt panden direct aan, ontwikkelt ze en verkoopt, verhuurt of beheert ze in Rotterdam en omstreken. Verkoop uw pand zonder gedoe — voorstel binnen 48 uur.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="manifest" href="manifest.webmanifest">
@@ -76,7 +76,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260716a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260717">
   <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
   <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -398,7 +398,7 @@
       <span class="t-eyebrow">Wat wij doen</span>
       <div class="rule"></div>
       <h2>Vijf disciplines.<br>Eén <em>doorlopende cyclus.</em></h2>
-      <p>HomeINN doorloopt de hele vastgoedcyclus zelf — van aankoop tot beheer. Met eigen kapitaal en één vast team houden we snelheid, kwaliteit en resultaat in eigen hand.</p>
+      <p>HomeINN doorloopt de hele vastgoedcyclus zelf — van aankoop tot beheer. Met eigen kapitaal en één vast team houden wij snelheid, kwaliteit en resultaat in eigen hand.</p>
     </div>
     <div class="disc-list rv-stagger">
       <a class="disc-row" href="pand-verkopen.html">
@@ -497,7 +497,7 @@
   <div class="cta-inner rv">
     <h2>Uw pand verkopen — of uw vastgoed beter laten <em>renderen?</em></h2>
     <button class="btn btn-primary" onclick="openModal()">Gratis kennismakingsgesprek <span class="arr">→</span></button>
-    <p class="cta-micro rv d1">Reactie binnen 4 uur op werkdagen · Gesprek van 30 minuten · Geheel vrijblijvend</p>
+    <p class="cta-micro rv d1">Reactie binnen vier uur op werkdagen · Gesprek van 30 minuten · Geheel vrijblijvend</p>
   </div>
 </div>
 
@@ -557,12 +557,12 @@
 <!-- ══════════════════════════════════════
      MODAL
 ══════════════════════════════════════ -->
-<div class="modal-bg" id="modal">
+<div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal">
     <div class="modal-nav">
-      <h3>Gratis kennismakingsgesprek</h3>
+      <h3 id="modal-title">Gratis kennismakingsgesprek</h3>
       <p>30 minuten · Vrijblijvend · Rotterdam of online</p>
-      <button class="modal-x" onclick="closeModal()">✕</button>
+      <button class="modal-x" onclick="closeModal()" aria-label="Sluiten">✕</button>
     </div>
     <div id="mf">
       <form method="post" action="#">
@@ -585,7 +585,7 @@
     <div class="modal-success" id="ms">
       <div class="success-icon"><svg width="22" height="22" aria-hidden="true"><use href="#ic-check"/></svg></div>
       <h3>Uw aanvraag is ontvangen</h3>
-      <p>Wij nemen binnen vier uur contact met u op om een afspraak in te plannen. We kijken ernaar uit.</p>
+      <p>Wij nemen binnen vier uur op werkdagen contact met u op om een afspraak in te plannen. Wij kijken ernaar uit.</p>
       <button class="btn btn-primary" style="margin-top:2rem" onclick="closeModal()">Sluiten <span class="arr">→</span></button>
     </div>
   </div>

@@ -506,7 +506,7 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
   .sidebar-card { display: none; }
   .app-shell { margin-left: 0; }
   .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dash-grid, .split, .dash-grid.bottom, .detail-grid { grid-template-columns: 1fr; }
+  .dash-grid, .split, .dash-grid.bottom, .detail-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 720px) {
@@ -523,6 +523,9 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--navy); }
   .week-grid { grid-template-columns: repeat(7, 220px); }
   .detail-head { flex-direction: column; align-items: stretch; }
   .progress-wrap { justify-items: start; }
+  .chart { grid-auto-columns: minmax(64px, 1fr); overflow-x: auto; }
+  .chart.chart span em { font-size: .85rem; }
+  .chart.chart span i { max-width: 64px; overflow: hidden; text-overflow: ellipsis; }
 }
 
 /* ===== Aankooppijplijn (kanban) ===== */

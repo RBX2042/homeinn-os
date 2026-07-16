@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260614">
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="styles.css?v=20260716a">
+  <link rel="stylesheet" href="styles.css?v=20260717">
 </head>
 <body>
   <aside class="sidebar">
@@ -91,7 +91,7 @@
         <div class="panel-head">
           <div>
             <h2>Aanvragen via de website</h2>
-            <p>Aanvragen van de live website ontvang je per e-mail op info@homeinn.nl. Test je de formulieren lokaal (Website preview), dan verschijnen ze ook hier — en zet je ze met één klik om naar een aankoopkans of relatie.</p>
+            <p>Live aanvragen van de website verschijnen hier zodra je bent ingelogd op de cloud (Instellingen → Cloud) — en komen daarnaast per e-mail binnen op info@homeinn.nl. Lokaal geteste formulieren (Website preview) staan er direct. Zet elke aanvraag met één klik om naar een aankoopkans of relatie.</p>
           </div>
         </div>
         <div class="table-wrap">
@@ -555,7 +555,7 @@
         </aside>
       </div>
       <section class="panel" id="cloud-panel">
-        <div class="panel-head compact"><h2>Cloud &amp; samenwerking</h2><span class="sub">Synchroniseer naar de cloud zodat investeerders, team en huurders kunnen inloggen.</span></div>
+        <div class="panel-head compact"><h2>Cloud &amp; samenwerking</h2><span class="sub">Synchroniseer naar de cloud zodat investeerders, huurders, kopers, verkopers en je team kunnen inloggen.</span></div>
         <div id="cloud-body"></div>
       </section>
       <section class="panel" id="team-panel" hidden>
@@ -695,7 +695,7 @@
   <dialog class="modal" id="bid-modal">
     <form method="dialog" class="modal-card" id="bid-form">
       <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
-      <p class="eyebrow">Bod uitbrengen</p>
+      <p class="eyebrow">Bod</p>
       <h2 id="bid-modal-title">Bod registreren</h2>
       <input type="hidden" name="dealId">
       <input type="hidden" name="id">
@@ -1086,7 +1086,7 @@
   <dialog class="modal" id="invoice-modal">
     <form method="dialog" class="modal-card" id="invoice-form">
       <button class="close" value="cancel" type="submit" aria-label="Sluiten">×</button>
-      <p class="eyebrow">Inkomende factuur / opbrengst</p>
+      <p class="eyebrow">Uitgaande factuur / opbrengst</p>
       <h2 id="invoice-modal-title">Factuur opstellen</h2>
       <input type="hidden" name="id">
       <div class="form-grid">
@@ -1273,7 +1273,7 @@
     <div class="modal-card">
       <button class="close" type="button" data-action="close-compare" aria-label="Sluiten">×</button>
       <p class="eyebrow">Aankoopkansen</p>
-      <h2>Deals vergelijken</h2>
+      <h2>Aankoopkansen vergelijken</h2>
       <div id="compare-body"></div>
       <menu>
         <button class="btn secondary" type="button" data-action="close-compare">Sluiten</button>
@@ -1304,6 +1304,6 @@
   <div id="print-area" aria-hidden="true"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="cloud.js?v=20260623"></script>
-  <script src="app.js?v=20260628"></script>
+  <script src="app.js?v=20260717"></script>
 </body>
 </html>

@@ -58,7 +58,7 @@ const VERGELIJK = [
 
 const STAPPEN = [
   ['01', 'Vertel ons over uw pand', 'Adres, staat en uw situatie volstaan — telefonisch of via het formulier.'],
-  ['02', 'Opname binnen enkele dagen', 'Één discreet bezoek, zonder verplichtingen — ook bij verhuurde staat.'],
+  ['02', 'Opname binnen enkele dagen', 'Eén discreet bezoek, zonder verplichtingen — ook bij verhuurde staat.'],
   ['03', 'Onderbouwd voorstel binnen 48 uur', 'Transparant opgebouwd op staat, ligging en marktwaarde.'],
   ['04', 'Passeren bij de notaris', 'Bij een notaris naar uw keuze, op het moment dat ú kiest.'],
 ];
@@ -78,7 +78,7 @@ function buurLinks(slug) {
 
 function page(w) {
   const meta = META[w.slug] || { soort: 'regio Rotterdam', areaType: 'city', buren: [] };
-  const titel = `Huis verkopen ${w.naam} | Direct bod binnen 48 uur — HomeINN`;
+  const titel = `Huis verkopen ${w.naam} | Bod in 48 uur — HomeINN`;
   const canonical = `https://home-inn.nl/verkopen-${w.slug}`;
   const h1 = `Uw pand verkopen in ${esc(w.naam)} — direct bod van HomeINN`;
   const areaLD = meta.areaType === 'city'
@@ -133,7 +133,7 @@ function page(w) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260716a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260717">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;

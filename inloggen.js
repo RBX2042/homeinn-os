@@ -23,7 +23,7 @@
       '<p class="eyebrow">HomeINN portaal</p><h1>Inloggen</h1>' +
       (sent
         ? '<p class="intro">We hebben je een inloglink gemaild. Open die link op dit apparaat om in te loggen.</p><div class="status" id="status"></div>'
-        : '<p class="intro">Beheerders loggen in met e-mail + wachtwoord. Investeerders, huurders en kopers kunnen ook een inloglink gebruiken (laat het wachtwoord dan leeg).</p>' +
+        : '<p class="intro">Beheerders loggen in met e-mail + wachtwoord. Investeerders, huurders, kopers en verkopers kunnen ook een inloglink gebruiken (laat het wachtwoord dan leeg).</p>' +
           '<form id="f"><label for="email">E-mailadres</label><input id="email" type="email" required placeholder="jouw@email.nl" autocomplete="email">' +
           '<label for="pw">Wachtwoord <span class="muted" style="font-weight:400">(optioneel)</span></label><input id="pw" type="password" placeholder="••••••••" autocomplete="current-password">' +
           '<button class="btn primary" type="submit">Inloggen</button>' +
