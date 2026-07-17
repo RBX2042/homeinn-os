@@ -52,7 +52,7 @@ const VERGELIJK = [
   ['Tijd tot zekerheid', 'Voorstel binnen 48 uur', 'Gemiddeld 3–6 maanden'],
   ['Makelaars- en stylingkosten', '€ 0', '± 1–2% courtage + verkoopklaar maken'],
   ['Staat van de woning', 'Wij kopen in elke staat', 'Opknappen verhoogt de kans'],
-  ['Financieringsvoorbehoud', 'Nooit — eigen kapitaal', 'Koop kan op het laatst stuklopen'],
+  ['Financieringsvoorbehoud', 'Nooit', 'Koop kan op het laatst stuklopen'],
   ['Privacy', 'Geen borden, geen Funda', 'Volledig openbaar traject'],
 ];
 
@@ -253,7 +253,7 @@ function page(w) {
     "url":"${canonical}",
     "areaServed":${areaLD},
     "address":{"@type":"PostalAddress","addressLocality":"Rotterdam","addressCountry":"NL"},
-    "description":"HomeINN koopt panden in ${esc(w.naam)} direct aan met eigen kapitaal — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
+    "description":"HomeINN koopt panden in ${esc(w.naam)} direct aan — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
   }
   </script>
   <script type="application/ld+json">

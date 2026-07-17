@@ -22,7 +22,7 @@ function esc(s) {
 }
 
 const CTA = {
-  verkopen: { titel: 'Overweegt u uw pand te verkopen?', sub: 'HomeINN koopt direct aan met eigen kapitaal — voorstel binnen 48 uur, zonder makelaarskosten.', label: 'Vraag een voorstel aan', href: 'pand-verkopen.html' },
+  verkopen: { titel: 'Overweegt u uw pand te verkopen?', sub: 'HomeINN koopt direct aan — voorstel binnen 48 uur, zonder makelaarskosten.', label: 'Vraag een voorstel aan', href: 'pand-verkopen.html' },
   beheer:   { titel: 'Uw vastgoed zorgeloos laten beheren?', sub: 'Vaste percentages, één aanspreekpunt en een 24/7 storingslijn voor huurders (vanaf Full Operational). Vraag vrijblijvend advies aan.', label: 'Vraag een offerte aan', href: 'vastgoedbeheer.html#offerte' },
   gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een gesprek', href: 'contact.html' },
 };
