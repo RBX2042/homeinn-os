@@ -443,7 +443,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .blog-cat{position:absolute;top:1.25rem;left:1.5rem;font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:var(--navy);padding:5px 11px}
 .blog-body{padding:1.75rem;display:flex;flex:1;flex-direction:column}
 .blog-body h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:400;color:var(--ink2);line-height:1.38;margin-bottom:.65rem}
-.blog-body p{font-size:.81rem;font-weight:300;color:var(--ink3);line-height:1.75;margin-bottom:1.25rem;flex:1}
+.blog-body p{font-size:.875rem;font-weight:300;color:var(--ink3);line-height:1.75;margin-bottom:1.25rem;flex:1}
 .blog-footer{display:flex;justify-content:space-between;padding-top:.9rem;border-top:1px solid var(--cream3);font-size:.7rem;font-weight:300;color:var(--ink4);gap:1rem;flex-wrap:wrap}
 .blog-empty{grid-column:1 / -1;background:var(--white);border:1px solid var(--cream3);padding:2.5rem}
 .blog-empty h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.8rem;font-weight:300;color:var(--ink2);margin-bottom:.5rem}
@@ -733,6 +733,8 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
   #cur,#cur-ring{display:none!important}
   .pk-cta,.pillar-cta{padding:12px 0;min-height:44px}
   .btn,.tc-btn,.cf-submit,.m-submit,.wd-more{min-height:44px}
+  .hero-textlink{padding:12px 0;min-height:44px}
+  .f-social-btn{width:44px;height:44px}
   .f-col ul a,.footer-links a{padding:8px 0;display:inline-block}
 }
 

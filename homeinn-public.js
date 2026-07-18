@@ -223,7 +223,7 @@ function doReveal() {
   }, {threshold: 0.08});
   document.querySelectorAll('.rv:not(.in), .rv-stagger:not(.in)').forEach(el => obs.observe(el));
 }
-window.addEventListener('scroll', doReveal, {passive: true});
+doReveal();
 
 /* ===== Count-up op kerncijfers (jstats) ===== */
 function runCount(el) {
