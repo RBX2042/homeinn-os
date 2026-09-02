@@ -1296,3 +1296,134 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
   .wd-main{animation:none}
   .lb-img{transition:none}
 }
+
+/* ════════════════════════════════════════════════════════════
+   LANDINGSPAGINA — AFRONDING (fotografie, werkwijze, kennis, FAQ)
+   Zie fotos/FOTOLIJST.md voor de benodigde beeldbestanden.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Ankers vrijhouden van de vaste nav (72px) ── */
+#diensten,#werkwijze,#werk,#vragen{scroll-margin-top:92px}
+
+/* ── Fotolaag hero — warmte zodra er echte fotografie is; zonder foto
+      verwijdert de laag zichzelf (onerror) en blijft de line-art intact ── */
+.hero-photo{position:absolute;inset:0;z-index:0;overflow:hidden;opacity:0;transition:opacity 1.2s var(--ease)}
+.hero-photo.on{opacity:1}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block;filter:saturate(.82) contrast(1.04)}
+/* Scrim: houdt de kop leesbaar en het navy-karakter overeind, ook bij een lichte foto */
+.hero-photo::after{content:'';position:absolute;inset:0;background:
+  linear-gradient(100deg,rgba(8,23,38,.94) 0%,rgba(9,26,43,.86) 38%,rgba(11,30,48,.62) 68%,rgba(11,30,48,.5) 100%),
+  linear-gradient(180deg,rgba(8,23,38,.7) 0%,transparent 32%,transparent 62%,rgba(8,23,38,.72) 100%)}
+@media(max-width:720px){
+  .hero-photo img{object-position:center 45%}
+  .hero-photo::after{background:linear-gradient(180deg,rgba(8,23,38,.9) 0%,rgba(9,26,43,.8) 45%,rgba(8,23,38,.93) 100%)}
+}
+
+/* ── Projectfoto's in de werk-kaarten (line-art blijft eronder als vangnet) ── */
+.blog-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;opacity:0;transition:opacity .8s var(--ease),transform .6s var(--ease);filter:saturate(.9)}
+.blog-photo.on{opacity:1}
+.blog-card:hover .blog-photo.on{transform:scale(1.035)}
+.blog-img::before,.blog-img::after{z-index:2}
+/* Statuslabel over het beeld — losstaand, nooit uitgerekt over de kaartbreedte */
+.proj-status{align-self:flex-start}
+.blog-img .proj-status{position:relative;z-index:3;align-self:flex-end;margin:0 0 1.15rem 1.25rem;background:rgba(8,23,38,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.blog-img .proj-status.sold{background:var(--navy)}
+.blog-facts{display:block;margin-top:auto;padding-top:.9rem;border-top:1px solid var(--cream2);font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink)}
+
+/* ── Inleidende zin onder een sectiekop ── */
+.proc-lede{max-width:600px;margin-top:1.25rem;font-size:.95rem;font-weight:300;line-height:1.85;color:var(--ink3)}
+
+/* ── Werkwijze-aside (navy kaart naast de stappen) ── */
+.pa-list{list-style:none;margin:0 0 2rem}
+.pa-list li{display:flex;align-items:flex-start;gap:.8rem;padding:.72rem 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.85rem;font-weight:300;line-height:1.6;color:rgba(255,255,255,.82)}
+.pa-list li:last-child{border-bottom:none}
+.pa-ico{width:15px;height:15px;flex:0 0 auto;margin-top:.22rem;color:var(--gold2)}
+.pa-cta{width:100%;justify-content:center}
+.pa-note{margin-top:1.1rem;font-size:.78rem;font-weight:300;color:rgba(255,255,255,.55);text-align:center}
+.pa-note a{color:var(--gold3);border-bottom:1px solid rgba(var(--gold-rgb),.4)}
+.pa-note a:hover{color:var(--gold2)}
+@media(max-width:960px){.proc-aside{margin-top:.5rem}}
+
+/* ── Kennis-strip ── */
+.kn-strip{background:var(--white);border-top:1px solid var(--cream3)}
+.kn-strip-inner{max-width:1320px;margin:0 auto;padding:clamp(4rem,8vw,7rem) clamp(1.5rem,5vw,5.5rem)}
+
+/* ── FAQ — a11y en lange antwoorden ── */
+.faq-section{border-top:1px solid var(--cream3)}
+.faq-q{transition:color .2s var(--ease)}
+.faq-q:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.faq-item.open .faq-a{max-height:44rem}
+.faq-foot{margin-top:2.25rem;font-size:.85rem;font-weight:300;color:var(--ink3)}
+.faq-foot a{color:var(--gold-ink);border-bottom:1px solid rgba(var(--gold-rgb),.45)}
+.faq-foot a:hover{color:var(--gold-text)}
+
+/* ── Slot-CTA: inleidende zin ── */
+.cta-band--navy .cta-lede{max-width:520px;margin:1rem 0 2rem;font-size:.95rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.72)}
+
+/* ── Nav: vier items passen ruim, alleen de letterafstand iets strakker ── */
+@media(min-width:961px) and (max-width:1279px){
+  .nav-links{gap:1.5rem}
+  .nav-links a,.nav-sub-toggle{letter-spacing:.08em}
+}
+
+/* ── Hero-pill: nette uitlijning wanneer de tekst afbreekt op smalle schermen ── */
+.hero-pill{align-items:flex-start}
+.hero-pill-dot{margin-top:.42rem;flex:0 0 auto}
+@media(max-width:560px){
+  .hero-pill{margin-bottom:2rem}
+  .hero-pill span{letter-spacing:.13em;line-height:1.65}
+}
+
+/* ── Hoofdmenu — vier activiteiten + mega-menu onder 'Diensten'
+      Patroon van Amvest/Sotheby's: de kernactiviteiten staan op het hoogste
+      niveau, het volledige aanbod hangt in één breed paneel eronder. ── */
+.nav-has-sub{position:static}
+.nav-sub-toggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;cursor:pointer;font-family:inherit;font-size:.72rem;font-weight:450;letter-spacing:.155em;text-transform:uppercase;color:var(--white);opacity:.82;text-shadow:0 1px 6px rgba(0,0,0,.35);transition:opacity .25s var(--ease),color .25s var(--ease)}
+.nav-has-sub:hover .nav-sub-toggle,.nav-sub-toggle[aria-expanded="true"]{opacity:1;color:var(--gold2)}
+.nav-caret{width:5px;height:5px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .28s var(--ease)}
+.nav-sub-toggle[aria-expanded="true"] .nav-caret{transform:translateY(1px) rotate(225deg)}
+
+/* Breed paneel, uitgelijnd op de hele navbalk (#nav is de containing block) */
+.nav-mega{position:absolute;left:0;right:0;top:100%;background:linear-gradient(180deg,#0b1e30 0%,#081726 100%);border-bottom:1px solid rgba(var(--gold-rgb),.28);box-shadow:0 30px 70px -20px rgba(0,0,0,.6);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px);transition:opacity .24s var(--ease),transform .3s var(--ease),visibility .24s}
+.nav-has-sub:hover .nav-mega,.nav-has-sub:focus-within .nav-mega,.nav-mega.on{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
+.nav-mega-inner{max-width:1320px;margin:0 auto;padding:2.5rem clamp(1.5rem,5vw,5.5rem) 2.75rem;display:grid;grid-template-columns:1fr 1fr .9fr;gap:clamp(2rem,4vw,4rem)}
+.nav-mega-h{display:block;margin-bottom:1.1rem;padding-bottom:.7rem;border-bottom:1px solid rgba(var(--gold-rgb),.28);font-size:.64rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold3)}
+.nav-mega-col a{display:block;padding:.62rem .7rem;margin:0 -.7rem;transition:background .2s var(--ease)}
+.nav-mega-col a:hover{background:rgba(var(--gold-rgb),.09)}
+.nav-sub-t{display:block;font-size:.86rem;font-weight:400;letter-spacing:.01em;color:#fff;text-transform:none}
+.nav-mega-col a:hover .nav-sub-t{color:var(--gold2)}
+.nav-sub-d{display:block;margin-top:2px;font-size:.72rem;font-weight:300;line-height:1.5;color:rgba(255,255,255,.5);text-transform:none;letter-spacing:0}
+.nav-mega-feat{padding-left:clamp(1.5rem,2.5vw,2.5rem);border-left:1px solid rgba(255,255,255,.08)}
+.nav-mega-p{margin-bottom:1.4rem;font-size:.8rem;font-weight:300;line-height:1.75;color:rgba(255,255,255,.62)}
+.nav-mega-btn{width:100%;justify-content:center}
+.nav-mega-tel{margin-top:.9rem;font-size:.75rem;font-weight:300;color:rgba(255,255,255,.5);text-align:center}
+.nav-mega-tel a{color:var(--gold3);border-bottom:1px solid rgba(var(--gold-rgb),.4)}
+.nav-mega-tel a:hover{color:var(--gold2)}
+.nav-mega-col a:focus-visible,.nav-mega-btn:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+.nav-sub-toggle:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
+/* Gouden knop is nu een link i.p.v. een button */
+a.nav-cta{display:inline-flex;align-items:center;text-decoration:none}
+@media(min-width:961px) and (max-width:1180px){.nav-mega-inner{grid-template-columns:1fr 1fr;gap:2.5rem}.nav-mega-feat{grid-column:1/-1;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(255,255,255,.08)}.nav-mega-btn{width:auto}.nav-mega-tel{margin-top:1rem;text-align:left}}
+@media(prefers-reduced-motion:reduce){.nav-mega{transition:opacity .01s,visibility .01s;transform:none}.nav-has-sub:hover .nav-mega,.nav-has-sub:focus-within .nav-mega,.nav-mega.on{transform:none}}
+
+/* ── Mobiel menu — met een langere menulijst liep de gecentreerde flexbox over,
+      waardoor het bovenste item achter de nav verdween én onbereikbaar werd
+      (klassieke overflow bij justify-content:center). Nu centreert het alleen
+      wanneer er ruimte is en scrollt het anders netjes vanaf boven. ── */
+#mob{justify-content:flex-start}
+#mob > *:first-child{margin-top:auto}
+#mob > *:last-child{margin-bottom:auto}
+#mob nav a{font-size:clamp(1.7rem,5.2vw,2.6rem);line-height:1.34}
+#mob .mob-btn,#mob .mob-sub{margin-top:2rem}
+@media(max-height:720px){
+  #mob nav a{font-size:clamp(1.45rem,4.6vw,1.9rem);line-height:1.3}
+  #mob .mob-btn,#mob .mob-sub{margin-top:1.4rem}
+  #mob .mob-legal{margin-top:1.4rem;padding-top:1rem}
+}
+
+/* ── Mobiel menu — zelfde indeling als de desktopnav: drie hoofdingangen
+      groot, de rest gegroepeerd en kleiner ── */
+.mob-groep{display:block;margin:1.6rem 0 .5rem;font-family:'Outfit',system-ui,sans-serif;font-size:.64rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold3);opacity:.9}
+#mob nav a.mob-sm{font-size:clamp(1.05rem,3.4vw,1.35rem);line-height:1.55;color:rgba(255,255,255,.66)}
+#mob .mob-sub a{color:var(--gold3);border-bottom:1px solid rgba(var(--gold-rgb),.4)}
+@media(max-height:720px){#mob nav a.mob-sm{font-size:1rem;line-height:1.5}.mob-groep{margin:1.1rem 0 .35rem}}

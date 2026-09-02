@@ -74,6 +74,35 @@ function toggleMob() {
   syncMenuState(isOpen);
 }
 
+/* HOOFDMENU — uitklapbaar submenu (tik op touch, hover op desktop, toetsenbord via focus-within) */
+function closeNavSubs(except) {
+  document.querySelectorAll('.nav-mega.on').forEach(function (el) {
+    if (el === except) return;
+    el.classList.remove('on');
+    var btn = el.parentElement && el.parentElement.querySelector('.nav-sub-toggle');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  });
+}
+function toggleNavSub(btn) {
+  var sub = document.getElementById(btn.getAttribute('aria-controls'));
+  if (!sub) return;
+  var open = !sub.classList.contains('on');
+  closeNavSubs(sub);
+  sub.classList.toggle('on', open);
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+document.addEventListener('click', function (e) {
+  if (!(e.target.closest && e.target.closest('.nav-has-sub'))) closeNavSubs();
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  var open = document.querySelector('.nav-mega.on');
+  if (!open) return;
+  var btn = open.parentElement.querySelector('.nav-sub-toggle');
+  closeNavSubs();
+  if (btn) btn.focus();
+});
+
 /* PROCESS TABS */
 function setTab(id, btn) {
   document.querySelectorAll('#proc-panels .proc-panel').forEach(p => p.classList.remove('on'));
@@ -639,14 +668,27 @@ if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
   window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
 }
 
-/* ===== FAQ-accordion ===== */
+/* ===== FAQ-accordion (met aria-expanded, zodat screenreaders de staat volgen) ===== */
+function syncFaqState(item) {
+  var btn = item.querySelector('.faq-q');
+  var panel = item.querySelector('.faq-a');
+  var open = item.classList.contains('open');
+  if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (panel) panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+}
 document.addEventListener('click', function (e) {
   var q = e.target.closest ? e.target.closest('.faq-q') : null;
   if (!q) return;
   var item = q.parentElement;
   var open = item.classList.contains('open');
-  item.parentElement.querySelectorAll('.faq-item.open').forEach(function (el) { el.classList.remove('open'); });
-  if (!open) item.classList.add('open');
+  item.parentElement.querySelectorAll('.faq-item').forEach(function (el) {
+    el.classList.remove('open');
+    syncFaqState(el);
+  });
+  if (!open) { item.classList.add('open'); syncFaqState(item); }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.faq-item').forEach(syncFaqState);
 });
 
 /* ===== Hero-parallax: subtiele diepte bij scrollen ===== */

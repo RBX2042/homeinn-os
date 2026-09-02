@@ -13,6 +13,7 @@ cp tokens.css website-online/                          # design-tokens (single s
 cp portal.css website-online/                          # gedeelde componentlaag — vereist door login + rolportalen
 cp lightbox.js website-online/                         # fullscreen fotogalerij — vereist door woning.html + homepage
 cp homeinn-public.css homeinn-public.js website-online/
+cp lead-cloud.js website-online/                       # website-leads → Supabase (window.pushLeadToCloud); zonder dit bestand komen leads NIET in het portaal
 cp pand-verkopen.html website-online/                  # verkoop-flow (navigatie-loze meerstaps intake)
 cp vastgoedbeheer.html website-online/                 # dienstenpagina vastgoedbeheer (pakketten + rekenmodule + offerte)
 cp projectontwikkeling.html website-online/            # dienstenpagina projectontwikkeling (bouwpartner + aanpak)
@@ -52,7 +53,7 @@ cp -R fonts website-online/fonts 2>/dev/null || true
 # gewoon ongeminificeerd). app.js / cloud.js (portaal) worden bewust niet geraakt.
 if command -v npx >/dev/null 2>&1; then
   echo "Minify CSS/JS in bundel…"
-  for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js lightbox.js; do
+  for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js lightbox.js lead-cloud.js; do
     [ -f "website-online/$f" ] || continue
     if npx --yes esbuild "website-online/$f" --minify --outfile="website-online/$f.min" >/dev/null 2>&1; then
       mv "website-online/$f.min" "website-online/$f"
