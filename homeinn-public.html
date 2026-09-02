@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HomeINN — Vastgoed in Rotterdam | Van aankoop tot beheer</title>
-  <meta name="description" content="HomeINN koopt panden zelf aan, ontwikkelt ze en verkoopt, verhuurt of beheert ze in Rotterdam en omstreken. Discreet, zonder courtage — onderbouwd voorstel binnen 48 uur.">
+  <meta name="description" content="HomeINN koopt panden zelf aan, ontwikkelt ze en verkoopt, verhuurt of beheert ze in Rotterdam. Discreet, zonder courtage, voorstel binnen 48 uur.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0b1e30">
@@ -35,7 +35,7 @@
         "url": "https://home-inn.nl/",
         "logo": "https://home-inn.nl/assets/favicon-512.png?v=20260616g",
         "image": "https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g",
-        "description": "HomeINN koopt panden zelf aan, ontwikkelt ze en verkoopt, verhuurt of beheert ze in Rotterdam en omstreken. Discreet, zonder courtage — onderbouwd voorstel binnen 48 uur.",
+        "description": "HomeINN koopt panden zelf aan, ontwikkelt ze en verkoopt, verhuurt of beheert ze in Rotterdam. Discreet, zonder courtage, voorstel binnen 48 uur.",
         "telephone": "+31626257071",
         "email": "info@homeinn.nl",
         "address": {
@@ -138,7 +138,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260902h">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903b">
   <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
   <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -311,7 +311,7 @@
           <div class="nav-mega-feat">
             <span class="nav-mega-h">Kennismaken</span>
             <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
-            <button class="btn btn-primary nav-mega-btn" type="button" onclick="closeNavSubs();openModal()">Plan een kennismaking <span class="arr">→</span></button>
+            <a class="btn btn-primary nav-mega-btn" href="contact.html" onclick="if(window.openModal){closeNavSubs();openModal();return false}">Plan een kennismaking <span class="arr">→</span></a>
             <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
           </div>
         </div>
@@ -777,7 +777,7 @@
   </div>
   <div class="footer-bottom">
     <p>© 2026 HomeINN — Vastgoedpartner Rotterdam. Alle rechten voorbehouden.</p>
-    <p id="f-legal" style="display:none;font-size:.72rem;color:rgba(255,255,255,.6);margin-top:.4rem"></p>
+    <p id="f-legal" style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:.4rem">HomeINN B.V. · Rosestraat 1321, 3071 AL Rotterdam · KvK 96713437 · Btw NL867727548B01</p>
     <p class="f-platform">Aangedreven door ons eigen platform.</p>
   </div>
 </footer>
@@ -830,7 +830,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="lead-cloud.js?v=20260702" defer></script>
-<script src="homeinn-public.js?v=20260902h"></script>
+<script src="site-nav.js?v=20260903b"></script>
+<script src="homeinn-public.js?v=20260903b"></script>
 <script src="lightbox.js?v=20260705" defer></script>
 </body>
 </html>

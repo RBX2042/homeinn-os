@@ -52,56 +52,7 @@ function go(id, shouldScroll, updateHistory) {
   setTimeout(doReveal, 80);
 }
 
-/* MOBILE */
-function syncMenuState(isOpen) {
-  document.body.classList.toggle('no-scroll', isOpen);
-  var burger = document.getElementById('burger');
-  if (burger) burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-}
-
-function closeMob() {
-  var mob = document.getElementById('mob');
-  if (!mob) return;
-  mob.classList.remove('on');
-  syncMenuState(false);
-}
-
-function toggleMob() {
-  var mob = document.getElementById('mob');
-  if (!mob) return;
-  var isOpen = !mob.classList.contains('on');
-  mob.classList.toggle('on', isOpen);
-  syncMenuState(isOpen);
-}
-
-/* HOOFDMENU — uitklapbaar submenu (tik op touch, hover op desktop, toetsenbord via focus-within) */
-function closeNavSubs(except) {
-  document.querySelectorAll('.nav-mega.on').forEach(function (el) {
-    if (el === except) return;
-    el.classList.remove('on');
-    var btn = el.parentElement && el.parentElement.querySelector('.nav-sub-toggle');
-    if (btn) btn.setAttribute('aria-expanded', 'false');
-  });
-}
-function toggleNavSub(btn) {
-  var sub = document.getElementById(btn.getAttribute('aria-controls'));
-  if (!sub) return;
-  var open = !sub.classList.contains('on');
-  closeNavSubs(sub);
-  sub.classList.toggle('on', open);
-  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-}
-document.addEventListener('click', function (e) {
-  if (!(e.target.closest && e.target.closest('.nav-has-sub'))) closeNavSubs();
-});
-document.addEventListener('keydown', function (e) {
-  if (e.key !== 'Escape') return;
-  var open = document.querySelector('.nav-mega.on');
-  if (!open) return;
-  var btn = open.parentElement.querySelector('.nav-sub-toggle');
-  closeNavSubs();
-  if (btn) btn.focus();
-});
+/* MOBILE + submenu: zie site-nav.js (gedeeld door alle pagina's) */
 
 /* PROCESS TABS */
 function setTab(id, btn) {
@@ -645,23 +596,7 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') closeWoningDetail();
 });
 
-/* ===== Bedrijfsgegevens (footer) — vul in en publiceer ===== */
-var BEDRIJF = {
-  naam: 'HomeINN B.V.',
-  kvk: '96713437',
-  btw: 'NL867727548B01',
-  adres: 'Rosestraat 1321, 3071 AL Rotterdam'
-};
-document.addEventListener('DOMContentLoaded', function () {
-  var el = document.getElementById('f-legal');
-  if (!el) return;
-  var delen = [];
-  if (BEDRIJF.naam) delen.push(BEDRIJF.naam);
-  if (BEDRIJF.adres) delen.push(BEDRIJF.adres);
-  if (BEDRIJF.kvk) delen.push('KvK ' + BEDRIJF.kvk);
-  if (BEDRIJF.btw) delen.push('Btw ' + BEDRIJF.btw);
-  if (delen.length) { el.textContent = delen.join(' · '); el.style.display = 'block'; }
-});
+/* Bedrijfsgegevens staan nu rechtstreeks in de HTML-footer (zichtbaar zonder JS) */
 
 /* ===== PWA: installeerbaar + offline ===== */
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {

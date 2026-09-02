@@ -12,6 +12,12 @@
 const fs = require('fs');
 const path = require('path');
 
+const BEDRIJF = {
+  naam: 'HomeINN B.V.',
+  adres: 'Rosestraat 1321, 3071 AL Rotterdam',
+  kvk: '96713437',
+  btw: 'NL867727548B01',
+};
 const TEL = '+31 6 26 25 70 71';
 
 // Iconen-sprite (alleen de symbolen die de legal-hero's gebruiken)
@@ -38,14 +44,22 @@ const PAGES = [
   },
   {
     slug: 'voorwaarden', title: 'Algemene voorwaarden', icon: 'ic-doc',
-    metaDescription: 'De algemene voorwaarden van HomeINN: toepasselijkheid, dienstverlening, tarieven en betaling, en aansprakelijkheid. Helder en vooraf duidelijk.',
+    metaDescription: 'De algemene voorwaarden van HomeINN Rotterdam: toepasselijkheid, dienstverlening, tarieven, opzegging, aansprakelijkheid en toepasselijk recht.',
     heroCopy: 'Onze algemene voorwaarden geven duidelijkheid over samenwerking, verantwoordelijkheden, tarieven en communicatie. Zo weten beide partijen vooraf precies waar zij aan toe zijn.',
-    versie: '',
+    versie: 'Versie 2.0 &middot; ingangsdatum 3 september 2026',
     secties: [
-      ['Toepasselijkheid', 'Deze voorwaarden zijn van toepassing op offertes, overeenkomsten en dienstverlening van HomeINN, tenzij schriftelijk anders is overeengekomen.'],
-      ['Dienstverlening', 'HomeINN houdt zich bezig met de aan- en verkoop van onroerend goed, projectontwikkeling, verhuur en verhuurbemiddeling, vastgoedbeheer en aanverwante diensten. De exacte inhoud van een opdracht of overeenkomst volgt uit de offerte, koopovereenkomst of opdrachtbevestiging.'],
-      ['Tarieven en betaling', 'Tarieven worden vooraf transparant gecommuniceerd. Facturen dienen te worden voldaan binnen de overeengekomen termijn. Eventuele aanvullende werkzaamheden worden alleen in rekening gebracht als deze vooraf zijn afgestemd of logisch uit de opdracht voortvloeien.'],
-      ['Aansprakelijkheid', 'HomeINN spant zich in om haar werkzaamheden zorgvuldig uit te voeren. Aansprakelijkheid is beperkt tot directe schade die aantoonbaar voortvloeit uit een toerekenbare tekortkoming en voor zover wettelijk toegestaan.'],
+      ['Wie wij zijn', `Deze voorwaarden zijn van ${BEDRIJF.naam}, gevestigd aan ${BEDRIJF.adres}, ingeschreven in het handelsregister onder KvK-nummer ${BEDRIJF.kvk}, btw-identificatienummer ${BEDRIJF.btw}. Bereikbaar via <a href="mailto:info@homeinn.nl">info@homeinn.nl</a> en ${TEL}.`],
+      ['Toepasselijkheid', 'Deze voorwaarden zijn van toepassing op alle offertes, aanbiedingen, overeenkomsten en dienstverlening van HomeINN. Afwijkingen gelden alleen als HomeINN die schriftelijk heeft bevestigd. De toepasselijkheid van inkoop- of andere voorwaarden van de wederpartij wordt uitdrukkelijk van de hand gewezen. Wij stellen deze voorwaarden vóór het sluiten van de overeenkomst ter beschikking; zij zijn doorlopend raadpleegbaar op deze pagina.'],
+      ['Dienstverlening', 'HomeINN houdt zich bezig met de aan- en verkoop van onroerend goed, projectontwikkeling, verhuur en verhuurbemiddeling, vastgoedbeheer en aanverwante diensten. De exacte inhoud van een opdracht volgt uit de offerte, koopovereenkomst of opdrachtbevestiging. Aanbiedingen zijn vrijblijvend en geldig gedurende de daarin genoemde termijn; ontbreekt die, dan gedurende dertig dagen.'],
+      ['Totstandkoming en duur', 'Een overeenkomst komt tot stand zodra de opdrachtbevestiging schriftelijk of per e-mail door beide partijen is aanvaard. Beheerovereenkomsten worden aangegaan voor onbepaalde tijd, tenzij anders overeengekomen. Opgegeven termijnen zijn indicatief en nooit fataal, tenzij uitdrukkelijk anders is vastgelegd.'],
+      ['Tarieven en betaling', 'Tarieven worden vooraf transparant gecommuniceerd en zijn exclusief btw, tenzij anders vermeld. Facturen dienen te worden voldaan binnen veertien dagen na factuurdatum. Bij niet-tijdige betaling is de wederpartij zonder ingebrekestelling in verzuim en zijn de wettelijke (handels)rente en buitengerechtelijke incassokosten conform de Wet normering buitengerechtelijke incassokosten verschuldigd. Aanvullende werkzaamheden worden alleen in rekening gebracht als deze vooraf zijn afgestemd of logisch uit de opdracht voortvloeien.'],
+      ['Opzegging en be&euml;indiging', 'Overeenkomsten voor onbepaalde tijd kunnen door beide partijen schriftelijk worden opgezegd met inachtneming van een opzegtermijn van &eacute;&eacute;n kalendermaand, tegen het einde van een maand. Bij een opdracht voor een bepaald project eindigt de overeenkomst na oplevering. Beide partijen mogen de overeenkomst met onmiddellijke ingang ontbinden als de andere partij in staat van faillissement verkeert, surseance van betaling is verleend of haar onderneming staakt. Verplichtingen die naar hun aard doorlopen &mdash; zoals geheimhouding en aansprakelijkheid &mdash; blijven na be&euml;indiging van kracht.'],
+      ['Aansprakelijkheid', 'HomeINN spant zich in om haar werkzaamheden zorgvuldig uit te voeren. Aansprakelijkheid is beperkt tot directe schade die aantoonbaar voortvloeit uit een toerekenbare tekortkoming. De aansprakelijkheid is in alle gevallen beperkt tot het bedrag dat de aansprakelijkheidsverzekeraar van HomeINN in het betreffende geval uitkeert, vermeerderd met het eigen risico. Keert de verzekeraar niet uit, dan is de aansprakelijkheid beperkt tot het bedrag dat voor de betreffende opdracht in rekening is gebracht, over de twaalf maanden voorafgaand aan de schadeveroorzakende gebeurtenis. Aansprakelijkheid voor indirecte schade, waaronder gevolgschade, gederfde winst en gemiste besparingen, is uitgesloten. Deze beperkingen gelden niet bij opzet of bewuste roekeloosheid van HomeINN of haar leidinggevenden.'],
+      ['Overmacht', 'Kan HomeINN haar verplichtingen niet nakomen door een omstandigheid die haar niet is toe te rekenen &mdash; zoals overheidsmaatregelen, storingen bij toeleveranciers, extreme weersomstandigheden of het uitvallen van nutsvoorzieningen &mdash; dan worden die verplichtingen opgeschort zolang de overmacht duurt. Duurt de overmacht langer dan zestig dagen, dan mogen beide partijen de overeenkomst ontbinden voor het niet-uitgevoerde deel, zonder dat een schadevergoedingsplicht ontstaat.'],
+      ['Klachten', 'Bent u niet tevreden, meld dat dan binnen dertig dagen nadat u het gebrek heeft ontdekt of redelijkerwijs had kunnen ontdekken, per e-mail aan <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>. Wij bevestigen de ontvangst binnen vijf werkdagen en streven ernaar binnen vier weken inhoudelijk te reageren. Een klacht schort de betalingsverplichting niet op.'],
+      ['Persoonsgegevens', 'Persoonsgegevens verwerken wij zoals beschreven in ons <a href="privacy.html">privacybeleid</a>. Verwerken wij persoonsgegevens in opdracht van de wederpartij, dan sluiten wij daarvoor een verwerkersovereenkomst conform artikel 28 AVG.'],
+      ['Wijziging van deze voorwaarden', 'HomeINN mag deze voorwaarden wijzigen. Gewijzigde voorwaarden gelden voor nieuwe overeenkomsten vanaf de op deze pagina vermelde ingangsdatum. Voor lopende overeenkomsten gaat een wijziging pas in dertig dagen nadat wij de wederpartij daarover hebben ge&iuml;nformeerd; is de wijziging voor de wederpartij niet aanvaardbaar, dan mag zij de overeenkomst binnen die termijn opzeggen.'],
+      ['Toepasselijk recht en bevoegde rechter', 'Op alle overeenkomsten met HomeINN is uitsluitend Nederlands recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter van de rechtbank Rotterdam, tenzij dwingend recht een andere rechter aanwijst. Partijen spannen zich in om een geschil eerst in onderling overleg op te lossen.'],
     ],
   },
   {
@@ -77,11 +91,19 @@ function page(p, alle) {
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="canonical" href="${canonical}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:site_name" content="HomeINN">
+  <meta property="og:title" content="${p.title} — HomeINN Rotterdam">
+  <meta property="og:description" content="${p.metaDescription}">
+  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:locale" content="nl_NL">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260717">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903b">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -99,13 +121,74 @@ function page(p, alle) {
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Naar de inhoud</a>
   ${SPRITE}
   <header class="lg-top">
     <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+        <ul class="sn">
+      <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
+      <li class="nav-has-sub">
+        <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
+        <div class="nav-mega" id="nav-mega-diensten">
+          <div class="nav-mega-inner">
+            <div class="nav-mega-col">
+              <span class="nav-mega-h">Vijf disciplines</span>
+              <a href="pand-verkopen.html"><span class="nav-sub-t">Aankoop</span><span class="nav-sub-d">Wij kopen zelf — ook verhuurd</span></a>
+              <a href="projectontwikkeling.html"><span class="nav-sub-t">Projectontwikkeling</span><span class="nav-sub-d">Herontwikkeling en verduurzaming</span></a>
+              <a href="te-koop.html"><span class="nav-sub-t">Verkoop</span><span class="nav-sub-d">Opgeleverd, gekeurd, energiezuinig</span></a>
+              <a href="verhuur.html"><span class="nav-sub-t">Verhuur</span><span class="nav-sub-d">Van advertentie tot sleuteloverdracht</span></a>
+              <a href="vastgoedbeheer.html"><span class="nav-sub-t">Vastgoedbeheer</span><span class="nav-sub-d">Vaste percentages, één aanspreekpunt</span></a>
+            </div>
+            <div class="nav-mega-col">
+              <span class="nav-mega-h">Aanbod &amp; achtergrond</span>
+              <a href="te-koop.html"><span class="nav-sub-t">Woningaanbod</span><span class="nav-sub-d">Wat er nu te koop staat</span></a>
+              <a href="verhuur.html"><span class="nav-sub-t">Huuraanbod</span><span class="nav-sub-d">Beschikbare huurwoningen</span></a>
+              <a href="projecten.html"><span class="nav-sub-t">Projecten &amp; investeren</span><span class="nav-sub-d">Meelopen in een lopende ontwikkeling</span></a>
+              <a href="kennis.html"><span class="nav-sub-t">Kennis</span><span class="nav-sub-d">Wat wij zien in de Rotterdamse markt</span></a>
+              <a href="werkgebied.html"><span class="nav-sub-t">Werkgebied</span><span class="nav-sub-d">Rotterdam en omstreken</span></a>
+            </div>
+            <div class="nav-mega-feat">
+              <span class="nav-mega-h">Kennismaken</span>
+              <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
+              <a class="btn btn-primary nav-mega-btn" href="contact.html">Plan een kennismaking <span class="arr">→</span></a>
+              <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">${TEL}</a></p>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="over-ons.html">Over ons</a></li>
+    </ul>
+    <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
     <a class="tel" href="tel:+31626257071">Liever bellen? <strong>${TEL}</strong></a>
   </header>
 
-  <main>
+  <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
+    <nav aria-label="Hoofdmenu">
+      <a href="projectontwikkeling.html">Projectontwikkeling</a>
+      <a href="vastgoedbeheer.html">Beheer</a>
+      <a href="over-ons.html">Over ons</a>
+      <span class="mob-groep">Diensten</span>
+      <a class="mob-sm" href="pand-verkopen.html">Aankoop — uw pand aanbieden</a>
+      <a class="mob-sm" href="te-koop.html">Verkoop — woningaanbod</a>
+      <a class="mob-sm" href="verhuur.html">Verhuur &amp; huuraanbod</a>
+      <a class="mob-sm" href="projecten.html">Projecten &amp; investeren</a>
+      <span class="mob-groep">Meer</span>
+      <a class="mob-sm" href="kennis.html">Kennis</a>
+      <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
+      <a class="mob-sm" href="contact.html">Contact</a>
+      <a class="mob-sm" href="inloggen.html">Inloggen</a>
+    </nav>
+    <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">→</span></a>
+    <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">${TEL}</a> · Rotterdam</p>
+    <div class="mob-legal">
+      <a href="privacy.html">Privacy</a>
+      <a href="voorwaarden.html">Voorwaarden</a>
+      <a href="cookies.html">Cookies</a>
+    </div>
+  </div>
+
+  <main id="main" tabindex="-1">
     <section class="legal-hero">
       <div class="legal-hero-inner">
         <div><span class="t-eyebrow">Juridisch</span><h1 class="page-h1">${p.title}</h1></div>
@@ -131,10 +214,11 @@ function page(p, alle) {
 
   <footer class="lg-foot">
     <div class="in">
-      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
+      <span>© 2026 ${BEDRIJF.naam} — Vastgoedpartner Rotterdam<br><small style="color:var(--ink4)">${BEDRIJF.adres} · KvK ${BEDRIJF.kvk} · Btw ${BEDRIJF.btw}</small></span>
       <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="privacy.html">Privacy</a><a href="voorwaarden.html">Voorwaarden</a><a href="cookies.html">Cookies</a></nav>
     </div>
   </footer>
+  <script src="site-nav.js?v=20260903b"></script>
 </body>
 </html>
 `;

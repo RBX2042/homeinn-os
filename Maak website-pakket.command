@@ -14,6 +14,7 @@ cp portal.css website-online/                          # gedeelde componentlaag 
 cp lightbox.js website-online/                         # fullscreen fotogalerij — vereist door woning.html + homepage
 cp homeinn-public.css homeinn-public.js website-online/
 cp lead-cloud.js website-online/                       # website-leads → Supabase (window.pushLeadToCloud); zonder dit bestand komen leads NIET in het portaal
+cp site-nav.js website-online/                         # gedeeld hoofdmenu (mobiel menu + Diensten-paneel); zonder dit bestand werkt de navigatie op ALLE pagina's niet
 cp pand-verkopen.html website-online/                  # verkoop-flow (navigatie-loze meerstaps intake)
 cp vastgoedbeheer.html website-online/                 # dienstenpagina vastgoedbeheer (pakketten + rekenmodule + offerte)
 cp projectontwikkeling.html website-online/            # dienstenpagina projectontwikkeling (bouwpartner + aanpak)
@@ -35,6 +36,23 @@ cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[]
 cp funda-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<RealEstateFeed bron="HomeINN" versie="3.0" gegenereerd="" aantal="0"><Objecten></Objecten></RealEstateFeed>' > website-online/funda-feed.xml
 cp pararius-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<pararius source="HomeINN" generated="" count="0"><properties></properties></pararius>' > website-online/pararius-feed.xml
 cp sw.js website-online/ 2>/dev/null || true
+# Sitemap-datums (lastmod) gelijkzetten aan de werkelijke wijzigingsdatum van elke pagina.
+# Zonder deze stap blijft lastmod op een oude datum staan en slaan zoekmachines het herindexeren over.
+python3 - <<'SITEMAP_PY'
+import io, re, os, datetime
+s = io.open('sitemap.xml', encoding='utf-8').read()
+def blok(m):
+    b = m.group(0)
+    loc = re.search(r'<loc>(.*?)</loc>', b).group(1)
+    p = re.sub(r'https?://home-inn\.nl/?', '', loc) or 'homeinn-public.html'
+    if not p.endswith('.html'): p += '.html'
+    if not os.path.exists(p): return b
+    d = datetime.date.fromtimestamp(os.path.getmtime(p)).isoformat()
+    return re.sub(r'<lastmod>.*?</lastmod>', '<lastmod>%s</lastmod>' % d, b)
+io.open('sitemap.xml', 'w', encoding='utf-8').write(re.sub(r'<url>.*?</url>', blok, s, flags=re.S))
+print("  ✓ sitemap lastmod bijgewerkt")
+SITEMAP_PY
+
 # Cloudflare Pages security-headers + SEO-bestanden meeleveren
 cp _headers robots.txt sitemap.xml website-online/ 2>/dev/null || true
 # Vercel security-headers (Vercel leest _headers niet) meeleveren
@@ -53,7 +71,7 @@ cp -R fonts website-online/fonts 2>/dev/null || true
 # gewoon ongeminificeerd). app.js / cloud.js (portaal) worden bewust niet geraakt.
 if command -v npx >/dev/null 2>&1; then
   echo "Minify CSS/JS in bundel…"
-  for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js lightbox.js lead-cloud.js; do
+  for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js lightbox.js lead-cloud.js site-nav.js; do
     [ -f "website-online/$f" ] || continue
     if npx --yes esbuild "website-online/$f" --minify --outfile="website-online/$f.min" >/dev/null 2>&1; then
       mv "website-online/$f.min" "website-online/$f"

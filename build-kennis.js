@@ -24,7 +24,7 @@ function esc(s) {
 const CTA = {
   verkopen: { titel: 'Overweegt u uw pand te verkopen?', sub: 'HomeINN koopt direct aan — voorstel binnen 48 uur, zonder makelaarskosten.', label: 'Vraag een voorstel aan', href: 'pand-verkopen.html' },
   beheer:   { titel: 'Uw vastgoed zorgeloos laten beheren?', sub: 'Vaste percentages, één aanspreekpunt en een 24/7 storingslijn voor huurders (vanaf Full Operational). Vraag vrijblijvend advies aan.', label: 'Vraag een offerte aan', href: 'vastgoedbeheer.html#offerte' },
-  gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een gesprek', href: 'contact.html' },
+  gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een kennismaking', href: 'contact.html' },
 };
 
 function head(titel, desc, canonical) {
@@ -53,7 +53,7 @@ function head(titel, desc, canonical) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260717">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903b">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}
@@ -115,18 +115,80 @@ function head(titel, desc, canonical) {
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="kn-top">
     <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <ul class="sn">
+      <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
+      <li class="nav-has-sub">
+        <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
+        <div class="nav-mega" id="nav-mega-diensten">
+          <div class="nav-mega-inner">
+            <div class="nav-mega-col">
+              <span class="nav-mega-h">Vijf disciplines</span>
+              <a href="pand-verkopen.html"><span class="nav-sub-t">Aankoop</span><span class="nav-sub-d">Wij kopen zelf &mdash; ook verhuurd</span></a>
+              <a href="projectontwikkeling.html"><span class="nav-sub-t">Projectontwikkeling</span><span class="nav-sub-d">Herontwikkeling en verduurzaming</span></a>
+              <a href="te-koop.html"><span class="nav-sub-t">Verkoop</span><span class="nav-sub-d">Opgeleverd, gekeurd, energiezuinig</span></a>
+              <a href="verhuur.html"><span class="nav-sub-t">Verhuur</span><span class="nav-sub-d">Van advertentie tot sleuteloverdracht</span></a>
+              <a href="vastgoedbeheer.html"><span class="nav-sub-t">Vastgoedbeheer</span><span class="nav-sub-d">Vaste percentages, &eacute;&eacute;n aanspreekpunt</span></a>
+            </div>
+            <div class="nav-mega-col">
+              <span class="nav-mega-h">Aanbod &amp; achtergrond</span>
+              <a href="te-koop.html"><span class="nav-sub-t">Woningaanbod</span><span class="nav-sub-d">Wat er nu te koop staat</span></a>
+              <a href="verhuur.html"><span class="nav-sub-t">Huuraanbod</span><span class="nav-sub-d">Beschikbare huurwoningen</span></a>
+              <a href="projecten.html"><span class="nav-sub-t">Projecten &amp; investeren</span><span class="nav-sub-d">Meelopen in een lopende ontwikkeling</span></a>
+              <a href="kennis.html"><span class="nav-sub-t">Kennis</span><span class="nav-sub-d">Wat wij zien in de Rotterdamse markt</span></a>
+              <a href="werkgebied.html"><span class="nav-sub-t">Werkgebied</span><span class="nav-sub-d">Rotterdam en omstreken</span></a>
+            </div>
+            <div class="nav-mega-feat">
+              <span class="nav-mega-h">Kennismaken</span>
+              <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
+              <a class="btn btn-primary nav-mega-btn" href="contact.html">Plan een kennismaking <span class="arr">&rarr;</span></a>
+              <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="over-ons.html">Over ons</a></li>
+    </ul>
+    <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
     <div class="right"><a class="tel" href="tel:${TEL_HREF}">Liever bellen? <strong>${TEL}</strong></a><a class="top-cta" href="kennis.html">Alle artikelen</a></div>
-  </header>`;
+  </header>
+  <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
+    <nav aria-label="Hoofdmenu">
+      <a href="projectontwikkeling.html">Projectontwikkeling</a>
+      <a href="vastgoedbeheer.html">Beheer</a>
+      <a href="over-ons.html">Over ons</a>
+      <span class="mob-groep">Diensten</span>
+      <a class="mob-sm" href="pand-verkopen.html">Aankoop &mdash; uw pand aanbieden</a>
+      <a class="mob-sm" href="te-koop.html">Verkoop &mdash; woningaanbod</a>
+      <a class="mob-sm" href="verhuur.html">Verhuur &amp; huuraanbod</a>
+      <a class="mob-sm" href="projecten.html">Projecten &amp; investeren</a>
+      <span class="mob-groep">Meer</span>
+      <a class="mob-sm" href="kennis.html">Kennis</a>
+      <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
+      <a class="mob-sm" href="contact.html">Contact</a>
+      <a class="mob-sm" href="inloggen.html">Inloggen</a>
+    </nav>
+    <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">&rarr;</span></a>
+    <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> &middot; Rotterdam</p>
+    <div class="mob-legal">
+      <a href="privacy.html">Privacy</a>
+      <a href="voorwaarden.html">Voorwaarden</a>
+      <a href="cookies.html">Cookies</a>
+    </div>
+  </div>
+`;
 }
 
 function foot() {
   return `  <footer class="kn-foot"><div class="in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand verkopen</a><a href="privacy.html">Privacy</a></nav>
+      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="privacy.html">Privacy</a></nav>
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
     </div></footer>
+  <script src="site-nav.js?v=20260903b"></script>
 </body>
 </html>
 `;
@@ -164,7 +226,7 @@ function articlePage(a, alle) {
     : '';
 
   return head(esc(a.title), a.metaDescription, canonical) + `
-  <main>
+  <main id="main" tabindex="-1">
     <header class="art-head"><div class="art-head-in">
       <span class="t-eyebrow">${esc(a.category)}</span>
       <h1>${esc(a.h1)}</h1>
@@ -203,7 +265,7 @@ function overviewPage(alle) {
   return head('Kennis & inzichten over vastgoed in Rotterdam — HomeINN',
     'Praktische kennis over vastgoed in Rotterdam: direct verkopen, verhuren of verkopen, en verduurzamen naar energielabel A. Helder uitgelegd door HomeINN.',
     canonical) + `
-  <main>
+  <main id="main" tabindex="-1">
     <section class="kn-hero"><div class="kn-hero-in">
       <span class="t-eyebrow">Kennis &amp; inzichten</span>
       <h1>Kennis &amp; inzichten over vastgoed in Rotterdam</h1>

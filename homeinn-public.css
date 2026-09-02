@@ -327,7 +327,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .pstep-n{width:30px;height:30px;min-width:30px;border:1px solid var(--cream3);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:var(--ink4);transition:all .25s;flex-shrink:0}
 .pstep:hover .pstep-n{background:var(--gold);color:var(--navy);border-color:var(--gold)}
 .pstep-body strong{display:block;font-size:.88rem;font-weight:500;color:var(--ink2);margin-bottom:3px}
-.pstep-body span{font-size:.875rem;font-weight:300;color:var(--ink4);line-height:1.7}
+.pstep-body span{font-size:.875rem;font-weight:300;color:var(--ink3);line-height:1.7}
 .proc-aside{background:var(--navy);padding:2.5rem;color:#fff}
 .proc-aside-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.45rem;font-weight:300;color:var(--gold2);margin-bottom:.4rem}
 .proc-aside-desc{font-size:.8rem;font-weight:300;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:2rem}
@@ -1427,3 +1427,43 @@ a.nav-cta{display:inline-flex;align-items:center;text-decoration:none}
 #mob nav a.mob-sm{font-size:clamp(1.05rem,3.4vw,1.35rem);line-height:1.55;color:rgba(255,255,255,.66)}
 #mob .mob-sub a{color:var(--gold3);border-bottom:1px solid rgba(var(--gold-rgb),.4)}
 @media(max-height:720px){#mob nav a.mob-sm{font-size:1rem;line-height:1.5}.mob-groep{margin:1.1rem 0 .35rem}}
+
+/* ════════════════════════════════════════════════════════════
+   GEDEELD HOOFDMENU OP DE SUBPAGINA'S (.sn)
+   Nestelt in de bestaande sticky kop van elke pagina (.ov-top,
+   .spoke-top, .kn-top, …) zodat die pagina's hun eigen opmaak houden
+   maar wél dezelfde navigatie krijgen als de homepage.
+   ════════════════════════════════════════════════════════════ */
+.sn{display:flex;align-items:center;gap:1.6rem;list-style:none;margin:0;padding:0}
+.sn > li{margin:0}
+.sn a,.sn .nav-sub-toggle{
+  font-family:'Outfit',system-ui,sans-serif;font-size:.72rem;font-weight:450;letter-spacing:.12em;
+  text-transform:uppercase;color:#fff;opacity:.8;text-decoration:none;white-space:nowrap;
+  transition:opacity .25s var(--ease),color .25s var(--ease)
+}
+.sn a:hover,.sn a.on,.sn .nav-sub-toggle:hover,.sn .nav-sub-toggle[aria-expanded="true"]{opacity:1;color:var(--gold2)}
+.sn a.on{border-bottom:1px solid var(--gold2);padding-bottom:2px}
+.sn .nav-sub-toggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;cursor:pointer}
+.sn a:focus-visible,.sn .nav-sub-toggle:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
+
+/* Burger in de subpagina-koppen — de kop is navy, dus expliciet wit */
+.sn-burger{
+  display:none;flex-direction:column;justify-content:center;align-items:flex-end;gap:5.5px;
+  width:46px;height:46px;padding:10px;margin:-10px;background:none;border:0;cursor:pointer;color:#fff;
+  -webkit-appearance:none;appearance:none
+}
+.sn-burger span{display:block;height:1.5px;width:100%;background:currentColor;margin-left:auto;transition:transform .3s var(--ease),opacity .2s}
+.sn-burger:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+body.no-scroll .sn-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+body.no-scroll .sn-burger span:nth-child(2){opacity:0}
+body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+@media(max-width:1080px){.sn{gap:1.15rem}.sn a,.sn .nav-sub-toggle{letter-spacing:.06em}}
+@media(max-width:960px){
+  .sn{display:none}
+  .sn-burger{display:flex}
+  /* Telefoon en actieknop wijken op mobiel voor de burger — ze staan in het menu */
+  .ov-top .right,.kn-top .right,.tk-top .right,.vh-top .right,.vb-top .right,
+  .pj-top .right,.pp-top .right,.wg-top .right,.wd-top .right,.iv-top .right,
+  .spoke-top .right,.ct-top .tel,.lg-top .tel{display:none}
+}

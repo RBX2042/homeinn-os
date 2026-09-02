@@ -106,7 +106,7 @@ function seedData() {
       { id: 'r4', type: 'Aannemer', name: 'Bouwbedrijf A', contact: 'Contactpersoon', email: 'planning@voorbeeld-bouw.nl', phone: '010-0000004', address: 'Schiedam', note: 'Hoofdaannemer renovaties. Plant 4-6 wkn vooruit.' },
       { id: 'r5', type: 'Aannemer', name: 'Installatiebedrijf A', contact: 'Contactpersoon', email: 'service@voorbeeld-installatie.nl', phone: '010-0000005', address: 'Rotterdam-Zuid', note: 'W/E-installaties, ook keuringen.' },
       { id: 'r6', type: 'Financier', name: 'Vastgoedfinanciering A', contact: 'Contactpersoon', email: 'krediet@voorbeeld-financier.nl', phone: '010-0000006', address: 'Rotterdam', note: 'Bridge- en ontwikkelfinanciering, 70-80% LTV.' },
-      { id: 'r7', type: 'Koper/Verkoper', name: 'Belangstellende A', contact: 'Belangstellende A', email: 'belangstellende-a@voorbeeld.nl', phone: '06-00000001', address: '', note: 'Bod uitgebracht op Laan op Zuid 304.' },
+      { id: 'r7', type: 'Koper/Verkoper', name: 'Belangstellende A', contact: 'Belangstellende A', email: 'belangstellende-a@example.invalid', phone: '06-00000001', address: '', note: 'Bod uitgebracht op Laan op Zuid 304.' },
       { id: 'r8', type: 'Overig', name: 'Taxatiebureau A', contact: 'Contactpersoon', email: 'taxatie@voorbeeld-taxatie.nl', phone: '010-0000007', address: 'Rotterdam', note: 'Gevalideerde taxaties binnen 5 werkdagen.' },
       { id: 'r9', type: 'Aannemer', name: 'Afbouwbedrijf A', contact: 'Contactpersoon', email: 'afbouw@voorbeeld-bouw.nl', phone: '06-00000002', address: 'Schiedam', note: 'Afbouw en styling richting oplevering.' }
     ],
