@@ -8,9 +8,9 @@
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
-  <link rel="canonical" href="https://home-inn.nl/vastgoedbeheer">
+  <link rel="canonical" href="https://home-inn.nl/vastgoedbeheer.html">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://home-inn.nl/vastgoedbeheer">
+  <meta property="og:url" content="https://home-inn.nl/vastgoedbeheer.html">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Vastgoedbeheer Rotterdam — transparante pakketten — HomeINN">
   <meta property="og:description" content="Vastgoedbeheer met vaste percentages en één aanspreekpunt. Drie heldere pakketten, met 24/7 storingslijn vanaf Full Operational. Vraag een vrijblijvende offerte aan.">
@@ -23,7 +23,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
   <style>
     /* Slimme kop + pagina-specifieke aanvullingen. Tokens uit tokens.css; componenten uit homeinn-public.css. */
     .vb-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -67,7 +67,7 @@
 <body>
 <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="vb-top">
-    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home">
+    <a class="brand" href="./" aria-label="HomeINN home">
       <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
       <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
     </a>
@@ -361,7 +361,7 @@
     <div class="in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
       <nav aria-label="Links">
-        <a href="homeinn-public.html">Home</a>
+        <a href="./">Home</a>
         <a href="pand-verkopen.html">Pand aanbieden</a>
         <a href="privacy.html">Privacy</a>
       </nav>
@@ -375,7 +375,7 @@
     "serviceType":"Vastgoedbeheer",
     "name":"Vastgoedbeheer Rotterdam — HomeINN",
     "areaServed":{"@type":"City","name":"Rotterdam"},
-    "provider":{"@type":"RealEstateAgent","name":"HomeINN","telephone":"+31626257071","email":"info@homeinn.nl","address":{"@type":"PostalAddress","addressLocality":"Rotterdam","addressCountry":"NL"}},
+    "provider":{"@type":"RealEstateAgent","@id":"https://home-inn.nl/#organisatie","name":"HomeINN","telephone":"+31626257071","email":"info@homeinn.nl","address":{"@type":"PostalAddress","streetAddress":"Rosestraat 1321","postalCode":"3071 AL","addressLocality":"Rotterdam","addressRegion":"Zuid-Holland","addressCountry":"NL"}},
     "description":"Professioneel vastgoedbeheer in Rotterdam met vaste percentages en één aanspreekpunt, met 24/7 storingslijn vanaf Full Operational. Drie pakketten: Core Management (5%), Full Operational (8%) en Performance Partner.",
     "offers":[
       {"@type":"Offer","name":"Core Management","description":"Administratief beheer: 5% van de kale huur, minimumtarief € 95 per object per maand.","priceCurrency":"EUR","priceSpecification":{"@type":"UnitPriceSpecification","price":"95","priceCurrency":"EUR","unitText":"per object per maand (minimumtarief, excl. btw)"}},
@@ -396,7 +396,7 @@
     ]
   }
   </script>
-  <script src="lead-cloud.js?v=20260903c" defer></script>
+  <script src="lead-cloud.js?v=20260903d" defer></script>
   <script>
   (function(){
     'use strict';
@@ -466,8 +466,7 @@
       if (f.get('company_website')) return; // honeypot
       var naam = (String(f.get('first_name')||'') + ' ' + String(f.get('last_name')||'')).trim();
       if (!naam || (!String(f.get('email')||'').trim() && !String(f.get('phone')||'').trim())) {
-        // minimale validatie: naam + (e-mail of telefoon)
-        var first = document.getElementById('vb-first'); if (first) first.focus();
+        var _v = document.getElementById('vb-first'); if (_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v);
         return;
       }
       saveLead('Beheer-offerte', {
@@ -486,6 +485,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260903c"></script>
+<script src="site-nav.js?v=20260903d"></script>
 </body>
 </html>

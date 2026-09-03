@@ -62,8 +62,8 @@
         type: type || 'Contact',
         source: source || location.pathname.replace(/^\//, '') || 'onbekend',
         name: data.name || data.naam || '',
-        email: data.email || '',
-        phone: data.phone || '',
+        email: data.email || (/@/.test(data.contact || '') ? data.contact : ''),
+        phone: data.phone || (!/@/.test(data.contact || '') ? (data.contact || '') : ''),
         subject: data.subject || '',
         message: data.message || '',
         portfolio: data.portfolio || ''

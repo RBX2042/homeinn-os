@@ -27,6 +27,7 @@ const CTA = {
   gesprek:  { titel: 'Even sparren over uw situatie?', sub: 'Plan een vrijblijvend kennismakingsgesprek van 30 minuten — telefonisch of in Rotterdam.', label: 'Plan een kennismaking', href: 'contact.html' },
 };
 
+const DATUM_BUILD = new Date().toISOString().slice(0,10);
 function head(titel, desc, canonical) {
   return `<!doctype html>
 <html lang="nl">
@@ -53,7 +54,7 @@ function head(titel, desc, canonical) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}
@@ -117,7 +118,7 @@ function head(titel, desc, canonical) {
 <body>
   <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="kn-top">
-    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="vastgoedbeheer.html">Beheer</a></li>
@@ -185,10 +186,10 @@ function head(titel, desc, canonical) {
 function foot() {
   return `  <footer class="kn-foot"><div class="in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="privacy.html">Privacy</a></nav>
+      <nav aria-label="Links"><a href="./">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="privacy.html">Privacy</a></nav>
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
     </div></footer>
-  <script src="site-nav.js?v=20260903c"></script>
+  <script src="site-nav.js?v=20260903d"></script>
 </body>
 </html>
 `;
@@ -204,7 +205,7 @@ function ctaBand(ctaType) {
 }
 
 function articlePage(a, alle) {
-  const canonical = `https://home-inn.nl/kennis-${a.slug}`;
+  const canonical = `https://home-inn.nl/kennis-${a.slug}.html`;
   const intro = (a.intro || []).map((p, i) => `<p${i === 0 ? ' class="lead"' : ''}>${esc(p)}</p>`).join('\n      ');
   const sections = (a.sections || []).map(s => {
     var body = (s.body || []).map(p => `<p>${esc(p)}</p>`).join('\n      ');
@@ -242,14 +243,14 @@ function articlePage(a, alle) {
     ${ctaBand(a.ctaType)}
   </main>
   <script type="application/ld+json">
-  [{"@context":"https://schema.org","@type":"Article","headline":${JSON.stringify(a.h1)},"description":${JSON.stringify(a.metaDescription)},"about":${JSON.stringify(a.category)},"inLanguage":"nl-NL","author":{"@type":"Organization","name":"HomeINN"},"publisher":{"@type":"Organization","name":"HomeINN"},"mainEntityOfPage":${JSON.stringify(canonical)}},
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://home-inn.nl/"},{"@type":"ListItem","position":2,"name":"Kennis","item":"https://home-inn.nl/kennis"},{"@type":"ListItem","position":3,"name":${JSON.stringify(a.category)},"item":${JSON.stringify(canonical)}}]}${faqLd}]
+  [{"@context":"https://schema.org","@type":"Article","headline":${JSON.stringify(a.h1)},"description":${JSON.stringify(a.metaDescription)},"about":${JSON.stringify(a.category)},"inLanguage":"nl-NL","datePublished":${JSON.stringify(a.datum || '2026-06-22')},"dateModified":${JSON.stringify(a.bijgewerkt || DATUM_BUILD)},"image":"https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g","author":{"@type":"Organization","name":"HomeINN","@id":"https://home-inn.nl/#organisatie"},"publisher":{"@type":"Organization","name":"HomeINN","@id":"https://home-inn.nl/#organisatie","logo":{"@type":"ImageObject","url":"https://home-inn.nl/assets/favicon-512.png"}},"mainEntityOfPage":${JSON.stringify(canonical)}},
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://home-inn.nl/"},{"@type":"ListItem","position":2,"name":"Kennis","item":"https://home-inn.nl/kennis.html"},{"@type":"ListItem","position":3,"name":${JSON.stringify(a.category)},"item":${JSON.stringify(canonical)}}]}${faqLd}]
   </script>
 ` + foot();
 }
 
 function overviewPage(alle) {
-  const canonical = 'https://home-inn.nl/kennis';
+  const canonical = 'https://home-inn.nl/kennis.html';
   const cards = alle.map(a => {
     var snippet = (a.intro && a.intro[0]) ? a.intro[0] : (a.metaDescription || '');
     snippet = snippet.length > 150 ? snippet.slice(0, 150) + '…' : snippet;

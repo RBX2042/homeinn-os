@@ -887,8 +887,9 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .mvw-strip-tag{flex-shrink:0;display:inline-flex;align-items:center;gap:9px;font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold3);white-space:nowrap}
 .mvw-strip-pulse{width:6px;height:6px;border-radius:50%;background:var(--gold2);animation:blink 2.2s ease-in-out infinite;flex-shrink:0}
 .mvw-strip-sep{flex-shrink:0;width:1px;height:34px;background:rgba(var(--gold-rgb),.35)}
-.mvw-strip-track{position:relative;flex:1;min-width:0;height:34px}
-.mvw-strip-item{position:absolute;inset:0;display:flex;align-items:center;gap:.9rem;opacity:0;white-space:nowrap;overflow:hidden;animation:mvwCycle 24s infinite}
+.mvw-strip-track{position:relative;flex:1;min-width:0;min-height:34px;height:auto}
+.mvw-strip-item{position:absolute;inset:0;display:flex;align-items:center;gap:.9rem;opacity:0;overflow:hidden;animation:mvwCycle 24s infinite}
+.mvw-strip-item:first-child{position:relative}
 .mvw-strip-item:nth-child(1){animation-delay:0s}
 .mvw-strip-item:nth-child(2){animation-delay:4s}
 .mvw-strip-item:nth-child(3){animation-delay:8s}
@@ -897,7 +898,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .mvw-strip-item:nth-child(6){animation-delay:20s}
 .mvw-strip-ico-badge{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid rgba(var(--gold-rgb),.45);background:rgba(var(--gold-rgb),.12)}
 .mvw-strip-ico{width:17px;height:17px;color:var(--gold3)}
-.mvw-strip-item span{font-size:1rem;font-weight:300;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvw-strip-item span{font-size:1rem;font-weight:300;color:rgba(255,255,255,.85);white-space:normal;line-height:1.35}
 .mvw-strip-item strong{color:var(--gold3);font-weight:600}
 .mvw-strip-dots{flex-shrink:0;display:flex;align-items:center;gap:7px}
 .mvw-strip-dot{width:6px;height:6px;border-radius:50%;background-color:rgba(var(--gold-rgb),.28);animation:mvwDot 24s infinite}
@@ -930,7 +931,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
   .mvw-strip-inner{flex-wrap:wrap;padding-top:1.1rem;padding-bottom:1.1rem;gap:.65rem 1rem}
   .mvw-strip-sep{display:none}
   .mvw-strip-more{display:none}
-  .mvw-strip-track{flex-basis:100%;height:44px}
+  .mvw-strip-track{flex-basis:100%;min-height:44px}
   .mvw-strip-item{white-space:normal;align-items:flex-start}
   .mvw-strip-item span{white-space:normal}
   .mvw-strip-ico-badge{width:30px;height:30px}
@@ -1363,7 +1364,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 /* ── Nav: vier items passen ruim, alleen de letterafstand iets strakker ── */
 @media(min-width:961px) and (max-width:1279px){
   .nav-links{gap:1.5rem}
-  .nav-links a,.nav-sub-toggle{letter-spacing:.08em}
+  .nav-links a,.nav-links .nav-sub-toggle{letter-spacing:.08em}
 }
 
 /* ── Hero-pill: nette uitlijning wanneer de tekst afbreekt op smalle schermen ── */
@@ -1466,4 +1467,21 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
   .ov-top .right,.kn-top .right,.tk-top .right,.vh-top .right,.vb-top .right,
   .pj-top .right,.pp-top .right,.wg-top .right,.wd-top .right,.iv-top .right,
   .spoke-top .right,.ct-top .tel,.lg-top .tel{display:none}
+}
+
+/* ── Reduced motion: statische strip (herhaald ná alle strip-regels zodat het niet overschreven wordt) ── */
+@media(prefers-reduced-motion:reduce){
+  .mvw-strip-track{height:auto;min-height:0}
+  .mvw-strip-item{position:static;opacity:1!important;display:flex!important;animation:none!important}
+  .mvw-strip-item:not(:first-child){display:none!important}
+  .mvw-strip-dot{animation:none!important}
+}
+/* ── 52: aanraakdoelen ≥ 44px voor de menu-items (ook op touch-laptops en iPad landscape) ── */
+.sn a,.sn .nav-sub-toggle,.nav-links a,.nav-links .nav-sub-toggle{padding-top:.85rem;padding-bottom:.85rem;display:inline-flex;align-items:center;min-height:44px}
+.sn a.on{padding-bottom:calc(.85rem - 1px)}
+/* ── 15: subpagina-kop tussen 961 en 1190px — telefoon wijkt, menu mag krimpen ── */
+@media(min-width:961px) and (max-width:1190px){
+  .sn{gap:1rem;flex-shrink:1;min-width:0}
+  .sn a,.sn .nav-sub-toggle{letter-spacing:.04em;font-size:.68rem}
+  .ov-top .tel,.kn-top .tel,.tk-top .tel,.vh-top .tel,.vb-top .tel,.pj-top .tel,.pp-top .tel,.wg-top .tel,.wd-top .tel,.iv-top .tel,.spoke-top .tel,.ct-top .tel,.lg-top .tel{display:none}
 }

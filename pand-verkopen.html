@@ -8,9 +8,9 @@
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
-  <link rel="canonical" href="https://home-inn.nl/pand-verkopen">
+  <link rel="canonical" href="https://home-inn.nl/pand-verkopen.html">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://home-inn.nl/pand-verkopen">
+  <meta property="og:url" content="https://home-inn.nl/pand-verkopen.html">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Pand verkopen Rotterdam — vrijblijvend voorstel binnen 48 uur">
   <meta property="og:description" content="HomeINN koopt uw pand direct aan, zonder financieringsvoorbehoud. Voorstel binnen 48 uur. Geen makelaarskosten. Discreet.">
@@ -208,7 +208,7 @@
 
   <!-- ─── Topbar (geen navigatie) ─── -->
   <header class="topbar">
-    <a class="brand" href="homeinn-public.html" aria-label="Terug naar HomeINN">
+    <a class="brand" href="./" aria-label="Terug naar HomeINN">
       <picture>
         <source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
         <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34">
@@ -225,13 +225,13 @@
     <div class="done-card" id="done" aria-live="polite">
       <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
       <h2 tabindex="-1">Uw aanvraag is ontvangen.</h2>
-      <p>Bedankt voor uw vertrouwen. Wij nemen binnen <strong>vier uur op werkdagen</strong> persoonlijk contact met u op en doen binnen <strong>48 uur</strong> een onderbouwd voorstel voor uw pand.</p>
+      <p>Bedankt voor uw vertrouwen. Wij nemen binnen <strong>vier uur op werkdagen</strong> persoonlijk contact met u op. Na één korte opname ontvangt u binnen <strong>48 uur</strong> een onderbouwd voorstel voor uw pand.</p>
       <div class="done-steps">
         <div class="ds"><span class="ds-n">1</span><span class="ds-t"><strong>Wij bellen u</strong>Binnen vier uur op werkdagen, voor een korte toelichting en het inplannen van één discrete opname.</span></div>
         <div class="ds"><span class="ds-n">2</span><span class="ds-t"><strong>Opname van uw pand</strong>Eén bezoek, zonder verplichtingen — uw eventuele huurder merkt er desgewenst niets van.</span></div>
         <div class="ds"><span class="ds-n">3</span><span class="ds-t"><strong>Voorstel binnen 48 uur</strong>Transparant opgebouwd op staat, ligging en marktwaarde. U beslist in alle rust.</span></div>
       </div>
-      <a class="btn btn-ghost home-link" href="homeinn-public.html">Terug naar de website</a>
+      <a class="btn btn-ghost home-link" href="./">Terug naar de website</a>
     </div>
 
     <!-- ─── Flow ─── -->
@@ -270,24 +270,24 @@
               <div class="field">
                 <label class="lbl" for="straat">Straat</label>
                 <input type="text" id="straat" name="straat" autocomplete="address-line1" placeholder="Bijv. Mathenesserlaan" required>
-                <p class="field-err" data-for="straat" role="alert">Vul de straatnaam in.</p>
+                <p class="field-err" id="err-straat" data-for="straat" role="alert">Vul de straatnaam in.</p>
               </div>
               <div class="field">
                 <label class="lbl" for="huisnr">Huisnummer</label>
                 <input type="text" id="huisnr" name="huisnr" autocomplete="address-line2" placeholder="Bijv. 124 B" required>
-                <p class="field-err" data-for="huisnr">Vul het huisnummer in.</p>
+                <p class="field-err" id="err-huisnr" role="alert" data-for="huisnr">Vul het huisnummer in.</p>
               </div>
             </div>
             <div class="grid-2">
               <div class="field">
                 <label class="lbl" for="postcode">Postcode</label>
                 <input type="text" id="postcode" name="postcode" autocomplete="postal-code" placeholder="3021 AB" required>
-                <p class="field-err" data-for="postcode">Vul de postcode in.</p>
+                <p class="field-err" id="err-postcode" role="alert" data-for="postcode">Vul de postcode in.</p>
               </div>
               <div class="field">
                 <label class="lbl" for="plaats">Plaats</label>
                 <input type="text" id="plaats" name="plaats" autocomplete="address-level2" placeholder="Rotterdam" value="Rotterdam" required>
-                <p class="field-err" data-for="plaats">Vul de plaats in.</p>
+                <p class="field-err" id="err-plaats" role="alert" data-for="plaats">Vul de plaats in.</p>
               </div>
             </div>
             <div class="step-actions">
@@ -306,7 +306,7 @@
               <label class="opt-card"><input type="radio" name="type" value="Portiekpand"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt-body"><span class="opt-t">Portiekpand</span><span class="opt-d">Pand met meerdere wooneenheden</span></span></label>
               <label class="opt-card"><input type="radio" name="type" value="Portefeuille (meerdere panden)"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt-body"><span class="opt-t">Portefeuille</span><span class="opt-d">Meerdere panden in één keer</span></span></label>
             </div>
-            <p class="field-err" data-for="type">Kies een type pand.</p>
+            <p class="field-err" id="err-type" role="alert" data-for="type">Kies een type pand.</p>
             <div class="step-actions">
               <button type="button" class="btn btn-ghost" data-prev><span class="arr">←</span> Terug</button>
               <span class="spacer"></span>
@@ -325,7 +325,7 @@
                 <label class="opt-card"><input type="radio" name="bewoning" value="Verhuurd"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt-body"><span class="opt-t">Verhuurd</span></span></label>
                 <label class="opt-card"><input type="radio" name="bewoning" value="Leegstaand"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt-body"><span class="opt-t">Leegstaand</span></span></label>
               </div>
-              <p class="field-err" data-for="bewoning">Kies de bewoningssituatie.</p>
+              <p class="field-err" id="err-bewoning" role="alert" data-for="bewoning">Kies de bewoningssituatie.</p>
             </div>
             <div class="opt-group" role="radiogroup" aria-label="Staat">
               <span class="opt-group-lbl">Staat van het pand</span>
@@ -334,7 +334,7 @@
                 <label class="opt-card"><input type="radio" name="staat" value="Gedateerd"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt-body"><span class="opt-t">Gedateerd</span></span></label>
                 <label class="opt-card"><input type="radio" name="staat" value="Achterstallig onderhoud"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt-body"><span class="opt-t">Achterstallig</span></span></label>
               </div>
-              <p class="field-err" data-for="staat">Kies de staat van het pand.</p>
+              <p class="field-err" id="err-staat" role="alert" data-for="staat">Kies de staat van het pand.</p>
             </div>
             <div class="step-actions">
               <button type="button" class="btn btn-ghost" data-prev><span class="arr">←</span> Terug</button>
@@ -373,18 +373,18 @@
             <div class="field">
               <label class="lbl" for="naam">Uw naam</label>
               <input type="text" id="naam" name="naam" autocomplete="name" placeholder="Jan de Vries" required>
-              <p class="field-err" data-for="naam">Vul uw naam in.</p>
+              <p class="field-err" id="err-naam" role="alert" data-for="naam">Vul uw naam in.</p>
             </div>
             <div class="grid-2">
               <div class="field">
                 <label class="lbl" for="telefoon">Telefoonnummer</label>
                 <input type="tel" id="telefoon" name="telefoon" autocomplete="tel" placeholder="+31 6 12 34 56 78">
-                <p class="field-err" data-for="telefoon">Vul een telefoonnummer of e-mailadres in.</p>
+                <p class="field-err" id="err-telefoon" role="alert" data-for="telefoon">Vul een telefoonnummer of e-mailadres in.</p>
               </div>
               <div class="field">
                 <label class="lbl" for="email">E-mailadres <span class="opt">(optioneel)</span></label>
                 <input type="email" id="email" name="email" autocomplete="email" placeholder="jan@voorbeeld.nl">
-                <p class="field-err" data-for="email">Controleer het e-mailadres.</p>
+                <p class="field-err" id="err-email" role="alert" data-for="email">Controleer het e-mailadres.</p>
               </div>
             </div>
             <div class="field">
@@ -432,7 +432,7 @@
     <div class="f-in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
       <nav aria-label="Juridisch">
-        <a href="homeinn-public.html">Home</a>
+        <a href="./">Home</a>
         <a href="privacy.html">Privacy</a>
         <a href="voorwaarden.html">Voorwaarden</a>
       </nav>
@@ -448,17 +448,16 @@
     "serviceType":"Directe aankoop van vastgoed",
     "areaServed":{"@type":"City","name":"Rotterdam"},
     "provider":{
-      "@type":"RealEstateAgent",
-      "name":"HomeINN",
+      "@type":"RealEstateAgent","@id":"https://home-inn.nl/#organisatie","name":"HomeINN",
       "telephone":"+31626257071",
       "email":"info@homeinn.nl",
       "areaServed":"Rotterdam en omstreken",
-      "address":{"@type":"PostalAddress","addressLocality":"Rotterdam","addressCountry":"NL"}
+      "address":{"@type":"PostalAddress","streetAddress":"Rosestraat 1321","postalCode":"3071 AL","addressLocality":"Rotterdam","addressRegion":"Zuid-Holland","addressCountry":"NL"}
     },
     "description":"HomeINN koopt woningen, appartementen en portiekpanden in Rotterdam direct aan — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
   }
   </script>
-  <script src="lead-cloud.js?v=20260903c" defer></script>
+  <script src="lead-cloud.js?v=20260903d" defer></script>
   <script>
   (function () {
     'use strict';
@@ -479,22 +478,11 @@
 
     function stuurLeadDoor(type, data) {
       try {
-        if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
-        fetch(LEAD_EMAIL_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            _subject: 'Website-aanvraag: ' + (data.subject || type),
-            _template: 'table',
-            Type: type,
-            Naam: data.name || '',
-            Telefoon: data.phone || '',
-            Email: data.email || '',
-            Onderwerp: data.subject || '',
-            Bericht: data.message || ''
-          })
-        }).catch(function () {});
-      } catch (err) {}
+        if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(true);
+        return fetch(LEAD_EMAIL_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ _subject: 'Website-aanvraag: ' + (data.subject || type), _template: 'table', Type: type, Naam: data.name || '', Email: data.email || '', Telefoon: data.phone || '', Onderwerp: data.subject || '', Bericht: data.message || '' })
+        }).then(function (r) { return r.ok; }).catch(function () { return false; });
+      } catch (e) { return Promise.resolve(false); }
     }
     function saveLead(type, data) {
       try {
@@ -507,8 +495,9 @@
         list.push(data);
         localStorage.setItem(INBOX_KEY, JSON.stringify(list));
       } catch (err) {}
-      stuurLeadDoor(type, data);
+      
       if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'pand-verkopen.html');
+      return stuurLeadDoor(type, data);
     }
 
     /* ── Navigatie ── */
@@ -592,8 +581,24 @@
       }
     });
 
+    // aria-describedby: koppel elk veld aan zijn foutmelding (schermlezers lezen de fout bij het veld)
+    form.querySelectorAll('.field-err[data-for]').forEach(function (p) {
+      var veld = form.querySelector('[name="' + p.getAttribute('data-for') + '"]');
+      if (veld && !veld.getAttribute('aria-describedby')) veld.setAttribute('aria-describedby', p.id);
+    });
+    // Enter in een tussenstap verstuurt niet het hele formulier maar gaat naar de volgende stap
+    form.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.type === 'submit') return;
+      if (current < steps.length - 1) {
+        e.preventDefault();
+        var vlg = steps[current].querySelector('[data-next]');
+        if (vlg) vlg.click();
+      }
+    });
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (current < steps.length - 1) { var vlg = steps[current].querySelector('[data-next]'); if (vlg) vlg.click(); return; }
       if (!validateStep(current)) return;
       var f = new FormData(form);
       if (f.get('company_website')) return; // honeypot: bot
@@ -609,19 +614,31 @@
         '\nPasseertermijn: ' + (f.get('passeertermijn') || '—') +
         (f.get('toelichting') ? '\nToelichting: ' + f.get('toelichting') : '');
 
-      saveLead('Verkoopvoorstel', {
+      var verzend = form.querySelector('button[type="submit"]');
+      if (verzend) { verzend.disabled = true; verzend.textContent = 'Bezig met verzenden…'; }
+      var oud = form.querySelector('.verzend-fout'); if (oud) oud.remove();
+
+      Promise.resolve(saveLead('Verkoopvoorstel', {
         name: String(f.get('naam') || '').trim(),
         phone: String(f.get('telefoon') || '').trim(),
         email: String(f.get('email') || '').trim(),
         subject: 'Pand verkopen — ' + (f.get('type') || 'pand') + ' (' + (f.get('plaats') || 'Rotterdam') + ')',
         message: bericht
+      })).then(function (ok) {
+        if (verzend) { verzend.disabled = false; verzend.innerHTML = 'Voorstel aanvragen <span class="arr">→</span>'; }
+        if (ok === false) {
+          var p = document.createElement('p');
+          p.className = 'field-err show verzend-fout'; p.setAttribute('role', 'alert');
+          p.innerHTML = 'Het versturen is niet gelukt — uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31626257071">+31 6 26 25 70 71</a>.';
+          verzend.parentElement.insertAdjacentElement('afterend', p);
+          return;
+        }
+        flow.style.display = 'none';
+        document.querySelector('.progress').style.display = 'none';
+        doneCard.classList.add('on');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (doneCard.querySelector('h2')) { try { doneCard.querySelector('h2').focus(); } catch (e) {} }
       });
-
-      flow.style.display = 'none';
-      document.querySelector('.progress').style.display = 'none';
-      doneCard.classList.add('on');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (doneCard.querySelector('h2')) { try { doneCard.querySelector('h2').focus(); } catch (e) {} }
     });
 
     showStep(0);

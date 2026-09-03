@@ -129,6 +129,8 @@ function showModalSuccess() {
   modalFormEl.style.display = 'none';
   modalSuccessEl.style.display = 'block';
   document.body.classList.add('no-scroll');
+  var kop = modalSuccessEl.querySelector('h3');
+  if (kop) { kop.setAttribute('tabindex', '-1'); try { kop.focus(); } catch (_) {} }
 }
 
 var modalLastFocus = null;
@@ -286,8 +288,8 @@ var LEAD_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/info@homeinn.nl';
 
 function stuurLeadDoor(type, data) {
   try {
-    if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
-    fetch(LEAD_EMAIL_ENDPOINT, {
+    if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(true);
+    return fetch(LEAD_EMAIL_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
@@ -302,8 +304,8 @@ function stuurLeadDoor(type, data) {
         Bericht: data.message || '',
         Portfolio: data.portfolio || ''
       })
-    }).catch(function () { /* bezorging mag de bezoeker nooit hinderen */ });
-  } catch (err) { /* idem */ }
+    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  } catch (err) { return Promise.resolve(false); }
 }
 
 function saveLead(type, data) {
@@ -317,8 +319,20 @@ function saveLead(type, data) {
     list.push(data);
     localStorage.setItem(INBOX_KEY, JSON.stringify(list));
   } catch (err) { console.warn('Aanvraag kon niet worden opgeslagen:', err); }
-  stuurLeadDoor(type, data);
   if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'homeinn-public.html');
+  // Lokale kopie alleen bewaren als de bezorging NIET is gelukt (privacy op gedeelde apparaten).
+  return stuurLeadDoor(type, data).then(function (ok) {
+    if (ok) verwijderLokaleLead(data.id);
+    return ok;
+  });
+}
+function verwijderLokaleLead(id) {
+  try {
+    var list = JSON.parse(localStorage.getItem(INBOX_KEY) || '[]');
+    if (!Array.isArray(list)) return;
+    list = list.filter(function (l) { return l && l.id !== id; });
+    if (list.length) localStorage.setItem(INBOX_KEY, JSON.stringify(list)); else localStorage.removeItem(INBOX_KEY);
+  } catch (_) {}
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -326,17 +340,26 @@ document.addEventListener('DOMContentLoaded', function () {
   if (mform) mform.addEventListener('submit', function (e) {
     e.preventDefault();
     var f = new FormData(mform);
-    if (!f.get('company_website')) { // honeypot: bots negeren
-      saveLead('Gesprek', {
-        name: String(f.get('meeting_name') || '').trim(),
-        contact: String(f.get('meeting_contact') || '').trim(),
-        portfolio: String(f.get('meeting_portfolio_size') || ''),
-        subject: String(f.get('meeting_package') || ''),
-        message: f.get('meeting_ref') ? 'Betreft: ' + String(f.get('meeting_ref')) : ''
-      });
-    }
-    mform.reset();
-    showModalSuccess();
+    if (f.get('company_website')) { mform.reset(); showModalSuccess(); return; } // honeypot: bot doen alsof
+    var knop = mform.querySelector('.m-submit');
+    if (knop) { knop.disabled = true; knop.textContent = 'Bezig met verzenden…'; }
+    var fout = mform.querySelector('.m-fout');
+    if (fout) fout.remove();
+    saveLead('Gesprek', {
+      name: String(f.get('meeting_name') || '').trim(),
+      contact: String(f.get('meeting_contact') || '').trim(),
+      portfolio: String(f.get('meeting_portfolio_size') || ''),
+      subject: String(f.get('meeting_package') || ''),
+      message: f.get('meeting_ref') ? 'Betreft: ' + String(f.get('meeting_ref')) : ''
+    }).then(function (ok) {
+      if (knop) { knop.disabled = false; knop.textContent = 'Plan mijn kennismaking →'; }
+      if (ok) { mform.reset(); showModalSuccess(); return; }
+      var p = document.createElement('p');
+      p.className = 'm-fout';
+      p.setAttribute('role', 'alert');
+      p.innerHTML = 'Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31626257071">+31 6 26 25 70 71</a> — dan plannen wij het gesprek telefonisch in.';
+      mform.querySelector('.modal-body').appendChild(p);
+    });
   });
 
   var cform = document.querySelector('#pg-contact form');
@@ -543,7 +566,7 @@ function openWoningDetail(w) {
       (fotos.length
         ? '<div class="wd-gallery"><img class="wd-main" id="wd-main" src="' + escHtml(fotos[0]) + '" alt="' + escHtml(w.adres) + '">' +
           (fotos.length > 1 ? '<div class="wd-thumbs">' + fotos.map(function (f, i) {
-            return '<img class="wd-thumb' + (i === 0 ? ' on' : '') + '" onerror="this.style.display=&quot;none&quot;" data-src="' + escHtml(f) + '" src="' + escHtml(f) + '" alt="Foto ' + (i + 1) + '">';
+            return '<img class="wd-thumb' + (i === 0 ? ' on' : '') + '" tabindex="0" role="button" aria-label="Toon foto ' + (i + 1) + ' van ' + fotos.length + '" onerror="this.style.display=&quot;none&quot;" data-src="' + escHtml(f) + '" src="' + escHtml(f) + '" alt="Foto ' + (i + 1) + '">';
           }).join('') + '</div>' : '') + '</div>'
         : '') +
       '<div class="wd-body">' +
@@ -563,16 +586,26 @@ function openWoningDetail(w) {
     '</div>';
   box.classList.add('on');
   box.setAttribute('aria-hidden', 'false');
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', (w.adres || 'Woning') + ', ' + (w.plaats || 'Rotterdam'));
   document.body.classList.add('no-scroll');
   box.scrollTop = 0;
+  wdLaatsteFocus = document.activeElement;
+  var sluit = box.querySelector('.wd-close');
+  if (sluit) { try { sluit.focus(); } catch (_) {} }
 }
+var wdLaatsteFocus = null;
 
 function closeWoningDetail() {
   var box = document.getElementById('woning-detail');
   if (!box) return;
+  if (!box.classList.contains('on')) return;
   box.classList.remove('on');
   box.setAttribute('aria-hidden', 'true');
   if (!(modalEl && modalEl.classList.contains('on'))) document.body.classList.remove('no-scroll');
+  if (wdLaatsteFocus && typeof wdLaatsteFocus.focus === 'function') { try { wdLaatsteFocus.focus(); } catch (_) {} }
+  wdLaatsteFocus = null;
 }
 
 document.addEventListener('click', function (e) {
@@ -593,7 +626,21 @@ document.addEventListener('click', function (e) {
   if (dicht || e.target === bg) closeWoningDetail();
 });
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') closeWoningDetail();
+  if (e.key === 'Escape') { closeWoningDetail(); return; }
+  // Enter/Spatie op een thumbnail = klik (toetsenbordbediening galerij)
+  if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.classList && e.target.classList.contains('wd-thumb')) {
+    e.preventDefault(); e.target.click();
+  }
+  // Focus-trap binnen de woningdetail-dialoog
+  var box = document.getElementById('woning-detail');
+  if (e.key === 'Tab' && box && box.classList.contains('on')) {
+    var f = Array.prototype.filter.call(box.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])'), function (el) { return el.offsetParent !== null; });
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (!box.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
 });
 
 /* Bedrijfsgegevens staan nu rechtstreeks in de HTML-footer (zichtbaar zonder JS) */

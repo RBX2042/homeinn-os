@@ -3,6 +3,8 @@
 cd "$(dirname "$0")"
 # Bewaar de Vercel-koppeling (.vercel) zodat 'vercel deploy' naar het juiste project blijft gaan
 [ -d website-online/.vercel ] && cp -R website-online/.vercel /tmp/homeinn-vercel-link
+echo "Generators draaien (legal, spokes, kennis)…"
+node build-legal.js >/dev/null && node build-spokes.js >/dev/null && node build-kennis.js >/dev/null && echo "  ✓ 19 gegenereerde pagina's up-to-date" || { echo "  ✗ generator faalde — bundel NIET gebouwd"; exit 1; }
 rm -rf website-online
 mkdir website-online
 # Herstel de Vercel-koppeling na de schone herbouw

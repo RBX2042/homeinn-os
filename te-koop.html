@@ -8,9 +8,9 @@
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
-  <link rel="canonical" href="https://home-inn.nl/te-koop">
+  <link rel="canonical" href="https://home-inn.nl/te-koop.html">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://home-inn.nl/te-koop">
+  <meta property="og:url" content="https://home-inn.nl/te-koop.html">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Te koop in Rotterdam — instapklaar & gekeurd | HomeINN">
   <meta property="og:description" content="Instapklare, gekeurde en energiezuinige woningen te koop in Rotterdam — door HomeINN zelf ontwikkeld.">
@@ -23,7 +23,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
   <style>
     .tk-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .tk-top .brand img{height:34px;width:auto;display:block}
@@ -50,7 +50,7 @@
 <body>
 <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="tk-top">
-    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="vastgoedbeheer.html">Beheer</a></li>
@@ -181,14 +181,14 @@
   <footer class="tk-foot">
     <div class="in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="verhuur.html">Te huur</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="privacy.html">Privacy</a></nav>
+      <nav aria-label="Links"><a href="./">Home</a><a href="verhuur.html">Te huur</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="privacy.html">Privacy</a></nav>
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
   </footer>
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"CollectionPage","name":"Woningaanbod te koop — HomeINN Rotterdam","url":"https://home-inn.nl/te-koop","inLanguage":"nl-NL","about":"Te koop staande woningen in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
+  {"@context":"https://schema.org","@type":"CollectionPage","name":"Woningaanbod te koop — HomeINN Rotterdam","url":"https://home-inn.nl/te-koop.html","inLanguage":"nl-NL","about":"Te koop staande woningen in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-  <script src="lead-cloud.js?v=20260903c" defer></script>
+  <script src="lead-cloud.js?v=20260903d" defer></script>
   <script>
   (function(){
     'use strict';
@@ -242,13 +242,13 @@
       var f=new FormData(form);
       if(f.get('company_website'))return;
       var naam=(String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
-      if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){var fr=document.getElementById('tk-first');if(fr)fr.focus();return;}
+      if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){ var _v=document.getElementById('tk-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
       saveLead('Aanbod-interesse',{name:naam,email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),subject:'Inschrijving woningaanbod (te koop)',message:'Gewenste plaats: '+String(f.get('plaats')||'—')+' · Budget: '+String(f.get('budget')||'—')+(f.get('message')?(' · '+String(f.get('message'))):'')});
       form.style.display='none';
       var ok=document.getElementById('tk-success'); if(ok){ok.style.display='block';ok.scrollIntoView({behavior:'smooth',block:'center'});}
     });
   })();
   </script>
-<script src="site-nav.js?v=20260903c"></script>
+<script src="site-nav.js?v=20260903d"></script>
 </body>
 </html>

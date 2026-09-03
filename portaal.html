@@ -69,7 +69,7 @@
       <div class="top-actions">
         <label class="search">
           <span>Zoeken</span>
-          <input id="search-input" type="search" placeholder="Pand, kans, relatie, project…" autocomplete="off">
+          <input id="search-input" type="search" placeholder="Pand, kans, relatie, project…" autocomplete="off" aria-label="Pand, kans, relatie, project">
           <div class="search-results" id="search-results" hidden></div>
         </label>
         <button class="btn secondary" id="export-btn">Exporteer</button>
@@ -148,8 +148,8 @@
             <h2>Eigen taken</h2>
           </div>
           <form id="task-form" class="inline-form">
-            <input id="task-input" placeholder="Nieuwe taak… (Enter om toe te voegen)" required>
-            <input id="task-date" type="date" title="Deadline (optioneel)">
+            <input id="task-input" placeholder="Nieuwe taak… (Enter om toe te voegen)" required aria-label="Nieuwe taak">
+            <input id="task-date" type="date" title="Deadline (optioneel)" aria-label="Deadline">
             <button class="btn primary slim" type="submit">+</button>
           </form>
           <div class="priority-list" id="task-panel"></div>
@@ -200,7 +200,7 @@
           </div>
           <form class="calc-form" id="calc-form">
             <div class="form-grid">
-              <label>Adres<input name="address" placeholder="Bijv. Noordsingel 84"></label>
+              <label>Adres<input name="address" placeholder="Bijv. Noordsingel 84" aria-label="Bijv. Noordsingel 84"></label>
               <label>Plaats<input name="city" value="Rotterdam"></label>
               <label>Vraagprijs (€)<input name="vraagprijs" type="number" min="0" step="any" value="300000"></label>
               <label>Jouw koopsom / bod (€)<input name="koopsom" type="number" min="0" step="any" value="280000" required></label>
@@ -526,12 +526,12 @@
           <form id="settings-form" class="settings-form">
             <div class="form-grid">
               <label>Bedrijfsnaam<input name="companyName" required></label>
-              <label>Adres<input name="address" placeholder="Straat 1, 3011 AA Rotterdam"></label>
+              <label>Adres<input name="address" placeholder="Straat 1, 3011 AA Rotterdam" aria-label="Straat 1, 3011 AA Rotterdam"></label>
               <label>E-mail<input name="email" type="email"></label>
               <label>Telefoon<input name="phone"></label>
-              <label>KvK-nummer<input name="kvk" placeholder="12345678"></label>
-              <label>BTW-nummer<input name="btw" placeholder="NL123456789B01"></label>
-              <label>Website-adres (voor feeds &amp; foto-links)<input name="siteUrl" type="url" placeholder="https://home-inn.nl"></label>
+              <label>KvK-nummer<input name="kvk" placeholder="12345678" aria-label="12345678"></label>
+              <label>BTW-nummer<input name="btw" placeholder="NL123456789B01" aria-label="NL123456789B01"></label>
+              <label>Website-adres (voor feeds &amp; foto-links)<input name="siteUrl" type="url" placeholder="https://home-inn.nl" aria-label="https://home-inn.nl"></label>
               <label>Overdrachtsbelasting (%)<input name="otbPct" type="number" min="0" step="any"></label>
               <label>Notaris &amp; recherche aankoop (€)<input name="notaris" type="number" min="0" step="any"></label>
               <label>Aankoopmakelaar (%)<input name="makelaarPct" type="number" min="0" step="any"></label>
@@ -582,7 +582,7 @@
       <h2 id="maintmsg-title">Berichten</h2>
       <div id="maintmsg-thread" style="max-height:300px;overflow:auto;margin:10px 0"></div>
       <form id="maintmsg-form" class="inline-form">
-        <input name="body" placeholder="Bericht aan de huurder…" required autocomplete="off">
+        <input name="body" placeholder="Bericht aan de huurder…" required autocomplete="off" aria-label="Bericht aan de huurder">
         <button class="btn primary slim" type="submit">Verstuur</button>
       </form>
     </div>
@@ -627,7 +627,7 @@
             <option>Overig</option>
           </select>
         </label>
-        <label>Naam<input name="name" required placeholder="Bijv. Maas Makelaardij"></label>
+        <label>Naam<input name="name" required placeholder="Bijv. Maas Makelaardij" aria-label="Bijv. Maas Makelaardij"></label>
         <label>Contactpersoon<input name="contact"></label>
         <label>E-mail<input name="email" type="email"></label>
         <label>Telefoon<input name="phone"></label>
@@ -649,7 +649,7 @@
       <h2 id="deal-modal-title">Aankoopkans toevoegen</h2>
       <input type="hidden" name="id">
       <div class="form-grid">
-        <label>Adres<input name="address" required placeholder="Straat + nummer"></label>
+        <label>Adres<input name="address" required placeholder="Straat + nummer" aria-label="Straat + nummer"></label>
         <label>Plaats<input name="city" value="Rotterdam"></label>
         <label>Type
           <select name="ptype">
@@ -673,7 +673,7 @@
         <label>Vraagprijs (€)<input name="vraagprijs" type="number" min="0" step="any"></label>
         <label>Verkopend makelaar<select name="makelaarId"></select></label>
         <label>Bezichtiging gepland<input name="viewingDate" type="date"></label>
-        <label>Bron<input name="source" placeholder="Funda / netwerk / veiling…"></label>
+        <label>Bron<input name="source" placeholder="Funda / netwerk / veiling…" aria-label="Funda / netwerk / veiling"></label>
         <label>E-mail verkoper (voor portaal)<input name="verkoperEmail" type="email"></label>
       </div>
       <h3 class="modal-section">Calculatie</h3>
@@ -703,7 +703,7 @@
         <label>Datum<input name="date" type="date" required></label>
         <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
         <label>Geldig tot<input name="validUntil" type="date"></label>
-        <label>Voorbehoud<input name="note" placeholder="Financiering / bouwkundige keuring…"></label>
+        <label>Voorbehoud<input name="note" placeholder="Financiering / bouwkundige keuring…" aria-label="Financiering / bouwkundige keuring"></label>
       </div>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
@@ -825,7 +825,7 @@
         <label>Doel-energielabel
           <select name="doelLabel"><option value="">—</option><option>A++++</option><option>A+++</option><option>A++</option><option>A+</option><option>A</option><option>B</option><option>C</option></select>
         </label>
-        <label>Subsidie / regeling<input name="subsidieType" placeholder="Bijv. ISDE warmtepomp"></label>
+        <label>Subsidie / regeling<input name="subsidieType" placeholder="Bijv. ISDE warmtepomp" aria-label="Bijv. ISDE warmtepomp"></label>
         <label>Subsidiebedrag (€)<input name="subsidieBedrag" type="number" min="0" step="any" value="0"></label>
       </div>
       <label>Verduurzamingsmaatregelen<textarea name="verduurzaming" rows="2" placeholder="Bijv. warmtepomp, dak- en gevelisolatie, HR++ glas, zonnepanelen"></textarea></label>
@@ -844,7 +844,7 @@
       <h2 id="project-modal-title">Project toevoegen</h2>
       <input type="hidden" name="id">
       <div class="form-grid">
-        <label>Projectnaam<input name="name" required placeholder="Bijv. Volledige renovatie + splitsing"></label>
+        <label>Projectnaam<input name="name" required placeholder="Bijv. Volledige renovatie + splitsing" aria-label="Bijv. Volledige renovatie + splitsing"></label>
         <label>Pand<select name="propertyId" required></select></label>
         <label>Status
           <select name="status">
@@ -866,7 +866,7 @@
         <label>Doelbedrag investering (€)<input name="doelbedrag" type="number" min="0" step="any"></label>
         <label>Minimale inleg (€)<input name="minInleg" type="number" min="0" step="any"></label>
         <label>Verwacht rendement (% per jaar)<input name="rendementPct" type="number" min="0" step="any"></label>
-        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden"></label>
+        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden" aria-label="Bijv. 12 maanden"></label>
       </div>
       <label>Notitie<textarea name="note" rows="2"></textarea></label>
       <menu>
@@ -897,7 +897,7 @@
             <option>Overig</option>
           </select>
         </label>
-        <label>Omschrijving<input name="desc" required placeholder="Bijv. badkamer compleet"></label>
+        <label>Omschrijving<input name="desc" required placeholder="Bijv. badkamer compleet" aria-label="Bijv. badkamer compleet"></label>
         <label>Bedrag incl. btw (€)<input name="amount" type="number" min="0" step="any" required></label>
         <label>Btw-tarief
           <select name="btwPct"><option value="21">21%</option><option value="9">9%</option><option value="0">0% / vrijgesteld</option></select>
@@ -926,7 +926,7 @@
       <input type="hidden" name="propertyId">
       <div class="form-grid">
         <label>Datum<input name="date" type="date" required></label>
-        <label>Naam / partij<input name="name" required placeholder="Bijv. fam. Janssen via makelaar"></label>
+        <label>Naam / partij<input name="name" required placeholder="Bijv. fam. Janssen via makelaar" aria-label="Bijv. fam. Janssen via makelaar"></label>
       </div>
       <label>Indruk / feedback<textarea name="note" rows="2" placeholder="Serieus? Tweede bezichtiging? Opmerkingen…"></textarea></label>
       <menu>
@@ -945,9 +945,9 @@
       <input type="hidden" name="id">
       <div class="form-grid">
         <label>Datum<input name="date" type="date" required></label>
-        <label>Bieder<input name="name" required placeholder="Naam koper of makelaar"></label>
+        <label>Bieder<input name="name" required placeholder="Naam koper of makelaar" aria-label="Naam koper of makelaar"></label>
         <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
-        <label>Voorbehoud<input name="note" placeholder="Financiering / geen voorbehoud…"></label>
+        <label>Voorbehoud<input name="note" placeholder="Financiering / geen voorbehoud…" aria-label="Financiering / geen voorbehoud"></label>
       </div>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
@@ -966,7 +966,7 @@
         <label>Verkoopprijs (€)<input name="verkoopprijs" type="number" min="0" step="any" required></label>
         <label>Passeerdatum<input name="date" type="date" required></label>
         <label>Verkoopkosten totaal (€)<input name="kosten" type="number" min="0" step="any" value="0"></label>
-        <label>Koper<input name="koper" placeholder="Naam koper"></label>
+        <label>Koper<input name="koper" placeholder="Naam koper" aria-label="Naam koper"></label>
       </div>
       <div class="totals-box" id="sale-preview"></div>
       <menu>
@@ -994,8 +994,8 @@
             <option>Afspraak</option>
           </select>
         </label>
-        <label>Omschrijving<input name="title" required placeholder="Bijv. bezichtiging Noordsingel 84"></label>
-        <label>Wie<input name="who" placeholder="Eigen / makelaar / aannemer"></label>
+        <label>Omschrijving<input name="title" required placeholder="Bijv. bezichtiging Noordsingel 84" aria-label="Bijv. bezichtiging Noordsingel 84"></label>
+        <label>Wie<input name="who" placeholder="Eigen / makelaar / aannemer" aria-label="Eigen / makelaar / aannemer"></label>
         <label>Betreft<select name="ref"></select></label>
         <label>Herhaling
           <select name="recurrence"><option value="">Eenmalig</option><option value="weekly">Wekelijks</option><option value="biweekly">Tweewekelijks</option><option value="monthly">Maandelijks</option><option value="quarterly">Per kwartaal</option></select>
@@ -1039,7 +1039,7 @@
         </label>
         <label>Geplaatst op<input name="datum" type="date"></label>
         <label>Advertentiekosten (€)<input name="kosten" type="number" min="0" step="any" value="0"></label>
-        <label>Link naar advertentie<input name="url" type="url" placeholder="https://…"></label>
+        <label>Link naar advertentie<input name="url" type="url" placeholder="https://…" aria-label="https://"></label>
       </div>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
@@ -1070,7 +1070,7 @@
         <label>Type
           <select name="type"><option>Opstalverzekering</option><option>Aansprakelijkheid</option><option>Leegstand</option><option>Bouw / CAR</option><option>Rechtsbijstand</option><option>Anders</option></select>
         </label>
-        <label>Verzekeraar<input name="verzekeraar" placeholder="Bijv. Nationale-Nederlanden"></label>
+        <label>Verzekeraar<input name="verzekeraar" placeholder="Bijv. Nationale-Nederlanden" aria-label="Bijv. Nationale-Nederlanden"></label>
         <label>Polisnummer<input name="polis"></label>
         <label>Premie (€/jaar)<input name="premie" type="number" min="0" step="any" value="0"></label>
         <label>Ingangsdatum<input name="start" type="date"></label>
@@ -1094,8 +1094,8 @@
           <select name="soort"><option>Huur</option><option>Servicekosten</option><option>Verkoopopbrengst</option><option>Investeerdersrente</option><option>Overig</option></select>
         </label>
         <label>Pand<select name="propertyId"></select></label>
-        <label>Debiteur / aan<input name="debiteur" placeholder="Huurder, koper, investeerder…"></label>
-        <label>Omschrijving<input name="desc" required placeholder="Bijv. Huur juni 2026"></label>
+        <label>Debiteur / aan<input name="debiteur" placeholder="Huurder, koper, investeerder…" aria-label="Huurder, koper, investeerder"></label>
+        <label>Omschrijving<input name="desc" required placeholder="Bijv. Huur juni 2026" aria-label="Bijv. Huur juni 2026"></label>
         <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
         <label>Factuurdatum<input name="date" type="date" required></label>
         <label>Vervaldatum<input name="due" type="date"></label>
@@ -1168,7 +1168,7 @@
         <label>Bedrag (€) — koopsom / maandhuur / inleg / aanneemsom<input name="bedrag" type="number" min="0" step="any"></label>
         <label>Contractdatum<input name="datum" type="date"></label>
         <label>Ingangs-/leverdatum<input name="ingangsdatum" type="date"></label>
-        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden / onbepaalde tijd"></label>
+        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden / onbepaalde tijd" aria-label="Bijv. 12 maanden / onbepaalde tijd"></label>
         <label>Rendement (% p/j, investering)<input name="rendementPct" type="number" min="0" step="any"></label>
       </div>
       <label>Bijzondere bepalingen<textarea name="note" rows="2" placeholder="Ontbindende voorwaarden, waarborgsom, opleverpunten…"></textarea></label>
@@ -1197,7 +1197,7 @@
           <select name="status"><option>Gepland</option><option>Uitbetaald</option></select>
         </label>
       </div>
-      <label>Notitie<input name="note" placeholder="Bijv. rente Q2 2026"></label>
+      <label>Notitie<input name="note" placeholder="Bijv. rente Q2 2026" aria-label="Bijv. rente Q2 2026"></label>
       <p class="hint">Verschijnt na "Synchroniseer nu" in het portaal van de investeerder.</p>
       <menu>
         <button class="btn danger" value="delete" id="payout-delete-btn" hidden formnovalidate>Verwijderen</button>
@@ -1238,7 +1238,7 @@
         <label>Op te halen bedrag (€)<input name="bedrag" type="number" min="0" step="any" required></label>
         <label>Reactiedeadline<input name="deadline" type="date" required></label>
       </div>
-      <label>Omschrijving / reden<input name="omschrijving" placeholder="Bijv. extra ronde voor meerwerk installaties"></label>
+      <label>Omschrijving / reden<input name="omschrijving" placeholder="Bijv. extra ronde voor meerwerk installaties" aria-label="Bijv. extra ronde voor meerwerk installaties"></label>
       <div id="capitalcall-preview"></div>
       <p class="hint">Het bedrag wordt pro-rata over de investeerders verdeeld naar hun inleg. Je kunt per investeerder bijhouden of het is toegezegd en gestort.</p>
       <menu>
@@ -1255,7 +1255,7 @@
       <h2 id="account-modal-title">Rekening toevoegen</h2>
       <input type="hidden" name="id">
       <div class="form-grid">
-        <label>Naam<input name="naam" required placeholder="Bijv. Zakelijke rekening"></label>
+        <label>Naam<input name="naam" required placeholder="Bijv. Zakelijke rekening" aria-label="Bijv. Zakelijke rekening"></label>
         <label>Type
           <select name="type"><option>Zakelijk</option><option>Spaar</option><option>Krediet</option><option>Kas</option><option>Overig</option></select>
         </label>
@@ -1283,7 +1283,7 @@
 
   <dialog id="cmdk" class="cmdk">
     <div class="cmdk-box">
-      <input id="cmdk-input" type="text" placeholder="Zoek een pand, deal, relatie… of typ een actie (bijv. 'nieuwe kostenpost')" autocomplete="off" spellcheck="false">
+      <input id="cmdk-input" type="text" placeholder="Zoek een pand, deal, relatie… of typ een actie (bijv. 'nieuwe kostenpost')" autocomplete="off" spellcheck="false" aria-label="Zoek een pand, deal, relatie… of typ een actie">
       <div id="cmdk-list" class="cmdk-list"></div>
       <p class="cmdk-hint">↑↓ navigeren · ↵ kiezen · esc sluiten</p>
     </div>

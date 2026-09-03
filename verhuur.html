@@ -8,9 +8,9 @@
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
-  <link rel="canonical" href="https://home-inn.nl/verhuur">
+  <link rel="canonical" href="https://home-inn.nl/verhuur.html">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://home-inn.nl/verhuur">
+  <meta property="og:url" content="https://home-inn.nl/verhuur.html">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Huurwoningen Rotterdam & verhuurservice — HomeINN">
   <meta property="og:description" content="Gerenoveerde huurwoningen in Rotterdam met één aanspreekpunt en 24/7 storingslijn. Of laat uw woning verhuren via HomeINN.">
@@ -23,7 +23,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
   <style>
     .vh-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
       padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
@@ -76,7 +76,7 @@
 <body>
 <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="vh-top">
-    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home">
+    <a class="brand" href="./" aria-label="HomeINN home">
       <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
       <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
     </a>
@@ -222,7 +222,7 @@
           <p>Wij vinden en screenen de juiste huurder en regelen het hele traject — van advertentie tot sleuteloverdracht. Daarna kunt u doorgroeien naar volledig vastgoedbeheer.</p>
           <ul class="vh-eig-list">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Advertentie op Funda, Pararius en Kamernet</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Volledige screening: inkomenseis 3× huur, BKR-toets en referenties</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Volledige screening: inkomenseis 3× huur, identiteits- en kredietwaardigheidscheck en referenties</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Huurcontract conform de Rotterdamse en landelijke regelgeving</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Bezichtigingen en sleuteloverdracht volledig geregeld</li>
           </ul>
@@ -243,7 +243,7 @@
     <div class="in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
       <nav aria-label="Links">
-        <a href="homeinn-public.html">Home</a>
+        <a href="./">Home</a>
         <a href="vastgoedbeheer.html">Vastgoedbeheer</a>
         <a href="pand-verkopen.html">Pand aanbieden</a>
         <a href="privacy.html">Privacy</a>
@@ -254,17 +254,16 @@
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
-    "@type":"RealEstateAgent",
-    "name":"HomeINN",
+    "@type":"RealEstateAgent","@id":"https://home-inn.nl/#organisatie","name":"HomeINN",
     "telephone":"+31626257071",
     "email":"info@homeinn.nl",
-    "url":"https://home-inn.nl/verhuur",
+    "url":"https://home-inn.nl/verhuur.html",
     "areaServed":{"@type":"City","name":"Rotterdam"},
-    "address":{"@type":"PostalAddress","addressLocality":"Rotterdam","addressCountry":"NL"},
+    "address":{"@type":"PostalAddress","streetAddress":"Rosestraat 1321","postalCode":"3071 AL","addressLocality":"Rotterdam","addressRegion":"Zuid-Holland","addressCountry":"NL"},
     "description":"Huurwoningen in Rotterdam en verhuurservice voor eigenaren: gerenoveerde, energiezuinige woningen met één aanspreekpunt en 24/7 storingslijn; voor eigenaren advertentie, screening en huurcontract."
   }
   </script>
-  <script src="lead-cloud.js?v=20260903c" defer></script>
+  <script src="lead-cloud.js?v=20260903d" defer></script>
   <script>
   (function(){
     'use strict';
@@ -306,6 +305,7 @@
               '<p class="aanbod-kenmerken">'+kenmerken+'</p>'+
               '<div class="aanbod-prijs">'+fmtHuur(w.huur)+'</div>'+
               '<p>'+escHtml((w.omschrijving||'').slice(0,140)+((w.omschrijving||'').length>140?'…':''))+'</p>'+
+              '<a class="pillar-link" href="woning.html?id='+encodeURIComponent(ref)+'">Bekijk deze woning →</a>'+
               '<button class="pillar-cta" type="button" data-bezichtig="'+ref+'">Plan een bezichtiging →</button>'+
               '</div></article>';
           }).join('');
@@ -344,7 +344,7 @@
       var f = new FormData(form);
       if (f.get('company_website')) return; // honeypot
       var naam = (String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
-      if (!naam || (!String(f.get('email')||'').trim() && !String(f.get('phone')||'').trim())) { var first=document.getElementById('vh-first'); if(first) first.focus(); return; }
+      if (!naam || (!String(f.get('email')||'').trim() && !String(f.get('phone')||'').trim())) { var _v=document.getElementById('vh-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
       var obj = String(f.get('object')||'').trim();
       saveLead('Huuraanvraag', {
         name: naam,
@@ -359,6 +359,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260903c"></script>
+<script src="site-nav.js?v=20260903d"></script>
 </body>
 </html>

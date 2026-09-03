@@ -35,9 +35,10 @@ const PAGES = [
     versie: 'Versie 2.0 · ingangsdatum 11 juni 2026',
     secties: [
       ['Wie is verantwoordelijk', 'HomeINN, gevestigd te Rotterdam, is verwerkingsverantwoordelijke voor de verwerking van persoonsgegevens via deze website. Contact: <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.'],
-      ['Welke gegevens wij verwerken en waarom', 'Vult u een formulier in (kennismakingsgesprek, pand verkopen, project volgen, investeren of contact), dan verwerken wij de gegevens die u opgeeft: naam, e-mailadres en/of telefoonnummer, het onderwerp van uw aanvraag en uw bericht. Grondslag: uitvoering van (precontractuele) maatregelen op uw verzoek (art. 6 lid 1 sub b AVG) en ons gerechtvaardigd belang om aanvragen op te volgen.'],
+      ['Welke gegevens wij verwerken en waarom', 'Vult u een formulier in (kennismakingsgesprek, pand verkopen, project volgen, investeren of contact), dan verwerken wij de gegevens die u opgeeft: naam, e-mailadres en/of telefoonnummer, het onderwerp van uw aanvraag en uw bericht. Biedt u een pand aan, dan vragen wij daarnaast het adres van het pand, het type, de bewoningssituatie (leeg of verhuurd), de bouwkundige staat, de aanleiding voor verkoop en de gewenste passeertermijn — uitsluitend om een onderbouwd voorstel te kunnen doen. Grondslag: uitvoering van (precontractuele) maatregelen op uw verzoek (art. 6 lid 1 sub b AVG) en ons gerechtvaardigd belang om aanvragen op te volgen.'],
       ['Doorsturen en opslaan van uw aanvraag', 'Formulierinzendingen worden per e-mail aan ons bezorgd via de verwerkersdienst FormSubmit. Daarnaast slaan wij uw aanvraag op in onze eigen beveiligde database bij Supabase (hostingregio: EU), zodat wij hem in ons beheerportaal kunnen opvolgen. Beide partijen treden op als verwerker en verwerken uw gegevens uitsluitend in onze opdracht. Wij verkopen of delen uw gegevens niet voor marketingdoeleinden van derden.'],
       ['Kaarten van Google Maps', 'Kaarten op deze site laden pas nadat u daarop klikt. Op dat moment worden gegevens (zoals uw IP-adres) door Google verwerkt; daarop is het privacybeleid van Google van toepassing. Klikt u niet, dan worden er geen gegevens met Google gedeeld. Lettertypen worden vanaf onze eigen server geladen.'],
+      ['Scripts van jsDelivr', 'Zodra u een formulierveld aanraakt, laadt uw browser één script (de Supabase-bibliotheek) van het content delivery network jsDelivr (Prospect One / Fastly). Daarbij ontvangt jsDelivr uw IP-adres en browsergegevens; jsDelivr stelt zelf geen cookies in en profileert niet. Zonder formuliergebruik wordt dit script niet geladen.'],
       ['Bewaartermijnen', 'Aanvragen bewaren wij maximaal 12 maanden na afronding van het contact, tenzij er een overeenkomst tot stand komt — dan gelden de wettelijke (fiscale) bewaartermijnen van 7 jaar voor administratie.'],
       ['Uw rechten', 'U heeft recht op inzage, rectificatie, verwijdering, beperking, overdraagbaarheid en bezwaar. Mail daarvoor naar <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>; wij reageren binnen vier weken. U kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl).'],
     ],
@@ -56,7 +57,8 @@ const PAGES = [
       ['Opzegging en be&euml;indiging', 'Overeenkomsten voor onbepaalde tijd kunnen door beide partijen schriftelijk worden opgezegd met inachtneming van een opzegtermijn van &eacute;&eacute;n kalendermaand, tegen het einde van een maand. Bij een opdracht voor een bepaald project eindigt de overeenkomst na oplevering. Beide partijen mogen de overeenkomst met onmiddellijke ingang ontbinden als de andere partij in staat van faillissement verkeert, surseance van betaling is verleend of haar onderneming staakt. Verplichtingen die naar hun aard doorlopen &mdash; zoals geheimhouding en aansprakelijkheid &mdash; blijven na be&euml;indiging van kracht.'],
       ['Aansprakelijkheid', 'HomeINN spant zich in om haar werkzaamheden zorgvuldig uit te voeren. Aansprakelijkheid is beperkt tot directe schade die aantoonbaar voortvloeit uit een toerekenbare tekortkoming. De aansprakelijkheid is in alle gevallen beperkt tot het bedrag dat de aansprakelijkheidsverzekeraar van HomeINN in het betreffende geval uitkeert, vermeerderd met het eigen risico. Keert de verzekeraar niet uit, dan is de aansprakelijkheid beperkt tot het bedrag dat voor de betreffende opdracht in rekening is gebracht, over de twaalf maanden voorafgaand aan de schadeveroorzakende gebeurtenis. Aansprakelijkheid voor indirecte schade, waaronder gevolgschade, gederfde winst en gemiste besparingen, is uitgesloten. Deze beperkingen gelden niet bij opzet of bewuste roekeloosheid van HomeINN of haar leidinggevenden.'],
       ['Overmacht', 'Kan HomeINN haar verplichtingen niet nakomen door een omstandigheid die haar niet is toe te rekenen &mdash; zoals overheidsmaatregelen, storingen bij toeleveranciers, extreme weersomstandigheden of het uitvallen van nutsvoorzieningen &mdash; dan worden die verplichtingen opgeschort zolang de overmacht duurt. Duurt de overmacht langer dan zestig dagen, dan mogen beide partijen de overeenkomst ontbinden voor het niet-uitgevoerde deel, zonder dat een schadevergoedingsplicht ontstaat.'],
-      ['Klachten', 'Bent u niet tevreden, meld dat dan binnen dertig dagen nadat u het gebrek heeft ontdekt of redelijkerwijs had kunnen ontdekken, per e-mail aan <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>. Wij bevestigen de ontvangst binnen vijf werkdagen en streven ernaar binnen vier weken inhoudelijk te reageren. Een klacht schort de betalingsverplichting niet op.'],
+      ['Klachten', 'Bent u niet tevreden, meld dat dan binnen bekwame tijd nadat u het gebrek heeft ontdekt of redelijkerwijs had kunnen ontdekken, per e-mail aan <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>; voor consumenten is een melding binnen twee maanden in elk geval tijdig. Wij bevestigen de ontvangst binnen vijf werkdagen en streven ernaar binnen vier weken inhoudelijk te reageren. Een klacht schort de betalingsverplichting niet op.'],
+      ['Herroepingsrecht consumenten', 'Sluit u als consument op afstand (bijvoorbeeld via deze website of telefonisch) een overeenkomst voor een dienst met HomeINN, dan heeft u het wettelijke recht die overeenkomst binnen veertien dagen zonder opgave van redenen te herroepen. Vraagt u ons de dienst al binnen die termijn te starten, dan betaalt u een evenredig deel voor het reeds uitgevoerde werk. Op de koop of verkoop van onroerend goed is het herroepingsrecht niet van toepassing.'],
       ['Persoonsgegevens', 'Persoonsgegevens verwerken wij zoals beschreven in ons <a href="privacy.html">privacybeleid</a>. Verwerken wij persoonsgegevens in opdracht van de wederpartij, dan sluiten wij daarvoor een verwerkersovereenkomst conform artikel 28 AVG.'],
       ['Wijziging van deze voorwaarden', 'HomeINN mag deze voorwaarden wijzigen. Gewijzigde voorwaarden gelden voor nieuwe overeenkomsten vanaf de op deze pagina vermelde ingangsdatum. Voor lopende overeenkomsten gaat een wijziging pas in dertig dagen nadat wij de wederpartij daarover hebben ge&iuml;nformeerd; is de wijziging voor de wederpartij niet aanvaardbaar, dan mag zij de overeenkomst binnen die termijn opzeggen.'],
       ['Toepasselijk recht en bevoegde rechter', 'Op alle overeenkomsten met HomeINN is uitsluitend Nederlands recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter van de rechtbank Rotterdam, tenzij dwingend recht een andere rechter aanwijst. Partijen spannen zich in om een geschil eerst in onderling overleg op te lossen.'],
@@ -70,6 +72,7 @@ const PAGES = [
     secties: [
       ['Geen cookies', 'Deze website plaatst geen cookies en gebruikt geen analytische of advertentietrackers. Er is daarom geen cookiebanner nodig.'],
       ['Lokale opslag', 'Vult u een formulier in, dan bewaart uw browser de inzending ook lokaal (localStorage), zodat de aanvraag niet verloren gaat. Die lokale kopie blijft op uw eigen apparaat. De aanvraag zelf sturen wij daarnaast per e-mail en naar onze eigen database, zodat wij hem kunnen opvolgen — zie het privacybeleid voor wie die gegevens ontvangt en hoe lang wij ze bewaren.'],
+      ['Scripts van derden', 'Raakt u een formulierveld aan, dan laadt uw browser één script van het content delivery network jsDelivr; daarbij ziet jsDelivr uw IP-adres. Er wordt geen cookie geplaatst. Zie het privacybeleid voor details.'],
       ['Kaarten', 'Google Maps-kaarten laden uitsluitend nadat u daarop klikt. Pas op dat moment maakt uw browser verbinding met Google; tot die tijd wordt er niets met Google gedeeld. Lettertypen laden wij van onze eigen server, niet via Google Fonts.'],
       ['Vragen', 'Vragen over cookies of privacy? Mail <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.'],
     ],
@@ -77,7 +80,7 @@ const PAGES = [
 ];
 
 function page(p, alle) {
-  const canonical = `https://home-inn.nl/${p.slug}`;
+  const canonical = `https://home-inn.nl/${p.slug}.html`;
   const sections = p.secties.map(s => `<h2>${s[0]}</h2>\n      <p>${s[1]}</p>`).join('\n      ');
   const versie = p.versie ? `<p style="font-size:.78rem;color:var(--ink4)">${p.versie}</p>\n      ` : '';
   const andere = alle.filter(x => x.slug !== p.slug).map(x => `<a href="${x.slug}.html">${x.title}</a>`).join('');
@@ -89,6 +92,7 @@ function page(p, alle) {
   <title>${p.title} — HomeINN Rotterdam</title>
   <meta name="description" content="${p.metaDescription}">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="canonical" href="${canonical}">
   <meta property="og:type" content="website">
@@ -97,13 +101,15 @@ function page(p, alle) {
   <meta property="og:title" content="${p.title} — HomeINN Rotterdam">
   <meta property="og:description" content="${p.metaDescription}">
   <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -124,7 +130,7 @@ function page(p, alle) {
   <a class="skip-link" href="#main">Naar de inhoud</a>
   ${SPRITE}
   <header class="lg-top">
-    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
         <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="vastgoedbeheer.html">Beheer</a></li>
@@ -209,16 +215,17 @@ function page(p, alle) {
         </article>
       </div>
     </section>
-    <nav class="lg-other" aria-label="Andere juridische pagina's"><span>Zie ook:</span>${andere}<a href="homeinn-public.html">Terug naar home</a></nav>
+    <nav class="lg-other" aria-label="Andere juridische pagina's"><span>Zie ook:</span>${andere}<a href="./">Terug naar home</a></nav>
   </main>
 
   <footer class="lg-foot">
     <div class="in">
       <span>© 2026 ${BEDRIJF.naam} — Vastgoedpartner Rotterdam<br><small style="color:var(--ink4)">${BEDRIJF.adres} · KvK ${BEDRIJF.kvk} · Btw ${BEDRIJF.btw}</small></span>
-      <nav aria-label="Links"><a href="homeinn-public.html">Home</a><a href="privacy.html">Privacy</a><a href="voorwaarden.html">Voorwaarden</a><a href="cookies.html">Cookies</a></nav>
+      <nav aria-label="Links"><a href="./">Home</a><a href="privacy.html">Privacy</a><a href="voorwaarden.html">Voorwaarden</a><a href="cookies.html">Cookies</a></nav>
+      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260903c"></script>
+  <script src="site-nav.js?v=20260903d"></script>
 </body>
 </html>
 `;

@@ -49,8 +49,8 @@ const META = {
 const WIJKEN = require('./spokes-content.json');
 
 const VERGELIJK = [
-  ['Tijd tot zekerheid', 'Voorstel binnen 48 uur', 'Gemiddeld 3–6 maanden'],
-  ['Makelaars- en stylingkosten', '€ 0', '± 1–2% courtage + verkoopklaar maken'],
+  ['Tijd tot zekerheid', 'Voorstel binnen 48 uur na de opname', 'Vaak enkele maanden, zonder garantie'],
+  ['Makelaars- en stylingkosten', '€ 0', 'Courtage plus verkoopklaar maken'],
   ['Staat van de woning', 'Wij kopen in elke staat', 'Opknappen verhoogt de kans'],
   ['Financieringsvoorbehoud', 'Nooit', 'Koop kan op het laatst stuklopen'],
   ['Privacy', 'Geen borden, geen Funda', 'Volledig openbaar traject'],
@@ -79,7 +79,7 @@ function buurLinks(slug) {
 function page(w) {
   const meta = META[w.slug] || { soort: 'regio Rotterdam', areaType: 'city', buren: [] };
   const titel = `Huis verkopen ${w.naam} | Bod in 48 uur — HomeINN`;
-  const canonical = `https://home-inn.nl/verkopen-${w.slug}`;
+  const canonical = `https://home-inn.nl/verkopen-${w.slug}.html`;
   const h1 = `Uw pand verkopen in ${esc(w.naam)} — direct bod van HomeINN`;
   const areaLD = meta.areaType === 'city'
     ? `{"@type":"City","name":"${esc(w.naam)}"}`
@@ -133,7 +133,7 @@ function page(w) {
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -177,7 +177,7 @@ function page(w) {
 <body>
   <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="spoke-top">
-    <a class="brand" href="homeinn-public.html" aria-label="HomeINN home">
+    <a class="brand" href="./" aria-label="HomeINN home">
       <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
       <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
     </a>
@@ -297,10 +297,11 @@ function page(w) {
     <div class="in">
       <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
       <nav aria-label="Links">
-        <a href="homeinn-public.html">Home</a>
+        <a href="./">Home</a>
         <a href="pand-verkopen.html">Pand aanbieden</a>
         <a href="privacy.html">Privacy</a>
       </nav>
+      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
     </div>
   </footer>
 
@@ -308,12 +309,13 @@ function page(w) {
   {
     "@context":"https://schema.org",
     "@type":"RealEstateAgent",
+    "@id":"https://home-inn.nl/#organisatie",
     "name":"HomeINN",
     "telephone":"${TEL_HREF}",
     "email":"info@homeinn.nl",
     "url":"${canonical}",
     "areaServed":${areaLD},
-    "address":{"@type":"PostalAddress","addressLocality":"Rotterdam","addressCountry":"NL"},
+    "address":{"@type":"PostalAddress","streetAddress":"Rosestraat 1321","postalCode":"3071 AL","addressLocality":"Rotterdam","addressRegion":"Zuid-Holland","addressCountry":"NL"},
     "description":"HomeINN koopt panden in ${esc(w.naam)} direct aan — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
   }
   </script>
@@ -323,12 +325,11 @@ function page(w) {
     "@type":"BreadcrumbList",
     "itemListElement":[
       {"@type":"ListItem","position":1,"name":"Home","item":"https://home-inn.nl/"},
-      {"@type":"ListItem","position":2,"name":"Pand verkopen","item":"https://home-inn.nl/pand-verkopen"},
-      {"@type":"ListItem","position":3,"name":"Verkopen in ${esc(w.naam)}","item":"${canonical}"}
+      {"@type":"ListItem","position":2,"name":"Verkopen in ${esc(w.naam)}","item":"${canonical}"}
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260903c"></script>
+  <script src="site-nav.js?v=20260903d"></script>
 </body>
 </html>
 `;

@@ -5,7 +5,7 @@
    (app.js ~320 kB, cloud.js, styles.css) wordt pas gecachet als iemand het portaal
    daadwerkelijk bezoekt — een bezoeker van de landingspagina hoort die niet te
    downloaden. HTML-pagina's worden bij bezoek gecachet (netwerk eerst). */
-const CACHE = 'homeinn-os-v63';
+const CACHE = 'homeinn-os-v64';
 const CORE = [
   'homeinn-public.html', 'homeinn-public.js', 'homeinn-public.css', 'site-nav.js', 'lead-cloud.js',
   'lightbox.js', 'tokens.css', 'fonts/fonts.css', 'manifest.webmanifest', 'aanbod.json',

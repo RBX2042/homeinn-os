@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /portaal.html
-Disallow: /inloggen.html
 Disallow: /investeerders.html
 Disallow: /huurders.html
 Disallow: /kopers.html
