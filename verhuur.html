@@ -323,11 +323,12 @@
     var LEAD_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/info@homeinn.nl';
     function stuurLeadDoor(type, data){
       try{
-        if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
-        fetch(LEAD_EMAIL_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
-          body: JSON.stringify({ _subject:'Website-aanvraag: '+(data.subject||type), _template:'table', Type:type, Naam:data.name||'', Email:data.email||'', Telefoon:data.phone||'', Onderwerp:data.subject||'', Bericht:data.message||'' }) }).catch(function(){});
-      }catch(e){}
+        if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(true);
+        return fetch(LEAD_EMAIL_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body: JSON.stringify({ _subject:'Website-aanvraag: '+(data.subject||type), _template:'table', Type:type, Naam:data.name||'', Email:data.email||'', Telefoon:data.phone||'', Onderwerp:data.subject||'', Bericht:data.message||'' }) }).then(function(r){ if(r.ok) verwijderLokaleLead(data.id); return r.ok; }).catch(function(){ return false; });
+      }catch(e){ return Promise.resolve(false); }
     }
+    function verwijderLokaleLead(id){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))return;l=l.filter(function(x){return x&&x.id!==id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}
     function saveLead(type, data){
       try{
         var list = JSON.parse(localStorage.getItem(INBOX_KEY)||'[]'); if(!Array.isArray(list)) list=[];
@@ -335,8 +336,8 @@
         data.type=type; data.date=new Date().toISOString(); data.handled=false;
         list.push(data); localStorage.setItem(INBOX_KEY, JSON.stringify(list));
       }catch(e){}
-      stuurLeadDoor(type, data);
       if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'verhuur.html');
+      return stuurLeadDoor(type, data);
     }
     var form = document.getElementById('vh-form');
     if (form) form.addEventListener('submit', function(e){
@@ -346,16 +347,21 @@
       var naam = (String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
       if (!naam || (!String(f.get('email')||'').trim() && !String(f.get('phone')||'').trim())) { var _v=document.getElementById('vh-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
       var obj = String(f.get('object')||'').trim();
+      var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();
+      var knop=form.querySelector('[type=submit]'); if(knop){knop.disabled=true;knop.dataset.txt=knop.textContent;knop.textContent='Bezig met verzenden\u2026';}
       saveLead('Huuraanvraag', {
         name: naam,
         email: String(f.get('email')||'').trim(),
         phone: String(f.get('phone')||'').trim(),
         subject: obj ? ('Huurwoning bezichtigen — '+obj) : 'Ik zoek een huurwoning',
         message: 'Gewenste plaats: '+String(f.get('plaats')||'—')+' · Budget: '+String(f.get('budget')||'—')+(f.get('message')?(' · '+String(f.get('message'))):'')
+      }).then(function(geslaagd){
+        if(knop){knop.disabled=false;knop.textContent=knop.dataset.txt;}
+        if(!geslaagd){ (function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31626257071" style="color:inherit;text-decoration:underline">+31 6 26 25 70 71</a>.';f.appendChild(p);})(form); return; }
+        var ok = document.getElementById('vh-success');
+        form.style.display='none';
+        if (ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
       });
-      var ok = document.getElementById('vh-success');
-      form.style.display='none';
-      if (ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
     });
   })();
   </script>
