@@ -40,10 +40,14 @@
         "email": "info@homeinn.nl",
         "address": {
           "@type": "PostalAddress",
+          "streetAddress": "Rosestraat 1321",
+          "postalCode": "3071 AL",
           "addressLocality": "Rotterdam",
           "addressRegion": "Zuid-Holland",
           "addressCountry": "NL"
         },
+        "vatID": "NL867727548B01",
+        "foundingDate": "2007",
         "areaServed": "Rotterdam en omstreken",
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
@@ -135,10 +139,10 @@
   }
   </script>
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260903c">
   <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
   <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -731,7 +735,7 @@
   <div class="cta-inner rv">
     <h2>Uw pand aanbieden — of uw vastgoed beter laten <em>renderen?</em></h2>
     <p class="cta-lede rv d1">Eén gesprek van dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
-    <button class="btn btn-primary" onclick="openModal()">Plan een kennismaking <span class="arr">→</span></button>
+    <a class="btn btn-primary" href="contact.html" onclick="openModal();return false">Plan een kennismaking <span class="arr">→</span></a>
     <p class="cta-micro rv d2">Reactie binnen vier uur op werkdagen · Vertrouwelijk · Geheel vrijblijvend</p>
   </div>
 </div>
@@ -800,10 +804,12 @@
       <button class="modal-x" onclick="closeModal()" aria-label="Sluiten">✕</button>
     </div>
     <div id="mf">
-      <form method="post" action="#">
+      <form method="post" action="https://formsubmit.co/info@homeinn.nl">
         <div class="modal-body">
           <input type="hidden" name="action" value="homeinn_submit_form">
           <input type="hidden" name="homeinn_form_type" value="meeting">
+          <input type="hidden" name="_subject" value="Website-aanvraag: kennismaking">
+          <input type="hidden" name="_template" value="table">
           <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="hidden" name="meeting_ref" value="">
           <div class="m2col">
@@ -828,10 +834,9 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="lead-cloud.js?v=20260702" defer></script>
-<script src="site-nav.js?v=20260903b"></script>
-<script src="homeinn-public.js?v=20260903b"></script>
+<script src="lead-cloud.js?v=20260903c" defer></script>
+<script src="site-nav.js?v=20260903c"></script>
+<script src="homeinn-public.js?v=20260903c"></script>
 <script src="lightbox.js?v=20260705" defer></script>
 </body>
 </html>

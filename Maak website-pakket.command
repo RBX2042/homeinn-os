@@ -15,6 +15,7 @@ cp lightbox.js website-online/                         # fullscreen fotogalerij 
 cp homeinn-public.css homeinn-public.js website-online/
 cp lead-cloud.js website-online/                       # website-leads → Supabase (window.pushLeadToCloud); zonder dit bestand komen leads NIET in het portaal
 cp site-nav.js website-online/                         # gedeeld hoofdmenu (mobiel menu + Diensten-paneel); zonder dit bestand werkt de navigatie op ALLE pagina's niet
+cp 404.html favicon.ico website-online/ 2>/dev/null || true   # eigen 404-pagina (Vercel/GitHub Pages pakken 404.html automatisch op) + favicon.ico voor browsers die /favicon.ico blind opvragen
 cp pand-verkopen.html website-online/                  # verkoop-flow (navigatie-loze meerstaps intake)
 cp vastgoedbeheer.html website-online/                 # dienstenpagina vastgoedbeheer (pakketten + rekenmodule + offerte)
 cp projectontwikkeling.html website-online/            # dienstenpagina projectontwikkeling (bouwpartner + aanpak)
@@ -36,6 +37,24 @@ cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[]
 cp funda-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<RealEstateFeed bron="HomeINN" versie="3.0" gegenereerd="" aantal="0"><Objecten></Objecten></RealEstateFeed>' > website-online/funda-feed.xml
 cp pararius-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<pararius source="HomeINN" generated="" count="0"><properties></properties></pararius>' > website-online/pararius-feed.xml
 cp sw.js website-online/ 2>/dev/null || true
+# Fotoplekken waarvan het bestand (nog) niet bestaat uit de BUNDEL strippen. De bron blijft
+# fotoklaar (zet het bestand in fotos/ en het verschijnt), maar de live site vraagt niets op
+# wat er niet is — geen 404's in logs, geen verspilde requests, geen fetchpriority op niets.
+python3 - <<'FOTO_PY'
+import io, os, re, glob
+n = 0
+for f in glob.glob('website-online/*.html'):
+    s = io.open(f, encoding='utf-8').read(); o = s
+    def keep(m):
+        src = re.search(r'src="([^"]+)"', m.group(0))
+        return m.group(0) if (src and os.path.exists(os.path.join('website-online', src.group(1)))) else ''
+    s = re.sub(r'\s*<div class="hero-photo"[^>]*>\s*<img[^>]*>\s*</div>', keep, s)
+    s = re.sub(r'\s*<img class="blog-photo"[^>]*>', keep, s)
+    if s != o:
+        io.open(f, 'w', encoding='utf-8').write(s); n += 1
+print("  ✓ ontbrekende fotoplekken gestript uit %d pagina('s)" % n)
+FOTO_PY
+
 # Sitemap-datums (lastmod) gelijkzetten aan de werkelijke wijzigingsdatum van elke pagina.
 # Zonder deze stap blijft lastmod op een oude datum staan en slaan zoekmachines het herindexeren over.
 python3 - <<'SITEMAP_PY'
