@@ -134,6 +134,7 @@ function page(p, alle) {
         <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="vastgoedbeheer.html">Beheer</a></li>
+      <li><a href="investeren.html">Investeren</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -173,6 +174,7 @@ function page(p, alle) {
     <nav aria-label="Hoofdmenu">
       <a href="projectontwikkeling.html">Projectontwikkeling</a>
       <a href="vastgoedbeheer.html">Beheer</a>
+      <a href="investeren.html">Investeren</a>
       <a href="over-ons.html">Over ons</a>
       <span class="mob-groep">Diensten</span>
       <a class="mob-sm" href="pand-verkopen.html">Aankoop — uw pand aanbieden</a>
