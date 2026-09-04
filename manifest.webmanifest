@@ -1,8 +1,8 @@
 {
-  "name": "HomeINN OS — Vastgoedportaal",
-  "short_name": "HomeINN OS",
-  "description": "Portaal voor aankoop, ontwikkeling, verhuur en verkoop van vastgoed.",
-  "start_url": "portaal.html",
+  "name": "HomeINN — Projectontwikkeling in Rotterdam",
+  "short_name": "HomeINN",
+  "description": "Projectontwikkeling, aankoop, verhuur en verkoop van vastgoed in Rotterdam.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

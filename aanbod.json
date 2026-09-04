@@ -1,5 +1,5 @@
 {
-  "bijgewerkt": "2026-06-11",
+  "bijgewerkt": "2026-09-04",
   "aanbod": [
     {
       "id": "PND-2025-011",
@@ -37,40 +37,164 @@
   ],
   "projecten": [
     {
-      "id": "PRJ-2026-003",
-      "titel": "Volledige renovatie + tuinkamer",
-      "adres": "Kralingse Plaslaan 22",
+      "id": "HI-P01",
+      "titel": "2e Rosestraat 26-A, 26-B en 28",
+      "adres": "2e Rosestraat 26-A, 26-B en 28",
+      "postcode": "3074 JK",
       "plaats": "Rotterdam",
-      "type": "Eengezinswoning",
-      "status": "Uitvoering",
-      "voortgang": 50,
-      "start": "2026-04-15",
-      "oplevering": "2026-07-14",
-      "omschrijving": "Karakteristieke eengezinswoning aan de Kralingse Plas, volledig gerenoveerd met uitbouw en energielabel A. Binnenkort in verkoop.",
-      "updates": [
-        {
-          "datum": "2026-06-08",
-          "tekst": "Afbouw in volle gang — stucwerk gereed, keukenplaatsing gepland."
-        },
-        {
-          "datum": "2026-05-27",
-          "tekst": "Installaties gestart: warmtepomp en nieuwe groepenkast geplaatst."
-        },
-        {
-          "datum": "2026-05-01",
-          "tekst": "Sloop en ruwbouw afgerond — het pand is wind- en waterdicht."
-        }
-      ],
+      "wijk": "Rotterdam-Zuid",
+      "type": "3 woningen",
+      "eenheden": 3,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Drie zelfstandige woningen in één bouwblok op Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
       "investering": {
-        "doelbedrag": 150000,
-        "opgehaald": 50000,
-        "minInleg": 25000,
-        "rendementPct": 8,
-        "looptijd": "12 maanden"
+        "open": true
       },
       "fotos": [
-        "fotos/kralingse-plaslaan-1.svg"
-      ]
+        "fotos/2e-rosestraat-26.jpg"
+      ],
+      "mapsAdres": "2e Rosestraat 26, 3074 JK Rotterdam"
+    },
+    {
+      "id": "HI-P02",
+      "titel": "Gaesbeekstraat 92-A en 92-B",
+      "adres": "Gaesbeekstraat 92-A en 92-B",
+      "postcode": "3081 NM",
+      "plaats": "Rotterdam",
+      "wijk": "Rotterdam-Zuid",
+      "type": "2 woningen",
+      "eenheden": 2,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Twee appartementen in één pand in Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/gaesbeekstraat-92.jpg"
+      ],
+      "mapsAdres": "Gaesbeekstraat 92, 3081 NM Rotterdam"
+    },
+    {
+      "id": "HI-P03",
+      "titel": "'s-Gravendijkwal 88 en 90",
+      "adres": "'s-Gravendijkwal 88 en 90",
+      "postcode": "3014 EH",
+      "plaats": "Rotterdam",
+      "wijk": "Rotterdam-West",
+      "type": "2 woningen",
+      "eenheden": 2,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Twee naastgelegen panden aan de 's-Gravendijkwal in Rotterdam-West. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/s-gravendijkwal-88.jpg"
+      ],
+      "mapsAdres": "'s-Gravendijkwal 88, 3014 EH Rotterdam"
+    },
+    {
+      "id": "HI-P04",
+      "titel": "Honingerdijk 105 en 107",
+      "adres": "Honingerdijk 105 en 107",
+      "postcode": "3063 AL",
+      "plaats": "Rotterdam",
+      "wijk": "Kralingen",
+      "type": "2 woningen",
+      "eenheden": 2,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Twee naastgelegen panden aan de Honingerdijk in Kralingen. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/honingerdijk-105.jpg"
+      ],
+      "mapsAdres": "Honingerdijk 105, 3063 AL Rotterdam"
+    },
+    {
+      "id": "HI-P05",
+      "titel": "Ploegstraat 48",
+      "adres": "Ploegstraat 48",
+      "postcode": "3075 NG",
+      "plaats": "Rotterdam",
+      "wijk": "Rotterdam-Zuid",
+      "type": "1 woning",
+      "eenheden": 1,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Stadswoning op Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/ploegstraat-48.jpg"
+      ],
+      "mapsAdres": "Ploegstraat 48, 3075 NG Rotterdam"
+    },
+    {
+      "id": "HI-P06",
+      "titel": "Schulpweg 396",
+      "adres": "Schulpweg 396",
+      "postcode": "3084 NJ",
+      "plaats": "Rotterdam",
+      "wijk": "Rotterdam-Zuid",
+      "type": "1 woning",
+      "eenheden": 1,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Woning aan de Schulpweg op Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/schulpweg-396.jpg"
+      ],
+      "mapsAdres": "Schulpweg 396, 3084 NJ Rotterdam"
+    },
+    {
+      "id": "HI-P07",
+      "titel": "Van der Driftstraat 4-A",
+      "adres": "Van der Driftstraat 4-A",
+      "postcode": "3131 JH",
+      "plaats": "Vlaardingen",
+      "wijk": "Vlaardingen",
+      "type": "1 woning",
+      "eenheden": 1,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Appartement in Vlaardingen. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/van-der-driftstraat-4a.jpg"
+      ],
+      "mapsAdres": "Van der Driftstraat 4, 3131 JH Vlaardingen"
+    },
+    {
+      "id": "HI-P08",
+      "titel": "Tollensstraat 32",
+      "adres": "Tollensstraat 32",
+      "postcode": "3131 GZ",
+      "plaats": "Vlaardingen",
+      "wijk": "Vlaardingen",
+      "type": "1 woning",
+      "eenheden": 1,
+      "status": "In portefeuille",
+      "eigendom": true,
+      "omschrijving": "Woning in Vlaardingen. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/tollensstraat-32.jpg"
+      ],
+      "mapsAdres": "Tollensstraat 32, 3131 GZ Vlaardingen"
     }
   ],
   "verkocht": [
@@ -80,5 +204,10 @@
       "type": "Appartement",
       "label": "B"
     }
-  ]
+  ],
+  "portefeuille": {
+    "woningen": 13,
+    "locaties": 8,
+    "peildatum": "2026-09-02"
+  }
 }

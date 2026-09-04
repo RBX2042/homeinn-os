@@ -53,8 +53,8 @@ function head(titel, desc, canonical) {
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}
@@ -121,8 +121,8 @@ function head(titel, desc, canonical) {
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li><a href="investeren.html">Investeren</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -155,7 +155,7 @@ function head(titel, desc, canonical) {
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="tel" href="tel:${TEL_HREF}">Liever bellen? <strong>${TEL}</strong></a><a class="top-cta" href="kennis.html">Alle artikelen</a></div>
+    <div class="right"><a class="tel" href="tel:${TEL_HREF}">Liever bellen? <strong>${TEL}</strong></a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
   </header>
   <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
     <nav aria-label="Hoofdmenu">
@@ -174,7 +174,8 @@ function head(titel, desc, canonical) {
       <a class="mob-sm" href="contact.html">Contact</a>
       <a class="mob-sm" href="inloggen.html">Inloggen</a>
     </nav>
-    <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">&rarr;</span></a>
+    <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">&rarr;</span></a>
+  <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan &rarr;</a>
     <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> &middot; Rotterdam</p>
     <div class="mob-legal">
       <a href="privacy.html">Privacy</a>
@@ -191,7 +192,7 @@ function foot() {
       <nav aria-label="Links"><a href="./">Home</a><a href="kennis.html">Kennis</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="privacy.html">Privacy</a></nav>
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
     </div></footer>
-  <script src="site-nav.js?v=20260903d"></script>
+  <script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>
 `;

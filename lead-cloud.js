@@ -66,7 +66,8 @@
         phone: data.phone || (!/@/.test(data.contact || '') ? (data.contact || '') : ''),
         subject: data.subject || '',
         message: data.message || '',
-        portfolio: data.portfolio || ''
+        portfolio: data.portfolio || '',
+        handled: false
       };
       loadSdk().then(function () {
         var c = getClient();

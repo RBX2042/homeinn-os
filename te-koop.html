@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
   <style>
     .tk-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .tk-top .brand img{height:34px;width:auto;display:block}
@@ -53,8 +53,8 @@
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li><a href="investeren.html">Investeren</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -107,7 +107,8 @@
     <a class="mob-sm" href="contact.html">Contact</a>
     <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
-  <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">→</span></a>
+  <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
+  <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
   <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> · Rotterdam</p>
   <div class="mob-legal">
     <a href="privacy.html">Privacy</a>
@@ -122,7 +123,7 @@
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Woningaanbod · Te koop</span>
         <h1>Te koop in Rotterdam — instapklaar en <em>gekeurd</em></h1>
-        <p>Elke woning die wij verkopen is door onszelf ontwikkeld: bouwkundig gekeurd, energiezuinig en zonder verrassingen achter de muren. Dit staat er nu te koop.</p>
+        <p>Elke woning die wij verkopen is door onszelf ontwikkeld en wordt met een bouwkundig keuringsrapport opgeleverd — energiezuinig en zonder verrassingen achter de muren. Dit staat er nu te koop.</p>
       </div>
     </section>
 
@@ -154,12 +155,12 @@
             <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
             <input type="hidden" name="object" id="tk-object" value="">
             <div class="cf-2col">
-              <div class="cf-group"><label for="tk-first">Voornaam</label><input id="tk-first" type="text" name="first_name" placeholder="Jan" required></div>
-              <div class="cf-group"><label for="tk-last">Achternaam</label><input id="tk-last" type="text" name="last_name" placeholder="de Vries"></div>
+              <div class="cf-group"><label for="tk-first">Voornaam</label><input id="tk-first" type="text" autocomplete="given-name" name="first_name" placeholder="Jan" required></div>
+              <div class="cf-group"><label for="tk-last">Achternaam</label><input id="tk-last" type="text" autocomplete="family-name" name="last_name" placeholder="de Vries"></div>
             </div>
             <div class="cf-2col">
-              <div class="cf-group"><label for="tk-email">E-mailadres</label><input id="tk-email" type="email" name="email" placeholder="jan@voorbeeld.nl"></div>
-              <div class="cf-group"><label for="tk-phone">Telefoonnummer</label><input id="tk-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
+              <div class="cf-group"><label for="tk-email">E-mailadres</label><input id="tk-email" type="email" autocomplete="email" inputmode="email" name="email" placeholder="jan@voorbeeld.nl"></div>
+              <div class="cf-group"><label for="tk-phone">Telefoonnummer</label><input id="tk-phone" type="tel" autocomplete="tel" inputmode="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
             </div>
             <div class="cf-2col">
               <div class="cf-group"><label for="tk-plaats">Gewenste plaats / wijk</label><input id="tk-plaats" type="text" name="plaats" placeholder="Bijv. Kralingen, Kop van Zuid"></div>
@@ -190,11 +191,12 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Woningaanbod te koop — HomeINN Rotterdam","url":"https://home-inn.nl/te-koop.html","inLanguage":"nl-NL","about":"Te koop staande woningen in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-  <script src="lead-cloud.js?v=20260903d" defer></script>
+  <script src="lead-cloud.js?v=20260905a" defer></script>
   <script>
   (function(){
     'use strict';
-    function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+    var _hpT=Date.now();function _isBot(f){return !!f.get('company_website') && (Date.now()-_hpT)<4000;}
+        function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
     function fmtPrijs(n){return '€ ' + (Number(n)||0).toLocaleString('nl-NL') + ' k.k.';}
     var HUIS = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11 L12 4 L20.5 11"/><path d="M6 10.2 V20 H18 V10.2"/><circle cx="12" cy="13.7" r="1.5"/><path d="M12 15.2 V18"/></svg>';
     var leeg = '<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><div style="color:var(--gold-ink);margin-bottom:1rem">'+HUIS+'</div><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy);margin:0 0 .5rem">Op dit moment is alles verkocht.</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Nieuwe woningen zijn in ontwikkeling. Schrijf u hieronder in en u hoort als eerste wanneer er aanbod bijkomt.</p></div>';
@@ -237,13 +239,13 @@
     /* Lead-pipeline */
     var INBOX_KEY='homeinn-inbox-v1', LEAD_EMAIL_ENDPOINT='https://formsubmit.co/ajax/info@homeinn.nl';
     function verwijderLokaleLead(id){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))return;l=l.filter(function(x){return x&&x.id!==id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}
-    function stuurLeadDoor(type,data){try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return fetch(LEAD_EMAIL_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+(data.subject||type),_template:'table',Type:type,Naam:data.name||'',Email:data.email||'',Telefoon:data.phone||'',Onderwerp:data.subject||'',Bericht:data.message||''})}).then(function(r){if(r.ok)verwijderLokaleLead(data.id);return r.ok;}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}}
+    function stuurLeadDoor(type,data){try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return fetch(LEAD_EMAIL_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+(data.subject||type),_template:'table',Type:type,Naam:data.name||'',Email:data.email||'',Telefoon:data.phone||'',Onderwerp:data.subject||'',Bericht:data.message||''})}).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok)verwijderLokaleLead(data.id);return ok;});}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}}
     function saveLead(type,data){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];data.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);data.type=type;data.date=new Date().toISOString();data.handled=false;l.push(data);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}if(window.pushLeadToCloud)window.pushLeadToCloud(type,data,'te-koop.html');return stuurLeadDoor(type,data);}
     var form=document.getElementById('tk-form');
     if(form) form.addEventListener('submit',function(e){
       e.preventDefault();
       var f=new FormData(form);
-      if(f.get('company_website'))return;
+      if(_isBot(f))return;
       var naam=(String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
       if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){ var _v=document.getElementById('tk-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
       var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();
@@ -257,6 +259,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260903d"></script>
+<script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>

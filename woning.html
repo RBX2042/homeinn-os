@@ -7,20 +7,20 @@
   <meta name="description" content="Bekijk de details van deze door HomeINN ontwikkelde woning in Rotterdam: kenmerken, omschrijving en de mogelijkheid een bezichtiging aan te vragen.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
-  <link rel="canonical" href="https://home-inn.nl/te-koop.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Woningdetail — HomeINN Rotterdam">
   <meta property="og:description" content="Bekijk deze woning van HomeINN in Rotterdam: instapklaar, bouwkundig gekeurd en energiezuinig opgeleverd.">
   <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:url" content="https://home-inn.nl/woning.html">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="robots" content="noindex,follow">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
   <style>
     .wd-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .wd-top .brand img{height:34px;width:auto;display:block}
@@ -84,8 +84,8 @@
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li><a href="investeren.html">Investeren</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -139,7 +139,8 @@
     <a class="mob-sm" href="contact.html">Contact</a>
     <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
-  <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">→</span></a>
+  <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
+  <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
   <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> · Rotterdam</p>
   <div class="mob-legal">
     <a href="privacy.html">Privacy</a>
@@ -159,12 +160,13 @@
       <nav aria-label="Links"><a href="./">Home</a><a href="te-koop.html">Te koop</a><a href="verhuur.html">Te huur</a><a href="privacy.html">Privacy</a></nav>
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
   </footer>
-  <script src="lead-cloud.js?v=20260903d" defer></script>
+  <script src="lead-cloud.js?v=20260905a" defer></script>
   <script src="lightbox.js?v=20260705" defer></script>
   <script>
   (function(){
     'use strict';
-    function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
+    var _hpT=Date.now();function _isBot(f){return !!f.get('company_website') && (Date.now()-_hpT)<4000;}
+        function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
     function getParam(n){return new URLSearchParams(location.search).get(n);}
     var main = document.getElementById('wd-main');
     var id = getParam('id');
@@ -220,9 +222,9 @@
           '<h3 style="margin-top:.75rem">Bezichtiging aanvragen</h3>'+
           '<form id="wd-form" novalidate>'+
           '<input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">'+
-          '<div class="cf-group"><label for="wd-naam">Naam</label><input id="wd-naam" type="text" name="naam" placeholder="Jan de Vries" required></div>'+
-          '<div class="cf-group"><label for="wd-phone">Telefoon</label><input id="wd-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>'+
-          '<div class="cf-group"><label for="wd-email">E-mail</label><input id="wd-email" type="email" name="email" placeholder="jan@voorbeeld.nl"></div>'+
+          '<div class="cf-group"><label for="wd-naam">Naam</label><input id="wd-naam" type="text" autocomplete="name" name="naam" placeholder="Jan de Vries" required></div>'+
+          '<div class="cf-group"><label for="wd-phone">Telefoon</label><input id="wd-phone" type="tel" autocomplete="tel" inputmode="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>'+
+          '<div class="cf-group"><label for="wd-email">E-mail</label><input id="wd-email" type="email" autocomplete="email" inputmode="email" name="email" placeholder="jan@voorbeeld.nl"></div>'+
           '<button class="cf-submit" type="submit" style="width:100%">Bezichtiging aanvragen →</button>'+
           '<p class="m-note" style="margin-top:.7rem;font-size:.72rem">Akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>.</p>'+
           '</form>'+
@@ -253,13 +255,13 @@
         function saveLead(type,d){
           try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];d.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);d.type=type;d.date=new Date().toISOString();d.handled=false;l.push(d);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}
           if(window.pushLeadToCloud) window.pushLeadToCloud(type,d,'woning.html');
-          try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return fetch(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+d.subject,_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||''})}).then(function(r){if(r.ok){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');l=l.filter(function(x){return x&&x.id!==d.id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}return r.ok;}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}
+          try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return fetch(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+d.subject,_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||''})}).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');l=l.filter(function(x){return x&&x.id!==d.id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}return ok;});}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}
         }
         var form = document.getElementById('wd-form');
         if (form) form.addEventListener('submit', function(e){
           e.preventDefault();
           var f=new FormData(form);
-          if(f.get('company_website'))return;
+          if(_isBot(f))return;
           var naam=String(f.get('naam')||'').trim();
           if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){ var _v=document.getElementById('wd-naam'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
           var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();
@@ -275,6 +277,6 @@
       .catch(function(){ notFound(); });
   })();
   </script>
-<script src="site-nav.js?v=20260903d"></script>
+<script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>

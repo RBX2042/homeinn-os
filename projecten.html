@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Projecten in Rotterdam — aankoop tot oplevering | HomeINN</title>
-  <meta name="description" content="Volg de vastgoedprojecten van HomeINN in Rotterdam: locatie, planning en voortgang per project — van aankoop tot oplevering. Of doe mee als investeerder.">
+  <title>Onze woningen in Rotterdam — 13 in eigen bezit | HomeINN</title>
+  <meta name="description" content="De dertien woningen die HomeINN zelf in bezit heeft, met adres en locatie. Investeer mee in een concreet ontwikkelproject in Rotterdam of Vlaardingen.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
@@ -13,7 +13,7 @@
   <meta property="og:url" content="https://home-inn.nl/projecten.html">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Onze projecten in Rotterdam — HomeINN">
-  <meta property="og:description" content="Volg locatie, planning en voortgang per project — van aankoop tot oplevering. Of doe mee.">
+  <meta property="og:description" content="De dertien woningen die HomeINN zelf in bezit heeft, met adres en locatie. Investeer mee in een concreet ontwikkelproject in Rotterdam of Vlaardingen.">
   <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
   <style>
     .pj-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .pj-top .brand img{height:34px;width:auto;display:block}
@@ -56,8 +56,8 @@
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li><a href="investeren.html">Investeren</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -110,7 +110,8 @@
     <a class="mob-sm" href="contact.html">Contact</a>
     <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
-  <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">→</span></a>
+  <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
+  <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
   <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> · Rotterdam</p>
   <div class="mob-legal">
     <a href="privacy.html">Privacy</a>
@@ -124,13 +125,13 @@
     <section class="page-hero">
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Projecten · Rotterdam</span>
-        <h1>Onze projecten in Rotterdam — van aankoop tot <em>oplevering</em></h1>
-        <p>Wij ontwikkelen panden van aankoop tot verkoop — en u kijkt mee. Volg de voortgang per project, of doe mee en deel in het resultaat. Transparant, met locatie, planning en updates.</p>
+        <h1>Dertien woningen in eigen bezit — van aankoop tot <em>oplevering</em></h1>
+        <p>Dit is geen etalage van andermans vastgoed: elk pand hieronder staat op naam van HomeINN. Wij kopen zelf aan, verbouwen met een vast eigen bouwteam en leveren op — en u kunt per project meedoen. Met adres en locatie erbij; zodra een verbouwing start, verschijnt de voortgang hier.</p>
       </div>
     </section>
 
     <section class="pj-sec">
-      <div class="proc-head"><span class="t-eyebrow">Lopend &amp; afgerond</span><h2>Wat wij nu <em>bouwen.</em></h2></div>
+      <div class="proc-head"><span class="t-eyebrow">Onze portefeuille</span><h2>Wat wij nu <em>in bezit hebben.</em></h2><p class="pf-meta" id="portefeuille-meta">13 woningen op 8 locaties · alles in eigen bezit</p></div>
       <div class="blog-grid" id="projecten-grid" style="margin-top:2.5rem"></div>
     </section>
 
@@ -167,45 +168,77 @@
     var leeg='<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy);margin:0 0 .5rem">Binnenkort meer projecten</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Wij werken aan onze volgende ontwikkelingen. Plan een kennismaking om als eerste op de hoogte te zijn.</p></div>';
     if(!grid) return;
     grid.innerHTML = leeg;
+
+    /* Kaart pas laden na een klik: geen Google-verzoek zonder toestemming van
+       de bezoeker, en geen dertien iframes bij het openen van de pagina. */
+    grid.addEventListener('click',function(e){
+      var btn=e.target&&e.target.closest?e.target.closest('.map-load'):null;
+      if(!btn)return;
+      var f=document.createElement('iframe');
+      f.className='card-map';f.loading='lazy';f.referrerPolicy='no-referrer-when-downgrade';
+      f.src='https://www.google.com/maps?q='+btn.getAttribute('data-maps')+'&output=embed';
+      f.title='Kaart '+(btn.getAttribute('data-titel')||'');
+      btn.replaceWith(f);
+    });
+
     fetch('aanbod.json',{cache:'no-store'})
       .then(function(r){if(!r.ok)throw new Error('geen aanbod.json');return r.json();})
       .then(function(data){
         var items=(data&&Array.isArray(data.projecten))?data.projecten:[];
+        var pf=data&&data.portefeuille;
+        var meta=document.getElementById('portefeuille-meta');
+        if(meta&&pf&&pf.woningen)meta.textContent=pf.woningen+' woningen op '+pf.locaties+' locaties · alles in eigen bezit';
         if(!items.length){grid.innerHTML=leeg;return;}
         grid.innerHTML=items.map(function(p){
+          var q=encodeURIComponent(p.mapsAdres||((p.adres||'')+', '+(p.postcode?p.postcode+' ':'')+(p.plaats||'Rotterdam')));
           var fotos=Array.isArray(p.fotos)?p.fotos:[];
-          var visual=fotos.length?'<div class="card-visual"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="'+escHtml(fotos[0])+'" alt="'+escHtml(p.titel||p.adres)+'"></div>':'<div class="card-visual" style="background:var(--cream2)"></div>';
+          var kaartKnop='<button class="map-load" type="button" data-maps="'+q+'" data-titel="'+escHtml(p.adres||'')+'"><span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span><strong>Kaart tonen</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik</span></button>';
+          var visual='<div class="pf-visual">'+kaartKnop+(fotos.length?'<img class="pf-foto" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add(&quot;on&quot;)" src="'+escHtml(fotos[0])+'" alt="'+escHtml((p.adres||'')+' in '+(p.plaats||'')+' — pand in eigendom van HomeINN')+'">':'')+'</div>';
           var vp=Math.max(0,Math.min(100,Number(p.voortgang)||0));
           function nl(iso){var d=new Date(iso);if(isNaN(d))return escHtml(iso);return d.toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});}
           var verlopen=p.oplevering&&!isNaN(new Date(p.oplevering))&&new Date(p.oplevering)<new Date()&&vp<100;
           var plan=[p.start?('Start '+nl(p.start)):'',p.oplevering?(verlopen?'oplevering in afstemming':('oplevering '+nl(p.oplevering))):''].filter(Boolean).join(' · ');
-          var kenmerken=[escHtml(p.plaats),escHtml(p.type)].filter(Boolean).join(' · ');
+          var kenmerken=[escHtml(p.postcode||''),escHtml(p.wijk||p.plaats||''),escHtml(p.type||'')].filter(Boolean).join(' · ');
           var updates=Array.isArray(p.updates)?p.updates:[];
           var updatesHtml='';
           if(updates.length){
-            var items=updates.slice(0,3).map(function(u){
+            var ui=updates.slice(0,3).map(function(u){
               var dLabel=escHtml(u.datum||'');
               var d=u.datum?new Date(u.datum):null;
               if(d&&!isNaN(d))dLabel=d.toLocaleDateString('nl-NL',{day:'numeric',month:'short'});
               return '<div class="pj-update-item"><span class="pj-update-date">'+dLabel+'</span><span>'+escHtml(u.tekst||'')+'</span></div>';
             }).join('');
-            updatesHtml='<div class="pj-updates"><h4>Laatste updates</h4>'+items+'</div>';
+            updatesHtml='<div class="pj-updates"><h4>Laatste updates</h4>'+ui+'</div>';
+          }
+          var inv=p.investering;
+          var invHtml='';
+          if(inv){
+            invHtml='<div class="invest-box"><div class="ib-title">Open voor investeerders</div>';
+            if(inv.doelbedrag){
+              var pct=Math.min(100,Math.round((inv.opgehaald||0)/inv.doelbedrag*100));
+              invHtml+='<div class="pw-wrap"><div class="pw-bar" style="width:'+pct+'%"></div></div>'+
+                '<div class="ib-row"><span>€ '+(Number(inv.opgehaald)||0).toLocaleString('nl-NL')+' opgehaald van € '+(Number(inv.doelbedrag)||0).toLocaleString('nl-NL')+'</span><span>'+pct+'%</span></div>';
+            } else {
+              invHtml+='<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers na een persoonlijke kennismaking.</p>';
+            }
+            invHtml+='<a class="pillar-cta" href="contact.html?onderwerp='+encodeURIComponent('Investeren in een project')+'&amp;ref='+encodeURIComponent((p.id||'')+' — '+(p.adres||''))+'">Investeer mee in dit project →</a></div>';
           }
           return '<article class="blog-card rv in">'+visual+'<div class="blog-body">'+
             '<div class="proj-status">'+escHtml(p.status||'In ontwikkeling')+'</div>'+
             '<h3>'+escHtml(p.titel||p.adres)+'</h3>'+
-            '<p class="aanbod-kenmerken">'+escHtml(p.adres||'')+(kenmerken?(' · '+kenmerken):'')+'</p>'+
-            '<p>'+escHtml((p.omschrijving||'').slice(0,150)+((p.omschrijving||'').length>150?'…':''))+'</p>'+
+            '<p class="aanbod-kenmerken">'+kenmerken+'</p>'+
+            '<p>'+escHtml(p.omschrijving||'')+'</p>'+
             (p.voortgang!=null?'<div class="pj-progress-lbl">Voortgang '+vp+'%</div><div class="pj-progress"><span style="width:'+vp+'%"></span></div>':'')+
             (plan?'<p class="pj-plan">'+plan+'</p>':'')+
             updatesHtml+
-            '<a class="pillar-cta" href="investeren.html" style="margin-top:1rem">Meedoen in een project →</a>'+
+            invHtml+
+            '<a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query='+q+'">Bekijk op Google Maps →</a>'+
             '</div></article>';
         }).join('');
       })
       .catch(function(){grid.innerHTML=leeg;});
   })();
   </script>
-<script src="site-nav.js?v=20260903d"></script>
+<script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>

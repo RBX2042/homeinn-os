@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
   <style>
     .ct-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .ct-top .brand img{height:34px;width:auto;display:block}
@@ -61,8 +61,8 @@
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li><a href="investeren.html">Investeren</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -86,7 +86,7 @@
             <div class="nav-mega-feat">
               <span class="nav-mega-h">Kennismaken</span>
               <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
-              <a class="btn btn-primary nav-mega-btn" href="#ct-form" onclick="closeNavSubs();var f=document.getElementById('ct-form');if(f){f.scrollIntoView({behavior:'smooth',block:'start'});var i=f.querySelector('input:not([type=hidden])');if(i)setTimeout(function(){i.focus()},400);return false}">Plan een kennismaking <span class="arr">→</span></a>
+              <a class="btn btn-primary nav-mega-btn" href="#ct-form" onclick="closeNavSubs();var f=document.getElementById('ct-form');if(f){f.scrollIntoView({behavior:'smooth',block:'start'});var i=f.querySelector('#ct-first');if(i)setTimeout(function(){i.focus()},400);return false}">Plan een kennismaking <span class="arr">→</span></a>
               <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
             </div>
           </div>
@@ -115,7 +115,8 @@
     <a class="mob-sm" href="contact.html">Contact</a>
     <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
-  <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">→</span></a>
+  <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
+  <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
   <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> · Rotterdam</p>
   <div class="mob-legal">
     <a href="privacy.html">Privacy</a>
@@ -142,11 +143,11 @@
           <form method="post" action="#" id="ct-form" novalidate>
             <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="cf-2col">
-              <div class="cf-group"><label for="ct-first">Voornaam</label><input id="ct-first" type="text" name="first_name" placeholder="Jan" required></div>
-              <div class="cf-group"><label for="ct-last">Achternaam</label><input id="ct-last" type="text" name="last_name" placeholder="de Vries"></div>
+              <div class="cf-group"><label for="ct-first">Voornaam</label><input id="ct-first" type="text" autocomplete="given-name" name="first_name" placeholder="Jan" required></div>
+              <div class="cf-group"><label for="ct-last">Achternaam</label><input id="ct-last" type="text" autocomplete="family-name" name="last_name" placeholder="de Vries"></div>
             </div>
-            <div class="cf-group"><label for="ct-email">E-mailadres</label><input id="ct-email" type="email" name="email" placeholder="jan@voorbeeld.nl"></div>
-            <div class="cf-group"><label for="ct-phone">Telefoonnummer</label><input id="ct-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
+            <div class="cf-group"><label for="ct-email">E-mailadres</label><input id="ct-email" type="email" autocomplete="email" inputmode="email" name="email" placeholder="jan@voorbeeld.nl"></div>
+            <div class="cf-group"><label for="ct-phone">Telefoonnummer</label><input id="ct-phone" type="tel" autocomplete="tel" inputmode="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
             <div class="cf-2col">
               <div class="cf-group"><label for="ct-portfolio">Aantal objecten</label><select id="ct-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
               <div class="cf-group"><label for="ct-interest">Waar gaat het om?</label><select id="ct-interest" name="package_interest"><option>Pand verkopen aan HomeINN</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Interesse in woningaanbod</option><option>Mijn woning laten verhuren</option><option>Huurwoning zoeken</option><option>Investeren in een project</option><option>Anders / advies</option></select></div>
@@ -165,7 +166,7 @@
         <div class="ci-wrap">
           <div class="ci-item"><div class="ci-tag">Tel</div><div class="ci-body"><strong>Telefoon</strong><span><a href="tel:+31626257071">+31 6 26 25 70 71</a><br>Maandag t/m vrijdag, 08:00 – 18:00</span></div></div>
           <div class="ci-item"><div class="ci-tag">Mail</div><div class="ci-body"><strong>E-mail</strong><span><a href="mailto:info@homeinn.nl">info@homeinn.nl</a><br>Reactie binnen vier uur op werkdagen</span></div></div>
-          <div class="ci-item"><div class="ci-tag">Adres</div><div class="ci-body"><strong>Vestiging</strong><span>Rotterdam, Nederland<br>Werkgebied: Rotterdam en omstreken</span></div></div>
+          <div class="ci-item"><div class="ci-tag">Adres</div><div class="ci-body"><strong>Vestiging</strong><span>HomeINN B.V., Rosestraat 1321, 3071 AL Rotterdam · Bezoek op afspraak.<br>Werkgebied: Rotterdam en omstreken</span></div></div>
           <div class="ci-item"><div class="ci-tag">Spoed</div><div class="ci-body"><strong>Storingen 24/7</strong><span>Voor huurders van panden in beheer (vanaf Full Operational)<br>Dag en nacht bereikbaar</span></div></div>
           <div class="ci-item"><div class="ci-tag">Volg</div><div class="ci-body"><strong>Sociale media</strong><span><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer">Facebook</a> · <a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer">Instagram</a></span></div></div>
           <button class="map-load" type="button" id="ct-map"><strong>📍 Toon HomeINN in Rotterdam</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik (privacy)</span></button>
@@ -193,22 +194,23 @@
     "openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"18:00"}
   }
   </script>
-  <script src="lead-cloud.js?v=20260903d" defer></script>
+  <script src="lead-cloud.js?v=20260905a" defer></script>
   <script>
   (function(){
     'use strict';
-    var INBOX_KEY='homeinn-inbox-v1', EP='https://formsubmit.co/ajax/info@homeinn.nl';
+    var _hpT=Date.now();function _isBot(f){return !!f.get('company_website') && (Date.now()-_hpT)<4000;}
+        var INBOX_KEY='homeinn-inbox-v1', EP='https://formsubmit.co/ajax/info@homeinn.nl';
     function saveLead(type,d){
       try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];d.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);d.type=type;d.date=new Date().toISOString();d.handled=false;l.push(d);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}
       if(window.pushLeadToCloud) window.pushLeadToCloud(type,d,'contact.html');
-      try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return fetch(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+(d.subject||type),_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||'',Portfolio:d.portfolio||'',Bericht:d.message||''})}).then(function(r){if(r.ok)verwijderLokaleLead(d.id);return r.ok;}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}
+      try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return fetch(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+(d.subject||type),_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||'',Portfolio:d.portfolio||'',Bericht:d.message||''})}).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok)verwijderLokaleLead(d.id);return ok;});}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}
     }
     function verwijderLokaleLead(id){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))return;l=l.filter(function(x){return x&&x.id!==id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}
     var form=document.getElementById('ct-form');
     if(form) form.addEventListener('submit',function(e){
       e.preventDefault();
       var f=new FormData(form);
-      if(f.get('company_website'))return;
+      if(_isBot(f))return;
       var naam=(String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
       if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){var err=document.getElementById('ct-form-err');if(!err){err=document.createElement('p');err.id='ct-form-err';err.setAttribute('role','alert');err.style.cssText='color:var(--red);font-size:var(--text-xs);font-weight:500;margin:var(--space-2) 0 0';form.appendChild(err);}err.textContent=!naam?'Vul uw voornaam in.':'Vul een telefoonnummer of e-mailadres in.';var fr=document.getElementById(!naam?'ct-first':'ct-email');if(fr)fr.focus();return;}
       var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();
@@ -223,11 +225,11 @@
     var mapBtn=document.getElementById('ct-map');
     if(mapBtn) mapBtn.addEventListener('click',function(){
       var f=document.createElement('iframe');f.className='ct-iframe';f.loading='lazy';f.referrerPolicy='no-referrer-when-downgrade';
-      f.src='https://www.google.com/maps?q='+encodeURIComponent('Rotterdam, Nederland')+'&output=embed';f.title='Kaart Rotterdam';
+      f.src='https://www.google.com/maps?q='+encodeURIComponent('Rosestraat 1321, 3071 AL Rotterdam')+'&output=embed';f.title='Kaart HomeINN — Rosestraat 1321, Rotterdam';
       mapBtn.replaceWith(f);
     });
   })();
   </script>
-<script src="site-nav.js?v=20260903d"></script>
+<script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>

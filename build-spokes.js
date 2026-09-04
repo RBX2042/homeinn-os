@@ -6,7 +6,7 @@
    eigen indexeerbare URL (/verkopen-<slug>), met UNIEKE lokale content. De
    pagina's hergebruiken het bestaande designsysteem (fonts.css → tokens.css →
    homeinn-public.css) zodat ze identiek ogen aan de publieke site. Alle CTA's
-   leiden naar de bod-flow (/pand-verkopen).
+   leiden naar de voorstel-flow (/pand-verkopen).
 
    Gebruik:  node build-spokes.js
    Output:   verkopen-<slug>.html  (in de projectroot)
@@ -27,19 +27,24 @@ function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-/* ── Vaste metadata per gebied: type (wijk vs gemeente) + interne buurlinks. ── */
+/* ── Vaste metadata per gebied: type (wijk vs gemeente) + interne buurlinks. ──
+   Optioneel per gebied:
+   - titel    : volledige <title>-override voor gebieden waar het standaardsjabloon
+                boven de 60 tekens uitkomt (daarboven kapt Google de titel af).
+   - district : officiële, bredere districtsnaam; gebruikt boven de buurtenlijst
+                wanneer die buurten uit het samengevoegde stadsdeel bevat. */
 const META = {
-  'rotterdam-noord':        { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['hillegersberg', 'centrum'] },
-  'rotterdam-zuid':         { soort: 'stadsdeel van Rotterdam', areaType: 'neighborhood', buren: ['feijenoord', 'ijsselmonde'] },
-  'kralingen':              { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['centrum', 'rotterdam-noord'] },
-  'hillegersberg':          { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-noord', 'kralingen'] },
+  'rotterdam-noord':        { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['hillegersberg', 'centrum'], titel: 'Huis verkopen Rotterdam-Noord | Voorstel in 48 uur' },
+  'rotterdam-zuid':         { soort: 'stadsdeel van Rotterdam', areaType: 'neighborhood', buren: ['feijenoord', 'ijsselmonde'], titel: 'Huis verkopen Rotterdam-Zuid | Voorstel in 48 uur' },
+  'kralingen':              { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['centrum', 'rotterdam-noord', 'capelle-aan-den-ijssel'], district: 'Kralingen-Crooswijk' },
+  'hillegersberg':          { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-noord', 'kralingen'], district: 'Hillegersberg-Schiebroek' },
   'ijsselmonde':            { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-zuid', 'barendrecht'] },
   'feijenoord':             { soort: 'wijk in Rotterdam', areaType: 'neighborhood', buren: ['rotterdam-zuid', 'centrum'] },
-  'centrum':                { soort: 'centrum van Rotterdam', areaType: 'neighborhood', buren: ['kralingen', 'rotterdam-noord'] },
+  'centrum':                { soort: 'centrum van Rotterdam', areaType: 'neighborhood', buren: ['kralingen', 'rotterdam-noord'], titel: 'Huis verkopen Rotterdam-Centrum | Voorstel in 48 uur' },
   'schiedam':              { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['vlaardingen', 'rotterdam-noord'] },
-  'capelle-aan-den-ijssel': { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['kralingen', 'ridderkerk'] },
+  'capelle-aan-den-ijssel': { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['kralingen', 'ridderkerk'], titel: 'Huis verkopen Capelle aan den IJssel | Voorstel in 48 uur' },
   'barendrecht':            { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['ijsselmonde', 'ridderkerk'] },
-  'ridderkerk':             { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['barendrecht', 'ijsselmonde'] },
+  'ridderkerk':             { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['barendrecht', 'ijsselmonde', 'capelle-aan-den-ijssel'] },
   'vlaardingen':            { soort: 'gemeente in de regio Rotterdam', areaType: 'city', buren: ['schiedam', 'rotterdam-zuid'] },
 };
 
@@ -78,9 +83,9 @@ function buurLinks(slug) {
 
 function page(w) {
   const meta = META[w.slug] || { soort: 'regio Rotterdam', areaType: 'city', buren: [] };
-  const titel = `Huis verkopen ${w.naam} | Bod in 48 uur — HomeINN`;
+  const titel = meta.titel || `Huis verkopen ${w.naam} | Voorstel in 48 uur — HomeINN`;
   const canonical = `https://home-inn.nl/verkopen-${w.slug}.html`;
-  const h1 = `Uw pand verkopen in ${esc(w.naam)} — direct bod van HomeINN`;
+  const h1 = `Uw pand verkopen in ${esc(w.naam)} — direct een voorstel van HomeINN`;
   const areaLD = meta.areaType === 'city'
     ? `{"@type":"City","name":"${esc(w.naam)}"}`
     : `{"@type":"Place","name":"${esc(w.naam)}, Rotterdam"}`;
@@ -95,11 +100,14 @@ function page(w) {
   // Buurtenlijst: concrete, controleerbare dekking per gebied. Geeft elke spoke eigen
   // inhoud (long-tail: "pand verkopen Blijdorp") zonder marktclaims te doen die wij
   // niet kunnen onderbouwen.
+  // Bij samengevoegde stadsdelen noemen wij boven de lijst de officiële districtsnaam
+  // (bv. Kralingen-Crooswijk), zodat de opgesomde buurten er ook echt onder vallen.
+  const buurtGebied = meta.district || w.naam;
   const buurten = (w.buurten || []).length
     ? `<div class="spoke-buurten">
-        <h3>Wij kopen in heel ${esc(w.naam)}</h3>
+        <h3>Wij kopen in heel ${esc(buurtGebied)}</h3>
         <ul class="buurt-lijst">${w.buurten.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
-        <p class="buurt-note">Staat uw buurt er niet bij? Wij kijken naar ieder pand in ${esc(w.naam)} en omgeving.</p>
+        <p class="buurt-note">Staat uw buurt er niet bij? Wij kijken naar ieder pand in ${esc(buurtGebied)} en omgeving.</p>
       </div>`
     : '';
 
@@ -132,8 +140,8 @@ function page(w) {
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -183,8 +191,8 @@ function page(w) {
     </a>
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li><a href="investeren.html">Investeren</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -239,7 +247,8 @@ function page(w) {
       <a class="mob-sm" href="contact.html">Contact</a>
       <a class="mob-sm" href="inloggen.html">Inloggen</a>
     </nav>
-    <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">&rarr;</span></a>
+    <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">&rarr;</span></a>
+  <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan &rarr;</a>
     <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> &middot; Rotterdam</p>
     <div class="mob-legal">
       <a href="privacy.html">Privacy</a>
@@ -331,7 +340,7 @@ function page(w) {
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260903d"></script>
+  <script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>
 `;

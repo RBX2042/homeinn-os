@@ -22,7 +22,7 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
   <style>
     /* ───────────────────────────────────────────────────────────────
        Bod-flow (/pand-verkopen) — navigatie-loze meerstaps intake.
@@ -33,9 +33,10 @@
        ─────────────────────────────────────────────────────────────── */
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;font-family:var(--sans);background:var(--cream);color:var(--ink);line-height:var(--leading-normal);-webkit-font-smoothing:antialiased}
+    body{margin:0;font-family:var(--sans);background:var(--cream);color:var(--ink);line-height:var(--leading-normal);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
     a{color:var(--gold-ink)}
     img{max-width:100%;display:block}
+    h1,h2,h3,h4{overflow-wrap:break-word;hyphens:auto}
     .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 
     /* ─── Topbar (logo + telefoon, géén navigatie) ─── */
@@ -435,6 +436,7 @@
         <a href="./">Home</a>
         <a href="privacy.html">Privacy</a>
         <a href="voorwaarden.html">Voorwaarden</a>
+        <a href="cookies.html">Cookies</a>
       </nav>
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
   </footer>
@@ -457,11 +459,12 @@
     "description":"HomeINN koopt woningen, appartementen en portiekpanden in Rotterdam direct aan — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
   }
   </script>
-  <script src="lead-cloud.js?v=20260903d" defer></script>
+  <script src="lead-cloud.js?v=20260905a" defer></script>
   <script>
   (function () {
     'use strict';
-    var form = document.getElementById('bodForm');
+    var _hpT=Date.now();function _isBot(f){return !!f.get('company_website') && (Date.now()-_hpT)<4000;}
+        var form = document.getElementById('bodForm');
     var flow = document.getElementById('flow');
     var doneCard = document.getElementById('done');
     var steps = Array.prototype.slice.call(form.querySelectorAll('.step'));
@@ -476,12 +479,22 @@
     var INBOX_KEY = 'homeinn-inbox-v1';
     var LEAD_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/info@homeinn.nl';
 
+    function verwijderLokaleLead(id) {
+      try {
+        var list = JSON.parse(localStorage.getItem(INBOX_KEY) || '[]');
+        if (!Array.isArray(list)) return;
+        list = list.filter(function (x) { return x && x.id !== id; });
+        if (list.length) localStorage.setItem(INBOX_KEY, JSON.stringify(list));
+        else localStorage.removeItem(INBOX_KEY);
+      } catch (e) {}
+    }
+
     function stuurLeadDoor(type, data) {
       try {
         if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(true);
         return fetch(LEAD_EMAIL_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({ _subject: 'Website-aanvraag: ' + (data.subject || type), _template: 'table', Type: type, Naam: data.name || '', Email: data.email || '', Telefoon: data.phone || '', Onderwerp: data.subject || '', Bericht: data.message || '' })
-        }).then(function (r) { return r.ok; }).catch(function () { return false; });
+        }).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok)verwijderLokaleLead(data.id);return ok;});}).catch(function () { return false; });
       } catch (e) { return Promise.resolve(false); }
     }
     function saveLead(type, data) {
@@ -601,7 +614,7 @@
       if (current < steps.length - 1) { var vlg = steps[current].querySelector('[data-next]'); if (vlg) vlg.click(); return; }
       if (!validateStep(current)) return;
       var f = new FormData(form);
-      if (f.get('company_website')) return; // honeypot: bot
+      if (_isBot(f)) return; // honeypot: bot
 
       var adres = [f.get('straat'), f.get('huisnr')].filter(Boolean).join(' ').trim();
       var adresVol = (adres + ', ' + (f.get('postcode') || '') + ' ' + (f.get('plaats') || '')).trim();

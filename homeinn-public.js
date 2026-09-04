@@ -141,10 +141,22 @@ function getModalFocusable() {
     function (el) { return el.offsetParent !== null && el.getAttribute('tabindex') !== '-1'; }
   );
 }
+var modalGeopendOp = 0;
 function openModal(subject, ref) {
-  if (!modalEl || !modalFormEl || !modalSuccessEl) return;
+  // Niet elke pagina draagt de modal. Zonder terugval zou de knop hier stil
+  // doodlopen (de inline onclick geeft immers 'return false'), waardoor de lead
+  // verloren gaat. Stuur de bezoeker dan door naar het contactformulier, met
+  // onderwerp en projectreferentie erbij — geen persoonsgegevens in de URL.
+  if (!modalEl || !modalFormEl || !modalSuccessEl) {
+    var q = [];
+    if (subject) q.push('onderwerp=' + encodeURIComponent(subject));
+    if (ref) q.push('ref=' + encodeURIComponent(ref));
+    window.location.href = 'contact.html' + (q.length ? '?' + q.join('&') : '');
+    return;
+  }
   modalLastFocus = document.activeElement;
   closeMob();
+  modalGeopendOp = Date.now();
   modalEl.classList.add('on');
   modalFormEl.style.display = 'block';
   modalSuccessEl.style.display = 'none';
@@ -267,7 +279,7 @@ if (mobEl) {
 /* ===== Google Maps: pas laden na klik (privacy) ===== */
 function mapsKnop(mapsQ, titel) {
   return '<button class="map-load" type="button" data-maps="' + mapsQ + '" data-titel="' + titel + '">' +
-    '<span class="map-load-icoon">📍</span><strong>Kaart tonen</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik</span></button>';
+    '<span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span><strong>Kaart tonen</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik</span></button>';
 }
 document.addEventListener('click', function (e) {
   var btn = e.target && e.target.closest ? e.target.closest('.map-load') : null;
@@ -304,7 +316,7 @@ function stuurLeadDoor(type, data) {
         Bericht: data.message || '',
         Portfolio: data.portfolio || ''
       })
-    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+    }).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");return ok;});}).catch(function () { return false; });
   } catch (err) { return Promise.resolve(false); }
 }
 
@@ -340,7 +352,9 @@ document.addEventListener('DOMContentLoaded', function () {
   if (mform) mform.addEventListener('submit', function (e) {
     e.preventDefault();
     var f = new FormData(mform);
-    if (f.get('company_website')) { mform.reset(); showModalSuccess(); return; } // honeypot: bot doen alsof
+    // Honeypot: alleen "ingevuld én binnen 4 seconden" telt als bot. Nooit meer
+    // een success-scherm tonen zonder verzending — dan verdwijnt een echte lead stil.
+    if (f.get('company_website') && (Date.now() - modalGeopendOp) < 4000) { mform.reset(); closeModal(); return; }
     var knop = mform.querySelector('.m-submit');
     if (knop) { knop.disabled = true; knop.textContent = 'Bezig met verzenden…'; }
     var fout = mform.querySelector('.m-fout');
@@ -496,40 +510,55 @@ function renderProjectenPublic() {
     .then(function (data) {
       var items = (data && Array.isArray(data.projecten)) ? data.projecten : [];
       grid.innerHTML = items.length ? items.map(function (pr, i) {
-        var mapsQ = encodeURIComponent((pr.adres || '') + ', ' + (pr.plaats || 'Rotterdam'));
+        var mapsQ = encodeURIComponent(pr.mapsAdres || ((pr.adres || '') + ', ' + (pr.postcode ? pr.postcode + ' ' : '') + (pr.plaats || 'Rotterdam')));
         var refLabel = escHtml((pr.id || '') + ' — ' + (pr.titel || pr.adres || ''));
         var laatste = (pr.updates && pr.updates[0]) ? pr.updates[0] : null;
         var inv = pr.investering;
         var invHtml = '';
         if (inv) {
-          var invPct = inv.doelbedrag ? Math.min(100, Math.round((inv.opgehaald || 0) / inv.doelbedrag * 100)) : 0;
           invHtml = '<div class="invest-box">' +
-            '<div class="ib-title">Open voor investeerders</div>' +
-            '<div class="pw-wrap"><div class="pw-bar" style="width:' + invPct + '%"></div></div>' +
-            '<div class="ib-row"><span>' + escHtml('€ ' + (Number(inv.opgehaald) || 0).toLocaleString('nl-NL') + ' opgehaald van € ' + (Number(inv.doelbedrag) || 0).toLocaleString('nl-NL')) + '</span><span>' + invPct + '%</span></div>' +
-            '<div class="ib-row"><span>Min. inleg € ' + (Number(inv.minInleg) || 0).toLocaleString('nl-NL') + '</span><span>' + escHtml(String(inv.rendementPct || 0)).replace('.', ',') + '% verwacht/jr · ' + escHtml(inv.looptijd || '') + '</span></div>' +
-            '<button class="pillar-cta" data-open-modal data-subject="Investeren in een project" data-ref="' + refLabel + '">Ik wil meedoen →</button>' +
+            '<div class="ib-title">Open voor investeerders</div>';
+          if (inv.doelbedrag) {
+            var invPct = Math.min(100, Math.round((inv.opgehaald || 0) / inv.doelbedrag * 100));
+            invHtml += '<div class="pw-wrap"><div class="pw-bar" style="width:' + invPct + '%"></div></div>' +
+              '<div class="ib-row"><span>' + escHtml('€ ' + (Number(inv.opgehaald) || 0).toLocaleString('nl-NL') + ' opgehaald van € ' + (Number(inv.doelbedrag) || 0).toLocaleString('nl-NL')) + '</span><span>' + invPct + '%</span></div>';
+          }
+          if (inv.minInleg || inv.rendementPct || inv.looptijd) {
+            invHtml += '<div class="ib-row">' +
+              (inv.minInleg ? '<span>Min. inleg € ' + (Number(inv.minInleg) || 0).toLocaleString('nl-NL') + '</span>' : '<span></span>') +
+              '<span>' + (inv.rendementPct ? escHtml(String(inv.rendementPct)).replace('.', ',') + '% streefrendement/jr' + (inv.looptijd ? ' · ' : '') : '') + escHtml(inv.looptijd || '') + '</span></div>';
+          } else {
+            invHtml += '<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers na een persoonlijke kennismaking.</p>';
+          }
+          invHtml += '<button class="pillar-cta" data-open-modal data-subject="Investeren in een project" data-ref="' + refLabel + '">Investeer mee in dit project →</button>' +
             '</div>';
         }
         var prFotos = Array.isArray(pr.fotos) ? pr.fotos : [];
-        var prVisual = prFotos.length
-          ? '<div class="card-visual"><img class="card-foto" loading="lazy" onerror="this.style.display=&quot;none&quot;" src="' + escHtml(prFotos[0]) + '" alt="' + escHtml(pr.adres) + '"></div>'
-          : mapsKnop(mapsQ, escHtml(pr.adres));
-        return '<article class="blog-card rv in ' + (i === 1 ? 'd1' : i === 2 ? 'd2' : '') + '">' +
+        var prVisual = '<div class="pf-visual">' + mapsKnop(mapsQ, escHtml(pr.adres)) +
+          (prFotos.length ? '<img class="pf-foto" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add(&quot;on&quot;)" src="' + escHtml(prFotos[0]) + '" alt="' + escHtml(pr.adres + ' — pand in eigendom van HomeINN') + '">' : '') + '</div>';
+        var kenmerken = [escHtml(pr.postcode || ''), escHtml(pr.wijk || pr.plaats || ''), escHtml(pr.type || '')].filter(Boolean).join(' · ');
+        var voortgang = Number(pr.voortgang);
+        return '<article class="blog-card rv in ' + (i % 3 === 1 ? 'd1' : i % 3 === 2 ? 'd2' : '') + '">' +
           prVisual +
           '<div class="blog-body">' +
           '<div class="proj-status">' + escHtml(pr.status || 'In ontwikkeling') + '</div>' +
           '<h3>' + escHtml(pr.titel || pr.adres) + '</h3>' +
-          '<p class="aanbod-kenmerken">' + [escHtml(pr.adres), escHtml(pr.plaats), escHtml(pr.type)].filter(Boolean).join(' · ') + '</p>' +
-          '<div class="pw-wrap"><div class="pw-bar" style="width:' + (Number(pr.voortgang) || 0) + '%"></div></div>' +
-          '<p class="aanbod-kenmerken">' + (Number(pr.voortgang) || 0) + '% gereed' + (pr.oplevering ? ' · oplevering ' + fmtDatumNl(pr.oplevering) : '') + '</p>' +
+          '<p class="aanbod-kenmerken">' + kenmerken + '</p>' +
+          (isFinite(voortgang) && voortgang > 0
+            ? '<div class="pw-wrap"><div class="pw-bar" style="width:' + voortgang + '%"></div></div>' +
+              '<p class="aanbod-kenmerken">' + voortgang + '% gereed' + (pr.oplevering ? ' · oplevering ' + fmtDatumNl(pr.oplevering) : '') + '</p>'
+            : '') +
           '<p>' + escHtml(pr.omschrijving || '') + '</p>' +
           (laatste ? '<p class="upd"><strong>Update ' + fmtDatumNl(laatste.datum) + ':</strong> ' + escHtml(laatste.tekst) + '</p>' : '') +
           invHtml +
-          '<button class="pillar-cta" data-open-modal data-subject="Project volgen" data-ref="' + refLabel + '">Volg dit project →</button> ' +
           '<a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + mapsQ + '">Bekijk op Google Maps →</a>' +
           '</div></article>';
       }).join('') : leeg;
+      var meta = document.getElementById('portefeuille-meta');
+      var pf = data && data.portefeuille;
+      if (meta && pf && pf.woningen) {
+        meta.textContent = pf.woningen + ' woningen op ' + pf.locaties + ' locaties · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
+      }
     })
     .catch(function () { grid.innerHTML = leeg; });
 }
@@ -696,4 +725,35 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('scroll', function () {
     if (!tick) { tick = true; requestAnimationFrame(upd); }
   }, { passive: true });
+})();
+
+
+/* ── Contactformulier voorvullen vanuit ?onderwerp= / ?ref= ──────────────────
+   Zo landt een bezoeker die vanaf een projectkaart of een menuknop doorklikt
+   met het juiste onderwerp in het formulier, in plaats van opnieuw te moeten
+   kiezen. De waarden komen uit onze eigen links; ze worden alleen als tekst
+   in bestaande velden gezet, nooit als HTML uitgevoerd. */
+(function () {
+  var form = document.getElementById('ct-form');
+  if (!form || !window.location.search) return;
+  var params = new URLSearchParams(window.location.search);
+  var onderwerp = params.get('onderwerp');
+  var ref = params.get('ref');
+
+  if (onderwerp) {
+    var sel = form.querySelector('#ct-interest');
+    if (sel) {
+      var match = Array.prototype.filter.call(sel.options, function (o) {
+        return o.value === onderwerp || o.text === onderwerp;
+      })[0];
+      if (!match) { match = new Option(onderwerp, onderwerp); sel.add(match); }
+      sel.value = match.value;
+    }
+  }
+  if (ref) {
+    var msg = form.querySelector('#ct-message');
+    if (msg && !msg.value) msg.value = 'Betreft: ' + ref + '\n\n';
+  }
+  var eerste = form.querySelector('#ct-first');
+  if (eerste) { try { eerste.focus({ preventScroll: true }); } catch (_) {} }
 })();

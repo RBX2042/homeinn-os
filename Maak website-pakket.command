@@ -52,6 +52,9 @@ for f in glob.glob('website-online/*.html'):
         return m.group(0) if (src and os.path.exists(os.path.join('website-online', src.group(1)))) else ''
     s = re.sub(r'\s*<div class="hero-photo"[^>]*>\s*<img[^>]*>\s*</div>', keep, s)
     s = re.sub(r'\s*<img class="blog-photo"[^>]*>', keep, s)
+    # Portefeuillefoto's (.pf-foto): zonder bestand geen 404 in het log; zodra de
+    # foto in fotos/ staat, blijft de laag staan en dekt hij de kaartknop af.
+    s = re.sub(r'\s*<img class="pf-foto"[^>]*>', keep, s)
     if s != o:
         io.open(f, 'w', encoding='utf-8').write(s); n += 1
 print("  ✓ ontbrekende fotoplekken gestript uit %d pagina('s)" % n)

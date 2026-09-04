@@ -32,10 +32,12 @@ const PAGES = [
     slug: 'privacy', title: 'Privacybeleid', icon: 'ic-slot',
     metaDescription: 'Het privacybeleid van HomeINN: welke persoonsgegevens wij verwerken, waarom, hoe lang en welke rechten u heeft. Geen trackers, kaarten pas na uw klik.',
     heroCopy: 'HomeINN verwerkt persoonsgegevens zorgvuldig en alleen voor contact, dienstverlening en het verbeteren van de website. Hieronder leest u in duidelijke taal welke gegevens wij verwerken en waarom.',
-    versie: 'Versie 2.0 · ingangsdatum 11 juni 2026',
+    versie: 'Versie 2.1 · ingangsdatum 5 september 2026',
     secties: [
-      ['Wie is verantwoordelijk', 'HomeINN, gevestigd te Rotterdam, is verwerkingsverantwoordelijke voor de verwerking van persoonsgegevens via deze website. Contact: <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.'],
+      ['Wie is verantwoordelijk', `${BEDRIJF.naam}, ${BEDRIJF.adres}, KvK ${BEDRIJF.kvk}, is verwerkingsverantwoordelijke voor de verwerkingen die in dit privacybeleid zijn beschreven. Verzoeken over uw gegevens: <a href="mailto:info@homeinn.nl">info@homeinn.nl</a> of <a href="tel:+31626257071">${TEL}</a>.`],
       ['Welke gegevens wij verwerken en waarom', 'Vult u een formulier in (kennismakingsgesprek, pand verkopen, project volgen, investeren of contact), dan verwerken wij de gegevens die u opgeeft: naam, e-mailadres en/of telefoonnummer, het onderwerp van uw aanvraag en uw bericht. Biedt u een pand aan, dan vragen wij daarnaast het adres van het pand, het type, de bewoningssituatie (leeg of verhuurd), de bouwkundige staat, de aanleiding voor verkoop en de gewenste passeertermijn — uitsluitend om een onderbouwd voorstel te kunnen doen. Grondslag: uitvoering van (precontractuele) maatregelen op uw verzoek (art. 6 lid 1 sub b AVG) en ons gerechtvaardigd belang om aanvragen op te volgen.'],
+      ['Gegevens bij verhuur, verhuurbemiddeling en beheer', 'Bemiddelen wij bij verhuur of beheren wij uw pand, dan verwerken wij daarnaast gegevens van kandidaat-huurders: identiteitsgegevens, inkomensgegevens, de uitkomst van een kredietwaardigheidscheck en referenties van een vorige verhuurder of werkgever. Wij bewaren geen kopie&euml;n van identiteitsbewijzen langer dan nodig en verstrekken deze gegevens niet aan derden. Voeren wij het beheer, dan verwerken wij bovendien de gegevens die daarvoor nodig zijn: de huurovereenkomst, contactgegevens van de huurder, huurbetalingen en achterstanden, en de correspondentie over onderhoud en meldingen. Grondslag: uitvoering van de (huur)overeenkomst en ons gerechtvaardigd belang bij een zorgvuldige selectie en een correcte huuradministratie. Verwerken wij deze gegevens in opdracht van een eigenaar, dan treden wij op als verwerker en leggen wij dat vast in een verwerkersovereenkomst.'],
+      ['Gegevens van investeerders', 'Vraagt u informatie aan over een ontwikkelproject, dan verwerken wij uw naam, uw contactgegevens en het bedrag en de looptijd die u aangeeft. Wij gebruiken die gegevens uitsluitend om u de projectinformatie te sturen en contact met u op te nemen; wij verkopen ze niet en delen ze niet met derden voor hun eigen doeleinden. Komt een deelname tot stand, dan verwerken wij daarnaast de gegevens die nodig zijn voor de administratie van uw inleg, de looptijd en de uitkeringen; op die administratie zijn de wettelijke (fiscale) bewaartermijnen van 7 jaar van toepassing.'],
       ['Doorsturen en opslaan van uw aanvraag', 'Formulierinzendingen worden per e-mail aan ons bezorgd via de verwerkersdienst FormSubmit. Daarnaast slaan wij uw aanvraag op in onze eigen beveiligde database bij Supabase (hostingregio: EU), zodat wij hem in ons beheerportaal kunnen opvolgen. Beide partijen treden op als verwerker en verwerken uw gegevens uitsluitend in onze opdracht. Wij verkopen of delen uw gegevens niet voor marketingdoeleinden van derden.'],
       ['Kaarten van Google Maps', 'Kaarten op deze site laden pas nadat u daarop klikt. Op dat moment worden gegevens (zoals uw IP-adres) door Google verwerkt; daarop is het privacybeleid van Google van toepassing. Klikt u niet, dan worden er geen gegevens met Google gedeeld. Lettertypen worden vanaf onze eigen server geladen.'],
       ['Scripts van jsDelivr', 'Zodra u een formulierveld aanraakt, laadt uw browser één script (de Supabase-bibliotheek) van het content delivery network jsDelivr (Prospect One / Fastly). Daarbij ontvangt jsDelivr uw IP-adres en browsergegevens; jsDelivr stelt zelf geen cookies in en profileert niet. Zonder formuliergebruik wordt dit script niet geladen.'],
@@ -47,13 +49,14 @@ const PAGES = [
     slug: 'voorwaarden', title: 'Algemene voorwaarden', icon: 'ic-doc',
     metaDescription: 'De algemene voorwaarden van HomeINN Rotterdam: toepasselijkheid, dienstverlening, tarieven, opzegging, aansprakelijkheid en toepasselijk recht.',
     heroCopy: 'Onze algemene voorwaarden geven duidelijkheid over samenwerking, verantwoordelijkheden, tarieven en communicatie. Zo weten beide partijen vooraf precies waar zij aan toe zijn.',
-    versie: 'Versie 2.0 &middot; ingangsdatum 3 september 2026',
+    versie: 'Versie 2.1 &middot; ingangsdatum 5 september 2026',
     secties: [
       ['Wie wij zijn', `Deze voorwaarden zijn van ${BEDRIJF.naam}, gevestigd aan ${BEDRIJF.adres}, ingeschreven in het handelsregister onder KvK-nummer ${BEDRIJF.kvk}, btw-identificatienummer ${BEDRIJF.btw}. Bereikbaar via <a href="mailto:info@homeinn.nl">info@homeinn.nl</a> en ${TEL}.`],
       ['Toepasselijkheid', 'Deze voorwaarden zijn van toepassing op alle offertes, aanbiedingen, overeenkomsten en dienstverlening van HomeINN. Afwijkingen gelden alleen als HomeINN die schriftelijk heeft bevestigd. De toepasselijkheid van inkoop- of andere voorwaarden van de wederpartij wordt uitdrukkelijk van de hand gewezen. Wij stellen deze voorwaarden vóór het sluiten van de overeenkomst ter beschikking; zij zijn doorlopend raadpleegbaar op deze pagina.'],
-      ['Dienstverlening', 'HomeINN houdt zich bezig met de aan- en verkoop van onroerend goed, projectontwikkeling, verhuur en verhuurbemiddeling, vastgoedbeheer en aanverwante diensten. De exacte inhoud van een opdracht volgt uit de offerte, koopovereenkomst of opdrachtbevestiging. Aanbiedingen zijn vrijblijvend en geldig gedurende de daarin genoemde termijn; ontbreekt die, dan gedurende dertig dagen.'],
+      ['Dienstverlening', 'HomeINN houdt zich bezig met de aan- en verkoop van onroerend goed, projectontwikkeling, verhuur en verhuurbemiddeling, vastgoedbeheer, het aantrekken van deelname door investeerders in eigen ontwikkelprojecten en aanverwante diensten. De exacte inhoud van een opdracht volgt uit de offerte, koopovereenkomst of opdrachtbevestiging. Aanbiedingen zijn vrijblijvend en geldig gedurende de daarin genoemde termijn; ontbreekt die, dan gedurende dertig dagen.'],
+      ['Deelname in een ontwikkelproject', 'Op deelname in een ontwikkelproject zijn uitsluitend de bepalingen van de betreffende onderhandse overeenkomst van toepassing. Deelname is beleggen: het rendement is niet gegarandeerd en de inleg kan geheel of gedeeltelijk verloren gaan. Informatie op deze website en in projectdocumentatie is een uitnodiging tot gesprek en geen aanbod; wijkt de onderhandse overeenkomst af van deze voorwaarden, dan gaat die overeenkomst voor.'],
       ['Totstandkoming en duur', 'Een overeenkomst komt tot stand zodra de opdrachtbevestiging schriftelijk of per e-mail door beide partijen is aanvaard. Beheerovereenkomsten worden aangegaan voor onbepaalde tijd, tenzij anders overeengekomen. Opgegeven termijnen zijn indicatief en nooit fataal, tenzij uitdrukkelijk anders is vastgelegd.'],
-      ['Tarieven en betaling', 'Tarieven worden vooraf transparant gecommuniceerd en zijn exclusief btw, tenzij anders vermeld. Facturen dienen te worden voldaan binnen veertien dagen na factuurdatum. Bij niet-tijdige betaling is de wederpartij zonder ingebrekestelling in verzuim en zijn de wettelijke (handels)rente en buitengerechtelijke incassokosten conform de Wet normering buitengerechtelijke incassokosten verschuldigd. Aanvullende werkzaamheden worden alleen in rekening gebracht als deze vooraf zijn afgestemd of logisch uit de opdracht voortvloeien.'],
+      ['Tarieven en betaling', 'Tarieven worden vooraf transparant gecommuniceerd en zijn exclusief btw, tenzij anders vermeld. Aan consumenten communiceren wij tarieven inclusief btw. Facturen dienen te worden voldaan binnen veertien dagen na factuurdatum. Bij niet-tijdige betaling is de wederpartij zonder ingebrekestelling in verzuim en zijn de wettelijke (handels)rente en buitengerechtelijke incassokosten conform de Wet normering buitengerechtelijke incassokosten verschuldigd. Aanvullende werkzaamheden worden alleen in rekening gebracht als deze vooraf zijn afgestemd of logisch uit de opdracht voortvloeien.'],
       ['Opzegging en be&euml;indiging', 'Overeenkomsten voor onbepaalde tijd kunnen door beide partijen schriftelijk worden opgezegd met inachtneming van een opzegtermijn van &eacute;&eacute;n kalendermaand, tegen het einde van een maand. Bij een opdracht voor een bepaald project eindigt de overeenkomst na oplevering. Beide partijen mogen de overeenkomst met onmiddellijke ingang ontbinden als de andere partij in staat van faillissement verkeert, surseance van betaling is verleend of haar onderneming staakt. Verplichtingen die naar hun aard doorlopen &mdash; zoals geheimhouding en aansprakelijkheid &mdash; blijven na be&euml;indiging van kracht.'],
       ['Aansprakelijkheid', 'HomeINN spant zich in om haar werkzaamheden zorgvuldig uit te voeren. Aansprakelijkheid is beperkt tot directe schade die aantoonbaar voortvloeit uit een toerekenbare tekortkoming. De aansprakelijkheid is in alle gevallen beperkt tot het bedrag dat de aansprakelijkheidsverzekeraar van HomeINN in het betreffende geval uitkeert, vermeerderd met het eigen risico. Keert de verzekeraar niet uit, dan is de aansprakelijkheid beperkt tot het bedrag dat voor de betreffende opdracht in rekening is gebracht, over de twaalf maanden voorafgaand aan de schadeveroorzakende gebeurtenis. Aansprakelijkheid voor indirecte schade, waaronder gevolgschade, gederfde winst en gemiste besparingen, is uitgesloten. Deze beperkingen gelden niet bij opzet of bewuste roekeloosheid van HomeINN of haar leidinggevenden.'],
       ['Overmacht', 'Kan HomeINN haar verplichtingen niet nakomen door een omstandigheid die haar niet is toe te rekenen &mdash; zoals overheidsmaatregelen, storingen bij toeleveranciers, extreme weersomstandigheden of het uitvallen van nutsvoorzieningen &mdash; dan worden die verplichtingen opgeschort zolang de overmacht duurt. Duurt de overmacht langer dan zestig dagen, dan mogen beide partijen de overeenkomst ontbinden voor het niet-uitgevoerde deel, zonder dat een schadevergoedingsplicht ontstaat.'],
@@ -68,10 +71,10 @@ const PAGES = [
     slug: 'cookies', title: 'Cookiebeleid', icon: 'ic-discreet',
     metaDescription: 'Het cookiebeleid van HomeINN: deze website plaatst geen cookies en gebruikt geen trackers. Alleen lokale opslag voor formulieren; kaarten pas na uw klik.',
     heroCopy: 'Deze website plaatst geen cookies en gebruikt geen trackers. Alleen uw eigen browser bewaart formuliergegevens lokaal; kaarten laden pas na uw klik.',
-    versie: 'Versie 2.0 · ingangsdatum 11 juni 2026',
+    versie: 'Versie 2.1 · ingangsdatum 5 september 2026',
     secties: [
       ['Geen cookies', 'Deze website plaatst geen cookies en gebruikt geen analytische of advertentietrackers. Er is daarom geen cookiebanner nodig.'],
-      ['Lokale opslag', 'Vult u een formulier in, dan bewaart uw browser de inzending ook lokaal (localStorage), zodat de aanvraag niet verloren gaat. Die lokale kopie blijft op uw eigen apparaat. De aanvraag zelf sturen wij daarnaast per e-mail en naar onze eigen database, zodat wij hem kunnen opvolgen — zie het privacybeleid voor wie die gegevens ontvangt en hoe lang wij ze bewaren.'],
+      ['Lokale opslag', 'Vult u een formulier in, dan bewaart uw browser de inzending ook lokaal (localStorage), zodat de aanvraag niet verloren gaat. Die lokale kopie blijft op uw eigen apparaat. Om de site sneller te laden bewaart uw browser ook een lokale kopie van pagina\'s (service worker). Ook die blijft op uw eigen apparaat. De aanvraag zelf sturen wij daarnaast per e-mail en naar onze eigen database, zodat wij hem kunnen opvolgen — zie het privacybeleid voor wie die gegevens ontvangt en hoe lang wij ze bewaren.'],
       ['Scripts van derden', 'Raakt u een formulierveld aan, dan laadt uw browser één script van het content delivery network jsDelivr; daarbij ziet jsDelivr uw IP-adres. Er wordt geen cookie geplaatst. Zie het privacybeleid voor details.'],
       ['Kaarten', 'Google Maps-kaarten laden uitsluitend nadat u daarop klikt. Pas op dat moment maakt uw browser verbinding met Google; tot die tijd wordt er niets met Google gedeeld. Lettertypen laden wij van onze eigen server, niet via Google Fonts.'],
       ['Vragen', 'Vragen over cookies of privacy? Mail <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.'],
@@ -108,8 +111,8 @@ function page(p, alle) {
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260618">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260903d">
+  <link rel="stylesheet" href="tokens.css?v=20260905a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -133,8 +136,8 @@ function page(p, alle) {
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
         <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li><a href="investeren.html">Investeren</a></li>
+      <li><a href="vastgoedbeheer.html">Beheer</a></li>
       <li class="nav-has-sub">
         <button class="nav-sub-toggle" type="button" aria-expanded="false" aria-controls="nav-mega-diensten" onclick="toggleNavSub(this)">Diensten <span class="nav-caret" aria-hidden="true"></span></button>
         <div class="nav-mega" id="nav-mega-diensten">
@@ -187,7 +190,8 @@ function page(p, alle) {
       <a class="mob-sm" href="contact.html">Contact</a>
       <a class="mob-sm" href="inloggen.html">Inloggen</a>
     </nav>
-    <a class="btn btn-primary mob-btn" href="pand-verkopen.html">Pand aanbieden <span class="arr">→</span></a>
+    <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
+  <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
     <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">${TEL}</a> · Rotterdam</p>
     <div class="mob-legal">
       <a href="privacy.html">Privacy</a>
@@ -227,7 +231,7 @@ function page(p, alle) {
       <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260903d"></script>
+  <script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>
 `;

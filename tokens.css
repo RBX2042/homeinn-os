@@ -96,6 +96,9 @@
   --space-20: 80px;
   --space-24: 96px;
 
+  /* — Contentbreedte ———————————————————————————————————————————— */
+  --maxw: 1140px;                  /* smalle leeskolom (o.a. .disc-wrap) */
+
   /* — Radius ————————————————————————————————————————————————————— */
   --radius-sm:   4px;
   --radius:      7px;
