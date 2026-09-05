@@ -164,14 +164,7 @@
       "mapsAdres": "Tollensstraat 32, 3131 GZ Vlaardingen"
     }
   ],
-  "verkocht": [
-    {
-      "adres": "Schiekade 18",
-      "plaats": "Rotterdam",
-      "type": "Appartement",
-      "label": "B"
-    }
-  ],
+  "verkocht": [],
   "portefeuille": {
     "woningen": 13,
     "locaties": 8,

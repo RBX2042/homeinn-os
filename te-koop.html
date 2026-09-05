@@ -135,7 +135,7 @@
     </div></div>
 
     <section class="tk-sec" id="aanbod">
-      <div class="proc-head"><span class="t-eyebrow">Actueel aanbod</span><h2>Nu <em>te koop.</em></h2></div>
+      <div class="proc-head"><span class="t-eyebrow">Actueel aanbod</span><h2>Wat er nu <em>in de verkoop staat.</em></h2></div>
       <div class="blog-grid" id="aanbod-grid" style="margin-top:2.5rem"></div>
       <div id="aanbod-verkocht" style="margin-top:1.5rem"></div>
     </section>
@@ -419,6 +419,22 @@
     });
   })();
   </script>
+<script>
+/* Kaart pas laden na een klik: geen Google-verzoek zonder toestemming van de bezoeker. */
+(function(){
+  var sec=document.getElementById('komend');
+  if(!sec)return;
+  sec.addEventListener('click',function(e){
+    var btn=e.target&&e.target.closest?e.target.closest('.map-load'):null;
+    if(!btn)return;
+    var f=document.createElement('iframe');
+    f.className='card-map';f.loading='lazy';f.referrerPolicy='no-referrer-when-downgrade';
+    f.src='https://www.google.com/maps?q='+btn.getAttribute('data-maps')+'&output=embed';
+    f.title='Kaart '+(btn.getAttribute('data-titel')||'');
+    btn.replaceWith(f);
+  });
+})();
+</script>
 <script src="site-nav.js?v=20260905a"></script>
 </body>
 </html>

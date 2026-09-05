@@ -221,7 +221,7 @@
             } else {
               invHtml+='<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers na een persoonlijke kennismaking.</p>';
             }
-            invHtml+='<a class="pillar-cta" href="contact.html?onderwerp='+encodeURIComponent('Investeren in een project')+'&amp;ref='+encodeURIComponent((p.id||'')+' — '+(p.adres||''))+'">Investeer mee in dit project →</a></div>';
+            invHtml+='<a class="pillar-cta" href="investeren.html?project='+encodeURIComponent(p.adres||'')+'#meedoen">Investeer mee in dit project →</a></div>';
           }
           return '<article class="blog-card rv in">'+visual+'<div class="blog-body">'+
             '<div class="proj-status">'+escHtml(p.status||'In ontwikkeling')+'</div>'+

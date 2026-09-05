@@ -495,11 +495,32 @@ function renderHuuraanbod() {
 document.addEventListener('DOMContentLoaded', renderHuuraanbod);
 
 /* ===== Projecten volgen & investeren (uit aanbod.json) ===== */
+var MAANDEN_NL = ['januari','februari','maart','april','mei','juni',
+                  'juli','augustus','september','oktober','november','december'];
 function fmtDatumNl(iso) {
   if (!iso) return '';
   var d = iso.split('-');
-  return d.length === 3 ? d[2] + '-' + d[1] + '-' + d[0] : iso;
+  if (d.length !== 3) return iso;
+  var m = MAANDEN_NL[parseInt(d[1], 10) - 1];
+  return m ? parseInt(d[2], 10) + ' ' + m + ' ' + d[0] : d[2] + '-' + d[1] + '-' + d[0];
 }
+
+/* De portefeuilleregel staat ook op pagina's zonder projectenraster (de
+   homepage). Los bijwerken, anders loopt hij nooit mee met aanbod.json. */
+function renderPortefeuilleMeta() {
+  var meta = document.getElementById('portefeuille-meta');
+  if (!meta || document.getElementById('projecten-grid')) return;
+  fetch('aanbod.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('geen data'); return r.json(); })
+    .then(function (data) {
+      var pf = data && data.portefeuille;
+      if (pf && pf.woningen) {
+        meta.textContent = pf.woningen + ' woningen op ' + pf.locaties + ' locaties · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
+      }
+    })
+    .catch(function () { /* statische tekst in de HTML blijft staan */ });
+}
+document.addEventListener('DOMContentLoaded', renderPortefeuilleMeta);
 
 function renderProjectenPublic() {
   var grid = document.getElementById('projecten-grid');

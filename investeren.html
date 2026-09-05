@@ -43,6 +43,10 @@
     .iv-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
     .iv-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
     .iv-foot .in a:first-child{margin-left:0}
+    .ct-success{background:var(--panel);border:1px solid var(--line);padding:2.5rem;text-align:center}
+    .ct-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy);margin:0 0 .75rem}
+    .ct-success p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0}
+    @media(max-width:720px){.ct-success{padding:1.75rem 1.25rem}.ct-success p{font-size:1.0667rem}}
   </style>
 </head>
 <body>
@@ -121,7 +125,7 @@
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Investeren · Rotterdam</span>
         <h1>Investeren in Rotterdams vastgoed — <em>meedoen</em> in onze projecten</h1>
-        <p>Van persoonlijke kennismaking tot uitkering via de notaris — in drie stappen. U investeert in stenen die wij zelf aankopen, verbouwen en verkopen, tegen een rendement dat wij per project vooraf schriftelijk met u vastleggen. Het streefrendement is 7% per jaar bij een looptijd van één jaar. Geen fonds, geen tussenlagen.</p>
+        <p>Van persoonlijke kennismaking tot uitkering via de notaris — in drie stappen. U investeert in stenen die wij zelf aankopen en verbouwen en daarna via onze makelaar op de markt brengen, tegen een rendement dat wij per project vooraf schriftelijk met u vastleggen. Het streefrendement is 7% per jaar bij een looptijd van één jaar. Geen fonds, geen tussenlagen.</p>
         <div class="iv-hero-cta">
           <a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
           <span class="iv-hero-micro">Streefrendement 7% per jaar · Looptijd vanaf één jaar · Uitkering via de notaris · Geen gegarandeerd rendement</span>
@@ -140,7 +144,7 @@
           </div>
           <div class="proc-aside">
             <div class="proc-aside-title">Waarom meedoen bij HomeINN</div>
-            <p class="proc-aside-desc">U investeert in stenen die wij zelf aankopen, zelf verbouwen met onze vaste bouwpartner en zelf verkopen. Geen fonds, geen tussenlagen — één project, één overeenkomst, één resultaat.</p>
+            <p class="proc-aside-desc">U investeert in stenen die wij zelf aankopen, zelf verbouwen met onze vaste bouwpartner en daarna via onze makelaar verkopen. Geen fonds, geen tussenlagen — één project, één overeenkomst, één resultaat.</p>
             <div class="sla-row"><span class="sla-row-label">Streefrendement</span><span class="sla-tag sla-gold">7% per jaar — niet gegarandeerd</span></div>
             <div class="sla-row"><span class="sla-row-label">Looptijd</span><span class="sla-tag sla-blue">Vanaf één jaar</span></div>
             <div class="sla-row"><span class="sla-row-label">Portefeuille</span><span class="sla-tag sla-blue">13 woningen in eigen bezit</span></div>
@@ -212,7 +216,7 @@
             <button class="cf-submit" type="submit">Vraag de projectinformatie aan →</button>
             <p class="m-note" style="margin-top:.9rem">Vrijblijvend. Met verzenden gaat u akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>. Wij verkopen uw gegevens niet en sturen geen nieuwsbrief zonder uw toestemming.</p>
           </form>
-          <div class="ct-success" id="iv-success" style="display:none">
+          <div class="ct-success" id="iv-success" style="display:none" role="status" aria-live="polite" tabindex="-1">
             <h3>Uw aanvraag is ontvangen ✓</h3>
             <p>Wij nemen binnen vier uur op werkdagen contact met u op en sturen u de volledige projectinformatie. Liever meteen contact? Bel <a href="tel:+31626257071">+31 6 26 25 70 71</a>.</p>
           </div>
@@ -223,7 +227,7 @@
     <!-- DISCLAIMER -->
     <section class="iv-disclaimer">
       <div class="box">
-        <strong>Belangrijk.</strong> Deelname in een project gebeurt op basis van een onderhandse overeenkomst en een persoonlijke kennismaking. Het genoemde percentage van minimaal 7% op jaarbasis bij een looptijd van één jaar wordt per project vastgelegd in die overeenkomst, maar is geen gegarandeerd rendement: bij tegenvallende verkoop- of verhuurresultaten kan het daadwerkelijke rendement lager uitvallen of kan (een deel van) uw inleg verloren gaan. In het verleden behaalde resultaten bieden geen zekerheid voor de toekomst. Dit is uitdrukkelijk <strong>geen aanbieding van effecten</strong> en geen beleggings-, fiscaal of juridisch advies. Vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren voordat u een beslissing neemt.
+        <strong>Belangrijk.</strong> Deelname in een project gebeurt op basis van een onderhandse overeenkomst en een persoonlijke kennismaking. Het streefrendement van 7% op jaarbasis bij een looptijd van één jaar wordt per project vastgelegd in die overeenkomst, maar is geen gegarandeerd rendement: bij tegenvallende verkoop- of verhuurresultaten kan het daadwerkelijke rendement lager uitvallen of kan (een deel van) uw inleg verloren gaan. In het verleden behaalde resultaten bieden geen zekerheid voor de toekomst. Dit is uitdrukkelijk <strong>geen aanbieding van effecten</strong> en geen beleggings-, fiscaal of juridisch advies. Vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren voordat u een beslissing neemt.
       </div>
     </section>
 
@@ -264,6 +268,20 @@
         .catch(function(){return false;});
     }catch(e){return Promise.resolve(false);}
   }
+  /* Projectkaarten elders op de site linken hierheen met ?project=<adres>.
+     Die keuze meteen voorselecteren, anders gaat de context verloren. */
+  (function(){
+    try{
+      var gevraagd=new URLSearchParams(location.search).get('project');
+      if(!gevraagd)return;
+      var sel=document.getElementById('iv-project');
+      if(!sel)return;
+      for(var i=0;i<sel.options.length;i++){
+        if(sel.options[i].text.trim()===gevraagd.trim()){sel.selectedIndex=i;break}
+      }
+    }catch(e){}
+  })();
+
   var form=document.getElementById('iv-form');
   if(!form) return;
   form.addEventListener('submit',function(e){

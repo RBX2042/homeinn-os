@@ -1503,13 +1503,13 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 .mob-tweede{display:block;margin-top:.85rem;text-align:center;font-size:.78rem;font-weight:500;letter-spacing:.03em;color:var(--gold3,var(--gold));text-decoration:none;min-height:44px;line-height:44px}
 .mob-tweede:hover{text-decoration:underline}
 .cta-acties{display:flex;flex-wrap:wrap;gap:.85rem 1rem;align-items:center}
-.hero-risico{margin-top:.9rem;max-width:52ch;font-size:.72rem;font-weight:300;line-height:1.65;color:rgba(255,255,255,.62)}
-.hero-risico a{color:rgba(255,255,255,.82);text-decoration:underline;text-underline-offset:2px}
+.hero-risico{margin-top:.9rem;max-width:52ch;font-size:.82rem;font-weight:300;line-height:1.7;color:rgba(255,255,255,.86)}
+.hero-risico a{color:#fff;text-decoration:underline;text-underline-offset:2px}
 .hero-risico a:hover{color:var(--gold3)}
 /* Tweede werkwijze-blok (investeerders) — zelfde component, andere ondergrond
    zodat de twee trechters visueel uit elkaar te houden zijn. */
 .proc-section--invest{background:var(--cream)}
-.proc-section--invest .pa-note{color:var(--ink4)}
+.proc-section--invest .pa-note{color:rgba(255,255,255,.82)}
 /* Fotoslot over de kaartknop: staat de foto in fotos/, dan dekt hij de knop af;
    ontbreekt hij, dan verwijdert onerror het beeld en blijft de kaart staan. */
 .pf-visual{position:relative;overflow:hidden}
@@ -1523,6 +1523,7 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 
 /* Mobiele leesbaarheid: broodtekst blijft >=16px ondanks de 15px-root */
 @media(max-width:720px){
+  .hero-risico{font-size:.9333rem}
   .t-body,.wb-text .lead,.contact-side p,.over-side p,.legal-doc p,.legal-doc li,
   .legal-hero-copy p,.proc-lede,.cta-lede,.statement-body p,
   .val-card p,.journey-head p,.jstep-body p,.partner-head p,.blog-body p,

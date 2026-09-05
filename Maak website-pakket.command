@@ -50,11 +50,19 @@ for f in glob.glob('website-online/*.html'):
     def keep(m):
         src = re.search(r'src="([^"]+)"', m.group(0))
         return m.group(0) if (src and os.path.exists(os.path.join('website-online', src.group(1)))) else ''
-    s = re.sub(r'\s*<div class="hero-photo"[^>]*>\s*<img[^>]*>\s*</div>', keep, s)
-    s = re.sub(r'\s*<img class="blog-photo"[^>]*>', keep, s)
+    # Alleen STATISCHE markup strippen. Binnen <script> staan dezelfde tags als
+    # JS-tekst (bijv. de renderer van projecten.html); die mag je niet aanraken,
+    # anders sloop je de code die de foto's juist plaatst.
+    def buiten_scripts(tekst, patroon):
+        stukken = re.split(r'(<script\b[^>]*>.*?</script>)', tekst, flags=re.S)
+        for i in range(0, len(stukken), 2):
+            stukken[i] = re.sub(patroon, keep, stukken[i])
+        return ''.join(stukken)
+    s = buiten_scripts(s, r'\s*<div class="hero-photo"[^>]*>\s*<img[^>]*>\s*</div>')
+    s = buiten_scripts(s, r'\s*<img class="blog-photo"[^>]*>')
     # Portefeuillefoto's (.pf-foto): zonder bestand geen 404 in het log; zodra de
     # foto in fotos/ staat, blijft de laag staan en dekt hij de kaartknop af.
-    s = re.sub(r'\s*<img class="pf-foto"[^>]*>', keep, s)
+    s = buiten_scripts(s, r'\s*<img class="pf-foto"[^>]*>')
     if s != o:
         io.open(f, 'w', encoding='utf-8').write(s); n += 1
 print("  ✓ ontbrekende fotoplekken gestript uit %d pagina('s)" % n)
