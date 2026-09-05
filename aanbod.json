@@ -1,40 +1,7 @@
 {
   "bijgewerkt": "2026-09-04",
-  "aanbod": [
-    {
-      "id": "PND-2025-011",
-      "adres": "Laan op Zuid 304",
-      "plaats": "Rotterdam",
-      "type": "Appartement",
-      "status": "Te koop",
-      "prijs": 415000,
-      "label": "A",
-      "m2": 92,
-      "kamers": 3,
-      "omschrijving": "Volledig gerenoveerd 3-kamerappartement op de Kop van Zuid. Nieuwe installaties, warmtepomp, energielabel A en hoogwaardige afwerking — direct te betrekken.",
-      "fotos": [
-        "fotos/laan-op-zuid-1.svg",
-        "fotos/laan-op-zuid-2.svg",
-        "fotos/laan-op-zuid-3.svg",
-        "fotos/laan-op-zuid-4.svg"
-      ]
-    }
-  ],
-  "tehuur": [
-    {
-      "id": "PND-2025-007",
-      "adres": "Beukelsdijk 145 B",
-      "plaats": "Rotterdam",
-      "type": "Appartement",
-      "status": "Te huur",
-      "huur": 1450,
-      "label": "A",
-      "m2": 78,
-      "kamers": 3,
-      "omschrijving": "Licht en volledig gerenoveerd 3-kamerappartement in Rotterdam-West. Energielabel A, eigen berging en op loopafstand van het centrum. Direct te betrekken, met 24/7 storingslijn en één vast aanspreekpunt.",
-      "fotos": []
-    }
-  ],
+  "aanbod": [],
+  "tehuur": [],
   "projecten": [
     {
       "id": "HI-P01",
@@ -45,9 +12,9 @@
       "wijk": "Rotterdam-Zuid",
       "type": "3 woningen",
       "eenheden": 3,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Drie zelfstandige woningen in één bouwblok op Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Drie zelfstandige woningen in één bouwblok op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },
@@ -65,9 +32,9 @@
       "wijk": "Rotterdam-Zuid",
       "type": "2 woningen",
       "eenheden": 2,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Twee appartementen in één pand in Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Twee appartementen in één pand in Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },
@@ -85,9 +52,9 @@
       "wijk": "Rotterdam-West",
       "type": "2 woningen",
       "eenheden": 2,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Twee naastgelegen panden aan de 's-Gravendijkwal in Rotterdam-West. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Twee naastgelegen panden aan de 's-Gravendijkwal in Rotterdam-West. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },
@@ -105,9 +72,9 @@
       "wijk": "Kralingen",
       "type": "2 woningen",
       "eenheden": 2,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Twee naastgelegen panden aan de Honingerdijk in Kralingen. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Twee naastgelegen panden aan de Honingerdijk in Kralingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },
@@ -125,9 +92,9 @@
       "wijk": "Rotterdam-Zuid",
       "type": "1 woning",
       "eenheden": 1,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Stadswoning op Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Stadswoning op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },
@@ -145,9 +112,9 @@
       "wijk": "Rotterdam-Zuid",
       "type": "1 woning",
       "eenheden": 1,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Woning aan de Schulpweg op Rotterdam-Zuid. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Woning aan de Schulpweg op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },
@@ -165,9 +132,9 @@
       "wijk": "Vlaardingen",
       "type": "1 woning",
       "eenheden": 1,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Appartement in Vlaardingen. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Appartement in Vlaardingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },
@@ -185,9 +152,9 @@
       "wijk": "Vlaardingen",
       "type": "1 woning",
       "eenheden": 1,
-      "status": "In portefeuille",
+      "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Woning in Vlaardingen. In eigendom van HomeINN en aangemerkt voor renovatie en verduurzaming.",
+      "omschrijving": "Woning in Vlaardingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
       "investering": {
         "open": true
       },

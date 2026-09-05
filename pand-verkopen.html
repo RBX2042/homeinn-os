@@ -190,6 +190,29 @@
     .done-card .home-link{display:inline-flex;margin-top:var(--space-10)}
 
     /* ─── Footer ─── */
+
+    .crit-list{list-style:none;margin:0 0 var(--space-3);padding:0;display:flex;flex-direction:column;gap:var(--space-2)}
+    .crit-list li{position:relative;padding-left:1.1rem;font-size:.86rem;line-height:1.6;color:var(--ink2)}
+    .crit-list li::before{content:"";position:absolute;left:0;top:.6em;width:5px;height:5px;border:1px solid var(--gold);transform:rotate(45deg)}
+    .crit-niet{margin:0;font-size:.8rem;line-height:1.55;color:var(--ink3);padding-top:var(--space-3);border-top:1px solid var(--cream3)}
+    .pv-tip{background:var(--navy);color:#eef2f6}
+    .pv-tip-in{max-width:1140px;margin:0 auto;padding:var(--space-10) clamp(var(--space-5),5vw,var(--space-12));
+      display:grid;grid-template-columns:1.55fr 1fr;gap:clamp(var(--space-6),5vw,var(--space-10));align-items:start}
+    .pv-tip .eyebrow{color:var(--gold);display:block;margin-bottom:var(--space-3)}
+    .pv-tip h2{font-family:var(--serif);font-weight:300;font-size:clamp(1.7rem,3.2vw,2.4rem);line-height:1.15;margin:0 0 var(--space-4);color:#fff;text-wrap:balance}
+    .pv-tip p{margin:0 0 var(--space-3);font-size:.95rem;line-height:1.8;color:#c3d0da;max-width:60ch}
+    .pv-tip-hoe{font-size:.88rem !important;color:#9fb2c2 !important}
+    .pv-tip-actie{display:flex;flex-direction:column;gap:var(--space-3);align-items:flex-start}
+    .pv-tip-sub{font-size:.86rem;color:#9fb2c2}
+    .pv-tip-sub a{color:#eef2f6}
+    .pv-tip-note{font-size:.78rem;line-height:1.6;color:#8ea2b3;border-top:1px solid rgba(184,147,58,.28);padding-top:var(--space-3)}
+    @media(max-width:860px){.pv-tip-in{grid-template-columns:1fr}}
+    @media(max-width:720px){
+      .pv-tip p{font-size:1rem}
+      .pv-tip-hoe{font-size:.94rem !important}
+      .crit-list li{font-size:.94rem}
+      .crit-niet{font-size:.88rem}
+    }
     footer{border-top:1px solid var(--cream3);background:var(--panel)}
     footer .f-in{max-width:1140px;margin:0 auto;padding:var(--space-8) clamp(var(--space-5),5vw,var(--space-12));
       display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
@@ -411,10 +434,21 @@
       <aside class="aside">
         <div class="aside-card">
           <h3>Waarom HomeINN</h3>
-          <div class="trust-row"><span class="num">2007</span><span class="lbl">Actief in Rotterdams vastgoed sinds</span></div>
-          <div class="trust-row"><span class="num">25+</span><span class="lbl">Panden aangekocht, ontwikkeld of verkocht</span></div>
+          <div class="trust-row"><span class="num">2007</span><span class="lbl">Ons team zit in Rotterdams vastgoed sinds</span></div>
+          <div class="trust-row"><span class="num">13</span><span class="lbl">Woningen nu in eigen bezit en ontwikkeling</span></div>
           <div class="trust-row"><span class="num">€0</span><span class="lbl">Makelaars-, styling- of advieskosten</span></div>
           <div class="trust-row"><span class="num">48u</span><span class="lbl">Een onderbouwd voorstel, geen verplichting</span></div>
+        </div>
+        <div class="aside-card" style="margin-top:var(--space-5)">
+          <h3>Wat wij zoeken</h3>
+          <ul class="crit-list">
+            <li>Woningen en panden in Rotterdam, Schiedam, Vlaardingen, Capelle, Ridderkerk en Barendrecht</li>
+            <li>Juist mét opknapbehoefte — achterstallig onderhoud is voor ons geen bezwaar maar de reden</li>
+            <li>Verhuurd of leeg; ook met zittende huurder</li>
+            <li>Beleggingspanden, opgesplitste panden en VvE-appartementen</li>
+            <li>Erfpacht en gedateerde installaties: bespreekbaar</li>
+          </ul>
+          <p class="crit-niet">Minder geschikt: nieuwbouw, recent gerenoveerd, en alles buiten de regio Rotterdam.</p>
         </div>
         <div class="aside-mini">
           <div class="mini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span><strong>Geen financieringsvoorbehoud.</strong> De koop loopt nooit stuk op de financiering van een ander.</span></div>
@@ -428,6 +462,24 @@
       </aside>
     </div>
   </div>
+
+
+  <!-- AANBRENGEN -->
+  <section class="pv-tip">
+    <div class="pv-tip-in">
+      <div>
+        <span class="eyebrow">Voor professionals</span>
+        <h2>Kent u een pand dat bij ons past?</h2>
+        <p>Makelaars, beheerders, aannemers, bewindvoerders en notarissen zien panden vaak eerder dan wie ook. Brengt u ons een pand aan dat wij daadwerkelijk aankopen, dan staat daar een vergoeding tegenover — vastgelegd voordat wij het gesprek met de eigenaar aangaan.</p>
+        <p class="pv-tip-hoe">Stuur ons het adres en uw gegevens. Wij laten binnen 48 uur weten of het pand voor ons interessant is, en bevestigen de afspraak schriftelijk. Wij benaderen een eigenaar nooit buiten u om.</p>
+      </div>
+      <div class="pv-tip-actie">
+        <a class="btn-cta" href="contact.html?onderwerp=Een%20pand%20aanbrengen%20(aanbrengvergoeding)">Pand aanbrengen →</a>
+        <span class="pv-tip-sub">Of bel <a href="tel:+31626257071">+31 6 26 25 70 71</a></span>
+        <span class="pv-tip-note">De hoogte van de vergoeding spreken wij per pand af — vraag ernaar bij uw eerste aanmelding.</span>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div class="f-in">

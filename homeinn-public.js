@@ -412,7 +412,7 @@ function renderAanbod() {
   var grid = document.getElementById('aanbod-grid');
   var soldBox = document.getElementById('aanbod-verkocht');
   if (!grid) return;
-  var leeg = '<div class="aanbod-leeg"><div class="leeg-spot hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></div><h3>Op dit moment is alles verkocht.</h3><p>Nieuwe woningen zijn in ontwikkeling. Laat uw gegevens achter via "Houd mij op de hoogte" en u hoort het als eerste.</p></div>';
+  var leeg = '<div class="aanbod-leeg"><div class="leeg-spot hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-aankoop"/></svg></div><h3>Nog niets in de verkoop.</h3><p>Onze woningen zijn nu in ontwikkeling. Laat uw gegevens achter via "Houd mij op de hoogte" en u hoort het zodra de eerste in de verkoop gaat.</p></div>';
   fetch('aanbod.json', { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('geen aanbod.json'); return r.json(); })
     .then(function (data) {
