@@ -213,6 +213,8 @@
       .crit-list li{font-size:.94rem}
       .crit-niet{font-size:.88rem}
     }
+    .skip-link{position:absolute;left:-9999px;top:0}
+    .skip-link:focus{left:1rem;top:1rem;z-index:900;background:var(--navy);color:#fff;padding:.6rem 1rem;border:1px solid var(--gold);text-decoration:none}
     footer{border-top:1px solid var(--cream3);background:var(--panel)}
     footer .f-in{max-width:1140px;margin:0 auto;padding:var(--space-8) clamp(var(--space-5),5vw,var(--space-12));
       display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
@@ -229,6 +231,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#flow">Naar het formulier</a>
 
   <!-- ─── Topbar (geen navigatie) ─── -->
   <header class="topbar">
