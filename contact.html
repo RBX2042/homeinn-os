@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contact — HomeINN Rotterdam | reactie binnen vier uur</title>
-  <meta name="description" content="Neem contact op met HomeINN in Rotterdam. Bel +31 6 26 25 70 71 of stuur een bericht — wij reageren binnen vier uur op werkdagen.">>
+  <meta name="description" content="Neem contact op met HomeINN in Rotterdam. Bel +31 6 26 25 70 71 of stuur een bericht — wij reageren binnen vier uur op werkdagen.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
@@ -156,7 +156,7 @@
             <button class="cf-submit" type="submit">Verstuur bericht →</button>
             <p class="m-note" style="margin-top:.9rem">Met verzenden gaat u akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>.</p>
           </form>
-          <div class="ct-success" id="ct-success">
+          <div class="ct-success" id="ct-success" role="status" aria-live="polite" tabindex="-1">
             <h3>Uw bericht is ontvangen ✓</h3>
             <p>Bedankt voor uw aanvraag. Wij nemen binnen vier uur op werkdagen contact met u op.</p>
           </div>
@@ -252,7 +252,7 @@
         if(knop){knop.disabled=false;knop.textContent=knop.dataset.txt;}
         if(!ok){(function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31626257071" style="color:inherit;text-decoration:underline">+31 6 26 25 70 71</a>.';f.appendChild(p);})(form);return;}
         form.style.display='none';
-        var s=document.getElementById('ct-success'); if(s){s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});}
+        var s=document.getElementById('ct-success'); if(s){s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});try{s.focus()}catch(e){}}
       });
     });
     var mapBtn=document.getElementById('ct-map');

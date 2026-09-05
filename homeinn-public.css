@@ -805,7 +805,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .values-grid.four{grid-template-columns:repeat(4,1fr)}
 .values-grid.five{grid-template-columns:repeat(5,1fr)}
 .values-grid.five .val-card p{flex:1}
-.pillar-cta{margin-top:1.25rem;display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--gold);background:none;border:none;cursor:pointer;padding:0;transition:color .25s}
+.pillar-cta{margin-top:1.25rem;display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--gold-ink);background:none;border:none;cursor:pointer;padding:0;transition:color .25s}
 .pillar-cta:hover{color:var(--navy)}
 .proj-status{display:inline-block;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:.35rem .7rem;border:1px solid var(--gold);color:var(--gold);margin-bottom:.9rem}
 .proj-status.sold{background:var(--navy);border-color:var(--navy);color:var(--gold2)}
