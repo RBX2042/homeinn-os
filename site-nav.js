@@ -130,3 +130,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+
+/* ── Scrollhint op brede tabellen ──
+   .vgl-wrap (spokes) en .anv (vastgoedbeheer) scrollen horizontaal. De
+   verlopende schaduw aan de rechterkant zegt dát er meer staat; hij dooft
+   zodra de gebruiker aan het einde is. Staat hier omdat site-nav.js op élke
+   publieke pagina geladen wordt. Zonder JS blijft de hint zichtbaar — dat is
+   de veilige uitkomst, niet andersom. */
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.vgl-wrap,.anv').forEach(function (el) {
+    function sync() {
+      var rest = el.scrollWidth - el.clientWidth - el.scrollLeft;
+      el.style.setProperty('--scroll-hint', rest > 8 ? '1' : '0');
+    }
+    sync();
+    el.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+  });
+});

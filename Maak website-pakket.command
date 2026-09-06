@@ -93,7 +93,7 @@ cp vercel.json website-online/ 2>/dev/null || true
 sed 's#"start_url": "portaal.html"#"start_url": "index.html"#; s#"short_name": "HomeINN OS"#"short_name": "HomeINN"#; s#"name": "HomeINN OS — Vastgoedportaal"#"name": "HomeINN"#; s#"description": "Portaal voor aankoop, ontwikkeling, verhuur en verkoop van vastgoed."#"description": "HomeINN — aankoop, ontwikkeling, verkoop, verhuur en beheer van vastgoed in Rotterdam."#' manifest.webmanifest > website-online/manifest.webmanifest
 cp -R assets website-online/assets
 # Verwijder zware, ongebruikte logo-varianten uit de deploybundel (bronbestanden in assets/ blijven staan)
-rm -f website-online/assets/logo-light-fullres.png website-online/assets/logo-light-original.png website-online/assets/logo-dark-original.png website-online/assets/homeinn-logo-new.png
+rm -f website-online/assets/logo-light-fullres.png website-online/assets/logo-light-original.png website-online/assets/logo-dark-original.png website-online/assets/homeinn-logo-new.png website-online/assets/logo-light-700.png website-online/assets/logo-light-700.webp
 cp -R fotos website-online/fotos 2>/dev/null || true
 cp -R fonts website-online/fonts 2>/dev/null || true
 

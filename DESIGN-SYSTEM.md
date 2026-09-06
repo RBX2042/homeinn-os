@@ -48,12 +48,36 @@ Link-volgorde op **elke** pagina:
 | `--ink` … `--ink4` | `#0c0b09` → `#736d64` | tekst (primair → zwakst) |
 | `--cream` … `--cream3`, `--panel` | `#f5f2ec` → `#ddd7cb`, `#fffdf8` | achtergronden, kaarten |
 | `--red` / `--green` | `#b03a3a` / `#1e6a42` | fout / succes |
+| `--green-bg/-line/-ink` | `#eef6ef` / `#2d7a46` / `#215838` | meldingsvlak succes (7,6:1) |
+| `--red-bg/-line/-ink` | `#fbefec` / `#b74b2d` / `#7f3220` | meldingsvlak fout (7,8:1) |
 | `--line` / `--hairline` / `--hair` | rgba-hairlines | randen (`--hair` volgt de merkkleur) |
 
 ### Typografie
 `--serif` Cormorant Garamond (koppen) · `--sans` Outfit (UI/tekst) — beide **lokaal** in `fonts/`.
-Schaal: `--text-xs` (12px) → `--text-5xl` (64px). Vloeiende koppen op de website via `clamp()`.
+Schaal: `--text-xs` (12px) → `--text-5xl` (64px).
 `--leading-tight/snug/normal`, `--tracking-caps` (.05em voor uppercase labels).
+
+**Kop-schaal (sinds 6 sep 2026).** De sectiekoppen liepen uiteen in elf losse
+`clamp()`-waarden met wisselend gewicht en regelhoogte. Dat is teruggebracht tot
+vier tokens; élke `h2` op de site gebruikt er één van, met `font-weight:300` en
+`line-height:1.15`.
+
+| Token | Waarde | Gebruik |
+|-------|--------|---------|
+| `--h2-lg` | `clamp(2.2rem, 4.2vw, 3.5rem)` | openingsstatement van een pagina |
+| `--h2` | `clamp(2rem, 3.5vw, 3rem)` | standaard sectiekop — de werkpaardschaal |
+| `--h2-sm` | `clamp(1.7rem, 2.8vw, 2.4rem)` | compacte blokken, juridische documenten |
+| `--h2-prose` | `clamp(1.5rem, 3vw, 2rem)` | tussenkoppen binnen een artikel |
+
+`h1` blijft per paginatype verschillen (hero 6,5rem, kennisartikel 3,2rem) — dat is
+een bewust onderscheid, geen drift. Uitzondering: `investeren.html` verkleint
+`.page-hero h1` inline omdat die titel het langst is.
+
+**Ondergrens leesbaarheid.** Onder 720px is de root 15px; rem-waarden onder ~.8rem
+zakken daar onder de 12px. Bijschriften staan daarom op minimaal `.78rem` (12,5px)
+en krijgen in het laatste `@media(max-width:720px)`-blok van `homeinn-public.css`
+een ondergrens. **Dat blok hoort het laatste te blijven** — een regel die eronder
+komt, verslaat hem.
 
 ### Ruimte · radius · elevatie · motion
 - **Ruimte** (8pt): `--space-1` (4px) → `--space-24` (96px)
@@ -114,6 +138,11 @@ intact blijft.
 3. **Canoniek goud = `#b8933a`.** SVG-`fill=`/`stroke=` en JS-chartstrings die geen `var()` kunnen gebruiken: de canonieke hex `#b8933a` (nooit `#b49030`).
 4. **Nieuwe pagina?** Link `fonts.css` → `tokens.css` → paginastijl, in die volgorde.
 5. **Breaking change in een token?** Pas het hier aan; alles erft mee. Documenteer in dit bestand.
+6. **Goud als tékst mag niet `--gold` of `--gold2` zijn op een lichte ondergrond.** Die halen daar 1,8–2,9:1. Gebruik `--gold-ink` (5,1:1 op cream) of `--gold-text` (6,3:1). `--gold`/`--gold2` blijven voor randen, vlakken, iconen en tekst op donker.
+7. **Witte tekst op de donkere vlakken: alpha ≥ .55.** Op `--navy` haalt `.45` nog maar 4,2:1; `.55` haalt 5,9:1.
+8. **`--ink4` niet op `--cream2`** (4,2:1). Daar hoort `--ink3` (5,8:1).
+9. **Eén footer.** Subpagina's gebruiken `.site-foot`; die staat óók in `build-legal.js`, `build-spokes.js` en `build-kennis.js`. Wijzig je hem, wijzig hem daar mee en draai de drie generatoren — anders is hij na de volgende build weg.
+10. **CSS of JS gewijzigd?** Hoog de `?v=`-token op in alle `*.html` én de drie build-scripts, en `CACHE` in `sw.js`. Zonder dat krijgen terugkerende bezoekers het oude bestand.
 
 ---
 

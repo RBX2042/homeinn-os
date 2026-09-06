@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HomeINN — Projectontwikkeling in Rotterdam &amp; omstreken</title>
-  <meta name="description" content="HomeINN ontwikkelt vastgoed in Rotterdam: zelf aangekocht, door onze vaste bouwpartner verbouwd en opgeleverd. 13 woningen in bezit — investeer mee in een project.">
+  <meta name="description" content="HomeINN ontwikkelt vastgoed in Rotterdam: zelf aangekocht, met onze vaste bouwpartner verbouwd en opgeleverd. 13 woningen in bezit — doe mee in een project.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0b1e30">
@@ -35,7 +35,7 @@
         "url": "https://home-inn.nl/",
         "logo": "https://home-inn.nl/assets/favicon-512.png?v=20260616g",
         "image": "https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g",
-        "description": "HomeINN ontwikkelt vastgoed in Rotterdam: zelf aangekocht, door onze vaste bouwpartner verbouwd en opgeleverd. 13 woningen in bezit — investeer mee in een project.",
+        "description": "HomeINN ontwikkelt vastgoed in Rotterdam: zelf aangekocht, met onze vaste bouwpartner verbouwd en opgeleverd. 13 woningen in bezit — doe mee in een project.",
         "telephone": "+31626257071",
         "email": "info@homeinn.nl",
         "address": {
@@ -82,7 +82,7 @@
                               "name": "Welke risico's loop ik als ik meedoe?",
                               "acceptedAnswer": {
                                       "@type": "Answer",
-                                      "text": "Meedoen in een project is beleggen, geen sparen. Het rendement is niet gegarandeerd: vallen de verkoop- of verhuurresultaten tegen, dan kan het rendement lager uitvallen of kan een deel van uw inleg verloren gaan. In het verleden behaalde resultaten bieden geen zekerheid voor de toekomst. Dit is geen aanbieding van effecten en geen beleggingsadvies — vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren."
+                                      "text": "Meedoen in een project is beleggen, geen sparen. Het rendement is niet gegarandeerd: vallen de verkoop- of verhuurresultaten tegen, dan kan het rendement lager uitvallen of kan een deel van uw inleg verloren gaan. In het verleden behaalde resultaten bieden geen zekerheid voor de toekomst. Deze pagina is een uitnodiging tot kennismaking, geen aanbod: deelname komt pas tot stand na een persoonlijk gesprek en een individuele overeenkomst. Dit is geen beleggingsadvies — vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren."
                               }
                       },
                       {
@@ -157,8 +157,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260906b">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
+  <link rel="stylesheet" href="tokens.css?v=20260906j">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906j">
   <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
   <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -380,7 +380,7 @@
 <span id="main" tabindex="-1"></span>
 <div class="pg on" id="pg-home" role="main">
 
-<section class="hero">
+<section class="hero" aria-label="Introductie">
   <div class="hero-bg"></div>
   <!-- Fotolaag — vult zich zodra fotos/hero-rotterdam.jpg bestaat; zonder foto verwijdert de laag zichzelf en blijft de line-art hero intact. Zie fotos/FOTOLIJST.md -->
   <div class="hero-photo" aria-hidden="true"><img src="fotos/hero-rotterdam.jpg" alt="" fetchpriority="high" decoding="async" onerror="this.closest('.hero-photo').remove()" onload="this.closest('.hero-photo').classList.add('on')"></div>
@@ -501,7 +501,7 @@
   </div>
 </div>
 
-<section class="jstats-band">
+<section class="jstats-band" aria-label="HomeINN in cijfers">
   <div class="jstats-inner">
     <div class="jstat rv"><div class="jstat-val" data-count="2007" data-from="1990">2007</div><div class="jstat-lbl">Ervaring van het team sinds</div></div>
     <div class="jstat rv d1"><div class="jstat-val" data-count="25" data-suffix="+">25+</div><div class="jstat-lbl">Panden door ons team aangekocht en ontwikkeld</div></div>
@@ -574,7 +574,7 @@
           <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Passeerdatum in overleg — ook op termijn</span></li>
           <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Ook verhuurd, gedateerd of met achterstallig onderhoud</span></li>
         </ul>
-        <a class="btn btn-primary pa-cta" href="pand-verkopen.html">Uw pand aanbieden <span class="arr">→</span></a>
+        <a class="btn btn-primary pa-cta" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a>
         <p class="pa-note">Liever eerst even sparren? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
       </aside>
     </div>
@@ -872,7 +872,7 @@
       </div>
       <div class="faq-item">
         <button class="faq-q" type="button" aria-expanded="false">Welke risico&#39;s loop ik als ik meedoe?<span class="faq-tog" aria-hidden="true">+</span></button>
-        <div class="faq-a"><p>Meedoen in een project is beleggen, geen sparen. Het rendement is niet gegarandeerd: vallen de verkoop- of verhuurresultaten tegen, dan kan het rendement lager uitvallen of kan een deel van uw inleg verloren gaan. In het verleden behaalde resultaten bieden geen zekerheid voor de toekomst. Dit is geen aanbieding van effecten en geen beleggingsadvies — vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren.</p></div>
+        <div class="faq-a"><p>Meedoen in een project is beleggen, geen sparen. Het rendement is niet gegarandeerd: vallen de verkoop- of verhuurresultaten tegen, dan kan het rendement lager uitvallen of kan een deel van uw inleg verloren gaan. In het verleden behaalde resultaten bieden geen zekerheid voor de toekomst. Deze pagina is een uitnodiging tot kennismaking, geen aanbod: deelname komt pas tot stand na een persoonlijk gesprek en een individuele overeenkomst. Dit is geen beleggingsadvies — vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" type="button" aria-expanded="false">Koopt HomeINN mijn pand echt zelf, of bemiddelt u?<span class="faq-tog" aria-hidden="true">+</span></button>
@@ -914,7 +914,7 @@
     <p class="cta-lede rv d1">Eén gesprek van dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. U ontvangt de volledige projectinformatie — aankoopsom, verbouwbudget, planning en voorwaarden — voordat u iets beslist.</p>
     <div class="cta-acties">
       <a class="btn btn-primary" href="contact.html" onclick="openModal('Investeren in een project');return false">Investeer mee in een project <span class="arr">→</span></a>
-      <a class="btn btn-outline-light" href="pand-verkopen.html">Uw pand aanbieden <span class="arr">→</span></a>
+      <a class="btn btn-outline-light" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a>
     </div>
     <p class="cta-micro rv d2">Reactie binnen vier uur op werkdagen · Vertrouwelijk · Geheel vrijblijvend</p>
   </div>
@@ -1017,9 +1017,9 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="lead-cloud.js?v=20260906b" defer></script>
-<script src="site-nav.js?v=20260906b"></script>
-<script src="homeinn-public.js?v=20260906b"></script>
+<script src="lead-cloud.js?v=20260906j" defer></script>
+<script src="site-nav.js?v=20260906j"></script>
+<script src="homeinn-public.js?v=20260906j"></script>
 <script src="lightbox.js?v=20260705" defer></script>
 </body>
 </html>

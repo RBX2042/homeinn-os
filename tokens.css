@@ -51,6 +51,14 @@
   /* — Semantisch ———————————————————————————————————————————————— */
   --red:         #b03a3a;          /* fout / negatief */
   --green:       #1e6a42;          /* succes / positief */
+  /* Meldingsvlakken (formulierbevestiging/-fout). Eigen, donkerdere inkt dan
+     --red/--green: die halen op deze zachte ondergronden 5,3–6,0:1, deze 7,6–7,8:1. */
+  --green-bg:    #eef6ef;          /* succes: achtergrond */
+  --green-line:  #2d7a46;          /* succes: randaccent */
+  --green-ink:   #215838;          /* succes: tekst */
+  --red-bg:      #fbefec;          /* fout: achtergrond */
+  --red-line:    #b74b2d;          /* fout: randaccent */
+  --red-ink:     #7f3220;          /* fout: tekst */
 
   /* — Lijnen & randen ——————————————————————————————————————————— */
   --line:         rgba(12, 11, 9, .1);          /* standaard hairline */
@@ -76,6 +84,15 @@
   --text-3xl:  2.25rem;   /* 36px */
   --text-4xl:  3rem;      /* 48px */
   --text-5xl:  4rem;      /* 64px */
+
+  /* Vloeiende kop-schaal — drie stappen i.p.v. de elf losse clamp()-waarden
+     die op de site rondzwierven. --h2 is de werkpaardschaal (was al de meest
+     gebruikte waarde), --h2-lg voor openingsstatements, --h2-sm voor compacte
+     blokken zoals juridische documenten en blog-CTA's. */
+  --h2:     clamp(2rem, 3.5vw, 3rem);
+  --h2-lg:  clamp(2.2rem, 4.2vw, 3.5rem);
+  --h2-sm:  clamp(1.7rem, 2.8vw, 2.4rem);
+  --h2-prose: clamp(1.5rem, 3vw, 2rem);  /* tussenkoppen binnen een artikel; blijft bewust onder de artikel-h1 */
 
   --leading-tight:  1.15;
   --leading-snug:   1.3;

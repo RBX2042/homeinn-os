@@ -140,8 +140,8 @@ function page(w) {
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260906b">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
+  <link rel="stylesheet" href="tokens.css?v=20260906j">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906j">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -274,7 +274,7 @@ function page(w) {
     <section class="vgl-section">
       <div class="vgl-inner">
         <div class="proc-head"><span class="t-eyebrow">Eerlijk vergeleken</span><h2>Direct aan HomeINN<br>of via de <em>makelaar?</em></h2></div>
-        <div class="vgl-wrap">
+        <div class="vgl-wrap" tabindex="0" role="region" aria-label="Vergelijkingstabel — horizontaal scrollbaar">
           <table class="vgl-table">
             <thead><tr><th></th><th class="vgl-hi">Direct aan HomeINN</th><th>Via een makelaar</th></tr></thead>
             <tbody>${vglRows}</tbody>
@@ -293,7 +293,7 @@ function page(w) {
 
     ${buurLinks(w.slug)}
 
-    <div class="cta-band"><div class="cta-inner"><h2>Uw pand in ${esc(w.naam)} verkopen? Vraag een vrijblijvend <em>voorstel</em> aan.</h2><a class="btn btn-dark" href="pand-verkopen.html">Voorstel binnen 48 uur <span class="arr">→</span></a></div></div>
+    <div class="cta-band"><div class="cta-inner"><h2>Uw pand in ${esc(w.naam)} verkopen? Vraag een vrijblijvend <em>voorstel</em> aan.</h2><a class="btn btn-dark" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div></div>
   </main>
 
   <footer class="site-foot">
@@ -348,7 +348,7 @@ function page(w) {
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260906b"></script>
+  <script src="site-nav.js?v=20260906j"></script>
 </body>
 </html>
 `;
