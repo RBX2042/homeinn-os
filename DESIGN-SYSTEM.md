@@ -143,6 +143,7 @@ intact blijft.
 8. **`--ink4` niet op `--cream2`** (4,2:1). Daar hoort `--ink3` (5,8:1).
 9. **Eén footer.** Subpagina's gebruiken `.site-foot`; die staat óók in `build-legal.js`, `build-spokes.js` en `build-kennis.js`. Wijzig je hem, wijzig hem daar mee en draai de drie generatoren — anders is hij na de volgende build weg.
 10. **CSS of JS gewijzigd?** Hoog de `?v=`-token op in alle `*.html` én de drie build-scripts, en `CACHE` in `sw.js`. Zonder dat krijgen terugkerende bezoekers het oude bestand.
+11. **`fonts/fonts.css` valt onder de `/fonts/*`-regel in `vercel.json`: een jaar `immutable`.** Zonder `?v=` zou een wijziging daar een jaar lang niet doorkomen. Neem hem dus mee in dezelfde bump als regel 10.
 
 ---
 
