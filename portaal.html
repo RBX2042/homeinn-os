@@ -14,8 +14,8 @@
   <meta name="apple-mobile-web-app-title" content="HomeINN OS">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260614">
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260906b">
-  <link rel="stylesheet" href="styles.css?v=20260717">
+  <link rel="stylesheet" href="tokens.css?v=20260906j">
+  <link rel="stylesheet" href="styles.css?v=20260906j">
 </head>
 <body>
 <a class="skip-link" href="#app">Naar de inhoud</a>
@@ -79,14 +79,14 @@
     </header>
 
     <!-- ===== Website preview ===== -->
-    <section class="view" id="landing">
+    <section class="view" id="landing" aria-label="Websitevoorbeeld">
       <iframe class="public-site-frame" src="homeinn-public.html" title="HomeINN landingspagina"></iframe>
       <button class="btn primary back-to-app" id="back-to-app">← Terug naar portaal</button>
     </section>
 
 
     <!-- ===== Aanvragen (website) ===== -->
-    <section class="view" id="inbox">
+    <section class="view" id="inbox" aria-label="Aanvragen via de website">
       <div class="kpi-grid three" id="inbox-kpis"></div>
       <div class="panel">
         <div class="panel-head">
@@ -115,7 +115,7 @@
     </section>
 
     <!-- ===== Dashboard ===== -->
-    <section class="view active" id="dashboard">
+    <section class="view active" id="dashboard" aria-label="Dashboard: kerncijfers, kapitaal per pand en actielijst">
       <div class="kpi-grid" id="kpi-grid"></div>
       <div class="dash-grid">
         <section class="panel wide">
@@ -159,7 +159,7 @@
     </section>
 
     <!-- ===== Aankoopkansen ===== -->
-    <section class="view" id="deals">
+    <section class="view" id="deals" aria-label="Aankoopkansen: pijplijn en archief">
       <div id="deal-list-wrap">
         <div class="kpi-grid three" id="deal-kpis"></div>
         <div class="panel">
@@ -190,7 +190,7 @@
     </section>
 
     <!-- ===== Dealcalculator ===== -->
-    <section class="view" id="calculator">
+    <section class="view" id="calculator" aria-label="Dealcalculator met scenario’s">
       <div class="split">
         <section class="panel">
           <div class="panel-head">
@@ -236,7 +236,7 @@
     </section>
 
     <!-- ===== Portfolio / Panden ===== -->
-    <section class="view" id="portfolio">
+    <section class="view" id="portfolio" aria-label="Panden in portfolio">
       <div id="portfolio-list-wrap">
         <div class="kpi-grid three" id="portfolio-kpis"></div>
         <div class="panel">
@@ -278,7 +278,7 @@
     </section>
 
     <!-- ===== Ontwikkelprojecten ===== -->
-    <section class="view" id="projects">
+    <section class="view" id="projects" aria-label="Ontwikkelprojecten">
       <div id="project-list-wrap">
         <div class="panel">
           <div class="panel-head">
@@ -318,7 +318,7 @@
     </section>
 
     <!-- ===== Kosten ===== -->
-    <section class="view" id="costs">
+    <section class="view" id="costs" aria-label="Kosten en verplichtingen">
       <div class="kpi-grid three" id="cost-kpis"></div>
       <div class="panel">
         <div class="panel-head">
@@ -358,7 +358,7 @@
     </section>
 
     <!-- ===== Verkoop ===== -->
-    <section class="view" id="sales">
+    <section class="view" id="sales" aria-label="Verkoop: te koop, onder bod en verkocht">
       <div class="kpi-grid" id="sales-kpis"></div>
       <div class="panel">
         <div class="panel-head">
@@ -415,52 +415,52 @@
     </section>
 
     <!-- ===== Geld-in & huur ===== -->
-    <section class="view" id="money">
+    <section class="view" id="money" aria-label="Geld-in en huurinkomsten">
       <div id="money-body"></div>
     </section>
 
     <!-- ===== Adverteren ===== -->
-    <section class="view" id="ads">
+    <section class="view" id="ads" aria-label="Adverteren">
       <div id="ads-body"></div>
     </section>
 
     <!-- ===== Rapportage ===== -->
-    <section class="view" id="reports">
+    <section class="view" id="reports" aria-label="Rapportage">
       <div id="report-body"></div>
     </section>
 
     <!-- ===== Onderhoud & meldingen ===== -->
-    <section class="view" id="maintenance">
+    <section class="view" id="maintenance" aria-label="Onderhoud en meldingen">
       <div id="maintenance-body"></div>
     </section>
 
     <!-- ===== Investeerders-overzicht ===== -->
-    <section class="view" id="investors">
+    <section class="view" id="investors" aria-label="Investeerdersoverzicht">
       <div id="investors-body"></div>
     </section>
 
     <!-- ===== Financiering ===== -->
-    <section class="view" id="finance">
+    <section class="view" id="finance" aria-label="Financiering">
       <div id="finance-body"></div>
     </section>
 
     <!-- ===== Liquiditeit ===== -->
-    <section class="view" id="liquidity">
+    <section class="view" id="liquidity" aria-label="Liquiditeit">
       <div id="liquidity-body"></div>
     </section>
 
     <!-- ===== Mailing / nieuwsbrief ===== -->
-    <section class="view" id="mailing">
+    <section class="view" id="mailing" aria-label="Mailing en nieuwsbrief">
       <div id="mailing-body"></div>
     </section>
 
     <!-- ===== Contracten ===== -->
-    <section class="view" id="contracts">
+    <section class="view" id="contracts" aria-label="Contracten">
       <div id="contracts-body"></div>
     </section>
 
     <!-- ===== Planning ===== -->
-    <section class="view" id="planning">
+    <section class="view" id="planning" aria-label="Weekplanning">
       <div class="panel">
         <div class="panel-head">
           <div>
@@ -479,7 +479,7 @@
     </section>
 
     <!-- ===== Relaties ===== -->
-    <section class="view" id="relations">
+    <section class="view" id="relations" aria-label="Relaties">
       <div class="panel">
         <div class="panel-head">
           <div>
@@ -515,7 +515,7 @@
     </section>
 
     <!-- ===== Instellingen ===== -->
-    <section class="view" id="settings">
+    <section class="view" id="settings" aria-label="Instellingen en bedrijfsgegevens">
       <div class="split">
         <section class="panel">
           <div class="panel-head">

@@ -8,12 +8,12 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/favicon-512.png?v=20260614">
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260906b">
+  <link rel="stylesheet" href="tokens.css?v=20260906j">
   <style>
     /* Design-tokens komen uit tokens.css (single source of truth). */
     *{box-sizing:border-box}
     body{margin:0;font-family:'Outfit',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
-    a{color:var(--gold)}
+    a{color:var(--gold-ink)}
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;background:var(--navy);color:#fff}
     .topbar .brand{display:flex;align-items:center;gap:10px}
     .topbar img{height:30px}
@@ -24,18 +24,18 @@
     .login-card{max-width:440px;margin:8vh auto 0}
     h1{font-family:var(--serif);font-weight:400;font-size:2rem;line-height:1.15;letter-spacing:-.01em;margin:0 0 6px;color:var(--navy)}
     h2{font-family:var(--serif);font-weight:600;font-size:1.4rem;line-height:1.2;letter-spacing:-.01em;margin:0 0 4px;color:var(--navy)}
-    .eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.72rem;color:var(--gold);font-weight:600;margin:0 0 8px}
-    .muted{color:var(--muted)}
+    .eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.72rem;color:var(--gold-ink);font-weight:600;margin:0 0 8px}
+    .muted{color:var(--ink3)}
     label{display:block;font-weight:600;font-size:.85rem;color:var(--navy);margin:14px 0 6px}
     input[type=email],textarea,.signname{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;transition:border-color .2s ease,box-shadow .2s ease}
-    input[type=email]:focus,textarea:focus,.signname:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
+    input[type=email]:focus,textarea:focus,.signname:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
     textarea{resize:vertical;min-height:70px}
     table{width:100%;border-collapse:collapse;font-size:.9rem}
     th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
     td{font-variant-numeric:tabular-nums}
-    th{font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--muted)}
+    th{font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--ink3)}
     .amount,.amount td,td.amount{font-family:var(--serif);font-weight:600;font-size:1.1rem;color:var(--navy);font-variant-numeric:tabular-nums;letter-spacing:0}
-    .empty{color:var(--muted);font-style:italic}
+    .empty{color:var(--ink3);font-style:italic}
     .contract-doc{max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;font-size:.82rem;line-height:1.55;margin:10px 0;color:#222}
     .contract-doc h1{font-family:var(--serif);font-weight:600;font-size:1.3rem;letter-spacing:-.01em;color:var(--navy);margin:0 0 4px}
     .contract-doc h2{font-family:var(--serif);font-weight:600;font-size:1.02rem;letter-spacing:-.01em;color:var(--navy);margin:12px 0 3px}
@@ -43,13 +43,13 @@
     .contract-doc img{max-width:110px;height:auto}
     .contract-doc table{width:100%;border-collapse:collapse}
     .contract-doc .doc-sign{display:flex;gap:24px;margin-top:14px}
-    .contract-doc .doc-sign .line{border-top:1px solid #999;margin-top:24px;padding-top:3px;color:#777;font-size:.74rem}
+    .contract-doc .doc-sign .line{border-top:1px solid #999;margin-top:24px;padding-top:3px;color:var(--ink3);font-size:.74rem}
     .signname{margin-top:4px}
     .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;box-shadow:0 18px 48px rgba(11,30,48,.18)}
     .toast.show{opacity:1}
-    .foot{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
+    .foot{text-align:center;color:var(--ink3);font-size:.8rem;margin-top:30px}
   </style>
-  <link rel="stylesheet" href="portal.css?v=20260906b">
+  <link rel="stylesheet" href="portal.css?v=20260906j">
 </head>
 <body>
 <a class="skip-link" href="#app">Naar de inhoud</a>

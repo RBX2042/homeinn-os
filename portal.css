@@ -22,6 +22,11 @@
   border: 0;
   border-radius: var(--radius-lg);
   padding: 11px 20px;
+  /* Raakvlak: minstens 44px hoog; inline-flex houdt het label gecentreerd */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font: inherit;
   font-weight: 600;
   font-size: var(--text-sm);
@@ -35,7 +40,7 @@
 .btn.primary { background: var(--gold); color: var(--navy); }
 .btn.primary:hover { background: var(--gold2); }
 .btn.secondary { background: transparent; color: var(--navy); border: 1px solid var(--line); }
-.btn.secondary:hover { border-color: var(--gold); color: var(--gold); }
+.btn.secondary:hover { border-color: var(--gold); color: var(--gold-ink); }
 .btn.ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.4); }
 .btn.ghost:hover { border-color: var(--gold2); color: var(--gold2); }
 .btn.slim { padding: 8px 12px; font-size: var(--text-xs); }
@@ -49,11 +54,11 @@
   background: transparent; color: var(--navy); border: 1px solid var(--line);
   text-transform: none; letter-spacing: 0;
 }
-.btn.outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn.outline:hover { border-color: var(--gold); color: var(--gold-ink); }
 .printbtn, .msgbtn {
   transition: border-color var(--t-fast), color var(--t-fast), background-color var(--t-fast), transform var(--t-fast);
 }
-.printbtn:hover, .msgbtn:hover { border-color: var(--gold); color: var(--gold); }
+.printbtn:hover, .msgbtn:hover { border-color: var(--gold); color: var(--gold-ink); }
 .printbtn:active, .msgbtn:active { transform: translateY(1px); }
 
 /* — Kaarten met gouden signatuurlijn ————————————————————————————————— */
@@ -83,7 +88,6 @@ input[type=tel], input[type=date], textarea, select, .signname {
 input[type=email]:focus, input[type=text]:focus, input[type=password]:focus,
 input[type=number]:focus, input[type=tel]:focus, input[type=date]:focus,
 textarea:focus, select:focus, .signname:focus {
-  outline: none;
   border-color: rgba(var(--gold-rgb), .6);
   box-shadow: 0 0 0 3px rgba(var(--gold-rgb), .13);
 }
@@ -101,26 +105,52 @@ textarea:focus, select:focus, .signname:focus {
   color: var(--navy);
 }
 .badge.green { background: rgba(30,106,66,.14); color: var(--green); }
-.badge.gold  { background: rgba(var(--gold-rgb),.16); color: var(--gold); }
+.badge.gold  { background: rgba(var(--gold-rgb),.16); color: var(--gold-ink); }
 .badge.red   { background: rgba(176,58,58,.14); color: var(--red); }
 .badge.blue  { background: rgba(11,30,48,.10); color: var(--navy); }
-.badge.gray  { background: rgba(111,117,111,.14); color: var(--muted); }
+.badge.gray  { background: rgba(111,117,111,.14); color: var(--ink3); }
 
 /* — Toast ——————————————————————————————————————————————————————————————— */
 .toast { box-shadow: var(--shadow); border-radius: var(--radius-lg); }
 
 /* — Topbar-signatuur (gouden onderlijn) ——————————————————————————————— */
 .topbar { border-bottom: 2px solid var(--gold); }
+/* Het logo heeft width="400" in de HTML; zonder width:auto rekende de browser
+   daarmee (400px breed, uitgerekt) en liep de topbar op 375px buiten beeld. */
+.topbar img { width: auto; }
+
+/* — Skip-link ————————————————————————————————————————————————————————
+   Stond op de portalen ongestyled: altijd zichtbaar bovenaan en maar 20px
+   hoog. Zelfde patroon als de publieke site, met een 44px-raakvlak zodra
+   hij focus krijgt. */
+.skip-link { position: absolute; left: -9999px; top: 0; }
+.skip-link:focus {
+  left: 1rem; top: 1rem; z-index: var(--z-overlay);
+  display: inline-flex; align-items: center; min-height: 44px;
+  background: var(--navy); color: #fff; padding: .6rem 1rem;
+  border: 1px solid var(--gold2); border-radius: var(--radius);
+}
 
 /* — Tabelkoppen uniform gedempt ——————————————————————————————————————— */
-th { color: var(--muted); }
+th { color: var(--ink3); }
 
-/* — Focus: zet de bestaande focus-tokens daadwerkelijk in —————————————— */
-:where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-offset);
-  border-radius: var(--radius-sm);
+/* — Focus: één duidelijke ring op alles wat focus kan krijgen ——————————
+   :where() heeft specificiteit 0 en verloor van de `input[...]:focus`-regels
+   van de pagina's zelf (die `outline:none` zetten); daarom hier een gewone
+   selectorlijst. Kleur: --gold2 haalt op crème/paneel maar 2,15:1, dus op
+   licht --gold-ink (5,1:1 op crème, 5,4:1 op paneel); op de navy topbar
+   blijft --gold2 (7,5:1). De border-radius is hier weg: die maakte van de
+   10px-velden bij focus 4px-velden. */
+a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible,
+select:focus-visible, textarea:focus-visible, .signname:focus-visible,
+input[type=email]:focus-visible, input[type=text]:focus-visible,
+input[type=password]:focus-visible, input[type=number]:focus-visible,
+input[type=tel]:focus-visible, input[type=date]:focus-visible, input:focus-visible {
+  outline: 2px solid var(--gold-ink);
+  outline-offset: 2px;
 }
+.topbar :focus-visible { outline-color: var(--gold2); }
+:focus:not(:focus-visible) { outline: none; }
 
 /* — Laadstaat: gouden spinner ————————————————————————————————————————— */
 .hi-spin {
