@@ -140,8 +140,8 @@ function page(w) {
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260906j">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260906j">
+  <link rel="stylesheet" href="tokens.css?v=20260906k">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906k">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -348,7 +348,7 @@ function page(w) {
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260906j"></script>
+  <script src="site-nav.js?v=20260906k"></script>
 </body>
 </html>
 `;

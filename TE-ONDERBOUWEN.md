@@ -30,13 +30,25 @@ verdedigbaar als een koper, investeerder of toezichthouder ernaar vraagt.
 - **Cookieclaim**: er staat nergens in de HTML of JS een `document.cookie`, analytics-
   of trackingaanroep, dus "deze website plaatst geen cookies" is waar.
 
-## Twee inhoudelijke punten om te bevestigen
+## Wie bouwt er — bevestigd op 6 september 2026
 
-1. **Wie bouwt er?** De site zei op elf plekken "vast eigen bouwteam" én noemde
-   tegelijk één vaste externe bouwpartner (Lageweg Services B.V.). Dat is
-   gelijkgetrokken naar "onze vaste bouwpartner", de voorzichtigste lezing. Werkt
-   HomeINN óók met eigen personeel in dienst, dan mag de formulering terug.
-2. **Het investeringsaanbod** — zie `COMPLIANCE-INVESTEREN.md`.
+**HomeINN bouwt uitsluitend met Lageweg Services B.V.** Er is geen eigen
+bouwpersoneel. Bevestigd door de eigenaar.
+
+De site sprak op elf plekken over een "vast eigen bouwteam" en op twee plekken
+over "onze eigen bouwpartner" — beide onjuist. Alles staat nu op **"onze vaste
+bouwpartner"**, met de naam voluit op `over-ons.html` en
+`projectontwikkeling.html`. Ook weggehaald: formuleringen die suggereerden dat
+HomeINN zélf verbouwt ("zelf verbouwen met onze vaste bouwpartner",
+"ontwikkelen en verduurzamen doen wij daarna zelf").
+
+Let hierop bij nieuwe teksten: *aankopen*, *ontwikkelen sturen*, *verhuren*,
+*beheren* en *verkopen* doet HomeINN zelf; **bouwen niet**. "Wij verbouwen" is
+alleen correct met "met onze vaste bouwpartner" erbij.
+
+## Openstaand
+
+**Het investeringsaanbod** — zie `COMPLIANCE-INVESTEREN.md`.
 
 
 ## Leadformulieren: end-to-end getest (6 sep 2026)
