@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260905a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
+  <link rel="stylesheet" href="tokens.css?v=20260906b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
   <style>
     .iv-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .iv-top .brand img{height:34px;width:auto;display:block}
@@ -39,10 +39,6 @@
     .iv-disclaimer .box strong{font-weight:600;color:var(--gold-text)}
     .sla-gold{background:rgba(204,169,74,.16);color:var(--gold2)}
     .page-hero h1{font-size:clamp(2.75rem,5.5vw,5.25rem)}
-    .iv-foot{border-top:1px solid var(--line);background:var(--panel)}
-    .iv-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
-    .iv-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
-    .iv-foot .in a:first-child{margin-left:0}
     .ct-success{background:var(--panel);border:1px solid var(--line);padding:2.5rem;text-align:center}
     .ct-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy);margin:0 0 .75rem}
     .ct-success p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0}
@@ -107,7 +103,6 @@
     <a class="mob-sm" href="kennis.html">Kennis</a>
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
     <a class="mob-sm" href="contact.html">Contact</a>
-    <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
   <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
@@ -116,6 +111,7 @@
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
     <a href="cookies.html">Cookies</a>
+    <a href="inloggen.html">Inloggen</a>
   </div>
 </div>
 
@@ -128,7 +124,7 @@
         <p>Van persoonlijke kennismaking tot uitkering via de notaris — in drie stappen. U investeert in stenen die wij zelf aankopen en verbouwen en daarna via onze makelaar op de markt brengen, tegen een rendement dat wij per project vooraf schriftelijk met u vastleggen. Het streefrendement is 7% per jaar bij een looptijd van één jaar. Geen fonds, geen tussenlagen.</p>
         <div class="iv-hero-cta">
           <a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
-          <span class="iv-hero-micro">Streefrendement 7% per jaar · Looptijd vanaf één jaar · Uitkering via de notaris · Geen gegarandeerd rendement</span>
+          <span class="iv-hero-micro">Streefrendement 7% per jaar · Looptijd vanaf één jaar; het streefrendement van 7% per jaar geldt bij een looptijd van één jaar en wordt bij een langere looptijd per project vastgelegd · Uitkering via de notaris · Geen gegarandeerd rendement</span>
         </div>
       </div>
     </section>
@@ -234,18 +230,39 @@
     <div class="cta-band"><div class="cta-inner"><h2>Dertien woningen in eigen bezit. <em>Doe mee in een project.</em></h2><div class="cta-acties"><a class="btn btn-dark" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a><a class="btn btn-outline-dark" href="projecten.html">Bekijk de panden <span class="arr">→</span></a></div></div></div>
   </main>
 
-  <footer class="iv-foot">
+  <footer class="site-foot">
     <div class="in">
-      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links"><a href="./">Home</a><a href="projecten.html">Projecten</a><a href="over-ons.html">Over ons</a><a href="privacy.html">Privacy</a></nav>
-      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
+      <nav class="site-foot-nav" aria-label="Hoofdlinks">
+        <a href="./">Home</a>
+        <a href="projectontwikkeling.html">Projectontwikkeling</a>
+        <a href="pand-verkopen.html">Pand aanbieden</a>
+        <a href="te-koop.html">Woningaanbod</a>
+        <a href="verhuur.html">Verhuur</a>
+        <a href="vastgoedbeheer.html">Beheer</a>
+        <a href="investeren.html">Investeren</a>
+        <a href="kennis.html">Kennis</a>
+        <a href="over-ons.html">Over ons</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <nav class="site-foot-legal" aria-label="Juridisch en portaal">
+        <a href="privacy.html">Privacybeleid</a>
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="cookies.html">Cookiebeleid</a>
+        <a href="werkgebied.html">Werkgebied</a>
+        <a href="inloggen.html">Inloggen</a>
+      </nav>
+      <div class="site-foot-bot">
+        <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
+        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+      </div>
+    </div>
   </footer>
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Investeren in Rotterdams vastgoed — HomeINN","url":"https://home-inn.nl/investeren.html","inLanguage":"nl-NL","about":"Particulier meedoen in vastgoedprojecten","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-<script src="lead-cloud.js?v=20260905a" defer></script>
-<script src="site-nav.js?v=20260905a"></script>
+<script src="lead-cloud.js?v=20260906b" defer></script>
+<script src="site-nav.js?v=20260906b"></script>
 <script>
 /* Investeerdersaanvraag — eigen leadtype, zodat deze aanvragen in de inbox
    herkenbaar los staan van verkoop- en beheeraanvragen. */

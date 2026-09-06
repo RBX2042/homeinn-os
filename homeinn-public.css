@@ -44,7 +44,11 @@ body.c-text #cur-ring-inner{opacity:0}
 .t-body{font-size:.95rem;font-weight:300;line-height:1.85;color:var(--ink3)}
 .t-small{font-size:.8rem;font-weight:300;line-height:1.7;color:var(--ink4)}
 .t-label{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
-.t-body,.pk-list li,.wb-text .lead,.calc-text p,.f-desc{font-weight:400}
+.t-body{font-weight:400}
+/* .pk-list li, .wb-text .lead, .calc-text p en .f-desc stonden hier ook,
+   maar worden op :217/:239/:280/:521 met gelijke specificiteit terug op 300
+   gezet. De regel had daar dus nooit effect; hij is hier weggehaald zodat het
+   bestand niet suggereert dat die vier op 400 staan. */
 
 /* ── LAYOUT ── */
 .wrap{max-width:1320px;margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem)}
@@ -220,7 +224,9 @@ body.hero-ready .hero-micro{animation:heroUp .8s var(--ease-out) .82s both}
 .pk-check.on::after{content:'';width:3.5px;height:7px;border:solid var(--navy);border-width:0 1.5px 1.5px 0;transform:rotate(45deg);margin-top:-1px}
 .pk:hover .pk-check.on{background:var(--gold2);border-color:var(--gold2)}
 .pk-list li.dim .pk-check{border-color:rgba(255,255,255,.1)}
-.pk-list li.dim{color:rgba(255,255,255,.2)}
+.pk-list li.dim{color:rgba(255,255,255,.42)}
+/* Uitsluiting mag niet alleen in kleur zitten (WCAG 1.4.1): de tekst zegt het nu ook. */
+.pk-list li.dim .pk-uit{font-style:italic;white-space:nowrap}
 .pk-cta{display:inline-flex;align-items:center;gap:10px;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);transition:gap .25s var(--ease),color .2s}
 .pk-cta:hover{gap:16px;color:var(--gold3)}
 .pk-cta-arr{display:inline-block;transition:transform .3s var(--ease)}
@@ -465,8 +471,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .cf h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:300;color:var(--ink2);margin-bottom:2rem}
 .cf-2col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
 .cf-group{margin-bottom:1.25rem}
-.cf-group label{display:block;font-size:.67rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.55rem}
-.cf-group input,.cf-group select,.cf-group textarea{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--cream);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:300;color:var(--ink);outline:none;transition:border .2s,background .2s;border-radius:0}
+.cf-group label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.55rem}
+.cf-group input,.cf-group select,.cf-group textarea{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--cream);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:300;color:var(--ink);transition:border .2s,background .2s;border-radius:0}
 .cf-group input:focus,.cf-group select:focus,.cf-group textarea:focus{border-color:var(--gold);background:var(--white)}
 .cf-group textarea{min-height:110px;resize:vertical}
 .cf-submit{width:100%;padding:14px;background:var(--gold);color:var(--navy);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;transition:background .25s}
@@ -549,12 +555,12 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .modal-body{padding:2.25rem 2.5rem}
 .m2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .m-group{margin-bottom:1.15rem}
-.m-group label{display:block;font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.5rem}
-.m-group input,.m-group select{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--white);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:300;outline:none;transition:border .2s,box-shadow .2s}
+.m-group label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.5rem}
+.m-group input,.m-group select{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--white);font-family:'Outfit',sans-serif;font-size:.875rem;font-weight:300;transition:border .2s,box-shadow .2s}
 .m-group input:focus,.m-group select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(var(--gold-rgb),.16)}
 .m-submit{width:100%;padding:14px;background:var(--gold);color:var(--navy);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;margin-top:.75rem;transition:background .25s}
 .m-submit:hover{background:var(--gold2)}
-.m-note{text-align:center;font-size:.7rem;font-weight:300;color:var(--ink4);margin-top:.85rem}
+.m-note{text-align:center;font-size:.76rem;font-weight:300;color:var(--ink4);margin-top:.85rem}
 .modal-success{display:none;padding:3.5rem 2.5rem;text-align:center}
 .success-icon{width:52px;height:52px;background:var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.75rem;font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--navy)}
 .modal-success h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:300;color:var(--navy);margin-bottom:.75rem}
@@ -623,7 +629,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 
 /* RESPONSIVE */
 @media(max-width:960px){
-  .nav-links,.nav-cta,.nav-right{display:none}
+  .nav-links,.nav-cta{display:none} /* .nav-right wordt op :1180 in ditzelfde bereik verborgen */
   .burger{display:flex}
   .nav-logo-img{height:36px;max-width:185px}
   .pk-grid,.tarief-cards,.wb-inner,.calc-inner,.over-hero-inner,.story-inner,.contact-hero-inner,.contact-inner,.testi-grid,.blog-grid,.statement-inner,.footer-grid,.values-grid{grid-template-columns:1fr}
@@ -765,7 +771,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 
 /* ===== DESKTOP/LAPTOP — vul het gat 960–1320 + lage laptophoogtes ===== */
 /* Korte laptopschermen: hero past zonder afkappen */
-@media(min-width:961px) and (max-height:820px){
+@media(min-width:960.02px) and (max-height:820px){
   .hero h1{font-size:clamp(3rem,5vw,4.6rem)}
   .hero-copy{padding-bottom:clamp(1.5rem,3vw,2.5rem)}
   .hero-content{padding-top:calc(72px + clamp(1.5rem,3vw,2.25rem));padding-bottom:clamp(1.5rem,2.5vw,2.25rem)}
@@ -773,29 +779,29 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
   .hero-sub{margin-bottom:1.75rem}
 }
 /* Tussen-breakpoint 961–1199: 3-koloms grids worden te krap */
-@media(min-width:961px) and (max-width:1199px){
+@media(min-width:960.02px) and (max-width:1199px){
   .testi-grid,.blog-grid{grid-template-columns:repeat(2,1fr)}
   .wb-inner,.calc-inner{gap:clamp(2.5rem,5vw,4rem)}
   .calc-box{padding:2rem}
   .cr-val{font-size:1.45rem}
 }
 /* 961–1439: nav compacter zodat de 8 links + CTA op één regel passen */
-@media(min-width:961px) and (max-width:1439px){
+@media(min-width:960.02px) and (max-width:1439px){
   .nav-links{gap:1.6rem}
   .nav-links a{font-size:.72rem;letter-spacing:.08em}
   .nav-cta{margin-left:.9rem}
   #nav{padding:0 clamp(1.25rem,4vw,3.5rem)}
 }
-/* 961–1120: krapste desktop-zone — 8 links + CTA passen hier nipt; extra verdichten
-   zodat de CTA niet voorbij de viewport valt (en niet afgekapt wordt door overflow-x:hidden) */
-@media(min-width:961px) and (max-width:1120px){
-  .nav-links{gap:1.1rem}
-  .nav-links a{font-size:.7rem;letter-spacing:.05em}
-  .nav-cta{margin-left:.4rem;padding-left:18px;padding-right:18px}
+/* 961–1120: was de krapste desktop-zone. De verdichting hier werd volledig
+   overschreven door het latere blok (min-width:961px) and (max-width:1279px),
+   dus gap/letter-spacing hadden nooit effect. Sinds 'Inloggen' uit de balk is
+   (naar de footer) meet de nav op 961px nog 41px speling en op 1120px 116px —
+   verdichten is niet meer nodig. Alleen de padding blijft, die werkte wél. */
+@media(min-width:960.02px) and (max-width:1120px){
   #nav{padding:0 clamp(1.25rem,3vw,2.5rem)}
 }
 /* 961–1200: pakket-padding/prijs niet te krap in de 3-koloms hairline-grid */
-@media(min-width:961px) and (max-width:1200px){
+@media(min-width:960.02px) and (max-width:1200px){
   .pk{padding:2.5rem 1.6rem 2.25rem}
   .pk-pct{font-size:3.1rem}
   .pk-tag{top:1.5rem;right:1.5rem}
@@ -1361,7 +1367,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .cta-band--navy .cta-lede{max-width:520px;margin:1rem 0 2rem;font-size:.95rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.72)}
 
 /* ── Nav: vier items passen ruim, alleen de letterafstand iets strakker ── */
-@media(min-width:961px) and (max-width:1279px){
+@media(min-width:960.02px) and (max-width:1279px){
   .nav-links{gap:1.5rem}
   .nav-links a,.nav-links .nav-sub-toggle{letter-spacing:.08em}
 }
@@ -1403,7 +1409,7 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 .nav-sub-toggle:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
 /* Gouden knop is nu een link i.p.v. een button */
 a.nav-cta{display:inline-flex;align-items:center;text-decoration:none}
-@media(min-width:961px) and (max-width:1180px){.nav-mega-inner{grid-template-columns:1fr 1fr;gap:2.5rem}.nav-mega-feat{grid-column:1/-1;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(255,255,255,.08)}.nav-mega-btn{width:auto}.nav-mega-tel{margin-top:1rem;text-align:left}}
+@media(min-width:960.02px) and (max-width:1180px){.nav-mega-inner{grid-template-columns:1fr 1fr;gap:2.5rem}.nav-mega-feat{grid-column:1/-1;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(255,255,255,.08)}.nav-mega-btn{width:auto}.nav-mega-tel{margin-top:1rem;text-align:left}}
 @media(prefers-reduced-motion:reduce){.nav-mega{transition:opacity .01s,visibility .01s;transform:none}.nav-has-sub:hover .nav-mega,.nav-has-sub:focus-within .nav-mega,.nav-mega.on{transform:none}}
 
 /* ── Mobiel menu — met een langere menulijst liep de gecentreerde flexbox over,
@@ -1479,7 +1485,7 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 .sn a,.sn .nav-sub-toggle,.nav-links a,.nav-links .nav-sub-toggle{padding-top:.85rem;padding-bottom:.85rem;display:inline-flex;align-items:center;min-height:44px}
 .sn a.on{padding-bottom:calc(.85rem - 1px)}
 /* ── 15: subpagina-kop tussen 961 en 1439px — telefoon wijkt, menu mag krimpen ── */
-@media(min-width:961px) and (max-width:1439px){
+@media(min-width:960.02px) and (max-width:1439px){
   .sn{gap:1rem;flex-shrink:1;min-width:0}
   .sn a,.sn .nav-sub-toggle{letter-spacing:.04em;font-size:.68rem}
   .ov-top .tel,.kn-top .tel,.tk-top .tel,.vh-top .tel,.vb-top .tel,.pj-top .tel,.pp-top .tel,.wg-top .tel,.wd-top .tel,.iv-top .tel,.spoke-top .tel,.ct-top .tel,.lg-top .tel{display:none}
@@ -1499,12 +1505,12 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 .pf-foot{max-width:1320px;margin:2.5rem auto 0;display:flex;flex-wrap:wrap;gap:1rem}
 .map-load-icoon{display:flex;align-items:center;justify-content:center}
 .map-load-icoon svg{width:26px;height:26px;fill:none;stroke:var(--gold);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
-.invest-box .ib-note{font-size:.76rem;font-weight:300;line-height:1.7;color:var(--ink3);margin:.2rem 0 0}
+.invest-box .ib-note{font-size:.8rem;font-weight:300;line-height:1.7;color:var(--ink3);margin:.2rem 0 0}
 .mob-tweede{display:block;margin-top:.85rem;text-align:center;font-size:.78rem;font-weight:500;letter-spacing:.03em;color:var(--gold3,var(--gold));text-decoration:none;min-height:44px;line-height:44px}
 .mob-tweede:hover{text-decoration:underline}
 .cta-acties{display:flex;flex-wrap:wrap;gap:.85rem 1rem;align-items:center}
-.hero-risico{margin-top:.9rem;max-width:52ch;font-size:.82rem;font-weight:300;line-height:1.7;color:rgba(255,255,255,.86)}
-.hero-risico a{color:#fff;text-decoration:underline;text-underline-offset:2px}
+.hero-risico{margin-top:.5rem;max-width:600px;font-size:.78rem;font-weight:300;line-height:1.6;color:rgba(255,255,255,.58)}
+.hero-risico a{color:rgba(255,255,255,.78);text-decoration:underline;text-decoration-thickness:.5px;text-underline-offset:2px}
 .hero-risico a:hover{color:var(--gold3)}
 /* Tweede werkwijze-blok (investeerders) — zelfde component, andere ondergrond
    zodat de twee trechters visueel uit elkaar te houden zijn. */
@@ -1523,7 +1529,7 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 
 /* Mobiele leesbaarheid: broodtekst blijft >=16px ondanks de 15px-root */
 @media(max-width:720px){
-  .hero-risico{font-size:.9333rem}
+  .hero-risico{font-size:.8667rem}
   .t-body,.wb-text .lead,.contact-side p,.over-side p,.legal-doc p,.legal-doc li,
   .legal-hero-copy p,.proc-lede,.cta-lede,.statement-body p,
   .val-card p,.journey-head p,.jstep-body p,.partner-head p,.blog-body p,
@@ -1533,7 +1539,10 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 }
 
 /* Lange Nederlandse samenstellingen mogen afbreken i.p.v. onzichtbaar overlopen */
-h1,h2,h3,h4{overflow-wrap:break-word;-webkit-hyphens:auto;hyphens:auto}
+h1,h2,h3,h4{overflow-wrap:break-word}
+/* Afbreekstreepjes alleen waar een woord écht niet past (smalle telefoons);
+   op ruimere schermen brak dit koppen midden in een woord: 'Rot-terdam'. */
+@media(max-width:420px){h2,h3,h4{-webkit-hyphens:auto;hyphens:auto}}
 
 /* Subpagina's hebben een sticky kop in de flow — geen vaste-nav-compensatie nodig */
 header[class$="-top"] ~ main .page-hero,
@@ -1570,3 +1579,194 @@ header[class$="-top"] ~ main .legal-hero{padding-top:clamp(2.5rem,6vw,5rem)}
   .iv-form-sec{padding-left:1.25rem;padding-right:1.25rem}
   .iv-form-intro>p,.iv-form-punten li{font-size:1.0667rem}
 }
+
+
+/* ════════════════════════════════════════════════════════════
+   GEDEELDE SUBPAGINA-FOOTER (.site-foot)
+   ------------------------------------------------------------
+   Vervangt elf per pagina zelfgemaakte mini-footers (vb-foot,
+   ct-foot, kn-foot, spoke-foot, …). Eén set links, één opmaak,
+   raakvlakken van 44px op mobiel. De grote footer op de
+   homepagina blijft ongewijzigd.
+   ════════════════════════════════════════════════════════════ */
+.site-foot{border-top:1px solid var(--line);background:var(--panel)}
+.site-foot .in{max-width:1320px;margin:0 auto;padding:2.5rem clamp(1.5rem,5vw,5.5rem) 2rem}
+.site-foot nav{display:flex;flex-wrap:wrap;gap:0 1.6rem}
+.site-foot nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
+.site-foot nav a:hover{color:var(--gold-ink)}
+.site-foot nav a[aria-current=page]{color:var(--gold-ink)}
+.site-foot-nav{font-size:.82rem;font-weight:400}
+.site-foot-legal{font-size:.76rem;font-weight:300}
+.site-foot-legal a{color:var(--ink4)}
+.site-foot-bot{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;justify-content:space-between;align-items:center;
+  margin-top:.75rem;padding-top:1.25rem;border-top:1px solid var(--line);font-size:.76rem;color:var(--ink4)}
+.site-foot-bot small{display:block;margin-top:.25rem;font-size:.72rem;color:var(--ink4)}
+.site-foot-bot .mini-f-social{margin-left:0}
+@media(max-width:720px){
+  .site-foot .in{padding:2rem 1.25rem 1.5rem}
+  .site-foot nav{gap:0 1.25rem}
+  .site-foot-nav{font-size:.9333rem}
+  .site-foot-legal{font-size:.8667rem}
+  .site-foot-bot{font-size:.8667rem}
+  .site-foot-bot small{font-size:.8rem}
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   MICROTEKST-ONDERGRENS (audit sep 2026)
+   ------------------------------------------------------------
+   De root is 15px onder 720px, waardoor rem-waarden onder ~.8rem
+   op mobiel onder de 12px zakken. Formulierlabels, notities en
+   voetregels kwamen zo op 9,8–11,3px uit — te klein om prettig te
+   lezen op een telefoon. Deze regels leggen een ondergrens van
+   12,5px voor labels en 12–13px voor bijschriften.
+   ════════════════════════════════════════════════════════════ */
+@media(max-width:720px){
+  .m-group label,.cf-group label{font-size:.8333rem}
+  .m-note,.pa-note,.nav-mega-tel,.mob-sub,.pf-meta{font-size:.8667rem}
+  .hero-micro,.f-platform{font-size:.8rem}
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   FOCUSRING OP FORMULIERVELDEN (audit sep 2026)
+   ------------------------------------------------------------
+   De basisregels van .cf-group en .m-group zetten outline:none.
+   Met specificiteit (0,1,1) wonnen ze van de site-brede ring in
+   :where(...) (0,1,0), waardoor toetsenbordgebruikers op álle
+   lead-formulieren alleen een 1px randkleurwissel overhielden —
+   contrast 2,0:1, ver onder de vereiste 3:1 (WCAG 1.4.11).
+   Deze regels zetten de ring expliciet terug.
+   ════════════════════════════════════════════════════════════ */
+.cf-group input:focus-visible,.cf-group select:focus-visible,.cf-group textarea:focus-visible,
+.m-group input:focus-visible,.m-group select:focus-visible,.m-group textarea:focus-visible{
+  outline:2px solid var(--gold2);outline-offset:2px}
+/* De schuifregelaar (rekenmodule vastgoedbeheer) onderdrukte de ring eveneens. */
+input[type=range]:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
+
+/* Risiconoot onder een reeks 'Investeer mee'-knoppen (projectontwikkeling,
+   werkgebied). Leesbaar, niet weggemoffeld: dit is een verplichte waarschuwing. */
+.pf-risico{max-width:1320px;margin:2.25rem auto 0;font-size:.82rem;font-weight:300;line-height:1.75;color:var(--ink3)}
+.pf-risico a{color:var(--gold-ink);text-decoration:underline;text-underline-offset:2px}
+@media(max-width:720px){.pf-risico{font-size:.9333rem}}
+
+/* ════════════════════════════════════════════════════════════
+   STICKY SUBPAGINA-KOP OP TELEFOONS (audit sep 2026)
+   ------------------------------------------------------------
+   Logo + burger + knop pasten van 320 t/m 479px niet naast
+   elkaar: de knoptekst brak in tweeën en de sticky kop groeide
+   naar 82px. Hier wordt alleen ruimte teruggewonnen (logo,
+   letterafstand, padding) — de tekstgrootte blijft 10,5px,
+   zodat het label leesbaar blijft.
+   De selector is één stap specifieker dan de .xx-top .top-cta
+   regels die elke subpagina in een eigen <style> meebrengt.
+   ════════════════════════════════════════════════════════════ */
+@media(max-width:479px){
+  header[class$="-top"]{padding-left:14px;padding-right:14px;gap:8px}
+  header[class$="-top"] .brand img{max-width:104px}
+  header[class$="-top"] .top-cta{white-space:nowrap;letter-spacing:.06em;padding:11px 12px;gap:5px}
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   CONTRAST: GOUD ALS TEKST OP LICHTE ONDERGROND (audit sep 2026)
+   ------------------------------------------------------------
+   --gold (#b8933a) haalt op cream/wit maar 2,58–2,89:1 en
+   --gold2 (#cca94a) zelfs 1,83–2,25:1. Vereist is 4,5:1 (3:1 bij
+   ≥24px). De tokens hebben hiervoor al --gold-ink (5,07:1 op
+   cream) en --gold-text (6,29:1); die worden hier toegepast.
+   --gold blijft ongewijzigd voor randen, vlakken en iconen, en
+   --gold2 blijft staan op de donkere secties (7,52:1 op navy).
+   ════════════════════════════════════════════════════════════ */
+
+/* Kleine tekst */
+.proj-status{color:var(--gold-ink)}
+.disc-n,.jstep-year,.pcard-num,.pf-meta,.partner-bq-naam,
+.invest-box .ib-title,.cyclus-legend .cl-n,.cyc-cap .cyc-num,
+.wd-prijs,.legal-hero .t-eyebrow{color:var(--gold-ink)}
+.vgl-table th.vgl-hi{color:var(--gold-text)}
+.iv-form-bel a,.post-prose a{color:var(--gold-ink)}
+
+/* Eyebrows op lichte secties — de donkere hero's en panelen
+   houden --gold2, die daar juist wél voldoet. */
+.journey-head .t-eyebrow,.partner-head .t-eyebrow,
+.iv-form-intro .t-eyebrow,.statement-label.t-eyebrow{color:var(--gold-ink)}
+
+/* Cursieve accentwoorden in grote koppen op lichte ondergrond */
+.journey-head h2 em,.partner-head h2 em,.cyclus-copy h2 em,
+.iv-form-intro h2 em,.contact-h1 em,.legal-hero h1.page-h1 em{color:var(--gold-ink)}
+
+/* ── Witte tekst met te lage alpha op donkere vlakken ──
+   Op --navy haalt alpha .45 nog maar 4,18:1; .55 is de veilige
+   ondergrens (5,91:1). Alleen de falende waarden zijn opgehoogd. */
+.hero-scroll-ind span{color:rgba(255,255,255,.5)}
+.pk-sub{color:rgba(255,255,255,.62)}
+.calc-tog-btn{color:rgba(255,255,255,.6)}
+.pk-pct-lbl,.calc-row-label{color:rgba(255,255,255,.6)}
+.pakketten-note p{color:rgba(255,255,255,.62)}
+.pk-list li.dim{color:rgba(255,255,255,.58)}
+.jstat-lbl{color:rgba(255,255,255,.62)}
+
+/* ── --ink4 op --cream2 haalt 4,16:1; --ink3 haalt daar 5,81:1 ── */
+.map-load-sub,.pstep-n,.vgl-note{color:var(--ink3)}
+
+/* ── Skip-link stond op dezelfde z-index als de modal (900) en
+      verdween daar achter; hij hoort altijd bovenaan te liggen. ── */
+.skip-link:focus{z-index:1500}
+
+/* ════════════════════════════════════════════════════════════
+   RAAKVLAKKEN (audit sep 2026)
+   ------------------------------------------------------------
+   Het mobiele menu is op telefoons de énige navigatie, maar de
+   links waren 14,7–34,2px hoog. Hier krijgt alles wat aangetikt
+   wordt minimaal 44px, en de juridische rij ook genoeg contrast
+   (was rgba(255,255,255,.35) ≈ 3,0:1 op navy).
+   #mob mag nu meescrollen: met 44px per regel past het menu op
+   de kleinste telefoons niet meer volledig binnen één scherm.
+   ════════════════════════════════════════════════════════════ */
+#mob{overflow-y:auto;-webkit-overflow-scrolling:touch}
+#mob nav a{display:flex;align-items:center;min-height:44px}
+#mob .mob-legal a{display:inline-flex;align-items:center;min-height:44px;color:rgba(255,255,255,.62)}
+#mob .mob-sub a{display:inline-flex;align-items:center;min-height:44px}
+.f-col ul a{min-height:44px;display:flex;align-items:center}
+.f-contact a{min-height:44px;display:inline-flex;align-items:center;padding:0}
+nav.spoke-buren > a,nav.lg-other > a{display:inline-flex;align-items:center;min-height:44px}
+
+/* Laatste contrastresten uit de meting: de FAQ-toggle (+/−) en de
+   tabelkoppen in het dienstenoverzicht stonden op 2,89 resp. 4,16:1. */
+.faq-tog{color:var(--gold-ink)}
+.anv th{color:var(--ink3)}
+
+/* ════════════════════════════════════════════════════════════
+   MOBIELE LEESBAARHEID — SLUITSTUK (audit sep 2026)
+   ------------------------------------------------------------
+   De eerdere ≤720px-correctie miste een aantal selectors, en
+   werd bij twee andere verslagen door hogere specificiteit:
+   .cta-band--navy .cta-lede (0,2,0) en #mob .mob-sub (1,1,0).
+   Hier staan ze mét de benodigde specificiteit, zodat de
+   broodtekst op telefoons overal minstens 16px is.
+   Dit blok hoort het láátste ≤720px-blok te blijven.
+   ════════════════════════════════════════════════════════════ */
+@media(max-width:720px){
+  .cta-band--navy .cta-lede{font-size:1.0667rem}
+  #mob .mob-sub{font-size:.8667rem}
+  .page-hero p,.cyclus-copy p,.disc-head p,.pakketten-note p,
+  .blog-empty p,.modal-nav p,.aanbod-leeg p{font-size:1.0667rem}
+  /* .f-platform stond in twee blokken (.8667 en .8) — één waarde. */
+  .footer-bottom p,.f-platform{font-size:.8667rem}
+}
+
+/* De USP-strip stond op white-space:nowrap; op 320px liep de langste
+   regel 7px buiten beeld. Onder 480px mag hij afbreken. */
+@media(max-width:480px){
+  /* nowrap liet de langste regel 7px buiten beeld lopen op 320px; op
+     telefoons wordt het een nette linkslijnende kolom i.p.v. vier
+     gecentreerde regels met wisselende inspringing. */
+  .usp-inner{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:.6rem}
+  .usp{white-space:normal;align-items:flex-start}
+  .usp-check{margin-top:.15rem}
+}
+
+/* Formulierlabels op pand-verkopen en de juridische versieregel zaten
+   nog onder de 12px op telefoons. */
+@media(max-width:720px){.legal-doc>p:first-of-type{font-size:.8667rem}}

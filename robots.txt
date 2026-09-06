@@ -1,9 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /portaal.html
-Disallow: /investeerders.html
-Disallow: /huurders.html
-Disallow: /kopers.html
-Disallow: /verkoper.html
+
+# De portalen en het inlogscherm dragen zelf <meta name="robots" content="noindex">.
+# Ze worden bewust NIET met Disallow geblokkeerd: een geblokkeerde pagina mag niet
+# opgehaald worden, waardoor de noindex nooit gelezen wordt en de URL alsnog in de
+# resultaten kan blijven staan.
 
 Sitemap: https://home-inn.nl/sitemap.xml

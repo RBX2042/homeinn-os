@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260905a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
+  <link rel="stylesheet" href="tokens.css?v=20260906b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
   <style>
     /* Slimme kop + pagina-specifieke aanvullingen. Tokens uit tokens.css; componenten uit homeinn-public.css. */
     .vb-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -55,12 +55,6 @@
     .vb-offerte .vb-form-success{display:none;background:var(--panel);border:1px solid var(--line);padding:2.5rem;text-align:center}
     .vb-offerte .vb-form-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy);margin:0 0 .75rem}
     .vb-offerte .vb-form-success p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0}
-    .vb-foot{border-top:1px solid var(--line);background:var(--panel)}
-    .vb-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);
-      display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
-    .vb-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
-    .vb-foot .in a:first-child{margin-left:0}
-    .vb-foot .in a:hover{color:var(--gold-ink)}
     .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
   </style>
 </head>
@@ -128,7 +122,6 @@
     <a class="mob-sm" href="kennis.html">Kennis</a>
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
     <a class="mob-sm" href="contact.html">Contact</a>
-    <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
   <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
@@ -137,6 +130,7 @@
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
     <a href="cookies.html">Cookies</a>
+    <a href="inloggen.html">Inloggen</a>
   </div>
 </div>
 
@@ -165,7 +159,7 @@
     <div class="pakketten-bg">
       <div class="pakketten-head">
         <div>
-          <span class="t-eyebrow" style="color:rgba(var(--gold-rgb),.7)">Drie pakketten</span>
+          <span class="t-eyebrow">Drie pakketten</span>
           <h2 style="margin-top:.75rem">Eén basis. Drie<br>niveaus van <em>ontzorgen.</em></h2>
         </div>
         <p>Elk pakket is gebouwd op het vorige — u start waar ú wilt en groeit wanneer u er klaar voor bent. Alle tarieven zijn exclusief btw (21%); aan particuliere verhuurders tonen wij daarnaast de prijs inclusief btw.</p>
@@ -186,8 +180,8 @@
             <li><span class="pk-check on"></span>Maandelijkse financiële rapportage</li>
             <li><span class="pk-check on"></span>Communicatie huurder (administratief)</li>
             <li><span class="pk-check on"></span>Document- en verzekeringsbeheer</li>
-            <li class="dim"><span class="pk-check"></span>Technisch en onderhoudsbeheer</li>
-            <li class="dim"><span class="pk-check"></span>24/7 storingslijn voor huurders</li>
+            <li class="dim"><span class="pk-check"></span>Technisch en onderhoudsbeheer <span class="pk-uit">— niet inbegrepen</span></li>
+            <li class="dim"><span class="pk-check"></span>24/7 storingslijn voor huurders <span class="pk-uit">— niet inbegrepen</span></li>
           </ul>
           <button class="pk-cta" type="button" data-offerte>Start met Core Management <span class="pk-cta-arr">→</span></button>
         </div>
@@ -242,10 +236,10 @@
     <section class="calc-section section">
       <div class="calc-inner">
         <div class="calc-text">
-          <span class="t-eyebrow" style="color:rgba(var(--gold-rgb),.7)">Bereken uw tarief</span>
+          <span class="t-eyebrow">Bereken uw tarief</span>
           <div class="rule" style="margin-top:1.25rem"></div>
           <h2>Hoeveel betaalt<br>u aan HomeINN<br>per <em>maand?</em></h2>
-          <p>Onze tarieven zijn altijd transparant. Stel uw huurprijs in, kies een pakket en zie direct uw maandkosten en netto-uitbetaling. U betaalt nooit meer dan het percentage of het minimumtarief rechtvaardigt.</p>
+          <p>Onze tarieven zijn vooraf transparant. Stel uw huurprijs in, kies een pakket en zie direct uw maandkosten en netto-uitbetaling. U betaalt nooit meer dan het percentage of het minimumtarief rechtvaardigt.</p>
         </div>
         <div class="calc-box">
           <div class="calc-row">
@@ -306,7 +300,7 @@
         <div class="val-card"><div class="val-eyebrow">Resultaat</div><h3>Rendement voorop</h3><p>Wij sturen op bezetting, onderhoudslasten en huurprijs binnen het wettelijk kader — uw rendement, niet ons uurtje.</p></div>
         <div class="val-card"><div class="val-eyebrow">Lokale kennis</div><h3>Rotterdam door en door</h3><p>Wij kennen de wijken, de huurders en de regelgeving. Dat scheelt leegstand en verrassingen.</p></div>
         <div class="val-card"><div class="val-eyebrow">Partnerschap</div><h3>Wij investeren mee</h3><p>Met de Performance Partner dragen wij tot 50% van projectkosten — co-investering, geen lening.</p></div>
-        <div class="val-card"><div class="val-eyebrow">Compliance</div><h3>Altijd volgens de regels</h3><p>Huurcontracten, WWS-punten en indexering conform de actuele Rotterdamse en landelijke regelgeving.</p></div>
+        <div class="val-card"><div class="val-eyebrow">Compliance</div><h3>Conform de actuele regelgeving</h3><p>Huurcontracten, WWS-punten en indexering conform de actuele Rotterdamse en landelijke regelgeving.</p></div>
       </div>
     </section>
 
@@ -342,7 +336,7 @@
               <div class="cf-group"><label for="vb-phone">Telefoonnummer</label><input id="vb-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
             </div>
             <div class="cf-2col">
-              <div class="cf-group"><label for="vb-portfolio">Aantal objecten</label><select id="vb-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
+              <div class="cf-group"><label for="vb-portfolio">Aantal objecten</label><select id="vb-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>11 of meer objecten</option></select></div>
               <div class="cf-group"><label for="vb-package">Interesse in pakket</label><select id="vb-package" name="package_interest"><option>Weet ik nog niet — graag advies</option><option>Alleen huurder plaatsen (€ 395,- eenmalig)</option><option>Core Management (5%)</option><option>Full Operational (8%)</option><option>Performance Partner (8%+)</option></select></div>
             </div>
             <div class="cf-group"><label for="vb-message">Toelichting (optioneel)</label><textarea id="vb-message" name="message" placeholder="Vertel kort over uw vastgoed: locatie, type, huidige situatie..."></textarea></div>
@@ -360,15 +354,32 @@
     <div class="cta-band"><div class="cta-inner"><h2>Liever uw pand <em>verkopen</em> in plaats van verhuren?</h2><a class="btn btn-dark" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div></div>
   </main>
 
-  <footer class="vb-foot">
+  <footer class="site-foot">
     <div class="in">
-      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links">
+      <nav class="site-foot-nav" aria-label="Hoofdlinks">
         <a href="./">Home</a>
+        <a href="projectontwikkeling.html">Projectontwikkeling</a>
         <a href="pand-verkopen.html">Pand aanbieden</a>
-        <a href="privacy.html">Privacy</a>
+        <a href="te-koop.html">Woningaanbod</a>
+        <a href="verhuur.html">Verhuur</a>
+        <a href="vastgoedbeheer.html">Beheer</a>
+        <a href="investeren.html">Investeren</a>
+        <a href="kennis.html">Kennis</a>
+        <a href="over-ons.html">Over ons</a>
+        <a href="contact.html">Contact</a>
       </nav>
-      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
+      <nav class="site-foot-legal" aria-label="Juridisch en portaal">
+        <a href="privacy.html">Privacybeleid</a>
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="cookies.html">Cookiebeleid</a>
+        <a href="werkgebied.html">Werkgebied</a>
+        <a href="inloggen.html">Inloggen</a>
+      </nav>
+      <div class="site-foot-bot">
+        <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
+        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+      </div>
+    </div>
   </footer>
 
   <script type="application/ld+json">
@@ -443,7 +454,7 @@
     ]
   }
   </script>
-  <script src="lead-cloud.js?v=20260905a" defer></script>
+  <script src="lead-cloud.js?v=20260906b" defer></script>
   <script>
   (function(){
     'use strict';
@@ -537,6 +548,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260905a"></script>
+<script src="site-nav.js?v=20260906b"></script>
 </body>
 </html>

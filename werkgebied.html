@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260905a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
+  <link rel="stylesheet" href="tokens.css?v=20260906b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
   <style>
     .wg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .wg-top .brand img{height:34px;width:auto;display:block}
@@ -47,11 +47,6 @@
     .wg-card .wg-link{margin-top:1rem;font-size:.78rem;font-weight:600;letter-spacing:.04em;color:var(--gold-ink)}
     .wg-note{max-width:1320px;margin:0 auto;padding:0 clamp(1.5rem,5vw,5.5rem) clamp(3rem,6vw,5rem);font-size:.88rem;font-weight:300;line-height:1.7;color:var(--ink3)}
     .wg-note a{color:var(--gold-ink);text-decoration:underline;text-decoration-thickness:1px}
-    .wg-foot{border-top:1px solid var(--line);background:var(--panel)}
-    .wg-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
-    .wg-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
-    .wg-foot .in a:first-child{margin-left:0}
-    .wg-foot .in a:hover{color:var(--gold-ink)}
   </style>
 </head>
 <body>
@@ -116,7 +111,6 @@
     <a class="mob-sm" href="kennis.html">Kennis</a>
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
     <a class="mob-sm" href="contact.html">Contact</a>
-    <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
   <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
@@ -125,6 +119,7 @@
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
     <a href="cookies.html">Cookies</a>
+    <a href="inloggen.html">Inloggen</a>
   </div>
 </div>
 
@@ -155,23 +150,44 @@
       <div class="proc-head"><span class="t-eyebrow">Regio</span><h2>Gemeenten in <em>de omgeving.</em></h2></div>
       <div class="wg-grid">
         <a class="wg-card" href="verkopen-schiedam.html"><h3><svg aria-hidden="true"><use href="#ic-pin"/></svg>Schiedam</h3><p>Historische binnenstad en jeneververleden, met een mix van vooroorlogse en naoorlogse bouw.</p><span class="wg-link">Verkopen in Schiedam →</span></a>
-        <a class="wg-card" href="verkopen-capelle-aan-den-ijssel.html"><h3><svg aria-hidden="true"><use href="#ic-pin"/></svg>Capelle aan den IJssel</h3><p>Naoorlogse woonwijken die grenzen aan Rotterdam-Oost — veel eengezinswoningen en flats.</p><span class="wg-link">Verkopen in Capelle a/d IJssel →</span></a>
+        <a class="wg-card" href="verkopen-capelle-aan-den-ijssel.html"><h3><svg aria-hidden="true"><use href="#ic-pin"/></svg>Capelle aan den IJssel</h3><p>Naoorlogse woonwijken die grenzen aan Rotterdam-Oost — veel eengezinswoningen en flats.</p><span class="wg-link">Verkopen in Capelle aan den IJssel →</span></a>
         <a class="wg-card" href="verkopen-barendrecht.html"><h3><svg aria-hidden="true"><use href="#ic-pin"/></svg>Barendrecht</h3><p>Forensengemeente ten zuiden van Rotterdam met veel nieuwere eengezinswoningen.</p><span class="wg-link">Verkopen in Barendrecht →</span></a>
         <a class="wg-card" href="verkopen-ridderkerk.html"><h3><svg aria-hidden="true"><use href="#ic-pin"/></svg>Ridderkerk</h3><p>Rustig wonen ten zuidoosten van Rotterdam — naoorlogse wijken en nieuwbouw.</p><span class="wg-link">Verkopen in Ridderkerk →</span></a>
         <a class="wg-card" href="verkopen-vlaardingen.html"><h3><svg aria-hidden="true"><use href="#ic-pin"/></svg>Vlaardingen</h3><p>Havenverleden en een historische kern aan de Nieuwe Maas, met gemengde woningvoorraad.</p><span class="wg-link">Verkopen in Vlaardingen →</span></a>
       </div>
     </section>
 
-    <p class="wg-note">Geen pand te verkopen, maar wel kapitaal beschikbaar? Bekijk hoe u kunt <a href="investeren.html">meefinancieren in onze ontwikkelprojecten in Rotterdam</a>.</p>
+    <p class="wg-note">Geen pand te verkopen, maar wel kapitaal beschikbaar? Bekijk hoe u kunt <a href="investeren.html">meedoen in onze ontwikkelprojecten in Rotterdam</a>. Meedoen is beleggen: het rendement is niet gegarandeerd en uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
 
     <div class="cta-band"><div class="cta-inner"><h2>Pand verkopen in <em>uw wijk?</em></h2><a class="btn btn-dark" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div></div>
   </main>
 
-  <footer class="wg-foot">
+  <footer class="site-foot">
     <div class="in">
-      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links"><a href="./">Home</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="over-ons.html">Over ons</a><a href="privacy.html">Privacy</a></nav>
-      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
+      <nav class="site-foot-nav" aria-label="Hoofdlinks">
+        <a href="./">Home</a>
+        <a href="projectontwikkeling.html">Projectontwikkeling</a>
+        <a href="pand-verkopen.html">Pand aanbieden</a>
+        <a href="te-koop.html">Woningaanbod</a>
+        <a href="verhuur.html">Verhuur</a>
+        <a href="vastgoedbeheer.html">Beheer</a>
+        <a href="investeren.html">Investeren</a>
+        <a href="kennis.html">Kennis</a>
+        <a href="over-ons.html">Over ons</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <nav class="site-foot-legal" aria-label="Juridisch en portaal">
+        <a href="privacy.html">Privacybeleid</a>
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="cookies.html">Cookiebeleid</a>
+        <a href="werkgebied.html">Werkgebied</a>
+        <a href="inloggen.html">Inloggen</a>
+      </nav>
+      <div class="site-foot-bot">
+        <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
+        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+      </div>
+    </div>
   </footer>
 
   <script type="application/ld+json">
@@ -188,6 +204,6 @@
     ]
   }
   </script>
-<script src="site-nav.js?v=20260905a"></script>
+<script src="site-nav.js?v=20260906b"></script>
 </body>
 </html>

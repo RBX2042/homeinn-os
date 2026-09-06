@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260905a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
+  <link rel="stylesheet" href="tokens.css?v=20260906b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
   <style>
     .tk-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .tk-top .brand img{height:34px;width:auto;display:block}
@@ -39,11 +39,6 @@
     .tk-form-success{display:none;background:var(--panel);border:1px solid var(--line);padding:2.5rem;text-align:center}
     .tk-form-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy);margin:0 0 .75rem}
     .tk-form-success p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0}
-    .tk-foot{border-top:1px solid var(--line);background:var(--panel)}
-    .tk-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
-    .tk-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
-    .tk-foot .in a:first-child{margin-left:0}
-    .tk-foot .in a:hover{color:var(--gold-ink)}
     .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
   </style>
 </head>
@@ -105,7 +100,6 @@
     <a class="mob-sm" href="kennis.html">Kennis</a>
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
     <a class="mob-sm" href="contact.html">Contact</a>
-    <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
   <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
@@ -114,6 +108,7 @@
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
     <a href="cookies.html">Cookies</a>
+    <a href="inloggen.html">Inloggen</a>
   </div>
 </div>
 
@@ -123,7 +118,7 @@
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Woningaanbod · Te koop &amp; in ontwikkeling</span>
         <h1>Wat wij ontwikkelen, komt hier <em>op de markt</em></h1>
-        <p>Wij ontwikkelen niet om te houden, maar om op te leveren. Elke woning is door onszelf aangekocht en verbouwd en wordt met een bouwkundig keuringsrapport opgeleverd. Hieronder staat wat er nu te koop is en wat eraan komt.</p>
+        <p>Wij ontwikkelen niet om te houden, maar om op te leveren. Elke woning is door onszelf aangekocht en verbouwd en wordt met een bouwkundig keuringsrapport opgeleverd. Hieronder staat wat eraan komt — en, zodra een pand is opgeleverd, wat er te koop staat.</p>
       </div>
     </section>
 
@@ -341,17 +336,38 @@
     <div class="cta-band"><div class="cta-inner"><h2>Benieuwd wat er <em>aankomt?</em></h2><a class="btn btn-dark" href="projecten.html">Bekijk onze projecten <span class="arr">→</span></a></div></div>
   </main>
 
-  <footer class="tk-foot">
+  <footer class="site-foot">
     <div class="in">
-      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam</span>
-      <nav aria-label="Links"><a href="./">Home</a><a href="verhuur.html">Te huur</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="privacy.html">Privacy</a></nav>
-      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
+      <nav class="site-foot-nav" aria-label="Hoofdlinks">
+        <a href="./">Home</a>
+        <a href="projectontwikkeling.html">Projectontwikkeling</a>
+        <a href="pand-verkopen.html">Pand aanbieden</a>
+        <a href="te-koop.html">Woningaanbod</a>
+        <a href="verhuur.html">Verhuur</a>
+        <a href="vastgoedbeheer.html">Beheer</a>
+        <a href="investeren.html">Investeren</a>
+        <a href="kennis.html">Kennis</a>
+        <a href="over-ons.html">Over ons</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <nav class="site-foot-legal" aria-label="Juridisch en portaal">
+        <a href="privacy.html">Privacybeleid</a>
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="cookies.html">Cookiebeleid</a>
+        <a href="werkgebied.html">Werkgebied</a>
+        <a href="inloggen.html">Inloggen</a>
+      </nav>
+      <div class="site-foot-bot">
+        <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
+        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+      </div>
+    </div>
   </footer>
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Woningaanbod te koop — HomeINN Rotterdam","url":"https://home-inn.nl/te-koop.html","inLanguage":"nl-NL","about":"Te koop staande woningen in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-  <script src="lead-cloud.js?v=20260905a" defer></script>
+  <script src="lead-cloud.js?v=20260906b" defer></script>
   <script>
   (function(){
     'use strict';
@@ -435,6 +451,6 @@
   });
 })();
 </script>
-<script src="site-nav.js?v=20260905a"></script>
+<script src="site-nav.js?v=20260906b"></script>
 </body>
 </html>

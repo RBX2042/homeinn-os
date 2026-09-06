@@ -85,7 +85,7 @@ const PAGES = [
 function page(p, alle) {
   const canonical = `https://home-inn.nl/${p.slug}.html`;
   const sections = p.secties.map(s => `<h2>${s[0]}</h2>\n      <p>${s[1]}</p>`).join('\n      ');
-  const versie = p.versie ? `<p style="font-size:.78rem;color:var(--ink4)">${p.versie}</p>\n      ` : '';
+  const versie = p.versie ? `<p style="font-size:.82rem;color:var(--ink3)">${p.versie}</p>\n      ` : '';
   const andere = alle.filter(x => x.slug !== p.slug).map(x => `<a href="${x.slug}.html">${x.title}</a>`).join('');
   return `<!doctype html>
 <html lang="nl">
@@ -111,8 +111,8 @@ function page(p, alle) {
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260905a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
+  <link rel="stylesheet" href="tokens.css?v=20260906b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -122,11 +122,6 @@ function page(p, alle) {
     .lg-other{max-width:760px;margin:0 auto;padding:0 clamp(1.5rem,5vw,2rem) clamp(3rem,6vw,5rem);display:flex;flex-wrap:wrap;gap:1.25rem;font-size:.82rem}
     .lg-other span{color:var(--ink4)}
     .lg-other a{color:var(--gold-ink);text-decoration:none;border-bottom:1px solid rgba(var(--gold-rgb),.3)}
-    .lg-foot{border-top:1px solid var(--line);background:var(--panel)}
-    .lg-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
-    .lg-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
-    .lg-foot .in a:first-child{margin-left:0}
-    .lg-foot .in a:hover{color:var(--gold-ink)}
   </style>
 </head>
 <body>
@@ -188,7 +183,6 @@ function page(p, alle) {
       <a class="mob-sm" href="kennis.html">Kennis</a>
       <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
       <a class="mob-sm" href="contact.html">Contact</a>
-      <a class="mob-sm" href="inloggen.html">Inloggen</a>
     </nav>
     <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
@@ -197,6 +191,7 @@ function page(p, alle) {
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
       <a href="cookies.html">Cookies</a>
+      <a href="inloggen.html">Inloggen</a>
     </div>
   </div>
 
@@ -224,14 +219,34 @@ function page(p, alle) {
     <nav class="lg-other" aria-label="Andere juridische pagina's"><span>Zie ook:</span>${andere}<a href="./">Terug naar home</a></nav>
   </main>
 
-  <footer class="lg-foot">
+  <footer class="site-foot">
     <div class="in">
-      <span>© 2026 ${BEDRIJF.naam} — Vastgoedpartner Rotterdam<br><small style="color:var(--ink4)">${BEDRIJF.adres} · KvK ${BEDRIJF.kvk} · Btw ${BEDRIJF.btw}</small></span>
-      <nav aria-label="Links"><a href="./">Home</a><a href="privacy.html">Privacy</a><a href="voorwaarden.html">Voorwaarden</a><a href="cookies.html">Cookies</a></nav>
-      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+      <nav class="site-foot-nav" aria-label="Hoofdlinks">
+        <a href="./">Home</a>
+        <a href="projectontwikkeling.html">Projectontwikkeling</a>
+        <a href="pand-verkopen.html">Pand aanbieden</a>
+        <a href="te-koop.html">Woningaanbod</a>
+        <a href="verhuur.html">Verhuur</a>
+        <a href="vastgoedbeheer.html">Beheer</a>
+        <a href="investeren.html">Investeren</a>
+        <a href="kennis.html">Kennis</a>
+        <a href="over-ons.html">Over ons</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <nav class="site-foot-legal" aria-label="Juridisch en portaal">
+        <a href="privacy.html">Privacybeleid</a>
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="cookies.html">Cookiebeleid</a>
+        <a href="werkgebied.html">Werkgebied</a>
+        <a href="inloggen.html">Inloggen</a>
+      </nav>
+      <div class="site-foot-bot">
+        <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
+        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+      </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260905a"></script>
+  <script src="site-nav.js?v=20260906b"></script>
 </body>
 </html>
 `;

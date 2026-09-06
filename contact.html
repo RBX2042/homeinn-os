@@ -22,8 +22,8 @@
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css">
-  <link rel="stylesheet" href="tokens.css?v=20260905a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260905a">
+  <link rel="stylesheet" href="tokens.css?v=20260906b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260906b">
   <style>
     .ct-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .ct-top .brand img{height:34px;width:auto;display:block}
@@ -44,12 +44,8 @@
     .ct-success p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0}
     .map-load{display:flex;flex-direction:column;align-items:flex-start;gap:.2rem;width:100%;min-height:120px;justify-content:center;background:var(--cream2);border:1px dashed var(--cream3);cursor:pointer;color:var(--ink3);font:inherit;padding:1.25rem;margin-top:1.5rem}
     .map-load strong{color:var(--navy);font-size:.95rem}
-    .map-load .map-load-sub{font-size:.75rem;color:var(--ink4)}
+    .map-load .map-load-sub{font-size:.75rem;color:var(--ink3)}
     .ct-iframe{width:100%;height:280px;border:0;margin-top:1.5rem}
-    .ct-foot{border-top:1px solid var(--line);background:var(--panel)}
-    .ct-foot .in{max-width:1320px;margin:0 auto;padding:2.25rem clamp(1.5rem,5vw,5.5rem);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--ink4)}
-    .ct-foot .in a{color:var(--ink3);text-decoration:none;margin-left:1.4rem}
-    .ct-foot .in a:first-child{margin-left:0}
     .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
     .page-hero{padding-top:calc(clamp(7rem,14vw,14rem) - 72px)}
     @media(max-width:480px){.page-hero{padding-top:2.5rem}}
@@ -113,7 +109,6 @@
     <a class="mob-sm" href="kennis.html">Kennis</a>
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
     <a class="mob-sm" href="contact.html">Contact</a>
-    <a class="mob-sm" href="inloggen.html">Inloggen</a>
   </nav>
   <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
@@ -122,6 +117,7 @@
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
     <a href="cookies.html">Cookies</a>
+    <a href="inloggen.html">Inloggen</a>
   </div>
 </div>
 
@@ -149,7 +145,7 @@
             <div class="cf-group"><label for="ct-email">E-mailadres</label><input id="ct-email" type="email" autocomplete="email" inputmode="email" name="email" placeholder="jan@voorbeeld.nl"></div>
             <div class="cf-group"><label for="ct-phone">Telefoonnummer</label><input id="ct-phone" type="tel" autocomplete="tel" inputmode="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
             <div class="cf-2col">
-              <div class="cf-group"><label for="ct-portfolio">Aantal objecten</label><select id="ct-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>10+ objecten</option></select></div>
+              <div class="cf-group"><label for="ct-portfolio">Aantal objecten</label><select id="ct-portfolio" name="portfolio_size"><option>1 object</option><option>2 – 5 objecten</option><option>6 – 10 objecten</option><option>11 of meer objecten</option></select></div>
               <div class="cf-group"><label for="ct-interest">Waar gaat het om?</label><select id="ct-interest" name="package_interest"><option>Pand verkopen aan HomeINN</option><option>Vastgoedbeheer</option><option>Projectontwikkeling</option><option>Interesse in woningaanbod</option><option>Mijn woning laten verhuren</option><option>Huurwoning zoeken</option><option>Investeren in een project</option><option>Een pand aanbrengen (aanbrengvergoeding)</option><option>Anders / advies</option></select></div>
             </div>
             <div class="cf-group"><label for="ct-message">Uw bericht (optioneel)</label><textarea id="ct-message" name="message" placeholder="Verkoopt u? Vermeld hier het adres van uw pand — of stel uw vraag..."></textarea></div>
@@ -177,11 +173,32 @@
     <div class="cta-band"><div class="cta-inner"><h2>Liever direct uw pand <em>verkopen?</em></h2><a class="btn btn-dark" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div></div>
   </main>
 
-  <footer class="ct-foot">
+  <footer class="site-foot">
     <div class="in">
-      <span>© 2026 HomeINN — Vastgoedpartner Rotterdam<br><small style="color:var(--ink4)">HomeINN B.V. · Rosestraat 1321, 3071 AL Rotterdam · KvK 96713437 · Btw NL867727548B01</small></span>
-      <nav aria-label="Links"><a href="./">Home</a><a href="pand-verkopen.html">Pand aanbieden</a><a href="vastgoedbeheer.html">Vastgoedbeheer</a><a href="privacy.html">Privacy</a></nav>
-      <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
+      <nav class="site-foot-nav" aria-label="Hoofdlinks">
+        <a href="./">Home</a>
+        <a href="projectontwikkeling.html">Projectontwikkeling</a>
+        <a href="pand-verkopen.html">Pand aanbieden</a>
+        <a href="te-koop.html">Woningaanbod</a>
+        <a href="verhuur.html">Verhuur</a>
+        <a href="vastgoedbeheer.html">Beheer</a>
+        <a href="investeren.html">Investeren</a>
+        <a href="kennis.html">Kennis</a>
+        <a href="over-ons.html">Over ons</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <nav class="site-foot-legal" aria-label="Juridisch en portaal">
+        <a href="privacy.html">Privacybeleid</a>
+        <a href="voorwaarden.html">Algemene voorwaarden</a>
+        <a href="cookies.html">Cookiebeleid</a>
+        <a href="werkgebied.html">Werkgebied</a>
+        <a href="inloggen.html">Inloggen</a>
+      </nav>
+      <div class="site-foot-bot">
+        <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
+        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+      </div>
+    </div>
   </footer>
 
   <script type="application/ld+json">
@@ -194,7 +211,7 @@
     "openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"18:00"}
   }
   </script>
-  <script src="lead-cloud.js?v=20260905a" defer></script>
+  <script src="lead-cloud.js?v=20260906b" defer></script>
   <script>
   (function(){
     'use strict';
@@ -263,6 +280,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260905a"></script>
+<script src="site-nav.js?v=20260906b"></script>
 </body>
 </html>
