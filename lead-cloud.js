@@ -79,3 +79,24 @@
     } catch (err) { /* nooit de bezoeker hinderen */ }
   };
 })();
+
+
+/* Tijdslimiet voor e-mailbezorging, inclusief het lezen van het antwoord. */
+window.fetchLeadWithTimeout = function (url, options) {
+  var controller = new AbortController();
+  var timer;
+  var timeout = new Promise(function (_, reject) {
+    timer = setTimeout(function () {
+      controller.abort();
+      reject(new Error('Verzenden duurde te lang'));
+    }, 15000);
+  });
+  var request = Promise.resolve().then(function () {
+    return fetch(url, Object.assign({}, options, { signal: controller.signal }));
+  }).then(function (response) {
+    return response.text().then(function (body) {
+      return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
+    });
+  });
+  return Promise.race([request, timeout]).finally(function () { clearTimeout(timer); });
+};

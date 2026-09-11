@@ -21,8 +21,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260906k">
-  <link rel="stylesheet" href="tokens.css?v=20260906k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260912a">
+  <link rel="stylesheet" href="tokens.css?v=20260912a">
   <style>
     /* ───────────────────────────────────────────────────────────────
        Bod-flow (/pand-verkopen) — navigatie-loze meerstaps intake.
@@ -93,7 +93,7 @@
 
     /* fields */
     .field{margin:0 0 var(--space-5)}
-    .field label.lbl,.opt-group .opt-group-lbl{display:block;font-weight:600;font-size:.78rem;text-transform:uppercase;
+    .field label.lbl,.opt-group .opt-group-lbl{display:block;font-weight:600;font-size:max(.875rem,14px);text-transform:uppercase;
       letter-spacing:.14em;color:var(--ink4);margin:0 0 var(--space-3)}
     .opt{font-weight:400;color:var(--ink4);font-size:.62rem;letter-spacing:.08em;text-transform:none}
     .grid-2{display:grid;grid-template-columns:1fr;gap:var(--space-4)}
@@ -101,7 +101,7 @@
     .grid-2.split-3-1{grid-template-columns:1fr}
     @media(min-width:520px){.grid-2.split-3-1{grid-template-columns:2fr 1fr}}
     input[type=text],input[type=tel],input[type=email],select,textarea{
-      width:100%;padding:13px 15px;font-family:var(--sans);font-size:.9rem;font-weight:300;color:var(--ink);background:var(--cream);
+      width:100%;padding:13px 15px;font-family:var(--sans);font-size:max(1rem,16px);min-height:48px;font-weight:300;color:var(--ink);background:var(--cream);
       border:1px solid var(--cream3);border-radius:0;outline:none;transition:border-color var(--t-fast),background var(--t-fast),box-shadow var(--t-fast)}
     input::placeholder,textarea::placeholder{color:var(--ink4)}
     input:focus,select:focus,textarea:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 2px rgba(var(--gold-rgb),.16)}
@@ -226,12 +226,20 @@
     footer .f-in nav a{color:var(--ink3);text-decoration:none;margin-left:var(--space-4)}
     footer .f-in nav a:first-child{margin-left:0}
     footer .f-in nav a:hover{color:var(--gold-ink)}
+    /* Raakvlakken op telefoons. Deze pagina laadt homeinn-public.css niet, dus de
+       site-brede 44px-regels bereiken haar niet: hier staan ze apart.
+       De footerlinks waren 15px, het telefoonnummer 18 en 33px, het logo 34px. */
+    @media(hover:none),(pointer:coarse){
+      footer .f-in nav a{display:inline-flex;align-items:center;min-height:44px}
+      .aside-call .ac-num a,.pv-tip-sub a{display:inline-flex;align-items:center;min-height:44px}
+      .topbar .brand{display:inline-flex;align-items:center;min-height:44px}
+    }
     .mini-f-social{display:inline-flex;align-items:center;gap:0;margin-left:1.4rem}
     .mini-f-social a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;color:var(--ink3);transition:color .2s}
     .mini-f-social a:hover{color:var(--gold-ink)}
     .mini-f-social svg{width:16px;height:16px}
 
-    @media(hover:none) and (pointer:coarse){input[type=text],input[type=tel],input[type=email],select,textarea{font-size:16px}}
+    @media(hover:none) and (pointer:coarse){input[type=text],input[type=tel],input[type=email],select,textarea{font-size:max(1rem,16px)}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
   </style>
 </head>
@@ -246,10 +254,7 @@
         <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34">
       </picture>
     </a>
-    <a class="tel" href="tel:+31626257071">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      <span class="tel-lbl">Liever bellen?</span> <span class="tel-num">+31 6 26 25 70 71</span>
-    </a>
+    
   </header>
 
   <div class="wrap">
@@ -433,7 +438,7 @@
               <span class="spacer"></span>
               <button type="submit" class="btn btn-primary full">Voorstel aanvragen <span class="arr">→</span></button>
             </div>
-            <p class="priv-note">Met verzenden gaat u akkoord met ons <a href="privacy.html">privacybeleid</a>. Wij gebruiken uw gegevens uitsluitend om uw aanvraag te behandelen — geen nieuwsbrief, geen derden.</p>
+            <p class="priv-note">Met verzenden gaat u akkoord met ons <a href="privacy.html">privacybeleid</a>. Wij gebruiken uw gegevens uitsluitend om uw aanvraag te behandelen.</p>
           </section>
         </form>
       </main>
@@ -519,7 +524,7 @@
     "description":"HomeINN koopt woningen, appartementen en portiekpanden in Rotterdam direct aan — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
   }
   </script>
-  <script src="lead-cloud.js?v=20260906k" defer></script>
+  <script src="lead-cloud.js?v=20260912a" defer></script>
   <script>
   (function () {
     'use strict';
@@ -552,7 +557,7 @@
     function stuurLeadDoor(type, data) {
       try {
         if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(true);
-        return fetch(LEAD_EMAIL_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        return (window.fetchLeadWithTimeout || fetch)(LEAD_EMAIL_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({ _subject: 'Website-aanvraag: ' + (data.subject || type), _template: 'table', Type: type, Naam: data.name || '', Email: data.email || '', Telefoon: data.phone || '', Onderwerp: data.subject || '', Bericht: data.message || '' })
         }).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok)verwijderLokaleLead(data.id);return ok;});}).catch(function () { return false; });
       } catch (e) { return Promise.resolve(false); }

@@ -52,9 +52,9 @@ function head(titel, desc, canonical) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260906k">
-  <link rel="stylesheet" href="tokens.css?v=20260906k">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260906k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260912a">
+  <link rel="stylesheet" href="tokens.css?v=20260912a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260912a">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}
@@ -142,7 +142,6 @@ function head(titel, desc, canonical) {
               <span class="nav-mega-h">Kennismaken</span>
               <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
               <a class="btn btn-primary nav-mega-btn" href="contact.html">Plan een kennismaking <span class="arr">&rarr;</span></a>
-              <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
             </div>
           </div>
         </div>
@@ -150,7 +149,7 @@ function head(titel, desc, canonical) {
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="tel" href="tel:${TEL_HREF}">Liever bellen? <strong>${TEL}</strong></a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+    <div class="right"><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
   </header>
   <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
     <nav aria-label="Hoofdmenu">
@@ -170,7 +169,7 @@ function head(titel, desc, canonical) {
     </nav>
     <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">&rarr;</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan &rarr;</a>
-    <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> &middot; Rotterdam</p>
+    <p class="mob-sub"><a href="contact.html">Contact &amp; kennismaken</a> · Rotterdam</p>
     <div class="mob-legal">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
@@ -184,6 +183,7 @@ function head(titel, desc, canonical) {
 function foot() {
   return `  <footer class="site-foot">
     <div class="in">
+      <p class="site-foot-contact"><a href="tel:+31626257071">+31 6 26 25 70 71</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
       <nav class="site-foot-nav" aria-label="Hoofdlinks">
         <a href="./">Home</a>
         <a href="projectontwikkeling.html">Projectontwikkeling</a>
@@ -209,7 +209,7 @@ function foot() {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260906k"></script>
+  <script src="site-nav.js?v=20260912a"></script>
 </body>
 </html>
 `;

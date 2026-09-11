@@ -2,3 +2,7 @@
 website-online/
 .DS_Store
 .wrangler/
+
+# Werkmap van auditsessies: check-scripts, rapporten en de uploadbare zip.
+# Geen broncode — hoort niet in de repo.
+audit/

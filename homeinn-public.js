@@ -48,7 +48,7 @@ function go(id, shouldScroll, updateHistory) {
     }
     window.history.replaceState({}, '', url.toString());
   }
-  if (shouldScroll) window.scrollTo({top:0, behavior:'smooth'});
+  if (shouldScroll) window.scrollTo({top:0, behavior:prefersReduce ? 'auto' : 'smooth'});
   setTimeout(doReveal, 80);
 }
 
@@ -252,30 +252,6 @@ if (!prefersReduce && 'IntersectionObserver' in window) {
     document.querySelectorAll('[data-count]').forEach(function (el) { countObs.observe(el); });
   });
 }
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 960) closeMob();
-});
-document.addEventListener('click', e => {
-  var mob = document.getElementById('mob');
-  var burger = document.getElementById('burger');
-  if (!mob || !burger || !mob.classList.contains('on')) return;
-  if (mob.contains(e.target) || burger.contains(e.target)) return;
-  closeMob();
-});
-if (mobEl) {
-  mobEl.addEventListener('click', e => {
-    if (e.target.id === 'mob') { closeMob(); return; }
-    // Anker-links binnen het mobiele menu: eerst sluiten (body is scroll-locked),
-    // daarna pas scrollen — anders vuurt de native hash-scroll in een gelockte body.
-    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
-    if (!a) return;
-    e.preventDefault();
-    closeMob();
-    var doel = document.getElementById(a.getAttribute('href').slice(1));
-    if (doel) setTimeout(function () { doel.scrollIntoView({ behavior: 'smooth' }); }, 0);
-  });
-}
-
 /* ===== Google Maps: pas laden na klik (privacy) ===== */
 function mapsKnop(mapsQ, titel) {
   return '<button class="map-load" type="button" data-maps="' + mapsQ + '" data-titel="' + titel + '">' +
@@ -290,7 +266,12 @@ document.addEventListener('click', function (e) {
   iframe.referrerPolicy = 'no-referrer-when-downgrade';
   iframe.src = 'https://www.google.com/maps?q=' + btn.getAttribute('data-maps') + '&output=embed';
   iframe.title = 'Kaart ' + (btn.getAttribute('data-titel') || '');
+  var restoreFocus = document.activeElement === btn;
   btn.replaceWith(iframe);
+  if (restoreFocus) {
+    iframe.setAttribute('tabindex', '0');
+    try { iframe.focus({ preventScroll: true }); } catch (_) { iframe.focus(); }
+  }
 });
 
 /* ===== Software-integratie: formulieren → HomeINN OS (Aanvragen) ===== */
@@ -301,7 +282,7 @@ var LEAD_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/info@homeinn.nl';
 function stuurLeadDoor(type, data) {
   try {
     if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(true);
-    return fetch(LEAD_EMAIL_ENDPOINT, {
+    return (window.fetchLeadWithTimeout || fetch)(LEAD_EMAIL_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
@@ -349,8 +330,20 @@ function verwijderLokaleLead(id) {
 
 document.addEventListener('DOMContentLoaded', function () {
   var mform = document.querySelector('#mf form');
+  if (mform) mform.addEventListener('input', function (e) {
+    if (e.target.setCustomValidity) e.target.setCustomValidity('');
+  });
   if (mform) mform.addEventListener('submit', function (e) {
     e.preventDefault();
+    var nameField = mform.querySelector('[name=meeting_name]');
+    var contactField = mform.querySelector('[name=meeting_contact]');
+    var contact = contactField.value.trim();
+    var validContact = contact.indexOf('@') >= 0
+      ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)
+      : contact.replace(/\D/g, '').length >= 6;
+    nameField.setCustomValidity(nameField.value.trim() ? '' : 'Vul uw naam in.');
+    contactField.setCustomValidity(validContact ? '' : 'Vul een geldig e-mailadres of telefoonnummer in.');
+    if (!mform.reportValidity()) return;
     var f = new FormData(mform);
     // Honeypot: alleen "ingevuld én binnen 4 seconden" telt als bot. Nooit meer
     // een success-scherm tonen zonder verzending — dan verdwijnt een echte lead stil.
@@ -555,7 +548,7 @@ function renderProjectenPublic() {
             '</div>';
         }
         var prFotos = Array.isArray(pr.fotos) ? pr.fotos : [];
-        var prVisual = '<div class="pf-visual">' + mapsKnop(mapsQ, escHtml(pr.adres)) +
+        var prVisual = '<div class="pf-visual">' + mapsKnop(mapsQ, escHtml(pr.adres)).replace('</button>', '<span class="pf-photo-note">Projectfoto’s volgen</span></button>') +
           (prFotos.length ? '<img class="pf-foto" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add(&quot;on&quot;)" src="' + escHtml(prFotos[0]) + '" alt="' + escHtml(pr.adres + ' — pand in eigendom van HomeINN') + '">' : '') + '</div>';
         var kenmerken = [escHtml(pr.postcode || ''), escHtml(pr.wijk || pr.plaats || ''), escHtml(pr.type || '')].filter(Boolean).join(' · ');
         var voortgang = Number(pr.voortgang);
@@ -588,7 +581,12 @@ document.addEventListener('DOMContentLoaded', renderProjectenPublic);
 /* Gedelegeerde modal-opener: veilig voor apostrofs in adressen/titels */
 document.addEventListener('click', function (e) {
   var btn = e.target && e.target.closest ? e.target.closest('[data-open-modal]') : null;
-  if (btn) openModal(btn.getAttribute('data-subject') || '', btn.getAttribute('data-ref') || '');
+  if (btn) {
+    // Sluit het woningdetail eerst: anders trekt de latere sluit-handler de
+    // focus uit het aanvraagformulier terug naar de achterliggende pagina.
+    if (btn.hasAttribute('data-wd-close')) closeWoningDetail();
+    openModal(btn.getAttribute('data-subject') || '', btn.getAttribute('data-ref') || '');
+  }
 });
 
 /* ===== Woningdetail: galerij, kenmerken, kaart ===== */
@@ -720,6 +718,7 @@ document.addEventListener('click', function (e) {
   if (!open) { item.classList.add('open'); syncFaqState(item); }
 });
 document.addEventListener('DOMContentLoaded', function () {
+  document.body.classList.add('faq-ready');
   document.querySelectorAll('.faq-item').forEach(syncFaqState);
 });
 

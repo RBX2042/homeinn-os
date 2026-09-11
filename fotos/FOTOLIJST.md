@@ -5,7 +5,7 @@ de juiste naam in deze map staat. Ontbreekt een foto, dan verwijdert de pagina
 die laag zichzelf en valt terug op de Google Maps-kaartknop — de site is dus op
 elk moment heel, ook halverwege de fotoronde.
 
-**Er staat op dit moment nog geen enkele echte foto in dit project.**
+**Hero en projectontwikkelpagina bevatten nu gelicentieerde sfeerfotografie (zie BEELDRECHTEN.md). De acht eigen pandfoto’s ontbreken nog.**
 
 ---
 

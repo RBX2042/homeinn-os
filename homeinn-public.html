@@ -156,9 +156,9 @@
   </script>
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260906k">
-  <link rel="stylesheet" href="tokens.css?v=20260906k">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260906k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260912a">
+  <link rel="stylesheet" href="tokens.css?v=20260912a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260912a">
   <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
   <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -333,7 +333,6 @@
             <span class="nav-mega-h">Kennismaken</span>
             <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
             <a class="btn btn-primary nav-mega-btn" href="contact.html" onclick="if(window.openModal){closeNavSubs();openModal();return false}">Plan een kennismaking <span class="arr">→</span></a>
-            <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
           </div>
         </div>
       </div>
@@ -341,7 +340,7 @@
     <li><a href="over-ons.html" data-p="over">Over ons</a></li>
   </ul>
   <div class="nav-right">
-    <a class="nav-cta" href="investeren.html#meedoen">Investeer mee</a>
+    <a class="nav-cta" href="contact.html">Plan een kennismaking</a>
   </div>
   <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
 </header>
@@ -357,7 +356,7 @@
     <a class="mob-sm" href="pand-verkopen.html">Aankoop — uw pand aanbieden</a>
     <a class="mob-sm" href="te-koop.html">Verkoop — woningaanbod</a>
     <a class="mob-sm" href="verhuur.html">Verhuur &amp; huuraanbod</a>
-    <a class="mob-sm" href="projecten.html">Projecten &amp; investeren</a>
+    <a class="mob-sm" href="projecten.html">Projecten</a>
     <span class="mob-groep">Meer</span>
     <a class="mob-sm" href="kennis.html">Kennis</a>
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
@@ -365,7 +364,7 @@
   </nav>
   <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
-  <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> · Rotterdam</p>
+  <p class="mob-sub"><a href="contact.html">Contact &amp; kennismaken</a> · Rotterdam</p>
   <div class="mob-legal">
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
@@ -382,8 +381,7 @@
 
 <section class="hero" aria-label="Introductie">
   <div class="hero-bg"></div>
-  <!-- Fotolaag — vult zich zodra fotos/hero-rotterdam.jpg bestaat; zonder foto verwijdert de laag zichzelf en blijft de line-art hero intact. Zie fotos/FOTOLIJST.md -->
-  <div class="hero-photo" aria-hidden="true"><img src="fotos/hero-rotterdam.jpg" alt="" fetchpriority="high" decoding="async" onerror="this.closest('.hero-photo').remove()" onload="this.closest('.hero-photo').classList.add('on')"></div>
+  <!-- Rustige opening met het Rotterdamse lijnmotief, conform de gekozen referentie. -->
   <div class="hero-glow"></div>
   <div class="hero-bridge hero-bridge-d" aria-hidden="true">
     <svg viewBox="0 0 1200 760" preserveAspectRatio="xMaxYMax slice" xmlns="http://www.w3.org/2000/svg">
@@ -452,16 +450,16 @@
     <div class="hero-copy">
       <div class="hero-pill">
         <div class="hero-pill-dot"></div>
-        <span>Projectontwikkeling · Aankoop · Verkoop · Verhuur · Beheer — Rotterdam e.o.</span>
+        <span>Vastgoedontwikkeling · Rotterdam &amp; Vlaardingen</span>
       </div>
       <h1><span class="hl">Wij ontwikkelen</span><span class="hl">Rotterdams vastgoed.</span><span class="hl">Doe <em>mee.</em></span></h1>
-      <p class="hero-sub">Projectontwikkeling is onze kern: wij kopen panden zelf aan, verbouwen ze met onze vaste bouwpartner en leveren ze op. Dertien woningen op acht locaties staan nu in eigen bezit — en u kunt meedoen in een concreet project.</p>
+      <p class="hero-sub">Wij geven panden een nieuwe toekomst. Van aankoop en renovatie met onze vaste bouwpartner tot verkoop en beheer. Ontdek onze dertien woningen — en de mogelijkheden om mee te doen.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
         <a class="hero-textlink" href="#portefeuille">Bekijk onze panden <span class="arr">→</span></a>
       </div>
       <p class="hero-micro">13 woningen in eigen bezit · 8 locaties in Rotterdam en Vlaardingen · Meedoen per project</p>
-      <p class="hero-risico">Beleggen brengt risico's mee: uw inleg kan geheel of deels verloren gaan. <a href="investeren.html#meedoen">Lees de projectinformatie</a>.</p>
+      <p class="hero-risico">Beleggen brengt risico's mee: uw inleg kan geheel of deels verloren gaan. <a href="investeren.html#meedoen">Vraag de projectinformatie aan</a>.</p>
     </div>
   </div>
   <div class="hero-scroll-ind"><span>Scroll</span><div class="scroll-line"></div></div>
@@ -472,15 +470,7 @@
       <span class="mvw-strip-tag"><span class="mvw-strip-pulse" aria-hidden="true"></span>Hoe wij werken</span>
       <span class="mvw-strip-sep" aria-hidden="true"></span>
       <div class="mvw-strip-track">
-        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-euro"/></svg></span><span><strong>Transparantie</strong> — geen kleine lettertjes, vaste percentages.</span></div>
-        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-klok"/></svg></span><span><strong>Betrouwbaarheid</strong> — één vast aanspreekpunt, op werkdagen 08:00–18:00.</span></div>
-        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-grafiek"/></svg></span><span><strong>Resultaat</strong> — wij verdienen mee op wat u extra verdient.</span></div>
-        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-pin"/></svg></span><span><strong>Lokale kennis</strong> — Rotterdam door en door, wijk voor wijk.</span></div>
-        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-gesprek"/></svg></span><span><strong>Partnerschap</strong> — wij investeren en groeien mee met u.</span></div>
-        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-schaal"/></svg></span><span><strong>Compliance</strong> — contracten en indexering conform actuele regelgeving.</span></div>
-      </div>
-      <div class="mvw-strip-dots" aria-hidden="true">
-        <span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span><span class="mvw-strip-dot"></span>
+        <div class="mvw-strip-item"><span class="mvw-strip-ico-badge"><svg class="mvw-strip-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-pin"/></svg></span><span><strong>Eigen projecten</strong> — aankoop, ontwikkeling en beheer in één hand.</span></div>
       </div>
       <a class="mvw-strip-more" href="over-ons.html">Meer over ons <span class="arr">→</span></a>
     </div>
@@ -494,30 +484,143 @@
     <div class="statement-body">
       <div class="rule rv"></div>
       <h2 class="rv">Projectontwikkeling is onze kern. <em>De rest houden wij in eigen hand.</em></h2>
-      <p class="rv d1">HomeINN bemiddelt niet bij aankoop en verkoop — HomeINN ontwikkelt. Wij verwerven panden in Rotterdam en omstreken, brengen ze met onze vaste bouwpartner bouwkundig en energetisch op niveau en brengen ze daarna terug op de markt. Dertien woningen op acht locaties staan nu in eigen bezit.</p>
-      <p class="rv d2">Aankoop, verkoop, verhuur en beheer zijn geen losse diensten maar de schakels rond die ontwikkeling. Omdat elke schakel in eigen hand blijft, is er één planning, één aanspreekpunt en één partij die aanspreekbaar is op het resultaat — voor de eigenaar die verkoopt én voor de investeerder die meedoet.</p>
+      <p class="rv d1">Wij kopen panden in Rotterdam en omstreken en ontwikkelen ze met onze vaste bouwpartner tot vernieuwde, energiezuinige woningen. Van aankoop tot oplevering sturen wij het project aan.</p>
+      <p class="rv d2">U kunt een pand aan ons verkopen, meedoen in een project of ons inschakelen voor verhuur en beheer. Hieronder ziet u onze panden en hoe een samenwerking begint.</p>
       <a class="btn btn-outline-dark rv d3" style="margin-top:.5rem" href="over-ons.html">Ons verhaal <span class="arr">→</span></a>
     </div>
   </div>
 </div>
 
-<section class="jstats-band" aria-label="HomeINN in cijfers">
+<section class="jstats-band" aria-label="Onze huidige portefeuille in cijfers">
   <div class="jstats-inner">
-    <div class="jstat rv"><div class="jstat-val" data-count="2007" data-from="1990">2007</div><div class="jstat-lbl">Ervaring van het team sinds</div></div>
-    <div class="jstat rv d1"><div class="jstat-val" data-count="25" data-suffix="+">25+</div><div class="jstat-lbl">Panden door ons team aangekocht en ontwikkeld</div></div>
-    <div class="jstat rv d2"><div class="jstat-val" data-count="4" data-prefix="€ " data-suffix=" mln+">€ 4 mln+</div><div class="jstat-lbl">Aan gerealiseerde verkopen door ons team</div></div>
-    <div class="jstat rv d3"><div class="jstat-val" data-count="13">13</div><div class="jstat-lbl">Woningen nu in eigen bezit</div></div>
+    <div class="jstat"><div class="jstat-val">13</div><div class="jstat-lbl">Woningen in eigen bezit</div></div>
+    <div class="jstat"><div class="jstat-val">8</div><div class="jstat-lbl">Projectlocaties</div></div>
+    <div class="jstat"><div class="jstat-val">2</div><div class="jstat-lbl">Steden: Rotterdam en Vlaardingen</div></div>
+    <div class="jstat"><div class="jstat-val">5</div><div class="jstat-lbl">Vastgoeddisciplines</div></div>
   </div>
 </section>
 
 <!-- WAT WIJ DOEN -->
+<section class="blog-section" id="portefeuille">
+  <span id="werk" class="anchor-offset" aria-hidden="true"></span>
+  <div style="max-width:1320px;margin:0 auto;padding-bottom:.5rem">
+    <div class="proc-head">
+      <span class="t-eyebrow rv">Onze portefeuille</span>
+      <h2 class="rv">Dertien woningen. <em>Acht locaties.</em></h2>
+      <p class="proc-lede rv d1">Een selectie uit onze eigen portefeuille in Rotterdam en Vlaardingen. Bekijk hieronder drie locaties, of ontdek alle acht projecten en de mogelijkheden om mee te doen.</p>
+      <p class="pf-meta rv d1" id="portefeuille-meta">13 woningen op 8 locaties · eigen bezit · peildatum 2 september 2026</p>
+    </div>
+  </div>
+  <div class="blog-grid rv-stagger">
+    <article class="blog-card pf-card rv">
+      <div class="pf-visual">
+        <button class="map-load" type="button" data-maps="2e%20Rosestraat%2026%2C%203074%20JK%20Rotterdam" data-titel="2e Rosestraat 26-A, 26-B en 28">
+          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
+          <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
+          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
+        </button>
+        <img class="pf-foto" src="fotos/2e-rosestraat-26.jpg" alt="2e Rosestraat 26-A, 26-B en 28 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
+      </div>
+      <div class="blog-body">
+        <span class="proj-status">In ontwikkeling</span>
+        <h3>2e Rosestraat 26-A, 26-B en 28</h3>
+        <p class="aanbod-kenmerken">3074 JK · Rotterdam-Zuid · 3 woningen</p>
+        <p>Drie zelfstandige woningen in één bouwblok op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
+        <div class="pf-acties">
+          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=2e%20Rosestraat%2026%2C%203074%20JK%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
+          <a class="pillar-cta" href="investeren.html?project=2e%20Rosestraat%2026-A%2C%2026-B%20en%2028#meedoen">Investeer mee <span class="arr">→</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="blog-card pf-card rv d1">
+      <div class="pf-visual">
+        <button class="map-load" type="button" data-maps="Gaesbeekstraat%2092%2C%203081%20NM%20Rotterdam" data-titel="Gaesbeekstraat 92-A en 92-B">
+          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
+          <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
+          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
+        </button>
+        <img class="pf-foto" src="fotos/gaesbeekstraat-92.jpg" alt="Gaesbeekstraat 92-A en 92-B in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
+      </div>
+      <div class="blog-body">
+        <span class="proj-status">In ontwikkeling</span>
+        <h3>Gaesbeekstraat 92-A en 92-B</h3>
+        <p class="aanbod-kenmerken">3081 NM · Rotterdam-Zuid · 2 woningen</p>
+        <p>Twee appartementen in één pand in Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
+        <div class="pf-acties">
+          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Gaesbeekstraat%2092%2C%203081%20NM%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
+          <a class="pillar-cta" href="investeren.html?project=Gaesbeekstraat%2092-A%20en%2092-B#meedoen">Investeer mee <span class="arr">→</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="blog-card pf-card rv d2">
+      <div class="pf-visual">
+        <button class="map-load" type="button" data-maps="%27s-Gravendijkwal%2088%2C%203014%20EH%20Rotterdam" data-titel="&#x27;s-Gravendijkwal 88 en 90">
+          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
+          <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
+          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
+        </button>
+        <img class="pf-foto" src="fotos/s-gravendijkwal-88.jpg" alt="&#x27;s-Gravendijkwal 88 en 90 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
+      </div>
+      <div class="blog-body">
+        <span class="proj-status">In ontwikkeling</span>
+        <h3>&#x27;s-Gravendijkwal 88 en 90</h3>
+        <p class="aanbod-kenmerken">3014 EH · Rotterdam-West · 2 woningen</p>
+        <p>Twee naastgelegen panden aan de &#x27;s-Gravendijkwal in Rotterdam-West. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
+        <div class="pf-acties">
+          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%27s-Gravendijkwal%2088%2C%203014%20EH%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
+          <a class="pillar-cta" href="investeren.html?project=%27s-Gravendijkwal%2088%20en%2090#meedoen">Investeer mee <span class="arr">→</span></a>
+        </div>
+      </div>
+    </article>
+    
+    
+    
+    
+    
+  </div>
+  <p class="pf-risico">Meedoen in een project is beleggen, geen sparen. Het rendement is niet gegarandeerd en uw inleg kan geheel of gedeeltelijk verloren gaan. <a href="investeren.html#meedoen">Vraag eerst de projectinformatie aan</a>.</p>
+  <div class="pf-foot">
+    <a class="btn btn-primary rv" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
+    <a class="btn btn-outline-dark rv" href="projecten.html">Bekijk alle acht projecten <span class="arr">→</span></a>
+  </div>
+</section>
+
+<section class="proc-section proc-section--invest" id="meedoen-stappen">
+  <div class="proc-inner">
+    <div class="proc-head rv">
+      <span class="t-eyebrow">Werkwijze — investeerders</span>
+      <h2>Van kennismaking tot <em>uitkering.</em></h2>
+      <p class="proc-lede">In drie stappen van kennismaking naar afronding. U ziet eerst de cijfers en voorwaarden van één project, daarna beslist u.</p>
+    </div>
+    <div class="proc-panel on">
+      <div class="proc-steps rv-stagger">
+        <div class="pstep"><div class="pstep-n">01</div><div class="pstep-body"><strong>Persoonlijke kennismaking</strong><span>Wij bespreken uw doelen, het beschikbare bedrag en de looptijd die bij u past. Vrijblijvend, in Rotterdam of online.</span></div></div>
+        <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Projectinformatie &amp; overeenkomst</strong><span>U ontvangt de cijfers, planning en voorwaarden van één project. De inleg, looptijd, het rendement en de risico’s staan op papier voordat u beslist.</span></div></div>
+        <div class="pstep"><div class="pstep-n">03</div><div class="pstep-body"><strong>Volgen &amp; uitkeren</strong><span>U volgt de voortgang per e-mail en via de projectenpagina. De uitkering bij verkoop verloopt volgens de projectovereenkomst via de notaris; het rendement is niet gegarandeerd.</span></div></div>
+      </div>
+      <aside class="proc-aside rv d1">
+        <div class="proc-aside-title">Wat u van ons krijgt</div>
+        <p class="proc-aside-desc">Eén project, één overeenkomst, één resultaat — geen fonds en geen tussenlagen.</p>
+        <ul class="pa-list">
+          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>De volledige cijfers vóór u beslist</span></li>
+          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Eén concreet pand, geen fonds</span></li>
+          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Aankoop, verbouwing en verkoop in eigen hand</span></li>
+          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Uitkering via de notaris</span></li>
+        </ul>
+        <a class="btn btn-primary pa-cta" href="investeren.html#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
+        <p class="pa-note">Meedoen is beleggen: het rendement is niet gegarandeerd en uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
 <section class="disc-section section-sm" id="diensten">
   <div class="disc-wrap">
     <div class="disc-head rv">
       <span class="t-eyebrow">Wat wij doen</span>
       <div class="rule"></div>
       <h2>Ontwikkeling voorop.<br>Vijf disciplines, <em>één cyclus.</em></h2>
-      <p>Projectontwikkeling is waar het om draait; aankoop, verkoop, verhuur en beheer zijn de schakels eromheen. HomeINN doorloopt de volledige vastgoedcyclus zelf, dus blijven snelheid, kwaliteit en resultaat in eigen hand — en spreekt u steeds dezelfde mensen.</p>
+      <p>Van een pand aanbieden tot een woning kopen of laten beheren: kies de dienst die past bij uw vraag.</p>
     </div>
     <div class="disc-list rv-stagger">
       <a class="disc-row" href="projectontwikkeling.html">
@@ -549,7 +652,6 @@
   </div>
 </section>
 
-<!-- WERKWIJZE -->
 <section class="proc-section" id="werkwijze">
   <div class="proc-inner">
     <div class="proc-head rv">
@@ -576,217 +678,6 @@
         </ul>
         <a class="btn btn-primary pa-cta" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a>
         <p class="pa-note">Liever eerst even sparren? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
-      </aside>
-    </div>
-  </div>
-</section>
-
-<!-- RECENT WERK -->
-<!-- PORTEFEUILLE — echte panden in eigen bezit (bron: aanbod.json) -->
-<section class="blog-section" id="portefeuille">
-  <span id="werk" class="anchor-offset" aria-hidden="true"></span>
-  <div style="max-width:1320px;margin:0 auto;padding-bottom:.5rem">
-    <div class="proc-head">
-      <span class="t-eyebrow rv">Onze portefeuille</span>
-      <h2 class="rv">Dertien woningen. <em>Acht locaties.</em></h2>
-      <p class="proc-lede rv d1">Geen fonds en geen etalage van andermans vastgoed: dit zijn de panden die HomeINN zelf in bezit heeft, in Rotterdam en Vlaardingen. Elk pand is een concreet ontwikkelproject — en in elk project kunt u meedoen.</p>
-      <p class="pf-meta rv d1" id="portefeuille-meta">13 woningen op 8 locaties · eigen bezit · peildatum 2 september 2026</p>
-    </div>
-  </div>
-  <div class="blog-grid rv-stagger">
-    <article class="blog-card pf-card rv">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="2e%20Rosestraat%2026%2C%203074%20JK%20Rotterdam" data-titel="2e Rosestraat 26-A, 26-B en 28">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/2e-rosestraat-26.jpg" alt="2e Rosestraat 26-A, 26-B en 28 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>2e Rosestraat 26-A, 26-B en 28</h3>
-        <p class="aanbod-kenmerken">3074 JK · Rotterdam-Zuid · 3 woningen</p>
-        <p>Drie zelfstandige woningen in één bouwblok op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=2e%20Rosestraat%2026%2C%203074%20JK%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=2e%20Rosestraat%2026-A%2C%2026-B%20en%2028#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-    <article class="blog-card pf-card rv d1">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="Gaesbeekstraat%2092%2C%203081%20NM%20Rotterdam" data-titel="Gaesbeekstraat 92-A en 92-B">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/gaesbeekstraat-92.jpg" alt="Gaesbeekstraat 92-A en 92-B in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>Gaesbeekstraat 92-A en 92-B</h3>
-        <p class="aanbod-kenmerken">3081 NM · Rotterdam-Zuid · 2 woningen</p>
-        <p>Twee appartementen in één pand in Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Gaesbeekstraat%2092%2C%203081%20NM%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=Gaesbeekstraat%2092-A%20en%2092-B#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-    <article class="blog-card pf-card rv d2">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="%27s-Gravendijkwal%2088%2C%203014%20EH%20Rotterdam" data-titel="&#x27;s-Gravendijkwal 88 en 90">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/s-gravendijkwal-88.jpg" alt="&#x27;s-Gravendijkwal 88 en 90 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>&#x27;s-Gravendijkwal 88 en 90</h3>
-        <p class="aanbod-kenmerken">3014 EH · Rotterdam-West · 2 woningen</p>
-        <p>Twee naastgelegen panden aan de &#x27;s-Gravendijkwal in Rotterdam-West. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=%27s-Gravendijkwal%2088%2C%203014%20EH%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=%27s-Gravendijkwal%2088%20en%2090#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-    <article class="blog-card pf-card rv">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="Honingerdijk%20105%2C%203063%20AL%20Rotterdam" data-titel="Honingerdijk 105 en 107">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/honingerdijk-105.jpg" alt="Honingerdijk 105 en 107 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>Honingerdijk 105 en 107</h3>
-        <p class="aanbod-kenmerken">3063 AL · Kralingen · 2 woningen</p>
-        <p>Twee naastgelegen panden aan de Honingerdijk in Kralingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Honingerdijk%20105%2C%203063%20AL%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=Honingerdijk%20105%20en%20107#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-    <article class="blog-card pf-card rv d1">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="Ploegstraat%2048%2C%203075%20NG%20Rotterdam" data-titel="Ploegstraat 48">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/ploegstraat-48.jpg" alt="Ploegstraat 48 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>Ploegstraat 48</h3>
-        <p class="aanbod-kenmerken">3075 NG · Rotterdam-Zuid · 1 woning</p>
-        <p>Stadswoning op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Ploegstraat%2048%2C%203075%20NG%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=Ploegstraat%2048#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-    <article class="blog-card pf-card rv d2">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="Schulpweg%20396%2C%203084%20NJ%20Rotterdam" data-titel="Schulpweg 396">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/schulpweg-396.jpg" alt="Schulpweg 396 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>Schulpweg 396</h3>
-        <p class="aanbod-kenmerken">3084 NJ · Rotterdam-Zuid · 1 woning</p>
-        <p>Woning aan de Schulpweg op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Schulpweg%20396%2C%203084%20NJ%20Rotterdam">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=Schulpweg%20396#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-    <article class="blog-card pf-card rv">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="Van%20der%20Driftstraat%204%2C%203131%20JH%20Vlaardingen" data-titel="Van der Driftstraat 4-A">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/van-der-driftstraat-4a.jpg" alt="Van der Driftstraat 4-A in Vlaardingen — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>Van der Driftstraat 4-A</h3>
-        <p class="aanbod-kenmerken">3131 JH · Vlaardingen · 1 woning</p>
-        <p>Appartement in Vlaardingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Van%20der%20Driftstraat%204%2C%203131%20JH%20Vlaardingen">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=Van%20der%20Driftstraat%204-A#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-    <article class="blog-card pf-card rv d1">
-      <div class="pf-visual">
-        <button class="map-load" type="button" data-maps="Tollensstraat%2032%2C%203131%20GZ%20Vlaardingen" data-titel="Tollensstraat 32">
-          <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-          <strong>Kaart tonen</strong>
-          <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
-        </button>
-        <img class="pf-foto" src="fotos/tollensstraat-32.jpg" alt="Tollensstraat 32 in Vlaardingen — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
-      </div>
-      <div class="blog-body">
-        <span class="proj-status">In ontwikkeling</span>
-        <h3>Tollensstraat 32</h3>
-        <p class="aanbod-kenmerken">3131 GZ · Vlaardingen · 1 woning</p>
-        <p>Woning in Vlaardingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.</p>
-        <div class="pf-acties">
-          <a class="pillar-cta" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Tollensstraat%2032%2C%203131%20GZ%20Vlaardingen">Bekijk op Google Maps <span class="arr">→</span></a>
-          <a class="pillar-cta" href="investeren.html?project=Tollensstraat%2032#meedoen">Investeer mee <span class="arr">→</span></a>
-        </div>
-      </div>
-    </article>
-  </div>
-  <div class="pf-foot">
-    <a class="btn btn-primary rv" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
-    <a class="btn btn-outline-dark rv" href="projecten.html">Bekijk alle projecten <span class="arr">→</span></a>
-  </div>
-</section>
-
-<!-- WERKWIJZE — INVESTEERDERS -->
-<section class="proc-section proc-section--invest" id="meedoen-stappen">
-  <div class="proc-inner">
-    <div class="proc-head rv">
-      <span class="t-eyebrow">Werkwijze — investeerders</span>
-      <h2>Van kennismaking tot <em>uitkering.</em></h2>
-      <p class="proc-lede">Meedoen gaat per project, niet per fonds. U ziet eerst alle cijfers, daarna beslist u.</p>
-    </div>
-    <div class="proc-panel on">
-      <div class="proc-steps rv-stagger">
-        <div class="pstep"><div class="pstep-n">01</div><div class="pstep-body"><strong>Persoonlijke kennismaking</strong><span>Wij bespreken uw doelen, het bedrag en de looptijd die bij u passen. Vrijblijvend, in Rotterdam of online.</span></div></div>
-        <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Volledige projectinformatie</strong><span>Aankoopsom, verbouwbudget, planning, looptijd en het rendementspercentage van één concreet pand uit onze portefeuille.</span></div></div>
-        <div class="pstep"><div class="pstep-n">03</div><div class="pstep-body"><strong>Onderhandse overeenkomst</strong><span>Wat u en wij afspreken staat op papier voordat er geld overgaat — inleg, looptijd, rendement en wat er gebeurt als het tegenvalt.</span></div></div>
-        <div class="pstep"><div class="pstep-n">04</div><div class="pstep-body"><strong>Uitkering via de notaris</strong><span>Bij verkoop van het pand wordt uw inleg plus het afgesproken rendement via de notaris uitgekeerd.</span></div></div>
-      </div>
-      <aside class="proc-aside rv d1">
-        <div class="proc-aside-title">Wat u van ons krijgt</div>
-        <p class="proc-aside-desc">Eén project, één overeenkomst, één resultaat — geen fonds en geen tussenlagen.</p>
-        <ul class="pa-list">
-          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>De volledige cijfers vóór u beslist</span></li>
-          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Eén concreet pand, geen fonds</span></li>
-          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Aankoop, verbouwing en verkoop in eigen hand</span></li>
-          <li><svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-check"/></svg><span>Uitkering via de notaris</span></li>
-        </ul>
-        <a class="btn btn-primary pa-cta" href="investeren.html#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
-        <p class="pa-note">Meedoen is beleggen: het rendement is niet gegarandeerd en uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
       </aside>
     </div>
   </div>
@@ -823,14 +714,11 @@
 </section>
 
 <!-- WERKGEBIED -->
-<section class="wb-section wb-slim">
-  <div class="wb-inner">
-    <div class="wb-text">
-      <span class="t-eyebrow rv">Werkgebied</span>
+<section class="wb-section wb-slim"><div class="wb-inner"><div class="wb-text"><div class="wb-copy"><span class="t-eyebrow rv">Werkgebied</span>
       <div class="rule rv" style="margin-top:1.25rem"></div>
       <h2 class="rv">Rotterdam & de <em>regio</em></h2>
       <p class="lead rv d1">Diep verankerd in Rotterdam en omstreken — lokale kennis en snelle respons.</p>
-      <ul class="wb-list rv d2">
+      <a class="btn btn-outline-dark rv d3" style="margin-top:2.25rem" href="werkgebied.html">Bekijk het volledige werkgebied <span class="arr">→</span></a></div><ul class="wb-list rv d2">
         <li class="wb-item">
           <div class="wb-item-l"><div class="wb-bullet gold"></div><div class="wb-item-name">Rotterdam — alle wijken</div></div>
           <span class="wb-pill gold">Kerngebied</span>
@@ -851,11 +739,7 @@
           <div class="wb-item-l"><div class="wb-bullet navy"></div><div class="wb-item-name">Vlaardingen</div></div>
           <span class="wb-pill navy">Actief</span>
         </li>
-      </ul>
-      <a class="btn btn-outline-dark rv d3" style="margin-top:2.25rem" href="werkgebied.html">Bekijk het volledige werkgebied <span class="arr">→</span></a>
-    </div>
-  </div>
-</section>
+      </ul></div></div></section>
 
 <!-- VEELGESTELDE VRAGEN -->
 <section class="faq-section" id="vragen">
@@ -883,7 +767,7 @@
         <div class="faq-a"><p>Na de opname ontvangt u binnen 48 uur een onderbouwd voorstel, met de opbouw erbij. Reageren wij op uw eerste bericht, dan doen wij dat op werkdagen binnen vier uur. Passeren kan daarna zo snel als u wilt — of juist op termijn, als u eerst nog iets te regelen heeft.</p></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" type="button" aria-expanded="false">Wat kost het mij?<span class="faq-tog" aria-hidden="true">+</span></button>
+        <button class="faq-q" type="button" aria-expanded="false">Wat kost het om mijn pand aan HomeINN te verkopen?<span class="faq-tog" aria-hidden="true">+</span></button>
         <div class="faq-a"><p>Niets. Er is geen courtage, geen taxatierapport en geen opnamekosten. De gebruikelijke kosten koper zijn voor onze rekening; u draagt alleen wat wettelijk bij de verkoper hoort, zoals een eventuele doorhaling van de hypotheek. Wat er onder de streep voor u overblijft, staat in het voorstel.</p></div>
       </div>
       <div class="faq-item">
@@ -911,9 +795,9 @@
 <div class="cta-band cta-band--navy">
   <div class="cta-inner rv">
     <h2>Meedoen in een project — of uw pand <em>aanbieden?</em></h2>
-    <p class="cta-lede rv d1">Eén gesprek van dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. U ontvangt de volledige projectinformatie — aankoopsom, verbouwbudget, planning en voorwaarden — voordat u iets beslist.</p>
+    <p class="cta-lede rv d1">Wilt u investeren? Vraag de cijfers, planning en voorwaarden van een project op. Wilt u uw pand verkopen? Vertel ons over uw woning en uw situatie. Beide aanvragen zijn vrijblijvend.</p>
     <div class="cta-acties">
-      <a class="btn btn-primary" href="contact.html" onclick="openModal('Investeren in een project');return false">Investeer mee in een project <span class="arr">→</span></a>
+      <a class="btn btn-primary" href="investeren.html#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
       <a class="btn btn-outline-light" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a>
     </div>
     <p class="cta-micro rv d2">Reactie binnen vier uur op werkdagen · Vertrouwelijk · Geheel vrijblijvend</p>
@@ -939,16 +823,16 @@
       </div>
     </div>
     <div class="f-col"><h3>Diensten</h3><ul>
-      <li><a href="pand-verkopen.html">Pand aanbieden (verkopen aan HomeINN)</a></li>
+      <li><a href="pand-verkopen.html">Pand aanbieden</a></li>
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
-      <li><a href="te-koop.html">Woningaanbod (te koop)</a></li>
-      <li><a href="verhuur.html">Te huur &amp; verhuurservice</a></li>
-      <li><a href="vastgoedbeheer.html">Vastgoedbeheer &amp; tarieven</a></li>
+      <li><a href="te-koop.html">Woningaanbod</a></li>
+      <li><a href="verhuur.html">Verhuur &amp; huuraanbod</a></li>
+      <li><a href="vastgoedbeheer.html">Vastgoedbeheer</a></li>
     </ul></div>
     <div class="f-col"><h3>HomeINN</h3><ul>
       <li><a href="over-ons.html">Over ons</a></li>
       <li><a href="werkgebied.html">Werkgebied</a></li>
-      <li><a href="projecten.html">Projecten &amp; investeren</a></li>
+      <li><a href="projecten.html">Projecten</a></li>
       <li><a href="kennis.html">Kennis</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul></div>
@@ -956,7 +840,7 @@
       <li><a href="privacy.html">Privacybeleid</a></li>
       <li><a href="voorwaarden.html">Algemene voorwaarden</a></li>
       <li><a href="cookies.html">Cookiebeleid</a></li>
-      <li><a href="inloggen.html">Inloggen / portaal</a></li>
+      <li><a href="inloggen.html">Inloggen</a></li>
     </ul></div>
   </div>
   <div class="footer-bottom">
@@ -1017,9 +901,9 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="lead-cloud.js?v=20260906k" defer></script>
-<script src="site-nav.js?v=20260906k"></script>
-<script src="homeinn-public.js?v=20260906k"></script>
+<script src="lead-cloud.js?v=20260912a" defer></script>
+<script src="site-nav.js?v=20260912a"></script>
+<script src="homeinn-public.js?v=20260912a"></script>
 <script src="lightbox.js?v=20260705" defer></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
    ----------------------------------------------------------------------------
    Eén bron voor het gedrag van de navigatie op ALLE publieke pagina's:
    het mobiele menu (met focusbeheer), het uitklapbare 'Diensten'-paneel
-   (hover, klik, toetsenbord — met kloppende aria-expanded) en de sluitroutes.
+   (klik, toetsenbord — met kloppende aria-expanded) en de sluitroutes.
 
    Laad dit bestand vóór homeinn-public.js — die roept closeMob() aan vanuit
    de paginarouter go().
@@ -25,7 +25,10 @@ function syncMenuState(isOpen) {
   // Scroll-lock alleen opheffen als er geen andere overlay (modal/woningdetail) meer open staat.
   document.body.classList.toggle('no-scroll', isOpen || andereOverlayOpen());
   var burger = document.getElementById('burger');
-  if (burger) burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  if (burger) {
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    burger.setAttribute('aria-label', isOpen ? 'Sluit menu' : 'Open menu');
+  }
 }
 
 function closeMob() {
@@ -50,6 +53,25 @@ function toggleMob() {
   if (eerste) { try { eerste.focus(); } catch (_) {} }
 }
 
+/* Sluitroutes horen bij het gedeelde menu, ook op pagina's zonder homepage-script. */
+window.addEventListener('resize', function () {
+  if (window.innerWidth > 1100) closeMob();
+});
+document.addEventListener('click', function (e) {
+  var mob = document.getElementById('mob');
+  var burger = document.getElementById('burger');
+  if (!mob || !mob.classList.contains('on')) return;
+  if (burger && burger.contains(e.target)) return;
+  if (e.target === mob || !mob.contains(e.target)) { closeMob(); return; }
+  var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+  if (!a) return;
+  var doel = document.getElementById(a.getAttribute('href').slice(1));
+  if (!doel) return;
+  e.preventDefault();
+  closeMob();
+  doel.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+});
+
 /* ── Uitklapbaar submenu ('Diensten') ── */
 function zetSub(sub, open) {
   sub.classList.toggle('on', open);
@@ -71,17 +93,11 @@ function toggleNavSub(btn) {
   zetSub(sub, open);
 }
 
-// Hover en toetsenbordfocus openen het paneel via CSS; houd aria-expanded en de
-// .on-klasse daarmee in de pas, zodat Escape en schermlezers de echte staat zien.
+// Eén toestand voor zichtbaarheid en aria-expanded. Klik, Enter en Spatie
+// bedienen de knop; focus of hover opent het paneel niet onverwacht opnieuw.
 document.querySelectorAll('.nav-has-sub').forEach(function (li) {
   var sub = li.querySelector('.nav-mega');
   if (!sub) return;
-  var fijn = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  if (fijn) {
-    li.addEventListener('mouseenter', function () { zetSub(sub, true); });
-    li.addEventListener('mouseleave', function () { zetSub(sub, false); });
-  }
-  li.addEventListener('focusin', function () { zetSub(sub, true); });
   li.addEventListener('focusout', function (e) {
     if (!li.contains(e.relatedTarget)) zetSub(sub, false);
   });
@@ -149,3 +165,55 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', sync);
   });
 });
+
+
+/* ── Portefeuille inkorten op telefoons ──
+   Acht panden onder elkaar is op mobiel 6,6 schermen scrollen voordat je verder
+   komt. Onder 720px tonen we er drie, met een knop die de rest uitklapt. Dit
+   gebeurt bewust in JavaScript: zonder JS blijft de volledige lijst staan — een
+   bezoeker mag nooit panden missen doordat een script niet laadt.
+
+   Sommige grids (projecten.html, te-koop.html, verhuur.html) worden pas ná
+   DOMContentLoaded uit aanbod.json gevuld. Daarom kijkt een MutationObserver mee
+   tot een grid genoeg kaarten heeft; daarna koppelt hij zichzelf los. */
+(function () {
+  function kortIn(grid) {
+    if (grid.dataset.ingekort) return;
+    var kaarten = grid.children.length;
+    if (kaarten <= 4) return;               // vier of minder: inkorten heeft geen zin
+    grid.dataset.ingekort = '1';
+    grid.classList.add('pf-inkort');
+    var knop = document.createElement('button');
+    knop.type = 'button';
+    knop.className = 'pf-meer';
+    knop.setAttribute('aria-expanded', 'false');
+    knop.innerHTML = 'Toon alle ' + kaarten + ' panden <span class="arr" aria-hidden="true">\u2193</span>';
+    knop.addEventListener('click', function () {
+      grid.classList.remove('pf-inkort');
+      knop.setAttribute('aria-expanded', 'true');
+      knop.remove();
+      // Focus naar de eerste kaart die zichtbaar wordt, zodat toetsenbord- en
+      // schermlezergebruikers niet aan het einde van de lijst achterblijven.
+      var eerste = grid.children[3];
+      if (eerste) {
+        var f = eerste.querySelector('a,button,h3');
+        if (f) { if (!f.matches('a[href],button')) f.setAttribute('tabindex', '-1'); try { f.focus(); } catch (_) {} }
+      }
+    });
+    grid.insertAdjacentElement('afterend', knop);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.matchMedia || !window.matchMedia('(max-width:720px)').matches) return;
+    document.querySelectorAll('.blog-grid').forEach(function (grid) {
+      kortIn(grid);
+      if (grid.dataset.ingekort || !window.MutationObserver) return;
+      // Nog niet genoeg kaarten: wacht tot het aanbod geladen is.
+      var obs = new MutationObserver(function () {
+        kortIn(grid);
+        if (grid.dataset.ingekort) obs.disconnect();
+      });
+      obs.observe(grid, { childList: true });
+    });
+  });
+})();

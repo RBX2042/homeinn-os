@@ -10,9 +10,9 @@
   <meta name="theme-color" content="#0b1e30">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260906k">
-  <link rel="stylesheet" href="tokens.css?v=20260906k">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260906k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260912a">
+  <link rel="stylesheet" href="tokens.css?v=20260912a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260912a">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -73,7 +73,6 @@
               <span class="nav-mega-h">Kennismaken</span>
               <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
               <a class="btn btn-primary nav-mega-btn" href="contact.html">Plan een kennismaking <span class="arr">→</span></a>
-              <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
             </div>
           </div>
         </div>
@@ -81,8 +80,9 @@
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <a class="tel" href="tel:+31626257071">Liever bellen? <strong>+31 6 26 25 70 71</strong></a>
-  </header>
+    
+  <div class="right"><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+</header>
 <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
     <nav aria-label="Hoofdmenu">
       <a href="projectontwikkeling.html">Projectontwikkeling</a>
@@ -101,7 +101,7 @@
     </nav>
     <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
-    <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> · Rotterdam</p>
+    <p class="mob-sub"><a href="contact.html">Contact &amp; kennismaken</a> · Rotterdam</p>
     <div class="mob-legal">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
@@ -135,6 +135,7 @@
 
   <footer class="site-foot">
     <div class="in">
+      <p class="site-foot-contact"><a href="tel:+31626257071">+31 6 26 25 70 71</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
       <nav class="site-foot-nav" aria-label="Hoofdlinks">
         <a href="./">Home</a>
         <a href="projectontwikkeling.html">Projectontwikkeling</a>
@@ -160,6 +161,6 @@
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260906k"></script>
+  <script src="site-nav.js?v=20260912a"></script>
 </body>
 </html>

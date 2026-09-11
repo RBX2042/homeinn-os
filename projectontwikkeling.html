@@ -21,9 +21,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260906k">
-  <link rel="stylesheet" href="tokens.css?v=20260906k">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260906k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260912a">
+  <link rel="stylesheet" href="tokens.css?v=20260912a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260912a">
   <style>
     .pp-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
       padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
@@ -82,7 +82,6 @@
               <span class="nav-mega-h">Kennismaken</span>
               <p class="nav-mega-p">Dertig minuten is genoeg om te weten of wij iets voor elkaar kunnen betekenen. In Rotterdam, bij u thuis of online.</p>
               <a class="btn btn-primary nav-mega-btn" href="contact.html" onclick="if(window.openModal){closeNavSubs();openModal();return false}">Plan een kennismaking <span class="arr">→</span></a>
-              <p class="nav-mega-tel">Liever bellen? <a href="tel:+31626257071">+31 6 26 25 70 71</a></p>
             </div>
           </div>
         </div>
@@ -91,7 +90,7 @@
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
     <div class="right">
-      <a class="tel" href="tel:+31626257071">Liever bellen? <strong>+31 6 26 25 70 71</strong></a>
+      
       <a class="top-cta" href="contact.html">Plan een kennismaking</a>
     </div>
   </header>
@@ -114,7 +113,7 @@
   </nav>
   <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
-  <p class="mob-sub">Liever een gesprek? <a href="tel:+31626257071">+31 6 26 25 70 71</a> · Rotterdam</p>
+  <p class="mob-sub"><a href="contact.html">Contact &amp; kennismaken</a> · Rotterdam</p>
   <div class="mob-legal">
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
@@ -128,7 +127,7 @@
     <section class="page-hero">
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Projectontwikkeling · Rotterdam</span>
-        <h1>Projectontwikkeling in Rotterdam — van casco tot <em>instapklaar</em></h1>
+        <h1>Projectontwikkeling.<br><em>Van casco tot instapklaar.</em></h1>
         <p>Wij kopen niet alleen aan, wij ontwikkelen ook zelf: volledige renovaties, herindelingen en verduurzaming naar energielabel A — met onze vaste bouwpartner en strakke budget- en planningsbewaking.</p>
         <div class="pp-hero-cta">
           <a class="btn btn-primary" href="projecten.html">Bekijk alle projecten <span class="arr">→</span></a>
@@ -147,6 +146,7 @@
     <!-- VASTE BOUWPARTNER + WAT WE DOEN -->
     <section class="partner-section">
       <div class="partner-inner">
+        <div class="partner-intro">
         <div class="partner-head">
           <span class="t-eyebrow">Onze vaste bouwpartner</span>
           <div class="rule" style="margin-top:1.25rem"></div>
@@ -154,6 +154,11 @@
           <p>Een renovatie is zo sterk als de handen die haar uitvoeren. Daarom werkt HomeINN niet met wisselende onderaannemers, maar met één vaste bouwpartner: <strong>Lageweg Services B.V.</strong> — een veelzijdig bouw- en onderhoudsbedrijf uit de regio Rotterdam, gespecialiseerd in renovatie en totaalonderhoud voor particulieren, VvE's en zakelijke opdrachtgevers.</p>
           <p>Elk HomeINN-project — van gevelherstel tot complete woningrenovatie — wordt samen met dit team voorbereid, gecalculeerd en uitgevoerd. Eén aanspreekpunt, ingespeelde vaklieden en een gedeelde standaard: kwaliteit, betrouwbaarheid en duurzame oplossingen. Zo weet u vooraf wie er op de steiger staat — en dat het resultaat klopt met de begroting.</p>
           <div class="partner-bq"><blockquote>"Samen bouwen aan tevredenheid."</blockquote><span class="partner-bq-naam">— Lageweg Services B.V.</span></div>
+        </div>
+        <figure class="development-photo">
+          <img src="fotos/interieur-sfeer.jpg" alt="Lichte woonkamer met houten vloer, hoge ramen en een blauwe bank" width="1200" height="801" loading="lazy" decoding="async">
+          <figcaption>Sfeerbeeld · afwerking en woonkwaliteit. Geen HomeINN-project.</figcaption>
+        </figure>
         </div>
         <div class="partner-grid">
           <div class="pcard"><div class="pcard-num">01</div><h3>Gevel &amp; metselwerk</h3><p>Gevelrenovatie, voegwerk vervangen, metselwerkherstel, scheurherstel, reiniging en impregneren.</p></div>
@@ -179,7 +184,7 @@
     </section>
 
     <!-- PORTEFEUILLE — echte panden in eigen bezit (bron: aanbod.json) -->
-    <section class="blog-section" id="portefeuille" style="padding-left:clamp(1.5rem,5vw,5.5rem);padding-right:clamp(1.5rem,5vw,5.5rem)">
+    <section class="blog-section" id="portefeuille">
       <div style="max-width:1320px;margin:0 auto;padding-bottom:.5rem">
         <div class="proc-head">
           <span class="t-eyebrow rv in">Onze portefeuille</span>
@@ -193,7 +198,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="2e%20Rosestraat%2026%2C%203074%20JK%20Rotterdam" data-titel="2e Rosestraat 26-A, 26-B en 28">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/2e-rosestraat-26.jpg" alt="2e Rosestraat 26-A, 26-B en 28 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -213,7 +218,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="Gaesbeekstraat%2092%2C%203081%20NM%20Rotterdam" data-titel="Gaesbeekstraat 92-A en 92-B">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/gaesbeekstraat-92.jpg" alt="Gaesbeekstraat 92-A en 92-B in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -233,7 +238,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="%27s-Gravendijkwal%2088%2C%203014%20EH%20Rotterdam" data-titel="&#x27;s-Gravendijkwal 88 en 90">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/s-gravendijkwal-88.jpg" alt="&#x27;s-Gravendijkwal 88 en 90 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -253,7 +258,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="Honingerdijk%20105%2C%203063%20AL%20Rotterdam" data-titel="Honingerdijk 105 en 107">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/honingerdijk-105.jpg" alt="Honingerdijk 105 en 107 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -273,7 +278,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="Ploegstraat%2048%2C%203075%20NG%20Rotterdam" data-titel="Ploegstraat 48">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/ploegstraat-48.jpg" alt="Ploegstraat 48 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -293,7 +298,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="Schulpweg%20396%2C%203084%20NJ%20Rotterdam" data-titel="Schulpweg 396">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/schulpweg-396.jpg" alt="Schulpweg 396 in Rotterdam — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -313,7 +318,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="Van%20der%20Driftstraat%204%2C%203131%20JH%20Vlaardingen" data-titel="Van der Driftstraat 4-A">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/van-der-driftstraat-4a.jpg" alt="Van der Driftstraat 4-A in Vlaardingen — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -333,7 +338,7 @@
           <div class="pf-visual">
             <button class="map-load" type="button" data-maps="Tollensstraat%2032%2C%203131%20GZ%20Vlaardingen" data-titel="Tollensstraat 32">
               <span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span>
-              <strong>Kaart tonen</strong>
+              <strong>Bekijk de locatie <span aria-hidden="true">↗</span></strong><span class="pf-photo-note">Projectfoto’s volgen</span>
               <span class="map-load-sub">Google Maps — laadt pas na uw klik</span>
             </button>
             <img class="pf-foto" src="fotos/tollensstraat-32.jpg" alt="Tollensstraat 32 in Vlaardingen — pand in eigendom van HomeINN" loading="lazy" decoding="async" onerror="this.remove()" onload="this.classList.add('on')">
@@ -363,6 +368,7 @@
 
   <footer class="site-foot">
     <div class="in">
+      <p class="site-foot-contact"><a href="tel:+31626257071">+31 6 26 25 70 71</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
       <nav class="site-foot-nav" aria-label="Hoofdlinks">
         <a href="./">Home</a>
         <a href="projectontwikkeling.html">Projectontwikkeling</a>
@@ -400,7 +406,7 @@
     "description":"HomeINN ontwikkelt vastgoed in Rotterdam: volledige renovaties, herindelingen en verduurzaming naar energielabel A, uitgevoerd met één vaste bouwpartner (Lageweg Services B.V.)."
   }
   </script>
-<script src="site-nav.js?v=20260906k"></script>
+<script src="site-nav.js?v=20260912a"></script>
 <script>
 /* Kaart pas laden na een klik: geen Google-verzoek zonder toestemming van de bezoeker. */
 (function(){

@@ -1,0 +1,36 @@
+<svg viewBox="0 0 1200 760" preserveAspectRatio="xMaxYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <style>line,path{fill:none;stroke-linecap:round;stroke-linejoin:round}.hb-cable{stroke:#cca94a;stroke-width:.7}.hb-pylon{stroke:#fff;stroke-width:2.4}.hb-pier{stroke:#fff;stroke-width:1.25}.hb-deck{stroke:#fff;stroke-width:1}</style><defs>
+        <!-- dek-verloop: onzichtbaar boven de tekst/knoppen (links), zichtbaar onder de brug, vloeit weg vóór de schermrand -->
+        <linearGradient id="hb-deckfade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".46" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".52" stop-color="#fff" stop-opacity=".45"/>
+          <stop offset=".9" stop-color="#fff" stop-opacity=".45"/>
+          <stop offset=".98" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- brugdek: vloeiend ingebed, geen doorlopende streep meer -->
+      <line class="hb-deck" x1="0" y1="600" x2="1200" y2="600"/>
+      <!-- De Zwaan: dichte hoofdwaaier (echte brug heeft 16 voorstays) + 2 achterstays -->
+      <g class="hb-cables">
+        <!-- hoofdwaaier: dichte fan vanaf de gebogen nek → lange overspanning (links); hoog aangrijpend = ver reikend -->
+        <line class="hb-cable" pathLength="1" x1="862" y1="320" x2="760" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="873" y1="306" x2="702" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="885" y1="292" x2="644" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="896" y1="279" x2="586" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="907" y1="265" x2="528" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="918" y1="251" x2="470" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="930" y1="237" x2="412" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="941" y1="223" x2="354" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="952" y1="209" x2="296" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="963" y1="195" x2="238" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="975" y1="181" x2="180" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="986" y1="168" x2="122" y2="600"/>
+        <!-- 2 achterstays → één achteranker op de korte zijde (rechts) -->
+        <line class="hb-cable" pathLength="1" x1="984" y1="168" x2="1150" y2="600"/>
+        <line class="hb-cable" pathLength="1" x1="962" y1="201" x2="1150" y2="600"/>
+      </g>
+      <!-- De Zwaan: kaarsrechte schacht 'recht omhoog' → knik op ~3/5 → nek helt fors ACHTEROVER (van de overspanning af) naar de vrije kop -->
+      <path class="hb-pylon" d="M850 600 L850 335 L1000 150"/>
+      <line class="hb-pier" x1="850" y1="600" x2="850" y2="656"/>
+    </svg>

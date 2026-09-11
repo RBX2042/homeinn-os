@@ -39,17 +39,20 @@ cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[]
 cp funda-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<RealEstateFeed bron="HomeINN" versie="3.0" gegenereerd="" aantal="0"><Objecten></Objecten></RealEstateFeed>' > website-online/funda-feed.xml
 cp pararius-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<pararius source="HomeINN" generated="" count="0"><properties></properties></pararius>' > website-online/pararius-feed.xml
 cp sw.js website-online/ 2>/dev/null || true
+# Kopieer foto's vóór de controle; anders worden ook bestaande beelden gestript.
+cp -R fotos website-online/fotos 2>/dev/null || true
 # Fotoplekken waarvan het bestand (nog) niet bestaat uit de BUNDEL strippen. De bron blijft
 # fotoklaar (zet het bestand in fotos/ en het verschijnt), maar de live site vraagt niets op
 # wat er niet is — geen 404's in logs, geen verspilde requests, geen fetchpriority op niets.
 python3 - <<'FOTO_PY'
-import io, os, re, glob
+import io, os, re, glob, json
+from urllib.parse import urlsplit
 n = 0
 for f in glob.glob('website-online/*.html'):
     s = io.open(f, encoding='utf-8').read(); o = s
     def keep(m):
         src = re.search(r'src="([^"]+)"', m.group(0))
-        return m.group(0) if (src and os.path.exists(os.path.join('website-online', src.group(1)))) else ''
+        return m.group(0) if (src and os.path.exists(os.path.join('website-online', src.group(1).split('?')[0]))) else ''
     # Alleen STATISCHE markup strippen. Binnen <script> staan dezelfde tags als
     # JS-tekst (bijv. de renderer van projecten.html); die mag je niet aanraken,
     # anders sloop je de code die de foto's juist plaatst.
@@ -66,6 +69,19 @@ for f in glob.glob('website-online/*.html'):
     if s != o:
         io.open(f, 'w', encoding='utf-8').write(s); n += 1
 print("  ✓ ontbrekende fotoplekken gestript uit %d pagina('s)" % n)
+# Ook dynamisch gerenderde kaarten mogen geen ontbrekende foto's opvragen.
+pad = 'website-online/aanbod.json'
+with open(pad, encoding='utf-8') as f: data = json.load(f)
+def schoon(value):
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key == 'fotos' and isinstance(item, list):
+                value[key] = [u for u in item if isinstance(u, str) and (urlsplit(u).scheme in ('http','https','data') or os.path.isfile(os.path.join('website-online', urlsplit(u).path)))]
+            else: schoon(item)
+    elif isinstance(value, list):
+        for item in value: schoon(item)
+schoon(data)
+with open(pad, 'w', encoding='utf-8') as f: json.dump(data, f, ensure_ascii=False, indent=2)
 FOTO_PY
 
 # Sitemap-datums (lastmod) gelijkzetten aan de werkelijke wijzigingsdatum van elke pagina.
@@ -94,7 +110,6 @@ sed 's#"start_url": "portaal.html"#"start_url": "index.html"#; s#"short_name": "
 cp -R assets website-online/assets
 # Verwijder zware, ongebruikte logo-varianten uit de deploybundel (bronbestanden in assets/ blijven staan)
 rm -f website-online/assets/logo-light-fullres.png website-online/assets/logo-light-original.png website-online/assets/logo-dark-original.png website-online/assets/homeinn-logo-new.png website-online/assets/logo-light-700.png website-online/assets/logo-light-700.webp
-cp -R fotos website-online/fotos 2>/dev/null || true
 cp -R fonts website-online/fonts 2>/dev/null || true
 
 # ── Minify CSS + publieke JS in de bundel (de bronbestanden blijven leesbaar) ──
@@ -118,4 +133,4 @@ else
 fi
 
 echo "Klaar: upload de inhoud van 'website-online' naar je hosting."
-open website-online
+[ "${HOMEINN_NO_OPEN:-0}" = "1" ] || open website-online

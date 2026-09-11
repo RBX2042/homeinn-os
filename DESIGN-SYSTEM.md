@@ -148,3 +148,44 @@ intact blijft.
 ---
 
 *Bijgehouden naast de code. Wijzig je het systeem, wijzig dan dit bestand — anders bestaat de wijziging niet.*
+
+## Lancering 7 september 2026
+
+De homepage heeft lokale Rotterdam-fotografie met een navy tekstverloop; bij geladen fotografie verdwijnt de brugillustratie. De projectontwikkelpagina heeft een responsieve tekst/beeldcombinatie en een expliciet sfeerbijschrift. Foto’s en gebruiksrechten staan in fotos/BEELDRECHTEN.md. Menu-knop benoemt de actuele open/sluitactie. Cacheversie verhoogd.
+
+Tijdelijke pandpresentatie: navy/gouden locatiekaarten met echt adres en “Projectfoto’s volgen”, op homepage, projectontwikkeling en projecten. Eigen foto’s nemen het vlak automatisch over. Gecontroleerd op 320px zonder overflow; websitepakket opnieuw gecontroleerd.
+
+Afwerking layout: dienstkoppen begrensd op 5.25rem, ruimere/helderdere introtypografie, kaartteksten 16px op desktop, knoppen minimaal 48px hoog. Verhuurintro ingekort, uitlijning hero en aanbod exact gelijk (132px bij 1440px), aparte verhuurdersroute getest. Verhuurtekst verduidelijkt rond vaste bouwpartner en per-woning energielabel; onjuiste absolute tekst “geen derden” verwijderd. Acht kernpagina’s opnieuw op 320px gecontroleerd zonder horizontale overflow. 39 pagina’s statisch gecontroleerd zonder fouten. Bestaande inhoudelijke lanceerpunten blijven open.
+
+## Volledige responsive eindcontrole
+
+33 publieke routes (inclusief login, 404, juridisch en wijkpagina’s; exclusief ingelogde rolportalen en dubbele homepage) gecontroleerd op 320, 768 en 1440 pixels: 99 weergaven, geen documentoverflow of horizontaal afgesneden zichtbare koppen, alinea’s, labels, lijstitems en knoppen gevonden. De 1px schermlezerskop van login is bewust uitgesloten.
+
+Vijf kernpagina’s met een lokaal gesimuleerde verdubbelde rootletter (32px): homepage, contact, beheer, verhuur en pand verkopen. Na herstel geen horizontale documentoverflow. Dit is een tekstvergrotingstest, geen certificering van alle browserzoomcombinaties.
+
+Hersteld: tekstvelden minimaal 16px en 48px hoog; formulierlabels minimaal 14px; flexibele kolommen voor formulieren, pakketten, menu en calculator; kopbalk kan doorlopen bij grote tekst; beheer-H1 krijgt duidelijke regels. De menu-items hadden door een te brede flexregel hun toelichting naast de titel; deze staan nu onder elkaar. Menubediening werkt via klik/Enter/Spatie en sluit met Escape of verlaten van de focus. CSS-hover opent het paneel alleen als JavaScript uit staat, zodat visuele toestand en aria-expanded niet kunnen botsen. Klik open, Escape dicht en Enter open in browser getest.
+
+Statische pakketcontrole: 39 pagina’s, 22 JavaScript-controles, geen fouten of kapotte ankers. Desktopmenu visueel beoordeeld. Er zijn geen live aanvragen verstuurd; de bestaande inhoudelijke lanceerpunten blijven van kracht.
+
+## Referentie 7 september — homeinn.vercel.app
+Homepage opent weer met navy, gouden accenten en het Rotterdamse lijnmotief. Fotografie staat in inhoudelijke secties. Dienstenkoppen volgen de ruime referentieverhouding (7vw, maximaal 6.5rem, tekstkolom 900px); introducties blijven compact op maximaal 520px. Responsieve formulieren en navigatie behouden.
+
+## Laatste correctie na screenshots
+Dienstenkoppen maximaal 4.75rem met 5.2vw schaal; projectontwikkeling korter in twee regels. Waardenbalk statisch voor continue leesbaarheid. Modal vanaf boven scrollbaar bij korte schermen.
+
+## Contactplaatsing
+Geen telefoonnummer of “Liever bellen?” in header, dienstenmenu of mobiel menu. Contactgegevens in footer en contactpagina; menu houdt één primaire actie.
+
+## Definitieve gedeelde publieke opmaak — vergelijking met screenshots
+
+De afsluitende gedeelde blokken in homeinn-public.css beheren de publieke header en compositie. Voeg geen nieuwe pagina-specifieke headerafmetingen, logogroottes, CTA-vormen of vaste-nav-offsets toe.
+
+- Header: sticky, 72px desktop, 64px tot1100px. Logo170px desktop/158px mobiel. Eén gecentreerd menu en één CTA naar contact.html. site-nav.js gebruikt hetzelfde1100px omslagpunt.
+- Contentlijn: --site-content1176px, --site-gutter20–88px. Containers met binnenpadding tellen die apart op; schermbrede achtergronden krijgen een binnencontainer. Geen padding op footer.site-foot buiten .in.
+- Diensten en homepage: gedeelde serif-H1, goud zonder verschillende cursiefvarianten, gelijk donker verloop en bestaand brugmotief. Kopinhoud mag in aantal regels verschillen.
+- Contact staat in footer en contactpagina, niet in menu/header. Mobiele header bevat alleen logo en menuknop.
+- Na latere layoutwijzigingen naast elkaar beoordelen: homepage, ontwikkeling, aanbod, investeren; desktop1440 en mobiel390, plus320 en omslagpunt1100. Vergelijk daadwerkelijke logo-, menu-, CTA- en sectieposities, niet alleen documentoverflow.
+
+## Homepage, volledige controle 7 september 2026
+
+Houd de leesvolgorde aan: propositie, introductie/cijfers, drie uitgelichte projecten, drie investeerdersstappen, diensten, verkopersproces, kennis, werkgebied, FAQ en afsluitende aanvraag. Alle acht projecten blijven op de projectenpagina. Koppen en kaarten delen dezelfde inhoudsbreedte. Footerlinks zijn mobiel minimaal 16 px. Inhoud mag nooit van een succesvolle animatie-initialisatie afhangen. Projectinformatie-aanvragen gaan naar het investeerdersformulier. Gebruik eigen portefeuillegegevens voor cijfers en onderscheid sfeerbeelden van echte pandfoto’s.
