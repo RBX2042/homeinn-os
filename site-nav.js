@@ -271,3 +271,97 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('scroll', vangnet, { passive: true });
   window.addEventListener('resize', vangnet);
 });
+
+/* ── Licht/donker-schakelaar (19 sep 2026) ──
+   Kleuren komen uit tokens.css ([data-theme=dark] + prefers-color-scheme). Dit blok zet alleen
+   de knop in de kop (naast de EN-schakelaar), onthoudt de keuze in localStorage ('hi-theme')
+   en houdt aria-pressed/label bij. Het vroege inline-script in <head> past de opgeslagen keuze
+   al vóór de eerste paint toe, zodat er geen flits is. */
+(function () {
+  var EN = (document.documentElement.lang || 'nl').indexOf('en') === 0;
+  function huidig() {
+    var a = document.documentElement.getAttribute('data-theme');
+    if (a === 'dark' || a === 'light') return a;
+    return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  function label(knop) {
+    var donker = huidig() === 'dark';
+    knop.setAttribute('aria-pressed', donker ? 'true' : 'false');
+    knop.setAttribute('aria-label', EN ? (donker ? 'Switch to light mode' : 'Switch to dark mode') : (donker ? 'Naar lichte modus' : 'Naar donkere modus'));
+    knop.title = knop.getAttribute('aria-label');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', donker ? '#14161a' : (meta.dataset.licht || meta.getAttribute('content')));
+  }
+  function maakKnop() {
+    var knop = document.createElement('button');
+    knop.type = 'button'; knop.className = 'theme-sw';
+    knop.innerHTML = '<svg class="ts-zon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>' +
+                     '<svg class="ts-maan" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
+    knop.addEventListener('click', function () {
+      var naar = huidig() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', naar);
+      try { localStorage.setItem('hi-theme', naar); } catch (e) {}
+      document.querySelectorAll('.theme-sw').forEach(label);
+    });
+    label(knop);
+    return knop;
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.dataset.licht = meta.getAttribute('content');
+    var plekken = document.querySelectorAll('.lang-sw');
+    if (plekken.length) plekken.forEach(function (ls) { ls.parentNode.insertBefore(maakKnop(), ls); });
+    var burger = document.getElementById('burger') || document.querySelector('.sn-burger,.burger');
+    if (burger) { var m = maakKnop(); m.classList.add('theme-sw--m'); burger.parentNode.insertBefore(m, burger); }
+    else { var kop = document.querySelector('header .right, header .nav-right, .topbar .right, .topbar, header'); if (kop) kop.appendChild(maakKnop()); }
+    if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { document.querySelectorAll('.theme-sw').forEach(label); });
+  });
+})();
+
+/* ── Taal-continuïteit NL/EN (19 sep 2026) ──
+   Er zijn vijf Engelse pagina's (home, about, contact, invest, projects). Alle andere pagina's
+   bestaan alleen in het Nederlands. Zonder hulp verliest een Engelse bezoeker zijn taal zodra hij
+   in het menu op bv. "Development" klikt. Daarom:
+   1. op EN-pagina's krijgen menu-/footerlinks naar NL-only pagina's een klein NL-label en hreflang;
+   2. de taalkeuze wordt onthouden ('hi-lang');
+   3. landt een Engelse bezoeker (verwijzer *-en.html, ?lang=en of onthouden keuze) op een
+      NL-only pagina, dan verschijnt onderaan een smalle balk met een weg terug naar het Engels;
+   4. heeft de NL-pagina wél een Engelse tweeling en kwam de bezoeker van een EN-pagina, dan
+      gaan we direct door naar die tweeling (geen dubbel klikken). */
+(function () {
+  var EN = (document.documentElement.lang || 'nl').indexOf('en') === 0;
+  var NL_ONLY = /^(projectontwikkeling|vastgoedbeheer|verhuur|te-koop|kennis(-[a-z0-9-]+)?|werkgebied|pand-verkopen|privacy|voorwaarden|cookies|woning|404|verkopen-[a-z-]+)\.html/;
+  function onthoud(l) { try { localStorage.setItem('hi-lang', l); } catch (e) {} }
+  function onthouden() { try { return localStorage.getItem('hi-lang'); } catch (e) { return null; } }
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.lang-sw').forEach(function (a) { a.addEventListener('click', function () { onthoud(a.getAttribute('lang') || 'nl'); }); });
+    if (EN) {
+      onthoud('en');
+      document.querySelectorAll('header a[href], #mob a[href], footer a[href], .site-foot a[href], .nav-mega a[href]').forEach(function (a) {
+        var h = a.getAttribute('href') || '';
+        if (!NL_ONLY.test(h) || a.querySelector('.nl-tag')) return;
+        a.setAttribute('hreflang', 'nl');
+        a.setAttribute('href', h + (h.indexOf('?') > -1 ? '&' : '?') + 'lang=en');
+        a.insertAdjacentHTML('beforeend', ' <span class="nl-tag" title="Dutch only">NL</span>');
+      });
+      return;
+    }
+    var q = new URLSearchParams(location.search);
+    var vanEN = /-en\.html/.test(document.referrer) || q.get('lang') === 'en' || (onthouden() === 'en' && !document.referrer);
+    if (q.get('lang') === 'nl') { onthoud('nl'); vanEN = false; }
+    if (!vanEN) return;
+    var sw = document.querySelector('.lang-sw');
+    var isHome = /\/(index\.html|homeinn-public\.html)?$/.test(location.pathname);
+    var twin = sw && (isHome || !/index-en\.html$/.test(sw.getAttribute('href') || '')) ? sw.getAttribute('href') : null;
+    // Kwam de bezoeker via de NL-schakelaar van de Engelse tweeling? Dan is Nederlands een bewuste keuze.
+    if (twin && document.referrer.indexOf(twin.replace(/^\.\//, '')) > -1) { onthoud('nl'); return; }
+    var terug = twin ? twin : (/-en\.html/.test(document.referrer) ? document.referrer : 'index-en.html');
+    var tekst = twin ? 'This page is also available in English.' : 'This page is only available in Dutch.';
+    var knop = twin ? 'View in English \u2192' : 'Back to English \u2192';
+    var bar = document.createElement('div');
+    bar.className = 'nl-bar'; bar.setAttribute('role', 'status'); bar.setAttribute('lang', 'en');
+    bar.innerHTML = '<span>' + tekst + '</span> <a href="' + terug.replace(/"/g, '') + '">' + knop + '</a>' +
+                    '<button type="button" class="nl-bar-x" aria-label="Close">\u00d7</button>';
+    bar.querySelector('.nl-bar-x').addEventListener('click', function () { bar.remove(); onthoud('nl'); });
+    document.body.appendChild(bar);
+  });
+})();

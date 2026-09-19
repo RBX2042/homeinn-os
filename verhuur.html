@@ -2,6 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8">
+  <script>try{var t=localStorage.getItem('hi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Huurwoningen &amp; verhuurservice Rotterdam — HomeINN</title>
   <meta name="description" content="Gerenoveerde, energiezuinige huurwoningen in Rotterdam, plus verhuurservice voor eigenaren: screening, contract en beheer onder één dak.">
@@ -21,9 +22,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919i">
-  <link rel="stylesheet" href="tokens.css?v=20260919i">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919i">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919j">
+  <link rel="stylesheet" href="tokens.css?v=20260919j">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919j">
   <style>
     .vh-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
       padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
@@ -48,7 +49,7 @@
     @media(min-width:760px){.vh-steps{grid-template-columns:repeat(2,1fr)}}
     .vh-step{display:flex;gap:1rem;align-items:flex-start}
     .vh-step .vh-check{flex:0 0 22px;width:22px;height:22px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold-ink);margin-top:2px}
-    .vh-step h3{font-size:1rem;font-weight:600;color:var(--navy);margin:0 0 .25rem}
+    .vh-step h3{font-size:1rem;font-weight:600;color:var(--navy-text);margin:0 0 .25rem}
     .vh-step p{font-size:1rem;font-weight:300;color:var(--ink3);line-height:1.7;margin:0}
     .vh-eigenaren{background:var(--navy);color:#dfe6ec}
     .vh-eigenaren .in{max-width:1320px;margin:0 auto;padding:clamp(3.5rem,7vw,6rem) clamp(1.5rem,5vw,5.5rem);display:grid;grid-template-columns:1fr;gap:2.5rem}
@@ -61,12 +62,12 @@
     .vh-eig-list li{display:flex;gap:.75rem;align-items:flex-start;font-size:1rem;font-weight:300;color:#dfe6ec;line-height:1.6}
     .vh-eig-list li svg{flex:0 0 18px;width:18px;height:18px;color:var(--gold2);margin-top:2px}
     .vh-eig-card{background:var(--panel);color:var(--ink);padding:2.5rem;text-align:center}
-    .vh-eig-card .price{font-family:var(--serif);font-size:2.6rem;font-weight:300;color:var(--navy);line-height:1}
+    .vh-eig-card .price{font-family:var(--serif);font-size:2.6rem;font-weight:300;color:var(--navy-text);line-height:1}
     .vh-eig-card .price-lbl{font-size:.8rem;color:var(--ink4);font-weight:400;margin-top:.4rem}
     .vh-eig-card p{color:var(--ink3);font-size:1rem;font-weight:300;line-height:1.7;margin:1.25rem 0 1.75rem}
     .vh-form-wrap{max-width:720px;margin:0 auto}
     .vh-form-success{display:none;background:var(--panel);border:1px solid var(--line);padding:2.5rem;text-align:center}
-    .vh-form-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy);margin:0 0 .75rem}
+    .vh-form-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy-text);margin:0 0 .75rem}
     .vh-form-success p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0}
     .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
   </style>
@@ -281,7 +282,7 @@
     "description":"Huurwoningen in Rotterdam en verhuurservice voor eigenaren: gerenoveerde, energiezuinige woningen met één aanspreekpunt en een 24/7 storingslijn voor huurders van onze eigen woningen; voor eigenaren advertentie, screening en huurcontract."
   }
   </script>
-  <script src="lead-cloud.js?v=20260919i" defer></script>
+  <script src="lead-cloud.js?v=20260919j" defer></script>
   <script>
   (function(){
     'use strict';
@@ -295,7 +296,7 @@
 
     /* ── Huuraanbod uit aanbod.json (sleutel 'tehuur') — nette lege staat ── */
     var SLEUTEL = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="4"/><path d="M11 11l8 8M16 16l2-2M19 19l2-2"/></svg>';
-    var leeg = '<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><div class="leeg-spot" style="color:var(--gold-ink);margin-bottom:1rem">' + SLEUTEL + '</div><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy);margin:0 0 .5rem">Op dit moment hebben wij geen woningen te huur.</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Nieuwe huurwoningen komen geregeld beschikbaar. Laat hieronder weten wat u zoekt — wij benaderen u zodra er een passende woning vrijkomt.</p></div>';
+    var leeg = '<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><div class="leeg-spot" style="color:var(--gold-ink);margin-bottom:1rem">' + SLEUTEL + '</div><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy-text);margin:0 0 .5rem">Op dit moment hebben wij geen woningen te huur.</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Nieuwe huurwoningen komen geregeld beschikbaar. Laat hieronder weten wat u zoekt — wij benaderen u zodra er een passende woning vrijkomt.</p></div>';
 
     function bezichtig(ref){
       var obj = document.getElementById('vh-object'); if (obj) obj.value = ref || '';
@@ -389,6 +390,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260919i"></script>
+<script src="site-nav.js?v=20260919j"></script>
 </body>
 </html>

@@ -34,6 +34,9 @@
   --navy2:       #102840;
   --navy3:       #183450;
   --navy4:       #224060;
+  --navy-text:   var(--navy);
+  --surface-dark:  #1e1c18;        /* donkere sectie-achtergrond (pakketten, kennis-hero, footer) — in beide modi gelijk */
+  --surface-darker:#0c0b09;      /* navy als TEKST op lichte vlakken — wordt licht in de donkere modus */
   --navy-2:      var(--navy2);     /* legacy-alias — niet meer gebruiken */
 
   /* — Neutraal: inkt & crème ———————————————————————————————————— */
@@ -162,4 +165,55 @@
   --bp-md: 768px;
   --bp-lg: 1024px;
   --bp-xl: 1280px;
+}
+
+/* ============================================================================
+   DONKERE MODUS (19 september 2026)
+   De navy-vlakken blijven navy; de crème/witte vlakken worden warm antraciet en de
+   inktkleuren licht. Tekst die op lichte vlakken navy was, gebruikt --navy-text.
+   Volgorde: systeemvoorkeur (tenzij expliciet licht gekozen), dan expliciete keuze.
+   ============================================================================ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  color-scheme: dark;
+  --cream:       #14161a;
+  --cream2:      #1c1f24;
+  --cream3:      #2c3038;
+  --white:       #1a1d22;
+  --panel:       #1e2127;
+  --ink:         #f3efe7;
+  --ink2:        #e6e1d7;
+  --ink3:        #b8b1a5;
+  --ink4:        #a09a8e;
+  --muted:       #a3a89f;
+  --navy-text:   #eae4d8;
+  --gold-ink:    #dcbb5c;
+  --gold-text:   #e3c469;
+  --gold-light:  rgba(184, 147, 58, .14);
+  --line:        rgba(255, 255, 255, .1);
+  --hairline:    rgba(255, 255, 255, .14);
+  --green-bg:    #152a1e;  --green-line: #3f9a5c;  --green-ink: #9fd9b3;
+  --red-bg:      #331b17;  --red-line:   #d0684c;  --red-ink:   #f0a898;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --cream:       #14161a;
+  --cream2:      #1c1f24;
+  --cream3:      #2c3038;
+  --white:       #1a1d22;
+  --panel:       #1e2127;
+  --ink:         #f3efe7;
+  --ink2:        #e6e1d7;
+  --ink3:        #b8b1a5;
+  --ink4:        #a09a8e;
+  --muted:       #a3a89f;
+  --navy-text:   #eae4d8;
+  --gold-ink:    #dcbb5c;
+  --gold-text:   #e3c469;
+  --gold-light:  rgba(184, 147, 58, .14);
+  --line:        rgba(255, 255, 255, .1);
+  --hairline:    rgba(255, 255, 255, .14);
+  --green-bg:    #152a1e;  --green-line: #3f9a5c;  --green-ink: #9fd9b3;
+  --red-bg:      #331b17;  --red-line:   #d0684c;  --red-ink:   #f0a898;
 }

@@ -2,6 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8">
+  <script>try{var t=localStorage.getItem('hi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Onze panden in Rotterdam — 11 in eigen bezit | HomeINN</title>
   <meta name="description" content="De elf panden (33 appartementsrechten) die HomeINN zelf in bezit heeft, met adres en locatie. Investeer mee in een concreet ontwikkelproject in Rotterdam of Vlaardingen.">
@@ -9,6 +10,9 @@
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="https://home-inn.nl/projecten.html">
+  <link rel="alternate" hreflang="nl" href="https://home-inn.nl/projecten.html">
+  <link rel="alternate" hreflang="en" href="https://home-inn.nl/projects-en.html">
+  <link rel="alternate" hreflang="x-default" href="https://home-inn.nl/projecten.html">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://home-inn.nl/projecten.html">
   <meta property="og:site_name" content="HomeINN">
@@ -21,9 +25,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919i">
-  <link rel="stylesheet" href="tokens.css?v=20260919i">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919i">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919j">
+  <link rel="stylesheet" href="tokens.css?v=20260919j">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919j">
   <style>
     .pj-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .pj-top .brand img{height:34px;width:auto;display:block}
@@ -183,7 +187,7 @@
     'use strict';
     function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
     var grid=document.getElementById('projecten-grid');
-    var leeg='<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy);margin:0 0 .5rem">Binnenkort meer projecten</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Wij werken aan onze volgende ontwikkelingen. Plan een kennismaking om als eerste op de hoogte te zijn.</p></div>';
+    var leeg='<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy-text);margin:0 0 .5rem">Binnenkort meer projecten</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Wij werken aan onze volgende ontwikkelingen. Plan een kennismaking om als eerste op de hoogte te zijn.</p></div>';
     if(!grid) return;
     grid.innerHTML = leeg;
 
@@ -257,6 +261,6 @@
       .catch(function(){grid.innerHTML=leeg;});
   })();
   </script>
-<script src="site-nav.js?v=20260919i"></script>
+<script src="site-nav.js?v=20260919j"></script>
 </body>
 </html>

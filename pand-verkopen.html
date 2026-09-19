@@ -2,6 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8">
+  <script>try{var t=localStorage.getItem('hi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pand verkopen Rotterdam | Voorstel binnen 48 uur — HomeINN</title>
   <meta name="description" content="Uw pand verkopen in Rotterdam? HomeINN koopt zelf aan, ook verhuurd of gedateerd. Onderbouwd voorstel binnen 48 uur, geen courtage.">
@@ -21,8 +22,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919i">
-  <link rel="stylesheet" href="tokens.css?v=20260919i">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919j">
+  <link rel="stylesheet" href="tokens.css?v=20260919j">
   <style>
     /* ───────────────────────────────────────────────────────────────
        Bod-flow (/pand-verkopen) — navigatie-loze meerstaps intake.
@@ -60,7 +61,7 @@
     .intro .eyebrow{display:block;text-transform:uppercase;letter-spacing:.22em;font-size:.7rem;
       font-weight:500;color:var(--gold-ink);margin:0 0 var(--space-5)}
     .intro h1{font-family:var(--serif);font-weight:300;letter-spacing:-.015em;line-height:1.06;
-      font-size:clamp(2.4rem,6vw,4rem);margin:0 0 var(--space-5);color:var(--navy)}
+      font-size:clamp(2.4rem,6vw,4rem);margin:0 0 var(--space-5);color:var(--navy-text)}
     .intro h1 em{font-style:italic;color:var(--gold-ink)}
     .intro p.lead{font-size:var(--text-md);font-weight:300;color:var(--ink3);max-width:56ch;margin:0 0 var(--space-6);line-height:1.8}
 
@@ -72,7 +73,7 @@
     /* ─── Progress ─── */
     .progress{margin:var(--space-12) 0 var(--space-6)}
     .progress-head{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 var(--space-3)}
-    .progress-head .step-label{font-weight:600;color:var(--navy);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em}
+    .progress-head .step-label{font-weight:600;color:var(--navy-text);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em}
     .progress-head .step-count{font-size:.72rem;color:var(--ink4);letter-spacing:.14em;text-transform:uppercase}
     .progress-track{display:flex;gap:6px}
     .progress-track .seg{flex:1;height:3px;background:var(--cream3);overflow:hidden;position:relative}
@@ -88,7 +89,7 @@
     .step.on{display:block}
     @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
     .step h2{font-family:var(--serif);font-weight:300;font-size:var(--h2-sm);line-height:1.12;
-      letter-spacing:-.01em;color:var(--navy);margin:0 0 var(--space-3)}
+      letter-spacing:-.01em;color:var(--navy-text);margin:0 0 var(--space-3)}
     .step .step-sub{color:var(--ink3);font-weight:300;margin:0 0 var(--space-8);font-size:var(--text-base);line-height:1.7;max-width:54ch}
 
     /* fields */
@@ -121,9 +122,9 @@
     .opt-card input{position:absolute;opacity:0;width:0;height:0}
     .opt-card .tick{flex:0 0 19px;width:19px;height:19px;border-radius:50%;border:1px solid var(--cream3);
       display:grid;place-items:center;margin-top:1px;transition:border-color var(--t-fast),background var(--t-fast)}
-    .opt-card .tick svg{width:10px;height:10px;color:var(--navy);opacity:0;transform:scale(.6);transition:opacity var(--t-fast),transform var(--t-fast)}
+    .opt-card .tick svg{width:10px;height:10px;color:var(--navy-text);opacity:0;transform:scale(.6);transition:opacity var(--t-fast),transform var(--t-fast)}
     .opt-card .opt-body{flex:1;min-width:0}
-    .opt-card .opt-t{display:block;font-weight:500;color:var(--navy);font-size:.95rem;line-height:1.3}
+    .opt-card .opt-t{display:block;font-weight:500;color:var(--navy-text);font-size:.95rem;line-height:1.3}
     .opt-card .opt-d{display:block;font-size:var(--text-xs);color:var(--ink3);font-weight:300;margin-top:3px;line-height:1.5}
     .opt-card:has(input:focus-visible){outline:2px solid var(--gold-ink);outline-offset:2px}
     .opt-card:has(input:checked){border-color:var(--gold);background:var(--gold-light)}
@@ -142,8 +143,8 @@
     .btn:active{transform:translateY(1px)}
     .btn-primary{background:var(--gold);color:var(--navy);border-color:var(--gold)}
     .btn-primary:hover{background:var(--gold2);border-color:var(--gold2)}
-    .btn-ghost{background:transparent;color:var(--navy);border-color:var(--cream3)}
-    .btn-ghost:hover{border-color:var(--navy)}
+    .btn-ghost{background:transparent;color:var(--navy-text);border-color:var(--cream3)}
+    .btn-ghost:hover{border-color:var(--navy-text)}
     .btn-primary::before{content:'';position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-180%);transition:transform .6s var(--ease);pointer-events:none}
     .btn-primary:hover::before{transform:translateX(320%)}
     .btn .arr{display:inline-block;line-height:1;transition:transform .3s var(--ease)}
@@ -166,13 +167,13 @@
     .aside-card .trust-row .lbl{font-size:.82rem;font-weight:300;color:#cdd6de;line-height:1.4}
     .aside-call{background:var(--panel);border:1px solid var(--cream3);padding:var(--space-6);text-align:center}
     .aside-call .ac-lbl{font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-ink);font-weight:600}
-    .aside-call .ac-num{font-family:var(--serif);font-size:1.7rem;color:var(--navy);margin:var(--space-2) 0;display:block}
+    .aside-call .ac-num{font-family:var(--serif);font-size:1.7rem;color:var(--navy-text);margin:var(--space-2) 0;display:block}
     .aside-call .ac-num a{color:inherit;text-decoration:none}
     .aside-call .ac-sub{font-size:var(--text-xs);color:var(--ink3);font-weight:300}
     .aside-mini{display:flex;flex-direction:column;gap:var(--space-4)}
     .aside-mini .mini{display:flex;gap:var(--space-3);align-items:flex-start;font-size:.85rem;color:var(--ink2);font-weight:300;line-height:1.6}
     .aside-mini .mini svg{flex:0 0 18px;width:18px;height:18px;color:var(--gold);margin-top:2px}
-    .aside-mini .mini strong{font-weight:600;color:var(--navy)}
+    .aside-mini .mini strong{font-weight:600;color:var(--navy-text)}
 
     /* ─── Bevestiging ─── */
     .done-card{display:none;text-align:center;max-width:640px;margin:clamp(var(--space-10),6vw,var(--space-20)) auto 0}
@@ -180,13 +181,13 @@
     .done-card .seal{width:80px;height:80px;margin:0 auto var(--space-6);border-radius:50%;background:var(--gold-light);
       display:grid;place-items:center;border:1px solid var(--gold)}
     .done-card .seal svg{width:34px;height:34px;color:var(--gold-ink)}
-    .done-card h2{font-family:var(--serif);font-weight:300;font-size:var(--h2);color:var(--navy);margin:0 0 var(--space-4);line-height:1.08}
+    .done-card h2{font-family:var(--serif);font-weight:300;font-size:var(--h2);color:var(--navy-text);margin:0 0 var(--space-4);line-height:1.08}
     .done-card>p{font-size:var(--text-md);font-weight:300;color:var(--ink3);margin:0 auto var(--space-6);max-width:50ch;line-height:1.8}
     .done-steps{display:grid;grid-template-columns:1fr;gap:var(--space-3);text-align:left;margin:var(--space-8) auto 0;max-width:480px}
     .done-steps .ds{display:flex;gap:var(--space-4);align-items:flex-start;background:var(--cream2);border:1px solid var(--cream3);padding:var(--space-4) var(--space-5)}
     .done-steps .ds .ds-n{flex:0 0 26px;width:26px;height:26px;border-radius:50%;background:var(--navy);color:var(--gold3);font-size:.78rem;font-weight:600;display:grid;place-items:center}
     .done-steps .ds .ds-t{font-size:.85rem;color:var(--ink3);font-weight:300;line-height:1.55}
-    .done-steps .ds .ds-t strong{display:block;color:var(--navy);font-weight:600;margin-bottom:2px}
+    .done-steps .ds .ds-t strong{display:block;color:var(--navy-text);font-weight:600;margin-bottom:2px}
     .done-card .home-link{display:inline-flex;margin-top:var(--space-10)}
 
     /* ─── Footer ─── */
@@ -526,7 +527,7 @@
     "description":"HomeINN koopt woningen, appartementen en portiekpanden in Rotterdam direct aan — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
   }
   </script>
-  <script src="lead-cloud.js?v=20260919i" defer></script>
+  <script src="lead-cloud.js?v=20260919j" defer></script>
   <script>
   (function () {
     'use strict';

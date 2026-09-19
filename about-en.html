@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>try{var t=localStorage.getItem('hi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About HomeINN — developer in Rotterdam, team since 2007</title>
   <meta name="description" content="The people behind HomeINN have been buying and developing property in Rotterdam since 2007; since 2025 as HomeINN B.V., with a fixed team and a fixed construction partner.">
@@ -24,9 +25,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919i">
-  <link rel="stylesheet" href="tokens.css?v=20260919i">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919i">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919j">
+  <link rel="stylesheet" href="tokens.css?v=20260919j">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919j">
   <style>
     .ov-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .ov-top .brand img{height:34px;width:auto;display:block}
@@ -39,7 +40,7 @@
     @media(max-width:620px){.ov-top .tel{display:none}}
     .ov-verhaal{max-width:820px;margin:0 auto;padding:clamp(3.5rem,7vw,6rem) clamp(1.5rem,5vw,2rem)}
     .ov-verhaal .t-eyebrow{display:block;margin-bottom:1.25rem}
-    .ov-verhaal h2{font-family:var(--serif);font-weight:300;font-size:var(--h2-sm);color:var(--navy);line-height:1.15;margin:0 0 1.5rem}
+    .ov-verhaal h2{font-family:var(--serif);font-weight:300;font-size:var(--h2-sm);color:var(--navy-text);line-height:1.15;margin:0 0 1.5rem}
     .ov-verhaal p{font-size:1.05rem;font-weight:300;line-height:1.9;color:var(--ink2);margin:0 0 1.25rem}
   </style>
 </head>
@@ -161,7 +162,7 @@
       <div class="jstats-inner">
         <div class="jstat"><div class="jstat-val">2007</div><div class="jstat-lbl">Team experience since</div></div>
         <div class="jstat"><div class="jstat-val">25+</div><div class="jstat-lbl">Properties bought and developed by our team</div></div>
-        <div class="jstat"><div class="jstat-val">€4 million+</div><div class="jstat-lbl">In completed sales by our team</div></div>
+        <div class="jstat"><div class="jstat-val" data-count="33">33</div><div class="jstat-lbl">Apartment rights after splitting our eleven properties</div></div>
         <div class="jstat"><div class="jstat-val" data-count="13">13</div><div class="jstat-lbl">Homes currently owned</div></div>
       </div>
     </section>
@@ -189,7 +190,7 @@
     <section class="values-section section-sm">
       <div style="max-width:880px;margin:0 auto;padding:0 clamp(1.5rem,5vw,2rem);text-align:center">
         <div class="card-ico hi-ico" style="margin:0 auto 1.25rem;color:var(--gold-ink)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></div>
-        <h2 style="font-family:var(--serif);font-weight:300;font-size:clamp(1.6rem,3vw,2.2rem);color:var(--navy);margin:0 0 1rem">We promise nothing our fixed construction partner cannot build.</h2>
+        <h2 style="font-family:var(--serif);font-weight:300;font-size:clamp(1.6rem,3vw,2.2rem);color:var(--navy-text);margin:0 0 1rem">We promise nothing our fixed construction partner cannot build.</h2>
         <p style="font-weight:300;line-height:1.8;color:var(--ink3);max-width:60ch;margin:0 auto 1.75rem">We carry out every project with one fixed construction partner — Lageweg Services B.V. One point of contact, a well-attuned team of tradespeople and quality within budget.</p>
         <a class="btn btn-outline-dark" href="projectontwikkeling.html">See development <span class="arr">→</span></a>
       </div>
@@ -241,6 +242,6 @@
     }
   }
   </script>
-<script src="site-nav.js?v=20260919i"></script>
+<script src="site-nav.js?v=20260919j"></script>
 </body>
 </html>

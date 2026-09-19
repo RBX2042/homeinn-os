@@ -2,6 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8">
+  <script>try{var t=localStorage.getItem('hi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Woningdetail — HomeINN Rotterdam</title>
   <meta name="description" content="Bekijk de details van deze door HomeINN ontwikkelde woning in Rotterdam: kenmerken, omschrijving en de mogelijkheid een bezichtiging aan te vragen.">
@@ -18,9 +19,9 @@
   <meta name="robots" content="noindex,follow">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919i">
-  <link rel="stylesheet" href="tokens.css?v=20260919i">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919i">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919j">
+  <link rel="stylesheet" href="tokens.css?v=20260919j">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919j">
   <style>
     .wd-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .wd-top .brand img{height:34px;width:auto;display:block}
@@ -33,7 +34,7 @@
     .wd-crumb{font-size:.78rem;color:var(--ink4);margin-bottom:1.5rem}
     .wd-crumb a{color:var(--gold-ink);text-decoration:none}
     .wd-status{display:inline-block;font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--gold-ink);border:1px solid var(--gold);padding:5px 12px;margin-bottom:1rem}
-    .wd-title{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,5vw,3rem);color:var(--navy);line-height:1.1;margin:0 0 .4rem}
+    .wd-title{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,5vw,3rem);color:var(--navy-text);line-height:1.1;margin:0 0 .4rem}
     .wd-sub{color:var(--ink3);font-weight:300;font-size:1.05rem;margin:0 0 2rem}
     .wd-gallery{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:2.5rem;background:transparent}
     @media(min-width:640px){.wd-gallery{grid-template-columns:2fr 1fr}.wd-gallery .g0{grid-row:span 2}}
@@ -54,22 +55,22 @@
     .wd-spec{padding:1rem 1.25rem;border-bottom:1px solid var(--cream3)}
     .wd-spec:nth-child(odd){border-right:1px solid var(--cream3)}
     .wd-spec .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink4);font-weight:600}
-    .wd-spec .v{font-size:1rem;color:var(--navy);font-weight:400;margin-top:2px}
-    .wd-body h2{font-family:var(--serif);font-weight:400;font-size:1.5rem;color:var(--navy);margin:2rem 0 .75rem}
+    .wd-spec .v{font-size:1rem;color:var(--navy-text);font-weight:400;margin-top:2px}
+    .wd-body h2{font-family:var(--serif);font-weight:400;font-size:1.5rem;color:var(--navy-text);margin:2rem 0 .75rem}
     .wd-body p{font-size:1.02rem;font-weight:300;line-height:1.9;color:var(--ink2);margin:0 0 1.25rem}
-    .wd-prijs{font-family:var(--serif);font-size:2rem;color:var(--navy);font-weight:300}
+    .wd-prijs{font-family:var(--serif);font-size:2rem;color:var(--navy-text);font-weight:300}
     .wd-aside{background:var(--panel);border:1px solid var(--cream3);padding:1.75rem;position:sticky;top:90px}
-    .wd-aside h3{font-family:var(--serif);font-weight:300;font-size:1.4rem;color:var(--navy);margin:0 0 1rem}
+    .wd-aside h3{font-family:var(--serif);font-weight:300;font-size:1.4rem;color:var(--navy-text);margin:0 0 1rem}
     .wd-aside .cf-group{margin-bottom:.9rem}
     .wd-aside .vb-success{display:none;text-align:center}
-    .wd-aside .vb-success h4{font-family:var(--serif);font-weight:300;font-size:1.3rem;color:var(--navy);margin:0 0 .5rem}
+    .wd-aside .vb-success h4{font-family:var(--serif);font-weight:300;font-size:1.3rem;color:var(--navy-text);margin:0 0 .5rem}
     .wd-aside .vb-success p{font-size:.85rem;font-weight:300;color:var(--ink3);line-height:1.7;margin:0}
     .map-load{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;width:100%;min-height:160px;background:var(--cream2);border:1px dashed var(--cream3);cursor:pointer;color:var(--ink3);font:inherit;margin:1rem 0 0}
-    .map-load strong{color:var(--navy);font-size:.95rem}
+    .map-load strong{color:var(--navy-text);font-size:.95rem}
     .map-load .map-load-sub{font-size:.75rem;color:var(--ink4)}
     .wd-iframe{width:100%;height:300px;border:0;margin-top:1rem}
     .wd-msg{max-width:600px;margin:0 auto;text-align:center;padding:4rem 1rem}
-    .wd-msg h1{font-family:var(--serif);font-weight:300;font-size:2rem;color:var(--navy);margin:0 0 1rem}
+    .wd-msg h1{font-family:var(--serif);font-weight:300;font-size:2rem;color:var(--navy-text);margin:0 0 1rem}
     .wd-msg p{font-weight:300;color:var(--ink3);line-height:1.8;margin:0 0 1.5rem}
     .wd-msg p a{color:var(--gold-ink)}
     .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
@@ -185,7 +186,7 @@
       </div>
     </div>
   </footer>
-  <script src="lead-cloud.js?v=20260919i" defer></script>
+  <script src="lead-cloud.js?v=20260919j" defer></script>
   <script src="lightbox.js?v=20260705" defer></script>
   <script>
   (function(){
@@ -307,6 +308,6 @@
       .catch(function(){ notFound(); });
   })();
   </script>
-<script src="site-nav.js?v=20260919i"></script>
+<script src="site-nav.js?v=20260919j"></script>
 </body>
 </html>
