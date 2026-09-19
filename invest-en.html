@@ -25,9 +25,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919g">
-  <link rel="stylesheet" href="tokens.css?v=20260919g">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919g">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919h">
+  <link rel="stylesheet" href="tokens.css?v=20260919h">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919h">
   <style>
     .iv-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .iv-top .brand img{height:34px;width:auto;display:block}
@@ -215,6 +215,17 @@
         <p class="pf-risico">This overview is for information purposes only and does not constitute an offer, advice or invitation to invest. The value after renovation is an appraisal; no rights can be derived from the figures or return expectations. Your deposit may be lost in whole or in part.</p>
       </div>
     </section>
+    <!-- Interactieve investeerderstools (script: investeer-tools, data: portefeuille.json) -->
+    <section class="iv-tools" id="projectkiezer" aria-label="Project picker and map">
+      <div class="proc-inner">
+        <div id="iv-kaart" class="iv-kaart"></div>
+        <div id="iv-kiezer" class="iv-kiezer"></div>
+      </div>
+    </section>
+    <section class="iv-tools iv-tools--vgl" id="vergelijk" aria-label="Buying yourself or taking part">
+      <div class="proc-inner"><div id="iv-vergelijk" class="iv-vergelijk"></div></div>
+    </section>
+
 
 
 
@@ -352,8 +363,9 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Investing in Rotterdam property — HomeINN","url":"https://home-inn.nl/invest-en.html","inLanguage":"en","about":"Private participation in property projects","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-<script src="lead-cloud.js?v=20260919g" defer></script>
-<script src="site-nav.js?v=20260919g"></script>
+<script src="lead-cloud.js?v=20260919h" defer></script>
+<script src="site-nav.js?v=20260919h"></script>
+<script src="investeer-tools.js?v=20260919h" defer></script>
 <script>
 /* Investor enquiry — its own lead type, so these requests stand apart from
    sales and management enquiries in the inbox. */

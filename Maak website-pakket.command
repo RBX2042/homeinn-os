@@ -36,6 +36,7 @@ cp kopers.html kopers.js website-online/ 2>/dev/null || true
 cp verkoper.html verkoper.js website-online/ 2>/dev/null || true
 # Beheerportaal (back-end) meeleveren zodat de login-router werkt
 cp portaal.html app.js styles.css cloud.js website-online/ 2>/dev/null || true
+cp portefeuille.json investeer-tools.js website-online/ 2>/dev/null || true # investeerderstools (investeren.html + invest-en.html)
 cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[],"tehuur":[],"projecten":[],"verkocht":[]}' > website-online/aanbod.json
 # Funda/Pararius woningfeeds (regenereren via portaal → Verkoop → "Funda/Pararius-feed")
 cp funda-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' '<RealEstateFeed bron="HomeINN" versie="3.0" gegenereerd="" aantal="0"><Objecten></Objecten></RealEstateFeed>' > website-online/funda-feed.xml
@@ -120,7 +121,7 @@ cp -R fonts website-online/fonts 2>/dev/null || true
 # gewoon ongeminificeerd). app.js / cloud.js (portaal) worden bewust niet geraakt.
 if command -v npx >/dev/null 2>&1; then
   echo "Minify CSS/JS in bundel…"
-  for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js lightbox.js lead-cloud.js site-nav.js; do
+  for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js lightbox.js lead-cloud.js site-nav.js investeer-tools.js; do
     [ -f "website-online/$f" ] || continue
     if npx --yes esbuild "website-online/$f" --minify --outfile="website-online/$f.min" >/dev/null 2>&1; then
       mv "website-online/$f.min" "website-online/$f"

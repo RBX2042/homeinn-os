@@ -91,3 +91,8 @@ voor de advocaat en mag niet zonder bevestiging aan de site worden toegevoegd.
 `funda-feed.xml`/`pararius-feed.xml` zijn lege plaatshouders. Geen fout, wel een zwak
 signaal naar zoekmachines zolang er niets te koop staat — overweeg `noindex` tot de eerste
 oplevering.
+
+## Fase per pand (investeerderstools, 19 sep 2026)
+`portefeuille.json` zet voor alle elf panden `fase: 2` (Planvorming & vergunning), afgeleid van status
+"In ontwikkeling". De eigenaar moet per pand de werkelijke fase (1–4) doorgeven; tot dan toont de
+fase-tracker overal dezelfde stand. Coördinaten op de schematische kaart zijn indicatief.

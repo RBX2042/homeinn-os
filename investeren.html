@@ -22,9 +22,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919g">
-  <link rel="stylesheet" href="tokens.css?v=20260919g">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919g">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919h">
+  <link rel="stylesheet" href="tokens.css?v=20260919h">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919h">
   <style>
     .iv-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .iv-top .brand img{height:34px;width:auto;display:block}
@@ -212,6 +212,17 @@
         <p class="pf-risico">Dit overzicht dient uitsluitend ter informatie en is geen aanbod, advies of uitnodiging tot beleggen. De waarde na renovatie is een taxatie; aan de cijfers en rendementsverwachtingen kunnen geen rechten worden ontleend. Uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
       </div>
     </section>
+    <!-- Interactieve investeerderstools (script: investeer-tools, data: portefeuille.json) -->
+    <section class="iv-tools" id="projectkiezer" aria-label="Projectkiezer en kaart">
+      <div class="proc-inner">
+        <div id="iv-kaart" class="iv-kaart"></div>
+        <div id="iv-kiezer" class="iv-kiezer"></div>
+      </div>
+    </section>
+    <section class="iv-tools iv-tools--vgl" id="vergelijk" aria-label="Zelf kopen of meedoen">
+      <div class="proc-inner"><div id="iv-vergelijk" class="iv-vergelijk"></div></div>
+    </section>
+
 
     <section class="proc-section">
       <div class="proc-inner">
@@ -346,8 +357,9 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Investeren in Rotterdams vastgoed — HomeINN","url":"https://home-inn.nl/investeren.html","inLanguage":"nl-NL","about":"Particulier meedoen in vastgoedprojecten","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-<script src="lead-cloud.js?v=20260919g" defer></script>
-<script src="site-nav.js?v=20260919g"></script>
+<script src="lead-cloud.js?v=20260919h" defer></script>
+<script src="site-nav.js?v=20260919h"></script>
+<script src="investeer-tools.js?v=20260919h" defer></script>
 <script>
 /* Investeerdersaanvraag — eigen leadtype, zodat deze aanvragen in de inbox
    herkenbaar los staan van verkoop- en beheeraanvragen. */

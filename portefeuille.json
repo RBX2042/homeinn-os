@@ -1,0 +1,804 @@
+{
+ "bijgewerkt": "2026-09-19",
+ "bron": "homeinn-public.html portefeuille sep 2026 + aanbod.json; fase=2 (planvorming & vergunning) voor alle panden tot de eigenaar per pand een fase doorgeeft; coördinaten schematisch",
+ "fasen": [
+  "Aankoop afgerond",
+  "Planvorming & vergunning",
+  "Renovatie met Lageweg Services B.V.",
+  "Verkoop of verhuur"
+ ],
+ "panden": [
+  {
+   "id": "pand-2e-rosestraat-26",
+   "titel": "2e Rosestraat 26",
+   "kort": "2e Rosestraat 26",
+   "gebied": "Rotterdam-Zuid",
+   "badge": "3 appartementen",
+   "kenmerken": "3074 JK · Rotterdam-Zuid · 270 m² woonoppervlak",
+   "desc": "Hoogwaardige totaalrenovatie gericht op luxe afwerking, comfort en maximale marktwaarde.",
+   "units": [
+    [
+     "26-A",
+     "souterrain + begane grond",
+     "125 m²",
+     "€ 450.000"
+    ],
+    [
+     "26-B",
+     "1e + halve 2e verdieping",
+     "75 m²",
+     "€ 375.000"
+    ],
+    [
+     "26-C",
+     "halve 2e + 3e verdieping",
+     "70 m²",
+     "€ 375.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 350k",
+    "Kostenbasis": "€ 700k",
+    "Waarde na renovatie": "€ 1,20 mln",
+    "Bruto waardestijging": "€ 500k"
+   },
+   "lat": 51.8985,
+   "lon": 4.5035,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "2e Rosestraat 26, 3074 JK Rotterdam",
+   "formOptie": "2e Rosestraat 26-A, 26-B en 28",
+   "en": {
+    "badge": "3 apartments",
+    "kenmerken": "3074 JK · Rotterdam-Zuid · 270 m² living area",
+    "desc": "High-end full renovation aimed at luxury finishing, comfort and maximum market value.",
+    "units": [
+     [
+      "26-A",
+      "basement + ground floor",
+      "125 m²",
+      "€450,000"
+     ],
+     [
+      "26-B",
+      "1st + half of 2nd floor",
+      "75 m²",
+      "€375,000"
+     ],
+     [
+      "26-C",
+      "half of 2nd + 3rd floor",
+      "70 m²",
+      "€375,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€350k",
+     "Cost basis": "€700k",
+     "Value after renovation": "€1.20 million",
+     "Gross equity uplift": "€500k"
+    }
+   }
+  },
+  {
+   "id": "pand-2e-rosestraat-28",
+   "titel": "2e Rosestraat 28",
+   "kort": "2e Rosestraat 28",
+   "gebied": "Rotterdam-Zuid",
+   "badge": "3 appartementen",
+   "kenmerken": "3074 JK · Rotterdam-Zuid · 270 m² woonoppervlak",
+   "desc": "Drie zelfstandige woningen, exclusief, duurzaam en marktklaar opgeleverd.",
+   "units": [
+    [
+     "28-A",
+     "souterrain + begane grond",
+     "125 m²",
+     "€ 450.000"
+    ],
+    [
+     "28-B",
+     "1e + halve 2e verdieping",
+     "75 m²",
+     "€ 375.000"
+    ],
+    [
+     "28-C",
+     "halve 2e + 3e verdieping",
+     "70 m²",
+     "€ 375.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 350k",
+    "Kostenbasis": "€ 700k",
+    "Waarde na renovatie": "€ 1,20 mln",
+    "Bruto waardestijging": "€ 500k"
+   },
+   "lat": 51.8987,
+   "lon": 4.504,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "2e Rosestraat 28, 3074 JK Rotterdam",
+   "formOptie": "2e Rosestraat 26-A, 26-B en 28",
+   "en": {
+    "badge": "3 apartments",
+    "kenmerken": "3074 JK · Rotterdam-Zuid · 270 m² living area",
+    "desc": "Three self-contained homes, delivered exclusive, sustainable and market-ready.",
+    "units": [
+     [
+      "28-A",
+      "basement + ground floor",
+      "125 m²",
+      "€450,000"
+     ],
+     [
+      "28-B",
+      "1st + half of 2nd floor",
+      "75 m²",
+      "€375,000"
+     ],
+     [
+      "28-C",
+      "half of 2nd + 3rd floor",
+      "70 m²",
+      "€375,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€350k",
+     "Cost basis": "€700k",
+     "Value after renovation": "€1.20 million",
+     "Gross equity uplift": "€500k"
+    }
+   }
+  },
+  {
+   "id": "pand-gaesbeekstraat-92",
+   "titel": "Gaesbeekstraat 92",
+   "kort": "Gaesbeekstraat 92",
+   "gebied": "Rotterdam-Zuid",
+   "badge": "2 appartementen",
+   "kenmerken": "3081 NM · Rotterdam-Zuid · 147 m² woonoppervlak",
+   "desc": "Transformatie naar twee zelfstandige woningen met hoogwaardige afwerking en een optimale indeling.",
+   "units": [
+    [
+     "92-A",
+     "begane grond",
+     "57 m²",
+     "€ 250.000"
+    ],
+    [
+     "92-B",
+     "1e + 2e verdieping",
+     "90 m²",
+     "€ 375.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 100k",
+    "Kostenbasis": "€ 495k",
+    "Waarde na renovatie": "€ 625k",
+    "Bruto waardestijging": "€ 130k"
+   },
+   "lat": 51.888,
+   "lon": 4.478,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "Gaesbeekstraat 92, 3081 NM Rotterdam",
+   "formOptie": "Gaesbeekstraat 92-A en 92-B",
+   "en": {
+    "badge": "2 apartments",
+    "kenmerken": "3081 NM · Rotterdam-Zuid · 147 m² living area",
+    "desc": "Transformation into two self-contained homes with high-end finishing and an optimal layout.",
+    "units": [
+     [
+      "92-A",
+      "ground floor",
+      "57 m²",
+      "€250,000"
+     ],
+     [
+      "92-B",
+      "1st + 2nd floor",
+      "90 m²",
+      "€375,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€100k",
+     "Cost basis": "€495k",
+     "Value after renovation": "€625k",
+     "Gross equity uplift": "€130k"
+    }
+   }
+  },
+  {
+   "id": "pand-schulpweg-396",
+   "titel": "Schulpweg 396",
+   "kort": "Schulpweg 396",
+   "gebied": "Rotterdam-Zuid",
+   "badge": "175 m² + 200 m² tuin",
+   "kenmerken": "3084 NJ · Rotterdam-Zuid · 175 m² woonoppervlak",
+   "desc": "Ruime woning met grote tuin en een extra woonlaag; hoogwaardige renovatie gericht op ruimte en kwaliteit.",
+   "units": [
+    [
+     "396",
+     "begane grond met tuin (100 m²) + 1e en 2e verdieping (75 m²)",
+     "175 m² + 200 m² tuin",
+     "€ 800.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 150k",
+    "Kostenbasis": "€ 485k",
+    "Waarde na renovatie": "€ 800k",
+    "Bruto waardestijging": "€ 315k"
+   },
+   "lat": 51.8735,
+   "lon": 4.468,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "Schulpweg 396, 3084 NJ Rotterdam",
+   "formOptie": "Schulpweg 396",
+   "en": {
+    "badge": "175 m² + 200 m² garden",
+    "kenmerken": "3084 NJ · Rotterdam-Zuid · 175 m² living area",
+    "desc": "Spacious home with a large garden and an additional floor; high-end renovation aimed at space and quality.",
+    "units": [
+     [
+      "396",
+      "ground floor with garden (100 m²) + 1st and 2nd floor (75 m²)",
+      "175 m² + 200 m² garden",
+      "€800,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€150k",
+     "Cost basis": "€485k",
+     "Value after renovation": "€800k",
+     "Gross equity uplift": "€315k"
+    }
+   }
+  },
+  {
+   "id": "pand-ploegstraat-48",
+   "titel": "Ploegstraat 48",
+   "kort": "Ploegstraat 48",
+   "gebied": "Rotterdam-Zuid",
+   "badge": "2 appartementen",
+   "kenmerken": "3075 NG · Rotterdam-Zuid · 180 m² woonoppervlak",
+   "desc": "Twee zelfstandige luxe woningen met hoogwaardige installaties en afwerking; begane grond met tuin.",
+   "units": [
+    [
+     "48-A",
+     "begane grond + tuin",
+     "85 m² + 50 m² tuin",
+     "€ 380.000"
+    ],
+    [
+     "48-B",
+     "1e + 2e verdieping",
+     "95 m²",
+     "€ 420.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 143k",
+    "Kostenbasis": "€ 493k",
+    "Waarde na renovatie": "€ 800k",
+    "Bruto waardestijging": "€ 307k"
+   },
+   "lat": 51.895,
+   "lon": 4.508,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "Ploegstraat 48, 3075 NG Rotterdam",
+   "formOptie": "Ploegstraat 48",
+   "en": {
+    "badge": "2 apartments",
+    "kenmerken": "3075 NG · Rotterdam-Zuid · 180 m² living area",
+    "desc": "Two self-contained luxury homes with high-end installations and finishing; ground floor with garden.",
+    "units": [
+     [
+      "48-A",
+      "ground floor + garden",
+      "85 m² + 50 m² garden",
+      "€380,000"
+     ],
+     [
+      "48-B",
+      "1st + 2nd floor",
+      "95 m²",
+      "€420,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€143k",
+     "Cost basis": "€493k",
+     "Value after renovation": "€800k",
+     "Gross equity uplift": "€307k"
+    }
+   }
+  },
+  {
+   "id": "pand-honingerdijk-105",
+   "titel": "Honingerdijk 105",
+   "kort": "Honingerdijk 105",
+   "gebied": "Kralingen",
+   "badge": "4 appartementen",
+   "kenmerken": "3063 AL · Kralingen · 283 m² woonoppervlak",
+   "desc": "Vier exclusief gerenoveerde appartementen met moderne installaties en luxe keuken- en sanitairafwerking.",
+   "units": [
+    [
+     "105-A",
+     "begane grond + tuin",
+     "80 m² + 40 m² tuin",
+     "€ 550.000"
+    ],
+    [
+     "105-B1",
+     "1e verdieping",
+     "59 m²",
+     "€ 450.000"
+    ],
+    [
+     "105-B2",
+     "2e verdieping",
+     "59 m²",
+     "€ 450.000"
+    ],
+    [
+     "105-B3",
+     "3e + 4e verdieping",
+     "85 m²",
+     "€ 525.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 450k",
+    "Kostenbasis": "€ 1,25 mln",
+    "Waarde na renovatie": "€ 1,975 mln",
+    "Bruto waardestijging": "€ 725k"
+   },
+   "lat": 51.913,
+   "lon": 4.5225,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "Honingerdijk 105, 3063 AL Rotterdam",
+   "formOptie": "Honingerdijk 105 en 107",
+   "en": {
+    "badge": "4 apartments",
+    "kenmerken": "3063 AL · Kralingen · 283 m² living area",
+    "desc": "Four exclusively renovated apartments with modern installations and luxury kitchen and bathroom finishing.",
+    "units": [
+     [
+      "105-A",
+      "ground floor + garden",
+      "80 m² + 40 m² garden",
+      "€550,000"
+     ],
+     [
+      "105-B1",
+      "1st floor",
+      "59 m²",
+      "€450,000"
+     ],
+     [
+      "105-B2",
+      "2nd floor",
+      "59 m²",
+      "€450,000"
+     ],
+     [
+      "105-B3",
+      "3rd + 4th floor",
+      "85 m²",
+      "€525,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€450k",
+     "Cost basis": "€1.25 million",
+     "Value after renovation": "€1.975 million",
+     "Gross equity uplift": "€725k"
+    }
+   }
+  },
+  {
+   "id": "pand-honingerdijk-107",
+   "titel": "Honingerdijk 107",
+   "kort": "Honingerdijk 107",
+   "gebied": "Kralingen",
+   "badge": "4 appartementen",
+   "kenmerken": "3063 AL · Kralingen · 283 m² woonoppervlak",
+   "desc": "Vier zelfstandige appartementen met hoogwaardige totaalrenovatie en het hoogst haalbare wooncomfort.",
+   "units": [
+    [
+     "107-A",
+     "begane grond + tuin",
+     "80 m² + 40 m² tuin",
+     "€ 550.000"
+    ],
+    [
+     "107-B1",
+     "1e verdieping",
+     "59 m²",
+     "€ 450.000"
+    ],
+    [
+     "107-B2",
+     "2e verdieping",
+     "59 m²",
+     "€ 450.000"
+    ],
+    [
+     "107-B3",
+     "3e + 4e verdieping",
+     "85 m²",
+     "€ 525.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 450k",
+    "Kostenbasis": "€ 1,27 mln",
+    "Waarde na renovatie": "€ 1,975 mln",
+    "Bruto waardestijging": "€ 705k"
+   },
+   "lat": 51.9132,
+   "lon": 4.523,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "Honingerdijk 107, 3063 AL Rotterdam",
+   "formOptie": "Honingerdijk 105 en 107",
+   "en": {
+    "badge": "4 apartments",
+    "kenmerken": "3063 AL · Kralingen · 283 m² living area",
+    "desc": "Four self-contained apartments with a high-end full renovation and the highest achievable living comfort.",
+    "units": [
+     [
+      "107-A",
+      "ground floor + garden",
+      "80 m² + 40 m² garden",
+      "€550,000"
+     ],
+     [
+      "107-B1",
+      "1st floor",
+      "59 m²",
+      "€450,000"
+     ],
+     [
+      "107-B2",
+      "2nd floor",
+      "59 m²",
+      "€450,000"
+     ],
+     [
+      "107-B3",
+      "3rd + 4th floor",
+      "85 m²",
+      "€525,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€450k",
+     "Cost basis": "€1.27 million",
+     "Value after renovation": "€1.975 million",
+     "Gross equity uplift": "€705k"
+    }
+   }
+  },
+  {
+   "id": "pand-s-gravendijkwal-88",
+   "titel": "'s-Gravendijkwal 88",
+   "kort": "'s-Gravendijkwal 88",
+   "gebied": "Rotterdam-West",
+   "badge": "4 appartementen",
+   "kenmerken": "3014 EH · Rotterdam-West · 348 m² woonoppervlak",
+   "desc": "Vier ruime zelfstandige woningen met luxe materiaalkeuze en een positionering in het hogere marktsegment.",
+   "units": [
+    [
+     "88-A",
+     "souterrain + begane grond + tuin",
+     "99 m² + 120 m² tuin",
+     "€ 550.000"
+    ],
+    [
+     "88-B1",
+     "souterrain + begane grond",
+     "99 m²",
+     "€ 500.000"
+    ],
+    [
+     "88-B2",
+     "1e verdieping",
+     "75 m²",
+     "€ 500.000"
+    ],
+    [
+     "88-B3",
+     "2e verdieping",
+     "75 m²",
+     "€ 500.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 600k",
+    "Kostenbasis": "€ 1,35 mln",
+    "Waarde na renovatie": "€ 2,05 mln",
+    "Bruto waardestijging": "€ 700k"
+   },
+   "lat": 51.917,
+   "lon": 4.4625,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "'s-Gravendijkwal 88, 3014 EH Rotterdam",
+   "formOptie": "'s-Gravendijkwal 88 en 90",
+   "en": {
+    "badge": "4 apartments",
+    "kenmerken": "3014 EH · Rotterdam-West · 348 m² living area",
+    "desc": "Four spacious self-contained homes with luxury materials, positioned in the upper market segment.",
+    "units": [
+     [
+      "88-A",
+      "basement + ground floor + garden",
+      "99 m² + 120 m² garden",
+      "€550,000"
+     ],
+     [
+      "88-B1",
+      "basement + ground floor",
+      "99 m²",
+      "€500,000"
+     ],
+     [
+      "88-B2",
+      "1st floor",
+      "75 m²",
+      "€500,000"
+     ],
+     [
+      "88-B3",
+      "2nd floor",
+      "75 m²",
+      "€500,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€600k",
+     "Cost basis": "€1.35 million",
+     "Value after renovation": "€2.05 million",
+     "Gross equity uplift": "€700k"
+    }
+   }
+  },
+  {
+   "id": "pand-s-gravendijkwal-90",
+   "titel": "'s-Gravendijkwal 90",
+   "kort": "'s-Gravendijkwal 90",
+   "gebied": "Rotterdam-West",
+   "badge": "4 appartementen",
+   "kenmerken": "3014 EH · Rotterdam-West · 348 m² woonoppervlak",
+   "desc": "Vier zelfstandige woningen met exclusieve totaalrenovatie, hoogwaardige installaties en duurzame waardecreatie.",
+   "units": [
+    [
+     "90-A",
+     "souterrain + begane grond + tuin",
+     "99 m² + 120 m² tuin",
+     "€ 550.000"
+    ],
+    [
+     "90-B1",
+     "souterrain + begane grond",
+     "99 m²",
+     "€ 500.000"
+    ],
+    [
+     "90-B2",
+     "1e verdieping",
+     "75 m²",
+     "€ 500.000"
+    ],
+    [
+     "90-B3",
+     "2e verdieping",
+     "75 m²",
+     "€ 500.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 600k",
+    "Kostenbasis": "€ 1,35 mln",
+    "Waarde na renovatie": "€ 2,05 mln",
+    "Bruto waardestijging": "€ 700k"
+   },
+   "lat": 51.9172,
+   "lon": 4.4628,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "'s-Gravendijkwal 90, 3014 EH Rotterdam",
+   "formOptie": "'s-Gravendijkwal 88 en 90",
+   "en": {
+    "badge": "4 apartments",
+    "kenmerken": "3014 EH · Rotterdam-West · 348 m² living area",
+    "desc": "Four self-contained homes with an exclusive full renovation, high-end installations and lasting value creation.",
+    "units": [
+     [
+      "90-A",
+      "basement + ground floor + garden",
+      "99 m² + 120 m² garden",
+      "€550,000"
+     ],
+     [
+      "90-B1",
+      "basement + ground floor",
+      "99 m²",
+      "€500,000"
+     ],
+     [
+      "90-B2",
+      "1st floor",
+      "75 m²",
+      "€500,000"
+     ],
+     [
+      "90-B3",
+      "2nd floor",
+      "75 m²",
+      "€500,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€600k",
+     "Cost basis": "€1.35 million",
+     "Value after renovation": "€2.05 million",
+     "Gross equity uplift": "€700k"
+    }
+   }
+  },
+  {
+   "id": "pand-van-der-driftstraat-4",
+   "titel": "Van der Driftstraat 4 (voorzijde)",
+   "kort": "Van der Driftstraat 4",
+   "gebied": "Vlaardingen",
+   "badge": "3 appartementen",
+   "kenmerken": "3131 JH · Vlaardingen · 210 m² woonoppervlak",
+   "desc": "Drie zelfstandige appartementen van gelijke grootte met een consistente, moderne en hoogwaardige afwerking.",
+   "units": [
+    [
+     "4-A",
+     "begane grond",
+     "70 m²",
+     "€ 350.000"
+    ],
+    [
+     "4-B",
+     "1e verdieping",
+     "70 m²",
+     "€ 350.000"
+    ],
+    [
+     "4-C",
+     "2e verdieping",
+     "70 m²",
+     "€ 350.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 350k",
+    "Kostenbasis": "€ 600k",
+    "Waarde na renovatie": "€ 1,05 mln",
+    "Bruto waardestijging": "€ 450k"
+   },
+   "lat": 51.906,
+   "lon": 4.343,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "Van der Driftstraat 4, 3131 JH Vlaardingen",
+   "formOptie": "Van der Driftstraat 4-A",
+   "en": {
+    "badge": "3 apartments",
+    "kenmerken": "3131 JH · Vlaardingen · 210 m² living area",
+    "desc": "Three self-contained apartments of equal size with a consistent, modern, high-end finish.",
+    "units": [
+     [
+      "4-A",
+      "ground floor",
+      "70 m²",
+      "€350,000"
+     ],
+     [
+      "4-B",
+      "1st floor",
+      "70 m²",
+      "€350,000"
+     ],
+     [
+      "4-C",
+      "2nd floor",
+      "70 m²",
+      "€350,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€350k",
+     "Cost basis": "€600k",
+     "Value after renovation": "€1.05 million",
+     "Gross equity uplift": "€450k"
+    }
+   }
+  },
+  {
+   "id": "pand-tollensstraat-32",
+   "titel": "Tollensstraat 32 (achterzijde)",
+   "kort": "Tollensstraat 32",
+   "gebied": "Vlaardingen",
+   "badge": "3 appartementen",
+   "kenmerken": "3131 GZ · Vlaardingen · 210 m² woonoppervlak",
+   "desc": "Drie zelfstandige appartementen van circa 70 m² met een consistente luxe afwerking.",
+   "units": [
+    [
+     "32-A",
+     "begane grond",
+     "70 m²",
+     "€ 350.000"
+    ],
+    [
+     "32-B",
+     "1e verdieping",
+     "70 m²",
+     "€ 350.000"
+    ],
+    [
+     "32-C",
+     "2e verdieping",
+     "70 m²",
+     "€ 350.000"
+    ]
+   ],
+   "fin": {
+    "Renovatiebudget": "€ 350k",
+    "Kostenbasis": "€ 600k",
+    "Waarde na renovatie": "€ 1,05 mln",
+    "Bruto waardestijging": "€ 450k"
+   },
+   "lat": 51.908,
+   "lon": 4.338,
+   "status": "In ontwikkeling",
+   "fase": 2,
+   "maps": "Tollensstraat 32, 3131 GZ Vlaardingen",
+   "formOptie": "Tollensstraat 32",
+   "en": {
+    "badge": "3 apartments",
+    "kenmerken": "3131 GZ · Vlaardingen · 210 m² living area",
+    "desc": "Three self-contained apartments of around 70 m² with a consistent luxury finish.",
+    "units": [
+     [
+      "32-A",
+      "ground floor",
+      "70 m²",
+      "€350,000"
+     ],
+     [
+      "32-B",
+      "1st floor",
+      "70 m²",
+      "€350,000"
+     ],
+     [
+      "32-C",
+      "2nd floor",
+      "70 m²",
+      "€350,000"
+     ]
+    ],
+    "fin": {
+     "Renovation budget": "€350k",
+     "Cost basis": "€600k",
+     "Value after renovation": "€1.05 million",
+     "Gross equity uplift": "€450k"
+    }
+   }
+  }
+ ]
+}
