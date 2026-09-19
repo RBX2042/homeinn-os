@@ -116,9 +116,9 @@ function page(p, alle) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919q">
-  <link rel="stylesheet" href="tokens.css?v=20260919q">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919q">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919r">
+  <link rel="stylesheet" href="tokens.css?v=20260919r">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919r">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -254,7 +254,7 @@ function page(p, alle) {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919q"></script>
+  <script src="site-nav.js?v=20260919r"></script>
 </body>
 </html>
 `;

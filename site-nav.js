@@ -350,6 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (EN) {
       onthoud('en');
       document.querySelectorAll('header a[href], #mob a[href], footer a[href], .site-foot a[href], .nav-mega a[href]').forEach(function (a) {
+        if (a.classList.contains('lang-sw') || a.classList.contains('mob-lang')) return; // taalschakelaar wijst bewust naar NL
         var h = a.getAttribute('href') || '';
         var m = h.match(/^([a-z0-9-]+\.html)([#?].*)?$/);
         if (m && TWIN[m[1]]) { a.setAttribute('href', TWIN[m[1]] + (m[2] || '')); return; }
