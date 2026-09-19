@@ -76,3 +76,18 @@ testsuite. Samenvoegen raakt de omzetlijn van het bedrijf; de winst (minder
 duplicatie) weegt niet op tegen het risico. De drie hulpfuncties eromheen
 (`escHtml`, `_isBot`, `verwijderLokaleLead`) zijn wél identiek — die zijn een
 veilige eerste stap als iemand dit later wil opruimen.
+
+## Aanvulling 19 september 2026
+
+**"Achtergesteld" staat nergens op de site.** De modelovereenkomst in de eigen software
+(`app.js:3180`) noemt de inleg "achtergestelde financiering"; geen enkele publieke pagina
+zegt dat. Als de echte overeenkomst dat ook bepaalt, is dat een materieel risicokenmerk
+dat in de werving ontbreekt. Zie `COMPLIANCE-INVESTEREN.md` § 1 — dit is de eerste vraag
+voor de advocaat en mag niet zonder bevestiging aan de site worden toegevoegd.
+
+**`te-koop.html` is een permanent lege, wél geïndexeerde pagina.** `aanbod.json` heeft
+`"aanbod": []` en `"tehuur": []`; de pagina staat in `sitemap.xml` met een canonical en
+`CollectionPage`-schema, `woning.html` komt daardoor altijd in de niet-gevonden-staat en
+`funda-feed.xml`/`pararius-feed.xml` zijn lege plaatshouders. Geen fout, wel een zwak
+signaal naar zoekmachines zolang er niets te koop staat — overweeg `noindex` tot de eerste
+oplevering.
