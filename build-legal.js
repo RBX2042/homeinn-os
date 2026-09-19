@@ -110,9 +110,9 @@ function page(p, alle) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919b">
-  <link rel="stylesheet" href="tokens.css?v=20260919b">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919b">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919c">
+  <link rel="stylesheet" href="tokens.css?v=20260919c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919c">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -165,7 +165,7 @@ function page(p, alle) {
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
     
-  <div class="right"><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+  <div class="right"><a class="lang-sw" href="index-en.html" lang="en" hreflang="en" aria-label="English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
 </header>
 
   <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
@@ -180,6 +180,7 @@ function page(p, alle) {
       <a class="mob-sm" href="verhuur.html">Verhuur &amp; huuraanbod</a>
       <a class="mob-sm" href="projecten.html">Projecten &amp; investeren</a>
       <span class="mob-groep">Meer</span>
+    <a class="mob-sm mob-lang" href="index-en.html" lang="en">English</a>
       <a class="mob-sm" href="kennis.html">Kennis</a>
       <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
       <a class="mob-sm" href="contact.html">Contact</a>
@@ -247,7 +248,7 @@ function page(p, alle) {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919b"></script>
+  <script src="site-nav.js?v=20260919c"></script>
 </body>
 </html>
 `;

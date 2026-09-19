@@ -347,7 +347,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var f = new FormData(mform);
     // Honeypot: alleen "ingevuld én binnen 4 seconden" telt als bot. Nooit meer
     // een success-scherm tonen zonder verzending — dan verdwijnt een echte lead stil.
-    if (f.get('company_website') && (Date.now() - modalGeopendOp) < 4000) { mform.reset(); closeModal(); return; }
+    // Honeypot-treffer: NIET stil sluiten. Een wachtwoordmanager kan het verborgen veld
+    // invullen; die bezoeker verdient dezelfde uitweg als bij een mislukte bezorging.
+    if (f.get('company_website') && (Date.now() - modalGeopendOp) < 4000) {
+      var fout0 = mform.querySelector('.m-fout'); if (fout0) fout0.remove();
+      var p0 = document.createElement('p');
+      p0.className = 'm-fout'; p0.setAttribute('role', 'alert');
+      p0.innerHTML = 'Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31626257071">+31 6 26 25 70 71</a>.';
+      mform.querySelector('.modal-body').appendChild(p0);
+      return;
+    }
     var knop = mform.querySelector('.m-submit');
     if (knop) { knop.disabled = true; knop.textContent = 'Bezig met verzenden…'; }
     var fout = mform.querySelector('.m-fout');
@@ -369,23 +378,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  var cform = document.querySelector('#pg-contact form');
-  if (cform) cform.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var f = new FormData(cform);
-    if (!f.get('company_website')) {
-      saveLead('Contact', {
-        name: (String(f.get('first_name') || '') + ' ' + String(f.get('last_name') || '')).trim(),
-        email: String(f.get('email') || '').trim(),
-        phone: String(f.get('phone') || '').trim(),
-        portfolio: String(f.get('portfolio_size') || ''),
-        subject: String(f.get('package_interest') || ''),
-        message: String(f.get('message') || '').trim()
-      });
-    }
-    var box = cform.closest('.cf');
-    if (box) box.innerHTML = '<h3>Uw bericht is ontvangen ✓</h3><p style="margin-top:1.25rem;font-weight:300;line-height:1.8">Bedankt voor uw aanvraag. Wij nemen binnen vier uur op werkdagen contact met u op.</p>';
-  });
+  // De #pg-contact-handler stond hier als dode kopie (contact is een losse pagina) en
+  // toonde altijd 'ontvangen', ongeacht het resultaat. Verwijderd 19 september 2026.
 });
 
 /* ===== Aanbod: woningen uit aanbod.json (gepubliceerd vanuit HomeINN OS) ===== */

@@ -758,6 +758,8 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
   .hero-textlink{padding:12px 0;min-height:44px}
   .f-social-btn{width:44px;height:44px}
   .f-col ul a,.footer-links a{padding:8px 0;display:inline-block}
+  /* Inline links in risico- en notitieregels: raakvlak 44px, negatieve marge houdt de regelafstand gelijk. */
+  .hero-risico a,.pf-risico a,.pa-note a,.faq-foot a,.m-note a{display:inline-block;padding:11px 0;margin:-11px 0;min-height:44px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -1183,7 +1185,11 @@ footer{background:var(--ink);padding:clamp(4rem,8vw,8rem) clamp(1.5rem,5vw,5.5re
 /* ── A11y: zichtbare gouden focus-ring voor toetsenbordgebruikers ──
    (de site verbergt de muis met cursor:none; keyboard/AT-gebruikers
    kregen tot nu toe géén zichtbare focus — dat hoort niet bij $100M) ── */
-:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:2px}
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--gold-ink);outline-offset:3px;border-radius:2px}
+/* Op donkere vlakken haalt --gold-ink te weinig; daar de lichte goudtint (7,5:1 op navy). */
+#nav :focus-visible,#mob :focus-visible,.hero :focus-visible,.jstats-band :focus-visible,.cta-band--navy :focus-visible,
+.pakketten-section :focus-visible,.pk :focus-visible,.calc-section :focus-visible,.tc-head.dark :focus-visible,
+.usp-strip :focus-visible,.pfx-exit :focus-visible,.mvw-strip :focus-visible,#pg-home > footer :focus-visible,.modal-nav :focus-visible{outline-color:var(--gold2)}
 .btn:focus-visible,.nav-cta:focus-visible{outline-offset:4px}
 .nav-links a:focus-visible{outline:none}
 .nav-links a:focus-visible::after{transform:scaleX(1)}
@@ -1611,7 +1617,7 @@ header[class$="-top"] ~ main .legal-hero{padding-top:clamp(2.5rem,6vw,5rem)}
 .iv-form-sec{background:var(--cream2);padding:clamp(4rem,8vw,7rem) clamp(1.5rem,5vw,5.5rem)}
 .iv-form-wrap{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4.5rem);align-items:start}
 .iv-form-intro h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:var(--h2);line-height:1.15;color:var(--navy);margin:1.25rem 0 1.25rem;letter-spacing:-.01em}
-.iv-form-intro h2 em{font-style:italic;color:var(--gold)}
+.iv-form-intro h2 em{font-style:italic;color:var(--gold-ink)}
 .iv-form-intro>p{font-size:.95rem;font-weight:300;line-height:1.85;color:var(--ink3);margin:0 0 1.75rem;max-width:52ch}
 .iv-form-punten{list-style:none;margin:0 0 1.75rem;padding:0;display:flex;flex-direction:column;gap:.7rem}
 .iv-form-punten li{position:relative;padding-left:1.6rem;font-size:.9rem;font-weight:300;line-height:1.6;color:var(--ink2)}
@@ -1877,7 +1883,7 @@ nav.spoke-buren > a,nav.lg-other > a{display:inline-flex;align-items:center;min-
    ════════════════════════════════════════════════════════════ */
 .pf-meer{display:none}
 @media(max-width:720px){
-  .blog-grid.pf-inkort > *:nth-child(n+4){display:none}
+  .blog-grid.pf-inkort > *:nth-child(n+4),.pfx-grid.pf-inkort > *:nth-child(n+4){display:none}
   .pf-meer{display:inline-flex;align-items:center;justify-content:center;gap:10px;
     width:100%;min-height:52px;margin-top:1.25rem;padding:14px 20px;
     background:transparent;border:1px solid var(--gold);color:var(--gold-ink);
@@ -2232,3 +2238,44 @@ body .blog-section > div{max-width:var(--site-content)!important;margin-left:aut
 @media(prefers-reduced-motion:reduce){.pfx-bar-fill{width:var(--w);transition:none}.pfx-vision-foto img,.pfx-exit-foto img{transform:none;transition:none}}
 @media(max-width:960px){.pfx-vision{grid-template-columns:1fr}.pfx-vision-foto{order:1}.pfx-vision-foto img{aspect-ratio:16/9}}
 @media(max-width:720px){.pfx-vision-list{grid-template-columns:1fr}}
+
+/* Taalschakelaar NL/EN in de kopbalk en het mobiele menu */
+:is(#nav, #nav.light, header[class$="-top"]) .lang-sw{display:inline-flex;align-items:center;justify-content:center;min-height:32px;margin-right:14px;padding:0 10px;font-family:'Outfit',system-ui,sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.22);transition:color .25s var(--ease),border-color .25s var(--ease)}
+:is(#nav, #nav.light, header[class$="-top"]) .lang-sw:hover{color:var(--gold2);border-color:rgba(var(--gold-rgb),.65)}
+#mob .mob-lang{margin-top:.35rem;color:var(--gold3,var(--gold));letter-spacing:.06em}
+
+/* ── Microtekst-ondergrens, aanvulling 19 september 2026 ──
+   De portefeuille (.pfx-*) is nieuw en viel buiten de eerdere ondergrens; .hero-pill span
+   werd op regel ~1967 door `body .hero-pill span` overschreven; .btn-labels en .wb-pill
+   zakten op 15px-root onder de 12px. Dit blok hoort het laatste ≤720px-blok te blijven. */
+@media(max-width:720px){
+  body .hero-pill span{font-size:max(.7rem,12px)}
+  .btn,.tc-btn,.cf-submit,.m-submit,.smcta-primary,.smcta-call,.pf-meer{font-size:max(.75rem,12.5px)}
+  .pfx-badge,.pfx-fin dt,.pfx-units-head,.pfx-bars-title,.pfx-phase-n,.pfx-big-lbl{font-size:.8667rem}
+  .wb-pill,.cr-lbl,.cc-eyebrow{font-size:.8rem}
+}
+
+/* Investeren — cijferblok (hergebruikt .pfx-* van de homepage) */
+.iv-data{padding-top:clamp(3.5rem,7vw,6rem)}
+.iv-data .pfx-summary{margin-top:0}
+.iv-data-punten{margin-top:1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.iv-dp{background:var(--white);border:1px solid var(--cream3);border-top:2px solid var(--gold);padding:1.35rem 1.4rem;display:flex;flex-direction:column;gap:.45rem}
+.iv-dp-val{font-family:var(--serif);font-size:clamp(1.7rem,2.4vw,2.2rem);font-weight:300;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.iv-dp-lbl{font-size:.84rem;font-weight:300;line-height:1.6;color:var(--ink3)}
+.iv-data .pf-foot{margin-top:2.25rem}
+.iv-data .pf-risico{margin-top:1.75rem}
+@media(max-width:1100px){.iv-data-punten{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.iv-data-punten{grid-template-columns:1fr}.iv-dp-lbl{font-size:1rem}}
+
+/* ── Contrast in de portefeuille-secties (19 september 2026) ──
+   .t-eyebrow is standaard --gold2 (bedoeld voor donkere vlakken, 7,5:1 op navy). De nieuwe
+   .pfx-*-blokken staan op crème/wit, waar --gold2 op 2,0–2,25:1 uitkomt. Zelfde oplossing
+   als eerder voor .proc-head, .journey-head e.a.: --gold-ink (5,07:1 op crème).
+   .pfx-exit is navy en hoort hier bewust NIET bij. */
+.pfx-vision .t-eyebrow,.pfx-summary .t-eyebrow,.pfx-phases .t-eyebrow,.pfx-risks .t-eyebrow,
+.pfx-partners .t-eyebrow,.pfx-section .proc-head .t-eyebrow{color:var(--gold-ink)}
+@media(max-width:720px){
+  .aanbod-kenmerken{font-size:.8667rem}
+  /* Uppercase eyebrow-labels en de strip-tag zakten op 15px-root naar 10,5–10,8px. */
+  .t-eyebrow,.mvw-strip-tag{font-size:.8rem}
+}

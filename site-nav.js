@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.addEventListener('DOMContentLoaded', function () {
     if (!window.matchMedia || !window.matchMedia('(max-width:720px)').matches) return;
-    document.querySelectorAll('.blog-grid').forEach(function (grid) {
+    document.querySelectorAll('.blog-grid,.pfx-grid').forEach(function (grid) {
       kortIn(grid);
       if (grid.dataset.ingekort || !window.MutationObserver) return;
       // Nog niet genoeg kaarten: wacht tot het aanbod geladen is.

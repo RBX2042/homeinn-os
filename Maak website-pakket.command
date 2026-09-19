@@ -17,6 +17,7 @@ cp lightbox.js website-online/                         # fullscreen fotogalerij 
 cp homeinn-public.css homeinn-public.js website-online/
 cp lead-cloud.js website-online/                       # website-leads → Supabase (window.pushLeadToCloud); zonder dit bestand komen leads NIET in het portaal
 cp site-nav.js website-online/                         # gedeeld hoofdmenu (mobiel menu + Diensten-paneel); zonder dit bestand werkt de navigatie op ALLE pagina's niet
+cp manifest-portaal.webmanifest website-online/          # eigen manifest voor het portaal (start_url portaal.html)
 cp 404.html favicon.ico website-online/ 2>/dev/null || true   # eigen 404-pagina (Vercel/GitHub Pages pakken 404.html automatisch op) + favicon.ico voor browsers die /favicon.ico blind opvragen
 cp pand-verkopen.html website-online/                  # verkoop-flow (navigatie-loze meerstaps intake)
 cp vastgoedbeheer.html website-online/                 # dienstenpagina vastgoedbeheer (pakketten + rekenmodule + offerte)
@@ -25,6 +26,7 @@ cp verhuur.html website-online/                        # dienstenpagina verhuur 
 cp kennis.html kennis-*.html website-online/ 2>/dev/null || true # kennis/blog: overzicht + artikelpagina's (build-kennis.js)
 cp te-koop.html woning.html over-ons.html werkgebied.html website-online/ 2>/dev/null || true # aanbod (te koop) + objectdetail + bedrijf
 cp projecten.html investeren.html contact.html website-online/ 2>/dev/null || true # projecten + investeren + contact
+cp *-en.html website-online/ 2>/dev/null || true # Engelse investeerderspagina's (index-en, invest-en, projects-en, about-en, contact-en)
 cp privacy.html voorwaarden.html cookies.html website-online/ 2>/dev/null || true # juridisch (build-legal.js)
 cp verkopen-*.html website-online/ 2>/dev/null || true # wijk-/gemeente-spokes (SEO-motor, gegenereerd via build-spokes.js)
 cp inloggen.html inloggen.js website-online/ 2>/dev/null || true

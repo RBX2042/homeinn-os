@@ -21,9 +21,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919b">
-  <link rel="stylesheet" href="tokens.css?v=20260919b">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919b">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919c">
+  <link rel="stylesheet" href="tokens.css?v=20260919c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919c">
   <style>
     .ct-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .ct-top .brand img{height:34px;width:auto;display:block}
@@ -91,7 +91,7 @@
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
     
-  <div class="right"><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+  <div class="right"><a class="lang-sw" href="contact-en.html" lang="en" hreflang="en" aria-label="English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
 </header>
 
 <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
@@ -106,6 +106,7 @@
     <a class="mob-sm" href="verhuur.html">Verhuur &amp; huuraanbod</a>
     <a class="mob-sm" href="projecten.html">Projecten &amp; investeren</a>
     <span class="mob-groep">Meer</span>
+    <a class="mob-sm mob-lang" href="contact-en.html" lang="en">English</a>
     <a class="mob-sm" href="kennis.html">Kennis</a>
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
     <a class="mob-sm" href="contact.html">Contact</a>
@@ -212,11 +213,15 @@
     "openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"18:00"}
   }
   </script>
-  <script src="lead-cloud.js?v=20260919b" defer></script>
+  <script src="lead-cloud.js?v=20260919c" defer></script>
   <script>
   (function(){
     'use strict';
-    var _hpT=Date.now();function _isBot(f){return !!f.get('company_website') && (Date.now()-_hpT)<4000;}
+    /* Honeypot. De klok start bij de EERSTE focus op een veld, niet bij het laden: waar het
+       formulier pas na een fetch verschijnt was de 4-secondenvoorwaarde anders nooit waar.
+       Bot = verborgen veld gevuld én (nooit een veld aangeraakt óf binnen 4 s). */
+    var _hpT=0;document.addEventListener('focusin',function(e){if(!_hpT&&e.target&&e.target.form)_hpT=Date.now();},true);
+    function _isBot(f){return !!f.get('company_website') && (!_hpT || (Date.now()-_hpT)<4000);}
         var INBOX_KEY='homeinn-inbox-v1', EP='https://formsubmit.co/ajax/info@homeinn.nl';
     function saveLead(type,d){
       try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];d.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);d.type=type;d.date=new Date().toISOString();d.handled=false;l.push(d);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}
@@ -282,6 +287,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260919b"></script>
+<script src="site-nav.js?v=20260919c"></script>
 </body>
 </html>

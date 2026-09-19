@@ -5,7 +5,7 @@
    (app.js ~320 kB, cloud.js, styles.css) wordt pas gecachet als iemand het portaal
    daadwerkelijk bezoekt — een bezoeker van de landingspagina hoort die niet te
    downloaden. HTML-pagina's worden bij bezoek gecachet (netwerk eerst). */
-const CACHE = 'homeinn-os-v92';
+const CACHE = 'homeinn-os-v93';
 const CORE = [
   'homeinn-public.html', 'homeinn-public.js', 'homeinn-public.css', 'site-nav.js', 'lead-cloud.js',
   'lightbox.js', 'tokens.css', 'fonts/fonts.css', 'manifest.webmanifest', 'aanbod.json',
@@ -57,10 +57,12 @@ self.addEventListener('fetch', e => {
   // Code (JS/CSS): netwerk eerst + revalideren (no-cache), zodat nieuwe code altijd direct laadt;
   // cache alleen als offline-fallback.
   if (req.destination === 'script' || req.destination === 'style' || /\.(js|css)$/.test(url.pathname)) {
-    e.respondWith(fetch(req, { cache: 'no-cache' }).then(r => bewaar(req, r)).catch(() => caches.match(req)));
+    // Pagina's vragen code op mét ?v=-token, de precache staat er zónder: bij een misser
+    // ook zonder querystring zoeken, anders is de precache offline waardeloos.
+    e.respondWith(fetch(req, { cache: 'no-cache' }).then(r => bewaar(req, r)).catch(() => caches.match(req, { ignoreSearch: true })));
     return;
   }
 
   // Overige assets (afbeeldingen, fonts): cache eerst, anders netwerk (en bijwerken in cache).
-  e.respondWith(caches.match(req).then(m => m || fetch(req).then(r => bewaar(req, r)).catch(() => m)));
+  e.respondWith(caches.match(req, { ignoreSearch: true }).then(m => m || fetch(req).then(r => bewaar(req, r)).catch(() => m)));
 });
