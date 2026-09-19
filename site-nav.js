@@ -316,7 +316,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var plekken = document.querySelectorAll('.lang-sw');
     if (plekken.length) plekken.forEach(function (ls) { ls.parentNode.insertBefore(maakKnop(), ls); });
     var burger = document.getElementById('burger') || document.querySelector('.sn-burger,.burger');
-    if (burger) { var m = maakKnop(); m.classList.add('theme-sw--m'); burger.parentNode.insertBefore(m, burger); }
+    if (burger) {
+      var m = maakKnop(); m.classList.add('theme-sw--m'); burger.parentNode.insertBefore(m, burger);
+      // Taalschakelaar ook zichtbaar in de mobiele kop (de .right-groep is daar verborgen)
+      var ls0 = document.querySelector('.lang-sw');
+      if (ls0) { var lm = ls0.cloneNode(true); lm.classList.add('lang-sw--m'); burger.parentNode.insertBefore(lm, m); }
+    }
     else { var kop = document.querySelector('header .right, header .nav-right, .topbar .right, .topbar, header'); if (kop) kop.appendChild(maakKnop()); }
     if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { document.querySelectorAll('.theme-sw').forEach(label); });
   });
@@ -376,5 +381,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     '<button type="button" class="nl-bar-x" aria-label="Close">\u00d7</button>';
     bar.querySelector('.nl-bar-x').addEventListener('click', function () { bar.remove(); onthoud('nl'); });
     document.body.appendChild(bar);
+  });
+})();
+
+/* ── Mobiele contactbalk (19 sep 2026) ──
+   Op telefoons staat onderaan elke pagina een vaste balk met WhatsApp en Bellen, zodat contact
+   altijd één tik weg is. De homepage heeft al een eigen .smcta (Investeren + WhatsApp) en wordt
+   overgeslagen. De gouden taalbalk (.nl-bar) schuift erboven. */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('.smcta')) return;
+    var EN = (document.documentElement.lang || 'nl').indexOf('en') === 0;
+    var bar = document.createElement('nav');
+    bar.className = 'smcta smcta-auto';
+    bar.setAttribute('aria-label', EN ? 'Quick contact' : 'Snel contact');
+    bar.innerHTML = '<a class="smcta-primary" href="https://wa.me/31633322257" target="_blank" rel="noopener">WhatsApp <span class="arr">\u2192</span></a>' +
+                    '<a class="smcta-call" href="tel:+31633322257" aria-label="' + (EN ? 'Call HomeINN' : 'Bellen met HomeINN') + '">' + (EN ? 'Call' : 'Bellen') + '</a>';
+    document.body.appendChild(bar);
+    document.body.classList.add('smcta-on', 'has-smcta');
   });
 })();

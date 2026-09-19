@@ -2645,3 +2645,20 @@ body:has(.nl-bar) .float-cta{bottom:4.5rem}
   .theme-sw,.theme-sw--m{width:44px;height:44px}
   .theme-sw--m{right:66px}
 }
+
+/* Mobiele contactbalk op subpagina's (site-nav.js) — altijd zichtbaar, geen scroll-drempel */
+@media(max-width:600px){
+  .smcta.smcta-auto{transform:none}
+  .smcta-auto .smcta-primary{flex:1 1 auto;background:var(--gold);color:var(--navy)}
+  .smcta-auto .smcta-primary:hover{background:var(--gold2)}
+  .smcta-auto .smcta-call{flex:0 0 36%}
+  body.has-smcta{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  body.has-smcta .nl-bar{bottom:calc(64px + env(safe-area-inset-bottom))}
+}
+
+/* Mobiele taalschakelaar naast de themaknop (kloon uit site-nav.js) */
+.lang-sw--m{display:none}
+@media(max-width:960px){
+  :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m{display:inline-flex;position:absolute;right:122px;top:50%;transform:translateY(-50%);margin:0;min-height:44px;min-width:44px;padding:0 8px}
+}
+@media(max-width:600px){ :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m{right:116px} }
