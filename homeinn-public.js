@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var fout0 = mform.querySelector('.m-fout'); if (fout0) fout0.remove();
       var p0 = document.createElement('p');
       p0.className = 'm-fout'; p0.setAttribute('role', 'alert');
-      p0.innerHTML = hiT('Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31626257071">+31 6 26 25 70 71</a>.', 'Sending failed. Please try again, or call us directly on +31 6 26 25 70 71 — we will then schedule the conversation by phone.');
+      p0.innerHTML = hiT('Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31633322257">+31 6 33 32 22 57</a>.', 'Sending failed. Please try again, or call us directly on +31 6 33 32 22 57 — we will then schedule the conversation by phone.');
       mform.querySelector('.modal-body').appendChild(p0);
       return;
     }
@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var p = document.createElement('p');
       p.className = 'm-fout';
       p.setAttribute('role', 'alert');
-      p.innerHTML = 'Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31626257071">+31 6 26 25 70 71</a> — dan plannen wij het gesprek telefonisch in.';
+      p.innerHTML = 'Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31633322257">+31 6 33 32 22 57</a> — dan plannen wij het gesprek telefonisch in.';
       mform.querySelector('.modal-body').appendChild(p);
     });
   });

@@ -22,9 +22,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919l">
-  <link rel="stylesheet" href="tokens.css?v=20260919l">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919l">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919m">
+  <link rel="stylesheet" href="tokens.css?v=20260919m">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919m">
   <style>
     .vh-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
       padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
@@ -166,7 +166,7 @@
     <section class="vh-sec" id="aanbod">
       <div class="proc-head"><span class="t-eyebrow">Te huur</span><h2>Beschikbare <em>huurwoningen.</em></h2></div>
       <div class="blog-grid vh-grid" id="huren-grid">
-        <noscript><div class="aanbod-leeg"><h3>Op zoek naar een huurwoning?</h3><p>Bekijk het actuele aanbod met JavaScript ingeschakeld, of <a href="tel:+31626257071">bel ons over uw woonwensen</a>.</p></div></noscript>
+        <noscript><div class="aanbod-leeg"><h3>Op zoek naar een huurwoning?</h3><p>Bekijk het actuele aanbod met JavaScript ingeschakeld, of <a href="tel:+31633322257">bel ons over uw woonwensen</a>.</p></div></noscript>
       </div>
       <div id="huren-meta" style="margin-top:1.5rem"></div>
     </section>
@@ -209,7 +209,7 @@
           </form>
           <div class="vh-form-success" id="vh-success">
             <h3>Bedankt — uw woonwens is ontvangen ✓</h3>
-            <p>Wij nemen contact met u op zodra er een passende huurwoning vrijkomt. Bij urgentie belt u ons gerust op +31 6 26 25 70 71.</p>
+            <p>Wij nemen contact met u op zodra er een passende huurwoning vrijkomt. Bij urgentie belt u ons gerust op +31 6 33 32 22 57.</p>
           </div>
         </div>
       </div>
@@ -243,7 +243,7 @@
 
   <footer class="site-foot">
     <div class="in">
-      <p class="site-foot-contact"><a href="tel:+31626257071">+31 6 26 25 70 71</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
+      <p class="site-foot-contact"><a href="tel:+31633322257">+31 6 33 32 22 57</a><a href="https://wa.me/31633322257" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
       <nav class="site-foot-nav" aria-label="Hoofdlinks">
         <a href="./">Home</a>
         <a href="projectontwikkeling.html">Projectontwikkeling</a>
@@ -274,7 +274,7 @@
   {
     "@context":"https://schema.org",
     "@type":"RealEstateAgent","@id":"https://homeinn.nl/#organisatie","name":"HomeINN",
-    "telephone":"+31626257071",
+    "telephone":"+31633322257",
     "email":"info@homeinn.nl",
     "url":"https://homeinn.nl/verhuur.html",
     "areaServed":{"@type":"City","name":"Rotterdam"},
@@ -282,7 +282,7 @@
     "description":"Huurwoningen in Rotterdam en verhuurservice voor eigenaren: gerenoveerde, energiezuinige woningen met één aanspreekpunt en een 24/7 storingslijn voor huurders van onze eigen woningen; voor eigenaren advertentie, screening en huurcontract."
   }
   </script>
-  <script src="lead-cloud.js?v=20260919l" defer></script>
+  <script src="lead-cloud.js?v=20260919m" defer></script>
   <script>
   (function(){
     'use strict';
@@ -382,7 +382,7 @@
         message: 'Gewenste plaats: '+String(f.get('plaats')||'—')+' · Budget: '+String(f.get('budget')||'—')+(f.get('message')?(' · '+String(f.get('message'))):'')
       }).then(function(geslaagd){
         if(knop){knop.disabled=false;knop.textContent=knop.dataset.txt;}
-        if(!geslaagd){ (function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31626257071" style="color:inherit;text-decoration:underline">+31 6 26 25 70 71</a>.';f.appendChild(p);})(form); return; }
+        if(!geslaagd){ (function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';f.appendChild(p);})(form); return; }
         var ok = document.getElementById('vh-success');
         form.style.display='none';
         if (ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
@@ -390,6 +390,6 @@
     });
   })();
   </script>
-<script src="site-nav.js?v=20260919l"></script>
+<script src="site-nav.js?v=20260919m"></script>
 </body>
 </html>

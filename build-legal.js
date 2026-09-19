@@ -18,7 +18,7 @@ const BEDRIJF = {
   kvk: '96713437',
   btw: 'NL867727548B01',
 };
-const TEL = '+31 6 26 25 70 71';
+const TEL = '+31 6 33 32 22 57';
 
 // Iconen-sprite (alleen de symbolen die de legal-hero's gebruiken)
 const SPRITE = `<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true"><defs>
@@ -34,7 +34,7 @@ const PAGES = [
     heroCopy: 'HomeINN verwerkt persoonsgegevens zorgvuldig en alleen voor contact, dienstverlening en het verbeteren van de website. Hieronder leest u in duidelijke taal welke gegevens wij verwerken en waarom.',
     versie: 'Versie 2.1 · ingangsdatum 5 september 2026',
     secties: [
-      ['Wie is verantwoordelijk', `${BEDRIJF.naam}, ${BEDRIJF.adres}, KvK ${BEDRIJF.kvk}, is verwerkingsverantwoordelijke voor de verwerkingen die in dit privacybeleid zijn beschreven. Verzoeken over uw gegevens: <a href="mailto:info@homeinn.nl">info@homeinn.nl</a> of <a href="tel:+31626257071">${TEL}</a>.`],
+      ['Wie is verantwoordelijk', `${BEDRIJF.naam}, ${BEDRIJF.adres}, KvK ${BEDRIJF.kvk}, is verwerkingsverantwoordelijke voor de verwerkingen die in dit privacybeleid zijn beschreven. Verzoeken over uw gegevens: <a href="mailto:info@homeinn.nl">info@homeinn.nl</a> of <a href="tel:+31633322257">${TEL}</a>.`],
       ['Welke gegevens wij verwerken en waarom', 'Vult u een formulier in (kennismakingsgesprek, pand verkopen, project volgen, investeren of contact), dan verwerken wij de gegevens die u opgeeft: naam, e-mailadres en/of telefoonnummer, het onderwerp van uw aanvraag en uw bericht. Biedt u een pand aan, dan vragen wij daarnaast het adres van het pand, het type, de bewoningssituatie (leeg of verhuurd), de bouwkundige staat, de aanleiding voor verkoop en de gewenste passeertermijn — uitsluitend om een onderbouwd voorstel te kunnen doen. Grondslag: uitvoering van (precontractuele) maatregelen op uw verzoek (art. 6 lid 1 sub b AVG) en ons gerechtvaardigd belang om aanvragen op te volgen.'],
       ['Gegevens bij verhuur, verhuurbemiddeling en beheer', 'Bemiddelen wij bij verhuur of beheren wij uw pand, dan verwerken wij daarnaast gegevens van kandidaat-huurders: identiteitsgegevens, inkomensgegevens, de uitkomst van een kredietwaardigheidscheck en referenties van een vorige verhuurder of werkgever. Wij bewaren geen kopie&euml;n van identiteitsbewijzen langer dan nodig en verstrekken deze gegevens niet aan derden. Voeren wij het beheer, dan verwerken wij bovendien de gegevens die daarvoor nodig zijn: de huurovereenkomst, contactgegevens van de huurder, huurbetalingen en achterstanden, en de correspondentie over onderhoud en meldingen. Grondslag: uitvoering van de (huur)overeenkomst en ons gerechtvaardigd belang bij een zorgvuldige selectie en een correcte huuradministratie. Verwerken wij deze gegevens in opdracht van een eigenaar, dan treden wij op als verwerker en leggen wij dat vast in een verwerkersovereenkomst.'],
       ['Gegevens van investeerders', 'Vraagt u informatie aan over een ontwikkelproject, dan verwerken wij uw naam, uw contactgegevens en het bedrag en de looptijd die u aangeeft. Wij gebruiken die gegevens uitsluitend om u de projectinformatie te sturen en contact met u op te nemen; wij verkopen ze niet en delen ze niet met derden voor hun eigen doeleinden. Komt een deelname tot stand, dan verwerken wij daarnaast de gegevens die nodig zijn voor de administratie van uw inleg, de looptijd en de uitkeringen; op die administratie zijn de wettelijke (fiscale) bewaartermijnen van 7 jaar van toepassing.'],
@@ -112,9 +112,9 @@ function page(p, alle) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919l">
-  <link rel="stylesheet" href="tokens.css?v=20260919l">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919l">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919m">
+  <link rel="stylesheet" href="tokens.css?v=20260919m">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919m">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -224,7 +224,7 @@ function page(p, alle) {
 
   <footer class="site-foot">
     <div class="in">
-      <p class="site-foot-contact"><a href="tel:+31626257071">+31 6 26 25 70 71</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
+      <p class="site-foot-contact"><a href="tel:+31633322257">+31 6 33 32 22 57</a><a href="https://wa.me/31633322257" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
       <nav class="site-foot-nav" aria-label="Hoofdlinks">
         <a href="./">Home</a>
         <a href="projectontwikkeling.html">Projectontwikkeling</a>
@@ -250,7 +250,7 @@ function page(p, alle) {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919l"></script>
+  <script src="site-nav.js?v=20260919m"></script>
 </body>
 </html>
 `;

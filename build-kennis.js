@@ -14,8 +14,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const TEL = '+31 6 26 25 70 71';
-const TEL_HREF = '+31626257071';
+const TEL = '+31 6 33 32 22 57';
+const TEL_HREF = '+31633322257';
 
 function esc(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -53,9 +53,9 @@ function head(titel, desc, canonical) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919l">
-  <link rel="stylesheet" href="tokens.css?v=20260919l">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919l">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919m">
+  <link rel="stylesheet" href="tokens.css?v=20260919m">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919m">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}
@@ -185,7 +185,7 @@ function head(titel, desc, canonical) {
 function foot() {
   return `  <footer class="site-foot">
     <div class="in">
-      <p class="site-foot-contact"><a href="tel:+31626257071">+31 6 26 25 70 71</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
+      <p class="site-foot-contact"><a href="tel:+31633322257">+31 6 33 32 22 57</a><a href="https://wa.me/31633322257" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:info@homeinn.nl">info@homeinn.nl</a></p>
       <nav class="site-foot-nav" aria-label="Hoofdlinks">
         <a href="./">Home</a>
         <a href="projectontwikkeling.html">Projectontwikkeling</a>
@@ -211,7 +211,7 @@ function foot() {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919l"></script>
+  <script src="site-nav.js?v=20260919m"></script>
 </body>
 </html>
 `;
