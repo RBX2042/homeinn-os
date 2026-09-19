@@ -27,7 +27,7 @@ function syncMenuState(isOpen) {
   var burger = document.getElementById('burger');
   if (burger) {
     burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    burger.setAttribute('aria-label', isOpen ? 'Sluit menu' : 'Open menu');
+    burger.setAttribute('aria-label', document.documentElement.lang === 'en' ? (isOpen ? 'Close menu' : 'Open menu') : (isOpen ? 'Sluit menu' : 'Open menu'));
   }
 }
 
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
     knop.type = 'button';
     knop.className = 'pf-meer';
     knop.setAttribute('aria-expanded', 'false');
-    knop.innerHTML = 'Toon alle ' + kaarten + ' panden <span class="arr" aria-hidden="true">\u2193</span>';
+    knop.innerHTML = (document.documentElement.lang === 'en' ? 'Show all ' + kaarten + ' properties ' : 'Toon alle ' + kaarten + ' panden ') + '<span class="arr" aria-hidden="true">\u2193</span>';
     knop.addEventListener('click', function () {
       grid.classList.remove('pf-inkort');
       knop.setAttribute('aria-expanded', 'true');

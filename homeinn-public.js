@@ -1,3 +1,6 @@
+/* ===== Taal: EN-pagina's (html lang="en") krijgen Engelse meldingen uit de gedeelde scripts ===== */
+var HI_EN = document.documentElement.lang === 'en';
+function hiT(nl, en) { return HI_EN ? en : nl; }
 var curPk = 'p2';
 var prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var navEl = document.getElementById('nav');
@@ -255,7 +258,7 @@ if (!prefersReduce && 'IntersectionObserver' in window) {
 /* ===== Google Maps: pas laden na klik (privacy) ===== */
 function mapsKnop(mapsQ, titel) {
   return '<button class="map-load" type="button" data-maps="' + mapsQ + '" data-titel="' + titel + '">' +
-    '<span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span><strong>Kaart tonen</strong><span class="map-load-sub">Google Maps — laadt pas na uw klik</span></button>';
+    '<span class="map-load-icoon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21 C12 21 5 14.6 5 9.5 A7 7 0 0 1 19 9.5 C19 14.6 12 21 12 21 Z"/><circle cx="12" cy="9.5" r="2.4"/></svg></span><strong>' + hiT('Kaart tonen', 'Show map') + '</strong><span class="map-load-sub">' + hiT('Google Maps — laadt pas na uw klik', 'Google Maps — loads only after you click') + '</span></button>';
 }
 document.addEventListener('click', function (e) {
   var btn = e.target && e.target.closest ? e.target.closest('.map-load') : null;
@@ -265,7 +268,7 @@ document.addEventListener('click', function (e) {
   iframe.loading = 'lazy';
   iframe.referrerPolicy = 'no-referrer-when-downgrade';
   iframe.src = 'https://www.google.com/maps?q=' + btn.getAttribute('data-maps') + '&output=embed';
-  iframe.title = 'Kaart ' + (btn.getAttribute('data-titel') || '');
+  iframe.title = hiT('Kaart ', 'Map ') + (btn.getAttribute('data-titel') || '');
   var restoreFocus = document.activeElement === btn;
   btn.replaceWith(iframe);
   if (restoreFocus) {
@@ -341,8 +344,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var validContact = contact.indexOf('@') >= 0
       ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)
       : contact.replace(/\D/g, '').length >= 6;
-    nameField.setCustomValidity(nameField.value.trim() ? '' : 'Vul uw naam in.');
-    contactField.setCustomValidity(validContact ? '' : 'Vul een geldig e-mailadres of telefoonnummer in.');
+    nameField.setCustomValidity(nameField.value.trim() ? '' : hiT('Vul uw naam in.', 'Please enter your name.'));
+    contactField.setCustomValidity(validContact ? '' : hiT('Vul een geldig e-mailadres of telefoonnummer in.', 'Please enter a valid e-mail address or phone number.'));
     if (!mform.reportValidity()) return;
     var f = new FormData(mform);
     // Honeypot: alleen "ingevuld én binnen 4 seconden" telt als bot. Nooit meer
@@ -353,12 +356,12 @@ document.addEventListener('DOMContentLoaded', function () {
       var fout0 = mform.querySelector('.m-fout'); if (fout0) fout0.remove();
       var p0 = document.createElement('p');
       p0.className = 'm-fout'; p0.setAttribute('role', 'alert');
-      p0.innerHTML = 'Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31626257071">+31 6 26 25 70 71</a>.';
+      p0.innerHTML = hiT('Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31626257071">+31 6 26 25 70 71</a>.', 'Sending failed. Please try again, or call us directly on +31 6 26 25 70 71 — we will then schedule the conversation by phone.');
       mform.querySelector('.modal-body').appendChild(p0);
       return;
     }
     var knop = mform.querySelector('.m-submit');
-    if (knop) { knop.disabled = true; knop.textContent = 'Bezig met verzenden…'; }
+    if (knop) { knop.disabled = true; knop.textContent = hiT('Bezig met verzenden…', 'Sending…'); }
     var fout = mform.querySelector('.m-fout');
     if (fout) fout.remove();
     saveLead('Gesprek', {
@@ -368,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
       subject: String(f.get('meeting_package') || ''),
       message: f.get('meeting_ref') ? 'Betreft: ' + String(f.get('meeting_ref')) : ''
     }).then(function (ok) {
-      if (knop) { knop.disabled = false; knop.textContent = 'Plan mijn kennismaking →'; }
+      if (knop) { knop.disabled = false; knop.textContent = hiT('Plan mijn kennismaking →', 'Book my introduction →'); }
       if (ok) { mform.reset(); showModalSuccess(); return; }
       var p = document.createElement('p');
       p.className = 'm-fout';
@@ -604,7 +607,7 @@ function openWoningDetail(w) {
   ].filter(function (r) { return r[1]; });
   box.innerHTML =
     '<div class="wd">' +
-      '<button class="wd-close" data-wd-close aria-label="Sluiten">✕</button>' +
+      '<button class="wd-close" data-wd-close aria-label="' + hiT('Sluiten', 'Close') + '">✕</button>' +
       (fotos.length
         ? '<div class="wd-gallery"><img class="wd-main" id="wd-main" src="' + escHtml(fotos[0]) + '" alt="' + escHtml(w.adres) + '">' +
           (fotos.length > 1 ? '<div class="wd-thumbs">' + fotos.map(function (f, i) {
