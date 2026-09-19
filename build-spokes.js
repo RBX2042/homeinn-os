@@ -139,9 +139,9 @@ function page(w) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919d">
-  <link rel="stylesheet" href="tokens.css?v=20260919d">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919d">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919e">
+  <link rel="stylesheet" href="tokens.css?v=20260919e">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919e">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -251,7 +251,7 @@ function page(w) {
 
 
   <main id="main" tabindex="-1">
-    <section class="page-hero">
+    <section class="page-hero page-hero--foto">
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Pand verkopen · ${esc(w.naam)}</span>
         <h1>${h1}</h1>
@@ -349,7 +349,7 @@ function page(w) {
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260919d"></script>
+  <script src="site-nav.js?v=20260919e"></script>
 </body>
 </html>
 `;

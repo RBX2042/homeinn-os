@@ -21,3 +21,5 @@ Wil je de foto terug, dan volstaat één regel in de hero, direct ná `.hero-bg`
 ```
 
 `interieur-sfeer.jpg` wordt wél gebruikt, op `projectontwikkeling.html`.
+
+**19 september 2026:** `hero-rotterdam.jpg` is als lage sfeerlaag (opacity .26, onder de navy) toegevoegd aan de kop van de twaalf wijkpagina's en `werkgebied.html`. Het is een stadsbeeld van Rotterdam, geen pand- of wijkfoto, en wordt nergens als zodanig gepresenteerd.

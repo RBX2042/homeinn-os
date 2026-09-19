@@ -2396,3 +2396,49 @@ body .page-hero::before{opacity:.2}
 .wg-card:focus-visible,.kn-card:focus-visible,.pfx-card:focus-visible,.blog-card a:focus-visible,.disc-row:focus-visible{outline:2px solid var(--gold-ink);outline-offset:4px}
 /* 11. lege staat in een raster: over de volle breedte, gecentreerd */
 .aanbod-leeg{grid-column:1/-1}
+
+/* ════════════════════════════════════════════════════════════
+   BEWEGING EN SFEER OP DE SUBPAGINA'S (19 september 2026)
+   ------------------------------------------------------------
+   1. Kop-entrance: dezelfde rustige opkomst als de homepage-hero, nu ook
+      op elke .page-hero. Alleen actief met body.hero-ready (JS), dus zonder
+      JS staat alles direct; reduced-motion zet animaties globaal uit.
+   2. Fotolaag: .page-hero--foto legt het gelicentieerde Rotterdam-beeld
+      (fotos/hero-rotterdam.jpg, Pexels, zie fotos/BEELDRECHTEN.md) laag
+      onder de navy. Opacity .26 houdt de tekst op dezelfde donkere grond,
+      dus het contrast blijft wat het was.
+   ════════════════════════════════════════════════════════════ */
+body.hero-ready .page-hero-inner > *{animation:heroUp .8s var(--ease-out) both}
+body.hero-ready .page-hero-inner > *:nth-child(1){animation-delay:.1s}
+body.hero-ready .page-hero-inner > *:nth-child(2){animation-delay:.24s}
+body.hero-ready .page-hero-inner > *:nth-child(3){animation-delay:.4s}
+body.hero-ready .page-hero-inner > *:nth-child(4){animation-delay:.54s}
+body.hero-ready .page-hero-inner > *:nth-child(n+5){animation-delay:.66s}
+
+.page-hero{position:relative;overflow:hidden}
+.page-hero--foto::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:url('fotos/hero-rotterdam.jpg') 72% center/cover no-repeat;opacity:.26;
+  filter:saturate(.7);
+  -webkit-mask:linear-gradient(90deg,rgba(0,0,0,.35),#000 55%);mask:linear-gradient(90deg,rgba(0,0,0,.35),#000 55%)}
+body.hero-ready .page-hero--foto::after{animation:kenburnsSub 14s ease-out both}
+@keyframes kenburnsSub{from{transform:scale(1.06)}to{transform:none}}
+@media(max-width:720px){.page-hero--foto::after{background-position:60% center;opacity:.22;-webkit-mask:linear-gradient(180deg,rgba(0,0,0,.3),#000 70%);mask:linear-gradient(180deg,rgba(0,0,0,.3),#000 70%)}}
+@media(prefers-reduced-motion:reduce){.page-hero--foto::after{animation:none;transform:none}}
+
+/* ═══ Mobiele hero rustiger (19 sep 2026, screenshot eigenaar) ═══
+   Op 375px stond de eyebrow op twee regels, de intro op vier, daaronder nog een metaregel
+   en de risicozin; de Erasmusbrug viel onder de vouw. Premium is weglaten: op mobiel één
+   eyebrow-regel, één korte intro, één knop, en de brug binnen het eerste scherm. */
+@media(max-width:720px){
+  .hero-pill-x{display:none}
+  body .hero-pill{margin-bottom:1.25rem}
+  body .hero-pill span{letter-spacing:.16em;white-space:nowrap}
+  body .hero h1{margin-bottom:1rem}
+  body .hero-sub{margin-bottom:1.5rem;max-width:30rem}
+  body .hero-actions{gap:.35rem}
+  body .hero-micro{display:none}
+  body .hero-risico{margin-top:1rem;font-size:.8rem;line-height:1.55;color:rgba(255,255,255,.62);max-width:30rem}
+  body .hero-risico a{color:rgba(255,255,255,.72)}
+  body .hero-copy{padding-bottom:clamp(8rem,38vw,12rem)}
+  body .hero-bridge-m{bottom:5.5rem;height:clamp(170px,46vw,250px);opacity:.55}
+}

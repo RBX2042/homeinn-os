@@ -217,3 +217,57 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 })();
+
+/* ── Site-brede reveal en hero-entrance ──
+   De homepage had 54 reveal-animaties, de subpagina's nul (hun .rv droeg een vaste .in).
+   Dit blok maakt de beweging overal gelijk zonder één regel HTML te wijzigen — dus ook
+   generator-veilig. Werkwijze: componenten die bij het laden ONDER de vouw staan krijgen
+   .rv en worden geobserveerd; wat al in beeld staat blijft direct zichtbaar (geen flits).
+   Zonder JS gebeurt niets (alles zichtbaar, @media(scripting:none) dekt de rest); met
+   prefers-reduced-motion zet de CSS alle transities uit en zet .in de opacity op 1. */
+document.addEventListener('DOMContentLoaded', function () {
+  document.body.classList.add('hero-ready');   // zelfde haak als de homepage voor de kop-entrance
+  if (!('IntersectionObserver' in window)) return;
+  var SEL = '.proc-head,.proc-lede,.pstep,.pk,.tc,.val-card,.blog-card,.wg-card,.pcard,.jstep,.disc-row,' +
+            '.cta-inner,.vgl-wrap,.faq-item,.kn-card,.story-text,.ci-item,.cf,.pfx-card,.pfx-vision,.pfx-summary,' +
+            '.pfx-phases,.pfx-risks,.pfx-partners,.iv-form-intro,.ov-verhaal,.calc-text,.pakketten-head,.usp-strip,' +
+            '.art-body > h2,.art-body > figure,.legal-doc > h2,.jstats-band,.wb-inner,.statement-body,.vh-eigenaren,.map-load';
+  var vouw = window.innerHeight;
+  var items = [];
+  document.querySelectorAll(SEL).forEach(function (el) {
+    if (el.closest('.hero,.page-hero,#nav,#mob,header')) return;
+    if (el.parentElement && el.parentElement.closest('.rv,.rv-stagger') && !el.parentElement.classList.contains('rv-stagger')) return;
+    var r = el.getBoundingClientRect();
+    if (r.top < vouw * 0.9) return;                        // al in beeld: niet verbergen
+    if (el.classList.contains('rv-stagger')) { el.classList.remove('in'); items.push(el); return; }
+    el.classList.add('rv'); el.classList.remove('in');
+    // lichte trapsgewijze vertraging voor broertjes naast elkaar (kaarten in een grid)
+    var i = Array.prototype.indexOf.call(el.parentElement ? el.parentElement.children : [], el);
+    if (i > 0 && i < 4) el.classList.add('d' + i);
+    items.push(el);
+  });
+  if (!items.length) return;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+  items.forEach(function (el) { obs.observe(el); });
+  // Vangnet: een verborgen of geknepen tabblad kan IntersectionObserver-meldingen uitstellen.
+  // Bij scrollen/resizen controleren we zelf de positie, zodat niets in beeld onzichtbaar blijft.
+  var bezig = false;
+  function vangnet() {
+    if (bezig) return; bezig = true;
+    requestAnimationFrame(function () {
+      bezig = false;
+      var h = window.innerHeight;
+      items = items.filter(function (el) {
+        if (el.classList.contains('in')) return false;
+        var r = el.getBoundingClientRect();
+        if (r.top < h * 0.96 && r.bottom > 0) { el.classList.add('in'); obs.unobserve(el); return false; }
+        return true;
+      });
+      if (!items.length) { window.removeEventListener('scroll', vangnet); window.removeEventListener('resize', vangnet); }
+    });
+  }
+  window.addEventListener('scroll', vangnet, { passive: true });
+  window.addEventListener('resize', vangnet);
+});
