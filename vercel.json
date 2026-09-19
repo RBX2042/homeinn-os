@@ -87,6 +87,39 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "home-inn.nl"
+        }
+      ],
+      "destination": "https://homeinn.nl/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.home-inn.nl"
+        }
+      ],
+      "destination": "https://homeinn.nl/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.homeinn.nl"
+        }
+      ],
+      "destination": "https://homeinn.nl/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
