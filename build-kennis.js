@@ -87,7 +87,7 @@ function head(titel, desc, canonical) {
     .art-head .t-eyebrow{color:var(--gold-ink);display:block;margin-bottom:1.25rem}
     .art-head h1{font-family:var(--serif);font-weight:300;color:var(--navy);line-height:1.08;letter-spacing:-.015em;font-size:clamp(2rem,5vw,3.2rem);margin:0}
     .art-meta{margin-top:1.5rem;font-size:.78rem;color:var(--ink4);letter-spacing:.04em}
-    .art-body{max-width:760px;margin:0 auto;padding:clamp(2.5rem,5vw,4rem) clamp(1.5rem,5vw,2rem) clamp(3rem,6vw,5rem)}
+    .art-body{max-width:68ch;margin:0 auto;padding:clamp(2.5rem,5vw,4rem) clamp(1.5rem,5vw,2rem) clamp(3rem,6vw,5rem)}
     .art-body .lead{font-size:1.18rem;font-weight:300;line-height:1.8;color:var(--ink2)}
     .art-body h2{font-family:var(--serif);font-weight:400;font-size:var(--h2-prose);color:var(--navy);line-height:1.2;margin:2.75rem 0 1rem}
     .art-body p{font-size:1.02rem;font-weight:300;line-height:1.9;color:var(--ink2);margin:0 0 1.25rem}

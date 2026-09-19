@@ -2442,3 +2442,51 @@ body.hero-ready .page-hero--foto::after{animation:kenburnsSub 14s ease-out both}
   body .hero-copy{padding-bottom:clamp(8rem,38vw,12rem)}
   body .hero-bridge-m{bottom:5.5rem;height:clamp(170px,46vw,250px);opacity:.55}
 }
+
+/* ═══ Review groep D (19 sep 2026) — cascade-herstel en regelbreedtes ═══
+   Latere regels (o.a. r. ~2382 min-height:30px) wonnen van het (pointer:coarse)-blok;
+   dit blok staat bewust ONDERAAN en moet onderaan blijven. */
+@media(hover:none),(pointer:coarse){
+  .pk-cta,.pillar-cta{padding-top:12px;padding-bottom:12px;min-height:44px}
+  .ci-item a,.nf-links a,.pv-foot a,.legal-doc a,.wg-note a{display:inline-block;padding:10px 0;margin:-6px 0;min-height:44px}
+  input[type=range],#c-slider{height:44px;background:linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.15)) 50% 50%/100% 1px no-repeat}
+  :is(#nav, #nav.light, header[class$="-top"]) .lang-sw{min-height:44px;min-width:44px}
+}
+.pk-cta{color:var(--gold-ink)}
+.m-note,.pf-risico,.wg-note,.vgl-note,.buurt-note,#ivc-note,.pfx-sum-note{max-width:64ch}
+.proc-lede,.pfx-vision-foot,.pf-meedoen p,.ov-verhaal p,.story-text p,.calc-text p{max-width:64ch}
+.hero-micro{max-width:60ch}
+.pfx-chip{min-height:44px}
+.proj-status{font-size:.75rem}
+@media(max-width:720px){
+  .usp,.jstat-lbl,.val-eyebrow,.ci-tag,.wg-link,.pk-sub,.pk-min,.map-load-sub,.kn-cat,.kn-meta,.art-meta,.pfx-chip-n,.pfx-units-head,.jstats-band dt,.nf-code,.pstep-n,.sla-tag,.iv-calc-k{font-size:.8rem}
+  .arr{font-size:inherit}
+}
+
+/* ═══ Review groep A (19 sep 2026) — rust op homepage, projecten, over ons, contact ═══ */
+#pg-home .pfx-units-head,#pg-home .pfx-units{display:none}   /* dossierregels op projecten.html; homepage toont kop, kenmerken en cijfers */
+#pg-home .faq-list .faq-item:nth-child(n+5){display:none}     /* vier vragen op de landingspagina, de rest via kennis */
+.pf-photo-note,.map-load-sub{display:none}                     /* geen placeholder-tekst op de kaartvlakken */
+.ov-verhaal h2,.story-text h2,.page-hero h1,.proc-head h2,.cta-inner h2{text-wrap:balance}
+.invest-box .ib-title,.ib-title,.pk-num,.pk-tag,.val-eyebrow{font-size:.75rem}
+.f-col h3,.f-col h5{font-size:.75rem}
+@media(max-width:720px){
+  .btn,.btn-primary,.btn-dark,.btn-outline-dark,.btn-outline-light,.pillar-cta,.cf-submit{font-size:.8125rem}
+  .f-col h3,.f-col h5{font-size:.75rem}
+}
+@media(hover:none),(pointer:coarse){
+  .site-foot-contact a{display:inline-block;padding:10px 0;min-height:44px}
+  .cf-submit{min-height:48px}
+}
+/* Naloop metingen 19 sep 2026 — pagina-eigen <style> won op specificiteit; daarom body-prefix */
+body .map-load-sub,body .pf-visual .map-load-sub,body .pf-visual .pf-photo-note,body .pf-photo-note{display:none}
+body #ct-map .map-load-sub{display:block}   /* privacy-melding bij de kaart op contact blijft */
+@media(max-width:720px){
+  body .pfx-badge,body .pfx-fin dt,body .pfx-bars-title,body .pfx-phase-n,body .pfx-chip-n,body .pfx-units-head,
+  body .invest-box .ib-title,body .ib-title,body .proj-status,body .ci-tag,body .val-eyebrow,body .f-col h3,body .f-col h5,body figcaption,
+  body .partner-bq-naam,body .pk-tag,body .pk-num,body .calc-row-label,body .calc-tog-btn,body .usp-check{font-size:.8rem}
+}
+@media(hover:none),(pointer:coarse){
+  body .iv-calc input[type=range]{height:44px}
+  body .m-note a,body .pv-tip-sub a,body .cta-micro a{display:inline-block;padding:10px 0;margin:-6px 0;min-height:44px}
+}
