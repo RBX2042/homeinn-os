@@ -246,6 +246,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (i > 0 && i < 4) el.classList.add('d' + i);
     items.push(el);
   });
+  // Oudere pagina's dragen soms .rv zónder .in in de HTML (bedoeld voor homeinn-public.js, dat daar
+  // niet laadt). Wat al in beeld staat mag nooit verborgen blijven: direct tonen.
+  document.querySelectorAll('.rv:not(.in)').forEach(function (el) { if (items.indexOf(el) > -1) return; var r = el.getBoundingClientRect(); if (r.top < vouw && r.bottom > 0) el.classList.add('in'); else items.push(el); });
   if (!items.length) return;
   var obs = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
@@ -270,6 +273,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   window.addEventListener('scroll', vangnet, { passive: true });
   window.addEventListener('resize', vangnet);
+  // Lettertypen/foto's verschuiven de lay-out nog even na DOMContentLoaded: daarna nog eens controleren.
+  window.addEventListener('load', vangnet); setTimeout(vangnet, 900); setTimeout(vangnet, 2500);
 });
 
 /* ── Licht/donker-schakelaar (19 sep 2026) ──

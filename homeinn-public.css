@@ -2636,3 +2636,12 @@ body .eyebrow,body .step-count,body .ac-lbl{font-size:max(.75rem,12px)}
 .nl-bar a{color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
 .nl-bar-x{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;color:var(--navy);font-size:1.5rem;cursor:pointer}
 body:has(.nl-bar) .float-cta{bottom:4.5rem}
+
+/* eindaudit 19 sep: artikelmeta 4,2:1 op crème → ink3 */
+.art-meta,.kn-meta{color:var(--ink3)}
+/* Eindaudit 19 sep 2026 — laatste mobiele ondergrens (root is 15px op mobiel: alles < .8rem zakt onder 12px) */
+@media(max-width:720px){
+  body :is(small,figcaption,.wb-pill,.ivs-btn,.ivm-note,.ivk-k,.ivk-fase-n,.map-load-sub,.lg-toc span,.wg-link,.art-meta,.kn-meta,.c,.usp-check,.t-eyebrow,.pk-tag,.pk-num,.ci-tag){font-size:max(.8rem,12px)}
+  .theme-sw,.theme-sw--m{width:44px;height:44px}
+  .theme-sw--m{right:66px}
+}
