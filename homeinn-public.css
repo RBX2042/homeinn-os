@@ -2365,3 +2365,34 @@ body .page-hero::before{opacity:.2}
   body .hero-bridge-m{bottom:6.75rem;height:clamp(190px,54vw,290px)}
   body .hero-copy{padding-bottom:clamp(9rem,46vw,16rem)}
 }
+
+/* ═══ Layout-review 19 sep 2026 — concrete fixes ═══ */
+/* 3. knoppen op smalle telefoons: geen tweeregelige labels */
+@media(max-width:480px){.btn,.btn-primary,.btn-dark,.btn-outline-dark,.btn-outline-light{letter-spacing:.08em;padding-left:16px;padding-right:16px;font-size:.78rem}}
+/* 4. vergelijkingstabellen: leesbaar en met scrollhint */
+@media(max-width:720px){
+  .anv,.vgl-wrap,.vgl-table-wrap{position:relative}
+  .anv table td,.anv table th,.vgl-table td,.vgl-table th{font-size:.9333rem}
+  .anv::after,.vgl-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:36px;background:linear-gradient(90deg,transparent,var(--cream));pointer-events:none}
+}
+/* 5/6. raakvlakken van tekstlinks */
+@media(hover:none),(pointer:coarse){
+  .ci-body a,.iv-form-bel a,.hero-risico a,.faq-foot a,.pv-tip-sub a,.pf-risico a,.pa-note a,.cta-micro a{display:inline-block;padding:11px 0;margin:-11px 0;min-height:44px;line-height:22px}
+}
+.pillar-cta,.pk-cta,.m-note a,.f-in nav a{padding-top:6px;padding-bottom:6px;min-height:30px}
+/* 7. te kleine hoofdletter-labels */
+.proj-status,.sla-tag,.usp-check,.kn-cat,.pfx-chip-n,.pfx-phase-n,.pfx-badge,.pfx-units-head,.pfx-fin dt,.iv-calc-k,.pfx-bars-title{font-size:.72rem;letter-spacing:.1em}
+.sla-blue{color:#a9c8f0}
+/* 9. goud op crème/wit onleesbaar: eyebrows op lichte vlakken in goud-inkt */
+.blog-section .t-eyebrow,.pfx-wrap .t-eyebrow,.iv-data .t-eyebrow,.proc-head .t-eyebrow,.disc-head .t-eyebrow,.values-section .t-eyebrow,.pj-sec .t-eyebrow,.tk-sec .t-eyebrow,.ct-sec .t-eyebrow,.wg-sec .t-eyebrow,.section-sm .t-eyebrow,.faq-section .t-eyebrow,.pfx-vision .t-eyebrow,.pfx-sum-table .t-eyebrow,.pfx-risks-head .t-eyebrow,.pfx-partner-list .t-eyebrow{color:var(--gold-ink)}
+.pfx-sum-chart .t-eyebrow,.pfx-exit .t-eyebrow,.iv-calc .t-eyebrow,.cta-band--navy .t-eyebrow,.page-hero .t-eyebrow,.hero .t-eyebrow,.proc-aside .t-eyebrow,.jstats-band .t-eyebrow{color:var(--gold2)}
+:is(#nav, #nav.light, header[class$="-top"]) :is(.nav-cta,.top-cta){background:rgba(var(--gold-rgb),.14);color:#f2dc9a}
+/* 20. footer-typografie op leesbare maat */
+.site-foot-nav,.site-foot-nav a{font-size:.9rem}
+.site-foot-legal a,.site-foot-bot,.site-foot-bot p{font-size:.85rem}
+/* 21. tweekoloms formulierrij: precies twee kolommen boven 720px */
+@media(min-width:720.02px){.cf-2col{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* 24. focusring op kaartlinks */
+.wg-card:focus-visible,.kn-card:focus-visible,.pfx-card:focus-visible,.blog-card a:focus-visible,.disc-row:focus-visible{outline:2px solid var(--gold-ink);outline-offset:4px}
+/* 11. lege staat in een raster: over de volle breedte, gecentreerd */
+.aanbod-leeg{grid-column:1/-1}
