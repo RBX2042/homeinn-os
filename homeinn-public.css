@@ -2490,3 +2490,12 @@ body #ct-map .map-load-sub{display:block}   /* privacy-melding bij de kaart op c
   body .iv-calc input[type=range]{height:44px}
   body .m-note a,body .pv-tip-sub a,body .cta-micro a{display:inline-block;padding:10px 0;margin:-6px 0;min-height:44px}
 }
+
+/* Sfeerlaag op alle subpagina-hero's (19 sep 2026) — drie uitsnedes zodat de Rotterdam-foto
+   niet op elke pagina identiek staat. Kop blijft leesbaar: opacity .26 + verloopmasker. */
+.page-hero--foto-l::after{background-position:18% center}
+.page-hero--foto-m::after{background-position:50% center}
+.page-hero--foto-r::after{background-position:88% center}
+@media(max-width:720px){.page-hero--foto-l::after,.page-hero--foto-m::after,.page-hero--foto-r::after{background-position:60% center}}
+/* Projectvisie-lijst op mobiel: drie punten in beeld, de rest inklapbaar via de bestaande tekst */
+@media(max-width:720px){#pg-home .pfx-vision li:nth-child(n+4){display:none}}
