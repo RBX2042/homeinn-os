@@ -140,9 +140,9 @@ function page(w) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919m">
-  <link rel="stylesheet" href="tokens.css?v=20260919m">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919m">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919n">
+  <link rel="stylesheet" href="tokens.css?v=20260919n">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919n">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -217,7 +217,7 @@ function page(w) {
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="lang-sw" href="index-en.html" lang="en" hreflang="en" aria-label="English version">EN</a>
+    <div class="right"><a class="lang-sw" href="sell-your-property-en.html" lang="en" hreflang="en" aria-label="English version">EN</a>
       
       <a class="top-cta" href="contact.html">Plan een kennismaking</a>
     </div>
@@ -234,7 +234,7 @@ function page(w) {
       <a class="mob-sm" href="verhuur.html">Verhuur &amp; huuraanbod</a>
       <a class="mob-sm" href="projecten.html">Projecten &amp; investeren</a>
       <span class="mob-groep">Meer</span>
-    <a class="mob-sm mob-lang" href="index-en.html" lang="en">English</a>
+    <a class="mob-sm mob-lang" href="sell-your-property-en.html" lang="en">English</a>
       <a class="mob-sm" href="kennis.html">Kennis</a>
       <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
       <a class="mob-sm" href="contact.html">Contact</a>
@@ -350,7 +350,7 @@ function page(w) {
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260919m"></script>
+  <script src="site-nav.js?v=20260919n"></script>
 </body>
 </html>
 `;

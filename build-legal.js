@@ -84,6 +84,7 @@ const PAGES = [
 
 function page(p, alle) {
   const canonical = `https://homeinn.nl/${p.slug}.html`;
+  const enTwin = {privacy:'privacy-en.html', voorwaarden:'terms-en.html', cookies:'cookies-en.html'}[p.slug] || 'index-en.html';
   const sections = p.secties.map((s, i) => `<h2 id="s${i + 1}">${s[0]}</h2>\n      <p>${s[1]}</p>`).join('\n      ');
   const toc = p.secties.length > 5 ? `<nav class="lg-toc" aria-label="Inhoud"><span>Inhoud</span><ol>${p.secties.map((s, i) => `<li><a href="#s${i + 1}">${s[0]}</a></li>`).join('')}</ol></nav>` : '';
   const versie = p.versie ? `<p style="font-size:.82rem;color:var(--ink3)">${p.versie}</p>\n      ` : '';
@@ -100,6 +101,9 @@ function page(p, alle) {
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="canonical" href="${canonical}">
+  <link rel="alternate" hreflang="nl" href="${canonical}">
+  <link rel="alternate" hreflang="en" href="https://homeinn.nl/${enTwin}">
+  <link rel="alternate" hreflang="x-default" href="${canonical}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="${canonical}">
   <meta property="og:site_name" content="HomeINN">
@@ -112,9 +116,9 @@ function page(p, alle) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919m">
-  <link rel="stylesheet" href="tokens.css?v=20260919m">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919m">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919n">
+  <link rel="stylesheet" href="tokens.css?v=20260919n">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919n">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -167,7 +171,7 @@ function page(p, alle) {
     </ul>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
     
-  <div class="right"><a class="lang-sw" href="index-en.html" lang="en" hreflang="en" aria-label="English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+  <div class="right"><a class="lang-sw" href="${enTwin}" lang="en" hreflang="en" aria-label="English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
 </header>
 
   <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
@@ -182,7 +186,7 @@ function page(p, alle) {
       <a class="mob-sm" href="verhuur.html">Verhuur &amp; huuraanbod</a>
       <a class="mob-sm" href="projecten.html">Projecten &amp; investeren</a>
       <span class="mob-groep">Meer</span>
-    <a class="mob-sm mob-lang" href="index-en.html" lang="en">English</a>
+    <a class="mob-sm mob-lang" href="${enTwin}" lang="en">English</a>
       <a class="mob-sm" href="kennis.html">Kennis</a>
       <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
       <a class="mob-sm" href="contact.html">Contact</a>
@@ -250,7 +254,7 @@ function page(p, alle) {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919m"></script>
+  <script src="site-nav.js?v=20260919n"></script>
 </body>
 </html>
 `;

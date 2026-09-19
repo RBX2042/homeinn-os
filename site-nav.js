@@ -334,7 +334,10 @@ document.addEventListener('DOMContentLoaded', function () {
       gaan we direct door naar die tweeling (geen dubbel klikken). */
 (function () {
   var EN = (document.documentElement.lang || 'nl').indexOf('en') === 0;
-  var NL_ONLY = /^(projectontwikkeling|vastgoedbeheer|verhuur|te-koop|kennis(-[a-z0-9-]+)?|werkgebied|pand-verkopen|privacy|voorwaarden|cookies|woning|404|verkopen-[a-z-]+)\.html/;
+  // Sinds 19 sep 2026 hebben alle publieke pagina's een Engelse tweeling; alleen de wijk-spokes en
+  // het portaal zijn NL-only. TWIN wordt gebruikt om op EN-pagina's links naar NL-pagina's om te leiden.
+  var TWIN = {'homeinn-public.html':'index-en.html','index.html':'index-en.html','over-ons.html':'about-en.html','contact.html':'contact-en.html','investeren.html':'invest-en.html','projecten.html':'projects-en.html','projectontwikkeling.html':'development-en.html','vastgoedbeheer.html':'property-management-en.html','verhuur.html':'letting-en.html','te-koop.html':'for-sale-en.html','woning.html':'property-en.html','werkgebied.html':'service-area-en.html','kennis.html':'knowledge-en.html','kennis-pand-direct-verkopen-zo-werkt-het.html':'knowledge-sell-directly-en.html','kennis-verduurzamen-naar-label-a.html':'knowledge-energy-label-a-en.html','kennis-verhuren-of-verkopen-de-afweging.html':'knowledge-let-or-sell-en.html','pand-verkopen.html':'sell-your-property-en.html','privacy.html':'privacy-en.html','cookies.html':'cookies-en.html','voorwaarden.html':'terms-en.html'};
+  var NL_ONLY = /^(verkopen-[a-z-]+|portaal|inloggen|huurders|kopers|verkoper|investeerders)\.html/;
   function onthoud(l) { try { localStorage.setItem('hi-lang', l); } catch (e) {} }
   function onthouden() { try { return localStorage.getItem('hi-lang'); } catch (e) { return null; } }
   document.addEventListener('DOMContentLoaded', function () {
@@ -343,6 +346,9 @@ document.addEventListener('DOMContentLoaded', function () {
       onthoud('en');
       document.querySelectorAll('header a[href], #mob a[href], footer a[href], .site-foot a[href], .nav-mega a[href]').forEach(function (a) {
         var h = a.getAttribute('href') || '';
+        var m = h.match(/^([a-z0-9-]+\.html)([#?].*)?$/);
+        if (m && TWIN[m[1]]) { a.setAttribute('href', TWIN[m[1]] + (m[2] || '')); return; }
+        if (/^verkopen-[a-z-]+\.html/.test(h)) { a.setAttribute('href', 'sell-your-property-en.html'); return; }
         if (!NL_ONLY.test(h) || a.querySelector('.nl-tag')) return;
         a.setAttribute('hreflang', 'nl');
         a.setAttribute('href', h + (h.indexOf('?') > -1 ? '&' : '?') + 'lang=en');
@@ -355,6 +361,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (q.get('lang') === 'nl') { onthoud('nl'); vanEN = false; }
     if (!vanEN) return;
     var sw = document.querySelector('.lang-sw');
+    var here = (location.pathname.split('/').pop() || 'index.html');
+    if (sw && TWIN[here] && /index-en\.html$/.test(sw.getAttribute('href') || '')) sw.setAttribute('href', TWIN[here]);
     var isHome = /\/(index\.html|homeinn-public\.html)?$/.test(location.pathname);
     var twin = sw && (isHome || !/index-en\.html$/.test(sw.getAttribute('href') || '')) ? sw.getAttribute('href') : null;
     // Kwam de bezoeker via de NL-schakelaar van de Engelse tweeling? Dan is Nederlands een bewuste keuze.
