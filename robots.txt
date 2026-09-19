@@ -6,4 +6,4 @@ Allow: /
 # opgehaald worden, waardoor de noindex nooit gelezen wordt en de URL alsnog in de
 # resultaten kan blijven staan.
 
-Sitemap: https://home-inn.nl/sitemap.xml
+Sitemap: https://homeinn.nl/sitemap.xml

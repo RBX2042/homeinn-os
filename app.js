@@ -96,7 +96,7 @@ function seedData() {
     lastBackup: '',
     settings: {
       companyName: 'HomeINN', address: 'Rotterdam', email: 'info@homeinn.nl', phone: '[TELEFOON]',
-      kvk: '[KVK-NUMMER]', btw: '[BTW-NUMMER]', siteUrl: 'https://home-inn.nl',
+      kvk: '[KVK-NUMMER]', btw: '[BTW-NUMMER]', siteUrl: 'https://homeinn.nl',
       otbPct: 8, notaris: 1500, makelaarPct: 1, rentePct: 6, vasteLasten: 300, verkoopkostenPct: 1.25, doelROI: 15
     },
     contacts: [
@@ -4256,7 +4256,7 @@ function publishAanbod() {
    feitelijke plaatsing vereist een NVM-/Funda-koppeling resp. een Pararius-account. */
 
 function feedBaseUrl() {
-  return String(state.settings.siteUrl || 'https://home-inn.nl').trim().replace(/\/+$/, '');
+  return String(state.settings.siteUrl || 'https://homeinn.nl').trim().replace(/\/+$/, '');
 }
 
 /* Absolute, extern-ophaalbare foto-URL's; dataURL's worden overgeslagen (niet bereikbaar voor crawlers). */

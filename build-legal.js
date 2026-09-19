@@ -83,7 +83,7 @@ const PAGES = [
 ];
 
 function page(p, alle) {
-  const canonical = `https://home-inn.nl/${p.slug}.html`;
+  const canonical = `https://homeinn.nl/${p.slug}.html`;
   const sections = p.secties.map((s, i) => `<h2 id="s${i + 1}">${s[0]}</h2>\n      <p>${s[1]}</p>`).join('\n      ');
   const toc = p.secties.length > 5 ? `<nav class="lg-toc" aria-label="Inhoud"><span>Inhoud</span><ol>${p.secties.map((s, i) => `<li><a href="#s${i + 1}">${s[0]}</a></li>`).join('')}</ol></nav>` : '';
   const versie = p.versie ? `<p style="font-size:.82rem;color:var(--ink3)">${p.versie}</p>\n      ` : '';
@@ -105,16 +105,16 @@ function page(p, alle) {
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="${p.title} — HomeINN Rotterdam">
   <meta property="og:description" content="${p.metaDescription}">
-  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919k">
-  <link rel="stylesheet" href="tokens.css?v=20260919k">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919l">
+  <link rel="stylesheet" href="tokens.css?v=20260919l">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919l">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -250,7 +250,7 @@ function page(p, alle) {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919k"></script>
+  <script src="site-nav.js?v=20260919l"></script>
 </body>
 </html>
 `;

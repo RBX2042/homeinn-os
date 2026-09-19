@@ -84,7 +84,7 @@ function buurLinks(slug) {
 function page(w) {
   const meta = META[w.slug] || { soort: 'regio Rotterdam', areaType: 'city', buren: [] };
   const titel = meta.titel || `Huis verkopen ${w.naam} | Voorstel in 48 uur — HomeINN`;
-  const canonical = `https://home-inn.nl/verkopen-${w.slug}.html`;
+  const canonical = `https://homeinn.nl/verkopen-${w.slug}.html`;
   const h1 = `Uw pand verkopen in ${esc(w.naam)} — direct een voorstel van HomeINN`;
   const areaLD = meta.areaType === 'city'
     ? `{"@type":"City","name":"${esc(w.naam)}"}`
@@ -133,16 +133,16 @@ function page(w) {
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Pand verkopen in ${esc(w.naam)} — voorstel binnen 48 uur">
   <meta property="og:description" content="${esc(w.metaDescription)}">
-  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919k">
-  <link rel="stylesheet" href="tokens.css?v=20260919k">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919l">
+  <link rel="stylesheet" href="tokens.css?v=20260919l">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919l">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -330,7 +330,7 @@ function page(w) {
   {
     "@context":"https://schema.org",
     "@type":"RealEstateAgent",
-    "@id":"https://home-inn.nl/#organisatie",
+    "@id":"https://homeinn.nl/#organisatie",
     "name":"HomeINN",
     "telephone":"${TEL_HREF}",
     "email":"info@homeinn.nl",
@@ -345,12 +345,12 @@ function page(w) {
     "@context":"https://schema.org",
     "@type":"BreadcrumbList",
     "itemListElement":[
-      {"@type":"ListItem","position":1,"name":"Home","item":"https://home-inn.nl/"},
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://homeinn.nl/"},
       {"@type":"ListItem","position":2,"name":"Verkopen in ${esc(w.naam)}","item":"${canonical}"}
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260919k"></script>
+  <script src="site-nav.js?v=20260919l"></script>
 </body>
 </html>
 `;

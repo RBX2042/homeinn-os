@@ -1,4 +1,4 @@
-# Fotolijst — echte fotografie voor home-inn.nl
+# Fotolijst — echte fotografie voor homeinn.nl
 
 Elke fotoplek staat al in de pagina's en laadt automatisch zodra het bestand met
 de juiste naam in deze map staat. Ontbreekt een foto, dan verwijdert de pagina

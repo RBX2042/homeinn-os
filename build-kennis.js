@@ -46,16 +46,16 @@ function head(titel, desc, canonical) {
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="${esc(titel)}">
   <meta property="og:description" content="${esc(desc)}">
-  <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919k">
-  <link rel="stylesheet" href="tokens.css?v=20260919k">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919k">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919l">
+  <link rel="stylesheet" href="tokens.css?v=20260919l">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919l">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}
@@ -211,7 +211,7 @@ function foot() {
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919k"></script>
+  <script src="site-nav.js?v=20260919l"></script>
 </body>
 </html>
 `;
@@ -227,7 +227,7 @@ function ctaBand(ctaType) {
 }
 
 function articlePage(a, alle) {
-  const canonical = `https://home-inn.nl/kennis-${a.slug}.html`;
+  const canonical = `https://homeinn.nl/kennis-${a.slug}.html`;
   const intro = (a.intro || []).map((p, i) => `<p${i === 0 ? ' class="lead"' : ''}>${esc(p)}</p>`).join('\n      ');
   const sections = (a.sections || []).map(s => {
     var body = (s.body || []).map(p => `<p>${esc(p)}</p>`).join('\n      ');
@@ -265,14 +265,14 @@ function articlePage(a, alle) {
     ${ctaBand(a.ctaType)}
   </main>
   <script type="application/ld+json">
-  [{"@context":"https://schema.org","@type":"Article","headline":${JSON.stringify(a.h1)},"description":${JSON.stringify(a.metaDescription)},"about":${JSON.stringify(a.category)},"inLanguage":"nl-NL","datePublished":${JSON.stringify(a.datum || '2026-06-22')},"dateModified":${JSON.stringify(a.bijgewerkt || DATUM_BUILD)},"image":"https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g","author":{"@type":"Organization","name":"HomeINN","@id":"https://home-inn.nl/#organisatie"},"publisher":{"@type":"Organization","name":"HomeINN","@id":"https://home-inn.nl/#organisatie","logo":{"@type":"ImageObject","url":"https://home-inn.nl/assets/favicon-512.png"}},"mainEntityOfPage":${JSON.stringify(canonical)}},
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://home-inn.nl/"},{"@type":"ListItem","position":2,"name":"Kennis","item":"https://home-inn.nl/kennis.html"},{"@type":"ListItem","position":3,"name":${JSON.stringify(a.category)},"item":${JSON.stringify(canonical)}}]}${faqLd}]
+  [{"@context":"https://schema.org","@type":"Article","headline":${JSON.stringify(a.h1)},"description":${JSON.stringify(a.metaDescription)},"about":${JSON.stringify(a.category)},"inLanguage":"nl-NL","datePublished":${JSON.stringify(a.datum || '2026-06-22')},"dateModified":${JSON.stringify(a.bijgewerkt || DATUM_BUILD)},"image":"https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g","author":{"@type":"Organization","name":"HomeINN","@id":"https://homeinn.nl/#organisatie"},"publisher":{"@type":"Organization","name":"HomeINN","@id":"https://homeinn.nl/#organisatie","logo":{"@type":"ImageObject","url":"https://homeinn.nl/assets/favicon-512.png"}},"mainEntityOfPage":${JSON.stringify(canonical)}},
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://homeinn.nl/"},{"@type":"ListItem","position":2,"name":"Kennis","item":"https://homeinn.nl/kennis.html"},{"@type":"ListItem","position":3,"name":${JSON.stringify(a.category)},"item":${JSON.stringify(canonical)}}]}${faqLd}]
   </script>
 ` + foot();
 }
 
 function overviewPage(alle) {
-  const canonical = 'https://home-inn.nl/kennis.html';
+  const canonical = 'https://homeinn.nl/kennis.html';
   const cards = alle.map(a => {
     var snippet = (a.intro && a.intro[0]) ? a.intro[0] : (a.metaDescription || '');
     snippet = snippet.length > 150 ? snippet.slice(0, 150) + '…' : snippet;
