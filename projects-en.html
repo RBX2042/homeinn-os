@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Our properties in Rotterdam — 11 owned outright | HomeINN</title>
+  <title>Our properties in Rotterdam — 11 in our own portfolio | HomeINN</title>
   <meta name="description" content="The eleven properties (33 apartment rights) that HomeINN owns itself, with address and location. Invest in a concrete development project in Rotterdam or Vlaardingen.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
@@ -24,9 +24,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919b">
-  <link rel="stylesheet" href="tokens.css?v=20260919b">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919b">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919c">
+  <link rel="stylesheet" href="tokens.css?v=20260919c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919c">
   <style>
     .pj-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .pj-top .brand img{height:34px;width:auto;display:block}
@@ -124,13 +124,13 @@
     <section class="page-hero">
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Projects · Rotterdam</span>
-        <h1>Eleven properties owned outright — from acquisition to <em>completion</em></h1>
+        <h1>Eleven properties in our own portfolio — from acquisition to <em>completion</em></h1>
         <p>This is not a showcase of other people's property: every building below is registered in HomeINN's name. We buy ourselves, refurbish with our fixed construction partner and complete — and you can take part per project. Address and location included; as soon as a refurbishment starts, its progress appears here.</p>
       </div>
     </section>
 
     <section class="pj-sec">
-      <div class="proc-head"><span class="t-eyebrow">Our portfolio</span><h2>What we currently <em>own.</em></h2><p class="pf-meta" id="portefeuille-meta">11 properties · 33 apartment rights · all owned outright</p></div>
+      <div class="proc-head"><span class="t-eyebrow">Our portfolio</span><h2>What we currently <em>own.</em></h2><p class="pf-meta" id="portefeuille-meta">11 properties · 33 apartment rights · all in our own portfolio</p></div>
       <div class="blog-grid" id="projecten-grid" style="margin-top:2.5rem"></div>
     </section>
 
@@ -239,7 +239,7 @@
         var items=(data&&Array.isArray(data.projecten))?data.projecten:[];
         var pf=data&&data.portefeuille;
         var meta=document.getElementById('portefeuille-meta');
-        if(meta&&pf&&pf.panden)meta.textContent=pf.panden+' properties · '+pf.appartementsrechten+' apartment rights · all owned outright';
+        if(meta&&pf&&pf.panden)meta.textContent=pf.panden+' properties · '+pf.appartementsrechten+' apartment rights · all in our own portfolio';
         if(!items.length){grid.innerHTML=leeg;return;}
         grid.innerHTML=items.map(function(p){
           var q=encodeURIComponent(p.mapsAdres||((p.adres||'')+', '+(p.postcode?p.postcode+' ':'')+(p.plaats||'Rotterdam')));
@@ -291,6 +291,6 @@
       .catch(function(){grid.innerHTML=leeg;});
   })();
   </script>
-<script src="site-nav.js?v=20260919b"></script>
+<script src="site-nav.js?v=20260919c"></script>
 </body>
 </html>

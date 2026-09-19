@@ -502,7 +502,7 @@ function renderPortefeuilleMeta() {
     .then(function (data) {
       var pf = data && data.portefeuille;
       if (pf && pf.panden) {
-        meta.textContent = pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
+        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · own portfolio · as at ' + fmtDatumNl(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
       }
     })
     .catch(function () { /* statische tekst in de HTML blijft staan */ });
@@ -565,7 +565,7 @@ function renderProjectenPublic() {
       var meta = document.getElementById('portefeuille-meta');
       var pf = data && data.portefeuille;
       if (meta && pf && pf.panden) {
-        meta.textContent = pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
+        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · own portfolio · as at ' + fmtDatumNl(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
       }
     })
     .catch(function () { grid.innerHTML = leeg; });
@@ -771,3 +771,54 @@ document.addEventListener('DOMContentLoaded', function () {
   var eerste = form.querySelector('#ct-first');
   if (eerste) { try { eerste.focus({ preventScroll: true }); } catch (_) {} }
 })();
+
+/* ===== Portefeuille-filter + zwevende CTA (homepage) ===== */
+document.addEventListener('DOMContentLoaded', function () {
+  var chips = document.querySelectorAll('.pfx-chip');
+  if (chips.length) {
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var f = chip.getAttribute('data-f');
+        // Mobiele inklapper (site-nav.js) opheffen: een filterkeuze toont altijd alle treffers.
+        var grid = document.querySelector('.pfx-grid'); if (grid) { grid.classList.remove('pf-inkort'); } var meer = document.querySelector('.pfx-grid + .pf-meer'); if (meer) { meer.remove(); }
+        chips.forEach(function (c) { var on = c === chip; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+        document.querySelectorAll('.pfx-card').forEach(function (card) {
+          var show = f === 'alle' || card.getAttribute('data-gebied') === f;
+          card.classList.toggle('pfx-hide', !show);
+          card.classList.remove('pfx-pop');
+          if (show) { void card.offsetWidth; card.classList.add('pfx-pop'); }
+        });
+      });
+    });
+  }
+  var fc = document.querySelector('.float-cta');
+  if (fc) {
+    var hero = document.querySelector('.hero');
+    var slot = document.querySelector('.cta-band--navy');
+    function tick() {
+      var past = hero ? window.scrollY > hero.offsetHeight * 0.9 : window.scrollY > 700;
+      var nearEnd = slot ? slot.getBoundingClientRect().top < window.innerHeight : false;
+      fc.classList.toggle('on', past && !nearEnd);
+    }
+    window.addEventListener('scroll', tick, { passive: true });
+    tick();
+  }
+});
+
+/* ===== Rekenvoorbeeld investeren (indicatief, 7% streefrendement, geen garantie) ===== */
+document.addEventListener('DOMContentLoaded', function () {
+  var inleg = document.getElementById('ivc-inleg'), jaren = document.getElementById('ivc-jaren');
+  if (!inleg || !jaren) return;
+  var en = document.documentElement.lang === 'en';
+  function eur(n) { return en ? '€' + Math.round(n).toLocaleString('en-GB') : '€ ' + Math.round(n).toLocaleString('nl-NL'); }
+  function upd() {
+    var i = +inleg.value, j = +jaren.value, r = i * 0.07 * j;
+    document.getElementById('ivc-inleg-out').textContent = eur(i);
+    document.getElementById('ivc-jaren-out').textContent = j + ' ' + (en ? (j === 1 ? 'year' : 'years') : 'jaar');
+    ['ivc-rend', 'ivc-tot'].forEach(function (id, k) {
+      var el = document.getElementById(id); el.classList.add('tick'); el.textContent = eur(k ? i + r : r);
+      setTimeout(function () { el.classList.remove('tick'); }, 120);
+    });
+  }
+  inleg.addEventListener('input', upd); jaren.addEventListener('input', upd); upd();
+});
