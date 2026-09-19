@@ -2,57 +2,33 @@
    Optioneel en fail-silent: de bestaande localStorage-inbox + FormSubmit-e-mail blijven de
    primaire, altijd-werkende paden. Deze laag stuurt elke lead ADDITIONEEL naar de centrale
    'hios_leads'-tabel, zodat hij ook zichtbaar is in het beheerportaal als dat op een ander
-   apparaat/browser openstaat. Faalt dit (geen internet, Supabase down, CDN geblokkeerd),
-   dan verandert er niets aan het bestaande gedrag van de site.
+   apparaat/browser openstaat. Faalt dit (geen internet, Supabase down), dan verandert er
+   niets aan het bestaande gedrag van de site.
 
-   De Supabase-SDK (~54 kB gzip) wordt NIET meer op elke paginaweergave geladen, maar pas
-   zodra een bezoeker een formulierveld aanraakt — en anders pas bij het versturen. Gepind
-   op een exacte versie met integriteitscontrole (SRI), zodat een CDN-wijziging nooit stil
-   ander code kan laden. */
+   WAAROM EEN KALE FETCH EN GEEN SDK (gewijzigd 19 september 2026)
+   De database staat op het gratis plan en gaat in hibernatie. Gemeten: een koud verzoek
+   duurt 7,7 s, een warm verzoek 0,4 s. De insert was fire-and-forget zonder tijdslimiet,
+   terwijl de e-mailroute al na 1–2 s klaar is en het bevestigingsscherm toont. Klikte de
+   bezoeker dan weg, dan brak de browser de nog lopende insert af: de lead stond wél in de
+   mailbox, maar niet in het portaal — juist bij de eerste lead na een stille periode.
+
+   `keepalive: true` laat het verzoek doorlopen nadat de pagina is gesloten, waarmee die
+   trage koude start niet meer uitmaakt. Daarvoor is de Supabase-SDK niet nodig: invoegen
+   was de enige bewerking die deze laag deed. Dat scheelt ~54 kB en een CDN-afhankelijkheid
+   op de acht publieke formulierpagina's. De portalen laden de SDK nog wel zelf — die doen
+   auth en queries, dus de CSP houdt cdn.jsdelivr.net.
+
+   LET OP bij wijzigen: `Prefer: return=minimal` is VERPLICHT. De anon-rol heeft op
+   hios_leads alleen een INSERT-policy en geen SELECT; met return=representation probeert
+   PostgREST de ingevoegde rij terug te lezen en faalt de hele insert op RLS. */
 (function () {
   'use strict';
   var SUPABASE_URL = 'https://evguvdpuidyvkiinzvys.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_JZcuyhVWabuo33MZ8qGTDg_wwMth0zC'; // publishable (anon) key — bedoeld voor de browser; RLS bewaakt de tabel
-  var SDK_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.114.0/dist/umd/supabase.min.js';
-  var SDK_SRI = 'sha384-0UK+HVlz5Y7F//atDpPysyocv/PjGXQoBX+XSaL/eEotARW8rPFh+lL5sO0Ljzfi';
-  var client = null;
-  var sdkPromise = null;
-
-  function loadSdk() {
-    if (window.supabase && window.supabase.createClient) return Promise.resolve();
-    if (sdkPromise) return sdkPromise;
-    sdkPromise = new Promise(function (resolve, reject) {
-      var s = document.createElement('script');
-      s.src = SDK_URL;
-      s.integrity = SDK_SRI;
-      s.crossOrigin = 'anonymous';
-      s.async = true;
-      s.onload = function () { resolve(); };
-      s.onerror = function () { sdkPromise = null; reject(new Error('Supabase-SDK niet geladen')); };
-      document.head.appendChild(s);
-    });
-    return sdkPromise;
-  }
-
-  function getClient() {
-    if (client) return client;
-    if (!window.supabase || !window.supabase.createClient) return null;
-    // Geen sessie-persistentie nodig: anonieme bezoekers loggen nooit in op dit kanaal.
-    client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-    });
-    return client;
-  }
-
-  // Warm de SDK op zodra iemand een formulierveld aanraakt — de latentie valt dan in de tijd
-  // die de bezoeker toch nodig heeft om het formulier in te vullen.
-  function warm(e) {
-    var t = e.target;
-    if (!(t && t.form)) return;
-    document.removeEventListener('focusin', warm, true);
-    loadSdk().catch(function () { /* stil: bij verzenden wordt het opnieuw geprobeerd */ });
-  }
-  document.addEventListener('focusin', warm, true);
+  var ENDPOINT = SUPABASE_URL + '/rest/v1/hios_leads';
+  // Een keepalive-verzoek mag samen met andere keepalive-verzoeken niet boven ~64 kB uitkomen.
+  // Daarboven laten we keepalive vallen in plaats van het verzoek te laten weigeren.
+  var KEEPALIVE_MAX = 60000;
 
   window.pushLeadToCloud = function (type, data, source) {
     try {
@@ -69,13 +45,23 @@
         portfolio: data.portfolio || '',
         handled: false
       };
-      loadSdk().then(function () {
-        var c = getClient();
-        if (!c) return;
-        return c.from('hios_leads').insert(rij).then(function (res) {
-          if (res && res.error) console.warn('Lead-cloud insert mislukt:', res.error.message);
-        });
-      }).catch(function () { /* CDN geblokkeerd of offline — lokale flow + e-mail blijven werken */ });
+      var body = JSON.stringify(rij);
+      fetch(ENDPOINT, {
+        method: 'POST',
+        keepalive: body.length <= KEEPALIVE_MAX,
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: body
+      }).then(function (r) {
+        if (!r.ok) {
+          r.text().then(function (t) { console.warn('Lead-cloud insert mislukt (' + r.status + '):', t); })
+            .catch(function () { console.warn('Lead-cloud insert mislukt (' + r.status + ')'); });
+        }
+      }).catch(function () { /* offline of geblokkeerd — lokale flow + e-mail blijven werken */ });
     } catch (err) { /* nooit de bezoeker hinderen */ }
   };
 })();
