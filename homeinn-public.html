@@ -156,9 +156,9 @@
   </script>
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919a">
-  <link rel="stylesheet" href="tokens.css?v=20260919a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919a">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919b">
+  <link rel="stylesheet" href="tokens.css?v=20260919b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919b">
   <!-- Fail-open: zonder JS (crawler/JS uit) zijn de reveal-blokken gewoon zichtbaar i.p.v. opacity:0 -->
   <noscript><style>.rv,.rv-stagger>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
@@ -493,10 +493,10 @@
 
 <section class="jstats-band" aria-label="Onze portefeuille in cijfers">
   <div class="jstats-inner">
-    <div class="jstat"><div class="jstat-val">11</div><div class="jstat-lbl">Panden in Rotterdam en Vlaardingen</div></div>
-    <div class="jstat"><div class="jstat-val">33</div><div class="jstat-lbl">Appartementsrechten na splitsing</div></div>
-    <div class="jstat"><div class="jstat-val">2.724<span class="jstat-unit">m²</span></div><div class="jstat-lbl">Woonoppervlak</div></div>
-    <div class="jstat"><div class="jstat-val">570<span class="jstat-unit">m²</span></div><div class="jstat-lbl">Tuinoppervlak</div></div>
+    <div class="jstat"><div class="jstat-val" data-count="11">11</div><div class="jstat-lbl">Panden in Rotterdam en Vlaardingen</div></div>
+    <div class="jstat"><div class="jstat-val" data-count="33">33</div><div class="jstat-lbl">Appartementsrechten na splitsing</div></div>
+    <div class="jstat"><div class="jstat-val"><span data-count="2724" data-sep="1">2.724</span><span class="jstat-unit">m²</span></div><div class="jstat-lbl">Woonoppervlak</div></div>
+    <div class="jstat"><div class="jstat-val"><span data-count="570">570</span><span class="jstat-unit">m²</span></div><div class="jstat-lbl">Tuinoppervlak</div></div>
   </div>
 </section>
 
@@ -512,6 +512,11 @@
     </div>
 
     <div class="pfx-vision rv">
+      <figure class="pfx-vision-foto">
+        <img src="fotos/interieur-sfeer.jpg" alt="Lichte woonkamer met houten vloer, hoge ramen en een blauwe bank" width="1200" height="801" loading="lazy" decoding="async">
+        <figcaption>Sfeerbeeld · het afwerkingsniveau dat wij nastreven. Geen HomeINN-project.</figcaption>
+      </figure>
+      <div class="pfx-vision-body">
       <span class="t-eyebrow">Projectvisie &amp; renovatiestandaard</span>
       <p class="pfx-vision-lede">De portefeuille wordt getransformeerd tot hoogwaardige, volledig gemoderniseerde en energiezuinige woningen voor het hogere segment van de particuliere huur- en koopmarkt.</p>
       <ul class="pfx-vision-list">
@@ -523,6 +528,7 @@
         <li><strong>Turn-key oplevering</strong> — volledig afgewerkt en gereed voor verkoop of verhuur in het hogere marktsegment.</li>
       </ul>
       <p class="pfx-vision-foot">Van bestaand vastgoed naar duurzame, hoogwaardige en toekomstbestendige woningen.</p>
+      </div>
     </div>
 
     <div class="pfx-grid">
@@ -812,8 +818,11 @@
       <div class="pfx-phase"><span class="pfx-phase-n">Fase 03</span><h3>Verkoop of verhuur</h3><p>Gefaseerde verkoop of verhuur van elk afzonderlijk appartementsrecht, afhankelijk van marktomstandigheden en strategie.</p></div>
     </div>
     <div class="pfx-exit rv">
+      <div class="pfx-exit-foto" aria-hidden="true"><img src="fotos/hero-rotterdam.jpg" alt="" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></div>
+      <div class="pfx-exit-body">
       <span class="t-eyebrow">Doel &amp; exit-strategie</span>
       <p>Doel is om binnen elk pand hoogwaardige zelfstandige woningen te creëren die afzonderlijk verkocht en gefinancierd kunnen worden. De portefeuille kan gefaseerd per appartementsrecht worden verkocht. Ook kunnen afzonderlijke woningen voor verhuur worden aangehouden, of kan na afronding van de renovaties herfinanciering worden overwogen. De definitieve route wordt per pand bepaald, op basis van de marktomstandigheden van dat moment.</p>
+      </div>
     </div>
 
     <div class="pfx-risks">
@@ -1160,9 +1169,9 @@
 
 <div class="wd-bg" id="woning-detail" aria-hidden="true"></div>
 
-<script src="lead-cloud.js?v=20260919a" defer></script>
-<script src="site-nav.js?v=20260919a"></script>
-<script src="homeinn-public.js?v=20260919a"></script>
+<script src="lead-cloud.js?v=20260919b" defer></script>
+<script src="site-nav.js?v=20260919b"></script>
+<script src="homeinn-public.js?v=20260919b"></script>
 <script src="lightbox.js?v=20260705" defer></script>
 </body>
 </html>

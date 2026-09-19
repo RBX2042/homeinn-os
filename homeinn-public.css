@@ -2115,7 +2115,7 @@ body .blog-section > div{max-width:var(--site-content)!important;margin-left:aut
 .pfx-wrap .proc-lede{max-width:72ch}
 .pfx-vision{background:var(--white);border:1px solid var(--cream3);border-top:2px solid var(--gold);padding:clamp(1.5rem,3vw,2.5rem);margin:0 0 2.5rem}
 .pfx-vision-lede{font-family:var(--serif);font-size:clamp(1.2rem,1.6vw,1.5rem);font-weight:400;line-height:1.35;color:var(--ink2);margin:.9rem 0 1.5rem;max-width:64ch}
-.pfx-vision-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem 2rem}
+.pfx-vision-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:1rem 2rem}
 .pfx-vision-list li{font-size:.9rem;font-weight:300;line-height:1.7;color:var(--ink3);padding-left:1.1rem;position:relative}
 .pfx-vision-list li::before{content:'';position:absolute;left:0;top:.8em;width:6px;height:1px;background:var(--gold)}
 .pfx-vision-list strong{font-weight:500;color:var(--ink2)}
@@ -2191,7 +2191,7 @@ body .blog-section > div{max-width:var(--site-content)!important;margin-left:aut
 .pfx-partner-list strong{font-weight:500;color:var(--ink2);font-size:.95rem}
 .pfx-wrap .pf-risico{margin-top:2.5rem}
 /* Responsief */
-@media(max-width:1180px){.pfx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pfx-vision-list{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1180px){.pfx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:960px){.pfx-summary,.pfx-partners{grid-template-columns:1fr}.pfx-phases{grid-template-columns:1fr;gap:1rem}}
 @media(max-width:720px){
   .pfx-section{padding-left:1.25rem;padding-right:1.25rem}
@@ -2209,3 +2209,26 @@ body .blog-section > div{max-width:var(--site-content)!important;margin-left:aut
 }
 @media(max-width:400px){.pfx-fin{grid-template-columns:1fr 1fr;gap:.7rem .6rem}}
 @media(prefers-reduced-motion:reduce){.pfx-card{transition:none}.pfx-card:hover{transform:none}}
+
+/* Beeld en beweging in het portefeuille-overzicht */
+.pfx-vision{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(1.5rem,3vw,3rem);align-items:center}
+.pfx-vision-foto{margin:0;min-width:0;position:relative;overflow:hidden}
+.pfx-vision-foto img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:45% center;transform:scale(1.04);transition:transform 1.4s var(--ease)}
+.pfx-vision.in .pfx-vision-foto img{transform:scale(1)}
+.pfx-vision-foto figcaption{font-size:.78rem;line-height:1.55;color:var(--ink3);padding:.75rem 0 0}
+.pfx-vision-body{min-width:0}
+.pfx-exit{position:relative;overflow:hidden;isolation:isolate}
+.pfx-exit-foto{position:absolute;inset:0;z-index:-1}
+.pfx-exit-foto img{width:100%;height:100%;object-fit:cover;object-position:70% center;opacity:.28;filter:saturate(.7);transform:scale(1.06);transition:transform 6s linear}
+.pfx-exit.in .pfx-exit-foto img{transform:scale(1)}
+.pfx-exit-foto::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,30,48,.96) 0%,rgba(11,30,48,.82) 55%,rgba(11,30,48,.55) 100%)}
+.pfx-exit-body{position:relative}
+.pfx-bar-fill{width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.pfx-sum-chart.in .pfx-bar-fill{width:var(--w)}
+.pfx-sum-chart.in .pfx-bar:nth-child(3) .pfx-bar-fill{transition-delay:.08s}.pfx-sum-chart.in .pfx-bar:nth-child(4) .pfx-bar-fill{transition-delay:.16s}.pfx-sum-chart.in .pfx-bar:nth-child(5) .pfx-bar-fill{transition-delay:.24s}.pfx-sum-chart.in .pfx-bar:nth-child(6) .pfx-bar-fill{transition-delay:.32s}.pfx-sum-chart.in .pfx-bar:nth-child(7) .pfx-bar-fill{transition-delay:.4s}.pfx-sum-chart.in .pfx-bar:nth-child(8) .pfx-bar-fill{transition-delay:.48s}.pfx-sum-chart.in .pfx-bar:nth-child(9) .pfx-bar-fill{transition-delay:.56s}.pfx-sum-chart.in .pfx-bar:nth-child(10) .pfx-bar-fill{transition-delay:.64s}.pfx-sum-chart.in .pfx-bar:nth-child(11) .pfx-bar-fill{transition-delay:.72s}.pfx-sum-chart.in .pfx-bar:nth-child(12) .pfx-bar-fill{transition-delay:.8s}
+.pfx-card{transition:box-shadow .3s,transform .3s,border-left-width .3s}
+.pfx-card:hover{border-left-width:6px}
+@media(scripting:none){.pfx-bar-fill{width:var(--w)}}
+@media(prefers-reduced-motion:reduce){.pfx-bar-fill{width:var(--w);transition:none}.pfx-vision-foto img,.pfx-exit-foto img{transform:none;transition:none}}
+@media(max-width:960px){.pfx-vision{grid-template-columns:1fr}.pfx-vision-foto{order:1}.pfx-vision-foto img{aspect-ratio:16/9}}
+@media(max-width:720px){.pfx-vision-list{grid-template-columns:1fr}}

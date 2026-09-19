@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Onze woningen in Rotterdam — 13 in eigen bezit | HomeINN</title>
-  <meta name="description" content="De dertien woningen die HomeINN zelf in bezit heeft, met adres en locatie. Investeer mee in een concreet ontwikkelproject in Rotterdam of Vlaardingen.">
+  <title>Onze panden in Rotterdam — 11 in eigen bezit | HomeINN</title>
+  <meta name="description" content="De elf panden (33 appartementsrechten) die HomeINN zelf in bezit heeft, met adres en locatie. Investeer mee in een concreet ontwikkelproject in Rotterdam of Vlaardingen.">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
@@ -13,7 +13,7 @@
   <meta property="og:url" content="https://home-inn.nl/projecten.html">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Onze projecten in Rotterdam — HomeINN">
-  <meta property="og:description" content="De dertien woningen die HomeINN zelf in bezit heeft, met adres en locatie. Investeer mee in een concreet ontwikkelproject in Rotterdam of Vlaardingen.">
+  <meta property="og:description" content="De elf panden (33 appartementsrechten) die HomeINN zelf in bezit heeft, met adres en locatie. Investeer mee in een concreet ontwikkelproject in Rotterdam of Vlaardingen.">
   <meta property="og:image" content="https://home-inn.nl/assets/og-home-1200x630.png?v=20260616g">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -21,9 +21,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919a">
-  <link rel="stylesheet" href="tokens.css?v=20260919a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919a">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919b">
+  <link rel="stylesheet" href="tokens.css?v=20260919b">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919b">
   <style>
     .pj-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .pj-top .brand img{height:34px;width:auto;display:block}
@@ -120,13 +120,13 @@
     <section class="page-hero">
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Projecten · Rotterdam</span>
-        <h1>Dertien woningen in eigen bezit — van aankoop tot <em>oplevering</em></h1>
+        <h1>Elf panden in eigen bezit — van aankoop tot <em>oplevering</em></h1>
         <p>Dit is geen etalage van andermans vastgoed: elk pand hieronder staat op naam van HomeINN. Wij kopen zelf aan, verbouwen met onze vaste bouwpartner en leveren op — en u kunt per project meedoen. Met adres en locatie erbij; zodra een verbouwing start, verschijnt de voortgang hier.</p>
       </div>
     </section>
 
     <section class="pj-sec">
-      <div class="proc-head"><span class="t-eyebrow">Onze portefeuille</span><h2>Wat wij nu <em>in bezit hebben.</em></h2><p class="pf-meta" id="portefeuille-meta">13 woningen op 8 locaties · alles in eigen bezit</p></div>
+      <div class="proc-head"><span class="t-eyebrow">Onze portefeuille</span><h2>Wat wij nu <em>in bezit hebben.</em></h2><p class="pf-meta" id="portefeuille-meta">11 panden · 33 appartementsrechten · alles in eigen bezit</p></div>
       <div class="blog-grid" id="projecten-grid" style="margin-top:2.5rem"></div>
     </section>
 
@@ -187,7 +187,7 @@
     grid.innerHTML = leeg;
 
     /* Kaart pas laden na een klik: geen Google-verzoek zonder toestemming van
-       de bezoeker, en geen dertien iframes bij het openen van de pagina. */
+       de bezoeker, en geen elf iframes bij het openen van de pagina. */
     grid.addEventListener('click',function(e){
       var btn=e.target&&e.target.closest?e.target.closest('.map-load'):null;
       if(!btn)return;
@@ -204,7 +204,7 @@
         var items=(data&&Array.isArray(data.projecten))?data.projecten:[];
         var pf=data&&data.portefeuille;
         var meta=document.getElementById('portefeuille-meta');
-        if(meta&&pf&&pf.woningen)meta.textContent=pf.woningen+' woningen op '+pf.locaties+' locaties · alles in eigen bezit';
+        if(meta&&pf&&pf.panden)meta.textContent=pf.panden+' panden · '+pf.appartementsrechten+' appartementsrechten · alles in eigen bezit';
         if(!items.length){grid.innerHTML=leeg;return;}
         grid.innerHTML=items.map(function(p){
           var q=encodeURIComponent(p.mapsAdres||((p.adres||'')+', '+(p.postcode?p.postcode+' ':'')+(p.plaats||'Rotterdam')));
@@ -256,6 +256,6 @@
       .catch(function(){grid.innerHTML=leeg;});
   })();
   </script>
-<script src="site-nav.js?v=20260919a"></script>
+<script src="site-nav.js?v=20260919b"></script>
 </body>
 </html>

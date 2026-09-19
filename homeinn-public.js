@@ -507,8 +507,8 @@ function renderPortefeuilleMeta() {
     .then(function (r) { if (!r.ok) throw new Error('geen data'); return r.json(); })
     .then(function (data) {
       var pf = data && data.portefeuille;
-      if (pf && pf.woningen) {
-        meta.textContent = pf.woningen + ' woningen op ' + pf.locaties + ' locaties · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
+      if (pf && pf.panden) {
+        meta.textContent = pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
       }
     })
     .catch(function () { /* statische tekst in de HTML blijft staan */ });
@@ -570,8 +570,8 @@ function renderProjectenPublic() {
       }).join('') : leeg;
       var meta = document.getElementById('portefeuille-meta');
       var pf = data && data.portefeuille;
-      if (meta && pf && pf.woningen) {
-        meta.textContent = pf.woningen + ' woningen op ' + pf.locaties + ' locaties · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
+      if (meta && pf && pf.panden) {
+        meta.textContent = pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum);
       }
     })
     .catch(function () { grid.innerHTML = leeg; });

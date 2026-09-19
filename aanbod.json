@@ -1,20 +1,20 @@
 {
-  "bijgewerkt": "2026-09-04",
+  "bijgewerkt": "2026-09-19",
   "aanbod": [],
   "tehuur": [],
   "projecten": [
     {
       "id": "HI-P01",
-      "titel": "2e Rosestraat 26-A, 26-B en 28",
-      "adres": "2e Rosestraat 26-A, 26-B en 28",
+      "titel": "2e Rosestraat 26",
+      "adres": "2e Rosestraat 26",
       "postcode": "3074 JK",
       "plaats": "Rotterdam",
       "wijk": "Rotterdam-Zuid",
-      "type": "3 woningen",
+      "type": "3 appartementen",
       "eenheden": 3,
       "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Drie zelfstandige woningen in één bouwblok op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
+      "omschrijving": "Drie zelfstandige appartementen na splitsing. Hoogwaardige totaalrenovatie gericht op luxe afwerking, comfort en maximale marktwaarde. In eigendom van HomeINN.",
       "investering": {
         "open": true
       },
@@ -25,16 +25,36 @@
     },
     {
       "id": "HI-P02",
-      "titel": "Gaesbeekstraat 92-A en 92-B",
-      "adres": "Gaesbeekstraat 92-A en 92-B",
+      "titel": "2e Rosestraat 28",
+      "adres": "2e Rosestraat 28",
+      "postcode": "3074 JK",
+      "plaats": "Rotterdam",
+      "wijk": "Rotterdam-Zuid",
+      "type": "3 appartementen",
+      "eenheden": 3,
+      "status": "In ontwikkeling",
+      "eigendom": true,
+      "omschrijving": "Drie zelfstandige woningen, exclusief, duurzaam en marktklaar opgeleverd. In eigendom van HomeINN.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/2e-rosestraat-28.jpg"
+      ],
+      "mapsAdres": "2e Rosestraat 28, 3074 JK Rotterdam"
+    },
+    {
+      "id": "HI-P03",
+      "titel": "Gaesbeekstraat 92",
+      "adres": "Gaesbeekstraat 92",
       "postcode": "3081 NM",
       "plaats": "Rotterdam",
       "wijk": "Rotterdam-Zuid",
-      "type": "2 woningen",
+      "type": "2 appartementen",
       "eenheden": 2,
       "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Twee appartementen in één pand in Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
+      "omschrijving": "Transformatie naar twee zelfstandige woningen met hoogwaardige afwerking en een optimale indeling. In eigendom van HomeINN.",
       "investering": {
         "open": true
       },
@@ -44,44 +64,24 @@
       "mapsAdres": "Gaesbeekstraat 92, 3081 NM Rotterdam"
     },
     {
-      "id": "HI-P03",
-      "titel": "'s-Gravendijkwal 88 en 90",
-      "adres": "'s-Gravendijkwal 88 en 90",
-      "postcode": "3014 EH",
-      "plaats": "Rotterdam",
-      "wijk": "Rotterdam-West",
-      "type": "2 woningen",
-      "eenheden": 2,
-      "status": "In ontwikkeling",
-      "eigendom": true,
-      "omschrijving": "Twee naastgelegen panden aan de 's-Gravendijkwal in Rotterdam-West. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
-      "investering": {
-        "open": true
-      },
-      "fotos": [
-        "fotos/s-gravendijkwal-88.jpg"
-      ],
-      "mapsAdres": "'s-Gravendijkwal 88, 3014 EH Rotterdam"
-    },
-    {
       "id": "HI-P04",
-      "titel": "Honingerdijk 105 en 107",
-      "adres": "Honingerdijk 105 en 107",
-      "postcode": "3063 AL",
+      "titel": "Schulpweg 396",
+      "adres": "Schulpweg 396",
+      "postcode": "3084 NJ",
       "plaats": "Rotterdam",
-      "wijk": "Kralingen",
-      "type": "2 woningen",
-      "eenheden": 2,
+      "wijk": "Rotterdam-Zuid",
+      "type": "1 woning",
+      "eenheden": 1,
       "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Twee naastgelegen panden aan de Honingerdijk in Kralingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
+      "omschrijving": "Ruime woning met grote tuin en een extra woonlaag; hoogwaardige renovatie gericht op ruimte en kwaliteit. In eigendom van HomeINN.",
       "investering": {
         "open": true
       },
       "fotos": [
-        "fotos/honingerdijk-105.jpg"
+        "fotos/schulpweg-396.jpg"
       ],
-      "mapsAdres": "Honingerdijk 105, 3063 AL Rotterdam"
+      "mapsAdres": "Schulpweg 396, 3084 NJ Rotterdam"
     },
     {
       "id": "HI-P05",
@@ -90,11 +90,11 @@
       "postcode": "3075 NG",
       "plaats": "Rotterdam",
       "wijk": "Rotterdam-Zuid",
-      "type": "1 woning",
-      "eenheden": 1,
+      "type": "2 appartementen",
+      "eenheden": 2,
       "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Stadswoning op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
+      "omschrijving": "Twee zelfstandige luxe woningen met hoogwaardige installaties en afwerking; begane grond met tuin. In eigendom van HomeINN.",
       "investering": {
         "open": true
       },
@@ -105,36 +105,96 @@
     },
     {
       "id": "HI-P06",
-      "titel": "Schulpweg 396",
-      "adres": "Schulpweg 396",
-      "postcode": "3084 NJ",
+      "titel": "Honingerdijk 105",
+      "adres": "Honingerdijk 105",
+      "postcode": "3063 AL",
       "plaats": "Rotterdam",
-      "wijk": "Rotterdam-Zuid",
-      "type": "1 woning",
-      "eenheden": 1,
+      "wijk": "Kralingen",
+      "type": "4 appartementen",
+      "eenheden": 4,
       "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Woning aan de Schulpweg op Rotterdam-Zuid. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
+      "omschrijving": "Vier exclusief gerenoveerde appartementen met moderne installaties en luxe keuken- en sanitairafwerking. In eigendom van HomeINN.",
       "investering": {
         "open": true
       },
       "fotos": [
-        "fotos/schulpweg-396.jpg"
+        "fotos/honingerdijk-105.jpg"
       ],
-      "mapsAdres": "Schulpweg 396, 3084 NJ Rotterdam"
+      "mapsAdres": "Honingerdijk 105, 3063 AL Rotterdam"
     },
     {
       "id": "HI-P07",
-      "titel": "Van der Driftstraat 4-A",
-      "adres": "Van der Driftstraat 4-A",
+      "titel": "Honingerdijk 107",
+      "adres": "Honingerdijk 107",
+      "postcode": "3063 AL",
+      "plaats": "Rotterdam",
+      "wijk": "Kralingen",
+      "type": "4 appartementen",
+      "eenheden": 4,
+      "status": "In ontwikkeling",
+      "eigendom": true,
+      "omschrijving": "Vier zelfstandige appartementen met hoogwaardige totaalrenovatie en het hoogst haalbare wooncomfort. In eigendom van HomeINN.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/honingerdijk-107.jpg"
+      ],
+      "mapsAdres": "Honingerdijk 107, 3063 AL Rotterdam"
+    },
+    {
+      "id": "HI-P08",
+      "titel": "'s-Gravendijkwal 88",
+      "adres": "'s-Gravendijkwal 88",
+      "postcode": "3014 EH",
+      "plaats": "Rotterdam",
+      "wijk": "Rotterdam-West",
+      "type": "4 appartementen",
+      "eenheden": 4,
+      "status": "In ontwikkeling",
+      "eigendom": true,
+      "omschrijving": "Vier ruime zelfstandige woningen met luxe materiaalkeuze en een positionering in het hogere marktsegment. In eigendom van HomeINN.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/s-gravendijkwal-88.jpg"
+      ],
+      "mapsAdres": "'s-Gravendijkwal 88, 3014 EH Rotterdam"
+    },
+    {
+      "id": "HI-P09",
+      "titel": "'s-Gravendijkwal 90",
+      "adres": "'s-Gravendijkwal 90",
+      "postcode": "3014 EH",
+      "plaats": "Rotterdam",
+      "wijk": "Rotterdam-West",
+      "type": "4 appartementen",
+      "eenheden": 4,
+      "status": "In ontwikkeling",
+      "eigendom": true,
+      "omschrijving": "Vier zelfstandige woningen met exclusieve totaalrenovatie, hoogwaardige installaties en duurzame waardecreatie. In eigendom van HomeINN.",
+      "investering": {
+        "open": true
+      },
+      "fotos": [
+        "fotos/s-gravendijkwal-90.jpg"
+      ],
+      "mapsAdres": "'s-Gravendijkwal 90, 3014 EH Rotterdam"
+    },
+    {
+      "id": "HI-P10",
+      "titel": "Van der Driftstraat 4",
+      "adres": "Van der Driftstraat 4",
       "postcode": "3131 JH",
       "plaats": "Vlaardingen",
       "wijk": "Vlaardingen",
-      "type": "1 woning",
-      "eenheden": 1,
+      "type": "3 appartementen",
+      "eenheden": 3,
       "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Appartement in Vlaardingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
+      "omschrijving": "Drie zelfstandige appartementen van gelijke grootte met een consistente, moderne en hoogwaardige afwerking. In eigendom van HomeINN.",
       "investering": {
         "open": true
       },
@@ -144,17 +204,17 @@
       "mapsAdres": "Van der Driftstraat 4, 3131 JH Vlaardingen"
     },
     {
-      "id": "HI-P08",
+      "id": "HI-P11",
       "titel": "Tollensstraat 32",
       "adres": "Tollensstraat 32",
       "postcode": "3131 GZ",
       "plaats": "Vlaardingen",
       "wijk": "Vlaardingen",
-      "type": "1 woning",
-      "eenheden": 1,
+      "type": "3 appartementen",
+      "eenheden": 3,
       "status": "In ontwikkeling",
       "eigendom": true,
-      "omschrijving": "Woning in Vlaardingen. In eigendom van HomeINN en in ontwikkeling: renovatie en verduurzaming naar label A.",
+      "omschrijving": "Drie zelfstandige appartementen van circa 70 m² met een consistente luxe afwerking. In eigendom van HomeINN.",
       "investering": {
         "open": true
       },
@@ -166,8 +226,10 @@
   ],
   "verkocht": [],
   "portefeuille": {
-    "woningen": 13,
-    "locaties": 8,
-    "peildatum": "2026-09-02"
+    "panden": 11,
+    "appartementsrechten": 33,
+    "woonoppervlak_m2": 2724,
+    "tuin_m2": 570,
+    "peildatum": "2026-09-19"
   }
 }
