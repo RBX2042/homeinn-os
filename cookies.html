@@ -21,16 +21,16 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919h">
-  <link rel="stylesheet" href="tokens.css?v=20260919h">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919h">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260919i">
+  <link rel="stylesheet" href="tokens.css?v=20260919i">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260919i">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
     .lg-top .tel{color:#eaf0f5;text-decoration:none;font-size:.8rem;font-weight:500;letter-spacing:.02em;white-space:nowrap}
     .lg-top .tel strong{color:#fff;font-weight:600}
     @media(max-width:560px){.lg-top .tel{display:none}}
-    .legal-doc p,.legal-doc li{max-width:72ch}.lg-other{max-width:760px;margin:0 auto;padding:0 clamp(1.5rem,5vw,2rem) clamp(3rem,6vw,5rem);display:flex;flex-wrap:wrap;gap:1.25rem;font-size:.82rem}
+    .legal-doc p,.legal-doc li{max-width:72ch}.lg-toc{margin:0 0 2.5rem;padding:1.25rem 1.5rem;background:var(--cream2);border-left:3px solid var(--gold)}.lg-toc span{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:.6rem}.lg-toc ol{margin:0;padding-left:1.2rem;columns:2;column-gap:2rem;font-size:.9rem;line-height:1.9}.lg-toc a{color:var(--navy);text-decoration:none;border-bottom:1px solid rgba(var(--gold-rgb),.35)}@media(max-width:720px){.lg-toc ol{columns:1}}.legal-doc h2{scroll-margin-top:90px}.lg-other{max-width:760px;margin:0 auto;padding:0 clamp(1.5rem,5vw,2rem) clamp(3rem,6vw,5rem);display:flex;flex-wrap:wrap;gap:1.25rem;font-size:.82rem}
     .lg-other span{color:var(--ink4)}
     .lg-other a{color:var(--gold-ink);text-decoration:none;border-bottom:1px solid rgba(var(--gold-rgb),.3)}
   </style>
@@ -129,15 +129,15 @@
       <div class="legal-wrap">
         <article class="legal-doc">
       <p style="font-size:.82rem;color:var(--ink3)">Versie 2.1 · ingangsdatum 5 september 2026</p>
-      <h2>Geen cookies</h2>
+      <h2 id="s1">Geen cookies</h2>
       <p>Deze website plaatst geen cookies en gebruikt geen analytische of advertentietrackers. Er is daarom geen cookiebanner nodig.</p>
-      <h2>Lokale opslag</h2>
+      <h2 id="s2">Lokale opslag</h2>
       <p>Vult u een formulier in, dan bewaart uw browser de inzending ook lokaal (localStorage), zodat de aanvraag niet verloren gaat. Die lokale kopie blijft op uw eigen apparaat. Om de site sneller te laden bewaart uw browser ook een lokale kopie van pagina's (service worker). Ook die blijft op uw eigen apparaat. De aanvraag zelf sturen wij daarnaast per e-mail en naar onze eigen database, zodat wij hem kunnen opvolgen — zie het privacybeleid voor wie die gegevens ontvangt en hoe lang wij ze bewaren.</p>
-      <h2>Scripts van derden</h2>
+      <h2 id="s3">Scripts van derden</h2>
       <p>Raakt u een formulierveld aan, dan laadt uw browser één script van het content delivery network jsDelivr; daarbij ziet jsDelivr uw IP-adres. Er wordt geen cookie geplaatst. Zie het privacybeleid voor details.</p>
-      <h2>Kaarten</h2>
+      <h2 id="s4">Kaarten</h2>
       <p>Google Maps-kaarten laden uitsluitend nadat u daarop klikt. Pas op dat moment maakt uw browser verbinding met Google; tot die tijd wordt er niets met Google gedeeld. Lettertypen laden wij van onze eigen server, niet via Google Fonts.</p>
-      <h2>Vragen</h2>
+      <h2 id="s5">Vragen</h2>
       <p>Vragen over cookies of privacy? Mail <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.</p>
         </article>
       </div>
@@ -173,6 +173,6 @@
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260919h"></script>
+  <script src="site-nav.js?v=20260919i"></script>
 </body>
 </html>

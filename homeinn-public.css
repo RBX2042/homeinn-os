@@ -2589,3 +2589,17 @@ body .page-hero--foto::after{background-image:radial-gradient(70% 80% at 10% 100
 
 /* kaart niet schermvullend op brede schermen */
 .iv-kaart{max-width:960px;margin-left:auto;margin-right:auto}
+
+/* ═══ Rest van de rapporten (A, D, meet-workflow) — 19 sep 2026 ═══ */
+body .nav-mega-btn,body .nav-mega-btn:hover{color:var(--navy)}         /* wit op goud (2,9:1) → navy op goud */
+.pk-num{opacity:1;color:var(--gold2)}                                    /* 4,4:1 door opacity .7 → volle kleur */
+.wb-pill{font-size:.7rem}
+.partner-bq-naam{font-size:.72rem}
+.blog-body h3{font-size:1.5rem;font-weight:300;line-height:1.15}         /* pandnaam als belangrijkste woord op de kaart */
+.pj-disclaimer p{max-width:68ch}
+.faq-section{padding-top:clamp(4rem,7vw,6rem);padding-bottom:clamp(4rem,7vw,6rem)}
+.aanbod-leeg{padding:2rem 1.5rem}                                        /* leeg aanbod compact, geen 650px lege ruimte */
+.blog-hero{padding-top:clamp(6rem,11vw,10rem)}
+body .intro .eyebrow,body .progress-head .step-count,body .aside-call .ac-lbl,body .pv-tip .eyebrow{font-size:.75rem}
+body .eyebrow,body .step-count,body .ac-lbl{font-size:max(.75rem,12px)}
+@media(hover:none),(pointer:coarse){body .f-in span a{display:inline-block;padding:10px 0;margin:-6px 0;min-height:44px}}
