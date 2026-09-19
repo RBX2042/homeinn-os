@@ -23,3 +23,8 @@ Wil je de foto terug, dan volstaat één regel in de hero, direct ná `.hero-bg`
 `interieur-sfeer.jpg` wordt wél gebruikt, op `projectontwikkeling.html`.
 
 **19 september 2026:** `hero-rotterdam.jpg` is als lage sfeerlaag (opacity .26, onder de navy) toegevoegd aan de kop van de twaalf wijkpagina's en `werkgebied.html`. Het is een stadsbeeld van Rotterdam, geen pand- of wijkfoto, en wordt nergens als zodanig gepresenteerd.
+
+## hero-hef.jpg en hero-erasmus-lucht.jpg (19 september 2026)
+- `hero-hef.jpg` — De Hef, Rotterdam. Pexels-foto 21952232, fotograaf Jan van der Wolf, Pexels-licentie (vrij gebruik, geen naamsvermelding vereist). Uitsnede 2400×800, gebruikt als lage-dekking sfeerlaag (`.page-hero--foto-r`) op contact en vastgoedbeheer.
+- `hero-erasmus-lucht.jpg` — Erasmusbrug vanuit de lucht. Pexels-foto 20655911, fotograaf Igor Passchier, Pexels-licentie. Uitsnede 2400×800, sfeerlaag (`.page-hero--foto-l`) op over ons, projecten, verhuur en de EN-varianten.
+- Beide zijn stadsbeelden, géén panden van HomeINN; nergens als eigen pand gepresenteerd.

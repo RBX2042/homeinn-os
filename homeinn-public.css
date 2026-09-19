@@ -2499,3 +2499,19 @@ body #ct-map .map-load-sub{display:block}   /* privacy-melding bij de kaart op c
 @media(max-width:720px){.page-hero--foto-l::after,.page-hero--foto-m::after,.page-hero--foto-r::after{background-position:60% center}}
 /* Projectvisie-lijst op mobiel: drie punten in beeld, de rest inklapbaar via de bestaande tekst */
 @media(max-width:720px){#pg-home .pfx-vision li:nth-child(n+4){display:none}}
+
+/* Drie Rotterdam-sfeerbeelden i.p.v. één (19 sep 2026, akkoord eigenaar):
+   -l = luchtfoto Erasmusbrug (Igor Passchier, Pexels), -r = De Hef (Jan van der Wolf, Pexels),
+   -m = skyline (László Hegedűs, Pexels) — alle lage dekking onder het navy-verloop. */
+.page-hero--foto-l::after{background-image:url('fotos/hero-erasmus-lucht.jpg');background-position:50% center}
+.page-hero--foto-r::after{background-image:url('fotos/hero-hef.jpg');background-position:55% center}
+@media(max-width:720px){.page-hero--foto-l::after{background-position:58% center}.page-hero--foto-r::after{background-position:52% center}}
+/* Warmer (19 sep 2026, wens eigenaar): foto's voller en met goudzweem, plus een warme gloed
+   linksonder in dezelfde laag (::before blijft van het lijn-motief). Kop blijft wit op donker. */
+.page-hero--foto{--hero-foto:url('fotos/hero-rotterdam.jpg')}
+.page-hero--foto-l{--hero-foto:url('fotos/hero-erasmus-lucht.jpg')}
+.page-hero--foto-r{--hero-foto:url('fotos/hero-hef.jpg')}
+body .page-hero--foto::after{background-image:radial-gradient(70% 80% at 10% 100%,rgba(var(--gold-rgb),.45),transparent 70%),var(--hero-foto);
+  background-size:auto,cover;background-repeat:no-repeat;opacity:.4;filter:saturate(.95) sepia(.22) brightness(1.05)}
+@media(max-width:720px){body .page-hero--foto::after{opacity:.34}}
+@media(prefers-reduced-motion:reduce){.page-hero--foto::after{animation:none}}
