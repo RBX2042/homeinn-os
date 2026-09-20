@@ -486,6 +486,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .cf-group input,.cf-group select,.cf-group textarea{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--cream);font-family:'Outfit',sans-serif;font-size:max(1rem,16px);min-height:48px;font-weight:300;color:var(--ink);transition:border .2s,background .2s;border-radius:0}
 .cf-group input:focus,.cf-group select:focus,.cf-group textarea:focus{border-color:var(--gold);background:var(--white)}
 .cf-group textarea{min-height:110px;resize:vertical}
+.cf-hint{display:block;margin-top:.45rem;font-size:max(.8125rem,13px);font-weight:300;color:var(--ink4);letter-spacing:0;text-transform:none}
 .cf-submit{width:100%;padding:14px;background:var(--gold);color:var(--navy);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;transition:background .25s}
 .cf-submit:hover{background:var(--gold2)}
 .hp-field{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
@@ -1853,7 +1854,7 @@ nav.spoke-buren > a,nav.lg-other > a{display:inline-flex;align-items:center;min-
    vol inkt zonder inhoud. Hier blijft alleen de tekst over.
    ════════════════════════════════════════════════════════════ */
 @media print{
-  #nav,#mob,#scrollbar,.burger,.sn-burger,.smcta,.modal-bg,.lb,
+  #nav,#mob,#scrollbar,.burger,.sn-burger,.smcta,.wa-fab,.modal-bg,.lb,
   .site-foot,footer,.cta-band,.blog-cta-band,.hero-scroll-ind,
   .spot-art,.contact-spot,.legal-spot,.leeg-spot,.hero-bridge,
   .hero-glow,.hero-grain,.hero-photo,.mvw-strip,.nav-mega{display:none!important}
@@ -2655,6 +2656,23 @@ body:has(.nl-bar) .float-cta{bottom:4.5rem}
   body.has-smcta{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
   body.has-smcta .nl-bar{bottom:calc(64px + env(safe-area-inset-bottom))}
 }
+
+/* WhatsApp-knop rechtsonder (site-nav.js) — alleen boven de mobiele contactbalk,
+   die onder 601px al een WhatsApp-knop toont. */
+.wa-fab{display:none}
+@media(min-width:601px){
+  .wa-fab{display:inline-flex;align-items:center;gap:.5rem;position:fixed;right:1.5rem;bottom:1.5rem;z-index:840;
+    padding:.7rem 1.05rem;background:var(--navy);color:var(--gold2);border:1px solid rgba(var(--gold-rgb),.45);
+    font-size:max(.75rem,12px);font-weight:600;letter-spacing:.1em;text-transform:uppercase;line-height:1;
+    box-shadow:0 10px 30px rgba(11,30,48,.22);transition:color .25s var(--ease),border-color .25s var(--ease),background .25s var(--ease),transform .25s var(--ease)}
+  .wa-fab svg{width:20px;height:20px;flex:0 0 20px}
+  .wa-fab:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);transform:translateY(-2px)}
+  .wa-fab:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  [data-theme="dark"] .wa-fab{background:var(--navy3);border-color:rgba(var(--gold-rgb),.6)}
+  body.nl-bar-on .wa-fab{bottom:calc(1.5rem + 58px)}
+  body.no-scroll .wa-fab{display:none}
+}
+@media(prefers-reduced-motion:reduce){.wa-fab{transition:none}.wa-fab:hover{transform:none}}
 
 /* Mobiele taalschakelaar naast de themaknop (kloon uit site-nav.js) */
 :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m,.lang-sw--m{display:none}

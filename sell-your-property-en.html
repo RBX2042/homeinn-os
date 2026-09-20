@@ -25,8 +25,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919r">
-  <link rel="stylesheet" href="tokens.css?v=20260919r">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260920d">
+  <link rel="stylesheet" href="tokens.css?v=20260920d">
   <style>
     /* ───────────────────────────────────────────────────────────────
        Bod-flow (/pand-verkopen) — navigatie-loze meerstaps intake.
@@ -240,6 +240,22 @@
       .aside-call .ac-num a,.pv-tip-sub a{display:inline-flex;align-items:center;min-height:44px}
       .topbar .brand{display:inline-flex;align-items:center;min-height:44px}
     }
+    /* WhatsApp — deze pagina staat bewust los van site-nav.js, dus de knop staat hier zelf.
+       Onder 601px een volle balk onderaan, daarboven een knop rechtsonder. */
+    .pv-wa{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;position:fixed;right:1.5rem;bottom:1.5rem;z-index:840;
+      padding:.7rem 1.05rem;background:var(--navy);color:var(--gold2,#d4b168);border:1px solid rgba(var(--gold-rgb),.45);
+      font-size:max(.75rem,12px);font-weight:600;letter-spacing:.1em;text-transform:uppercase;line-height:1;text-decoration:none;
+      box-shadow:0 10px 30px rgba(11,30,48,.22);transition:background .25s,color .25s,border-color .25s,transform .25s}
+    .pv-wa svg{width:20px;height:20px;flex:0 0 20px}
+    .pv-wa:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);transform:translateY(-2px)}
+    .pv-wa:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+    [data-theme="dark"] .pv-wa{background:var(--navy3);border-color:rgba(var(--gold-rgb),.6)}
+    @media(max-width:600px){
+      .pv-wa{left:0;right:0;bottom:0;padding:.85rem 1rem calc(.85rem + env(safe-area-inset-bottom));background:var(--gold);color:var(--navy);border:0;border-radius:0;box-shadow:0 -6px 24px rgba(11,30,48,.18)}
+      .pv-wa:hover{transform:none}
+      body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
+    }
+    @media(prefers-reduced-motion:reduce){.pv-wa{transition:none}.pv-wa:hover{transform:none}}
     .mini-f-social{display:inline-flex;align-items:center;gap:0;margin-left:1.4rem}
     .mini-f-social a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;color:var(--ink3);transition:color .2s}
     .mini-f-social a:hover{color:var(--gold-ink)}
@@ -476,7 +492,7 @@
         <div class="aside-call">
           <span class="ac-lbl">Prefer to get in touch directly?</span>
           <span class="ac-num"><a href="tel:+31633322257">+31 6 33 32 22 57</a></span>
-          <span class="ac-sub">Monday to Friday · 08:00 – 18:00</span>
+          <span class="ac-sub"><a href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20offer%20for%20my%20property." target="_blank" rel="noopener">Message us on WhatsApp</a> · Monday to Friday 08:00 – 18:00</span>
         </div>
       </aside>
     </div>
@@ -494,7 +510,7 @@
       </div>
       <div class="pv-tip-actie">
         <a class="btn btn-primary" href="contact-en.html?onderwerp=Een%20pand%20aanbrengen%20(aanbrengvergoeding)">Introduce a property →</a>
-        <span class="pv-tip-sub">Or call <a href="tel:+31633322257">+31 6 33 32 22 57</a></span>
+        <span class="pv-tip-sub">Or <a href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20offer%20for%20my%20property." target="_blank" rel="noopener">message us on WhatsApp</a> · <a href="tel:+31633322257">+31 6 33 32 22 57</a></span>
         <span class="pv-tip-note">The amount of the fee is agreed per property — ask about it when you first register.</span>
       </div>
     </div>
@@ -531,7 +547,7 @@
     "description":"HomeINN buys houses, apartments and walk-up buildings in Rotterdam directly — tenanted or with overdue maintenance too. Proposal within 48 hours, no estate agent fees."
   }
   </script>
-  <script src="lead-cloud.js?v=20260919r" defer></script>
+  <script src="lead-cloud.js?v=20260920d" defer></script>
   <script>
   (function () {
     'use strict';
@@ -733,5 +749,6 @@
     showStep(0);
   })();
   </script>
+<a class="pv-wa" href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20offer%20for%20my%20property." target="_blank" rel="noopener" aria-label="Message us on WhatsApp" title="Message us on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.73.45 3.4 1.32 4.89L2 22l5.4-1.48a9.83 9.83 0 0 0 4.64 1.18h.01c5.43 0 9.84-4.4 9.84-9.84 0-2.63-1.02-5.1-2.88-6.96A9.77 9.77 0 0 0 12.04 2Zm0 1.8c2.15 0 4.17.84 5.69 2.36a7.98 7.98 0 0 1 2.35 5.68c0 4.44-3.61 8.04-8.05 8.04a8.05 8.05 0 0 1-4.1-1.12l-.29-.17-3.2.88.85-3.12-.19-.31a7.96 7.96 0 0 1-1.22-4.2c0-4.44 3.61-8.04 8.16-8.04Zm-3.6 4.1c-.17 0-.45.06-.69.32-.24.26-.9.88-.9 2.15 0 1.26.92 2.48 1.05 2.65.13.17 1.79 2.83 4.44 3.86 2.2.86 2.65.69 3.13.65.48-.05 1.55-.63 1.77-1.24.22-.61.22-1.14.15-1.25-.06-.11-.24-.17-.5-.3-.26-.13-1.55-.77-1.79-.85-.24-.09-.41-.13-.59.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.41-2.1-1.3a7.9 7.9 0 0 1-1.46-1.8c-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.42-.8-1.94-.21-.5-.42-.44-.58-.44h-.5Z"/></svg><span>WhatsApp</span></a>
 </body>
 </html>

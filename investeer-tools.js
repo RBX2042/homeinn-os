@@ -22,7 +22,7 @@
     vglEyebrow: 'Compare', vglKop: 'Buying yourself or <em>taking part?</em>', vglLede: 'Facts side by side, without a return forecast. Which route fits you depends on your situation; we are happy to talk it through.',
     zelf: 'Buying a property yourself', mee: 'Taking part in a HomeINN project',
     vgl: [
-      ['Entry amount', 'Full purchase price plus buyer’s costs', 'From your contribution per project'],
+      ['Entry amount', 'Full purchase price plus buyer’s costs', 'From €100,000 in a single amount per participant'],
       ['Financing', 'Arrange it yourself; bank terms for investors', 'Not applicable — HomeINN owns and develops the property'],
       ['Refurbishment', 'Find and manage contractors yourself', 'HomeINN with its fixed partner Lageweg Services B.V.'],
       ['Tenants and management', 'Yourself or a paid property manager', 'Not applicable during the project'],
@@ -45,7 +45,7 @@
     vglEyebrow: 'Vergelijk', vglKop: 'Zelf kopen of <em>meedoen?</em>', vglLede: 'De feiten naast elkaar, zonder rendementsvoorspelling. Welke route bij u past hangt af van uw situatie; wij denken graag mee.',
     zelf: 'Zelf een pand kopen', mee: 'Meedoen in een HomeINN-project',
     vgl: [
-      ['Instapbedrag', 'Volledige koopsom plus kosten koper', 'Vanaf uw inleg per project'],
+      ['Instapbedrag', 'Volledige koopsom plus kosten koper', 'Vanaf € 100.000 ineens per deelnemer'],
       ['Financiering', 'Zelf regelen; bankvoorwaarden voor beleggers', 'Niet van toepassing — HomeINN bezit en ontwikkelt het pand'],
       ['Verbouwing', 'Zelf aannemers zoeken en aansturen', 'HomeINN met vaste bouwpartner Lageweg Services B.V.'],
       ['Huurders en beheer', 'Zelf of via een betaalde beheerder', 'Niet van toepassing tijdens het project'],
@@ -106,7 +106,7 @@
   }
 
   if (!kiezer) return;
-  var DATA = null, actief = null, pins = {};
+  var DATA = null, actief = null, pins = {}, pandGekozen = false;
 
   /* ── scenario in de URL-hash (#scenario=inleg,jaren,pand-id) ─────────── */
   function leesScenario() {
@@ -115,10 +115,19 @@
     var d = decodeURIComponent(m[1]).split(',');
     return { inleg: +d[0] || 0, jaren: +d[1] || 0, pand: d[2] || '' };
   }
+  /* Deelbare basis-URL: de canonical van de pagina, zodat een link vanaf localhost of
+     een preview-omgeving tóch naar de echte site wijst. Geen canonical? Dan de eigen URL,
+     inclusief een bestaande ?project=… zodat die niet verloren gaat. */
+  function deelBasis() {
+    var c = document.querySelector('link[rel="canonical"]');
+    var href = c && c.href ? c.href : (location.origin + location.pathname + location.search);
+    return href.split('#')[0];
+  }
   function schrijfScenario() {
     var inleg = $('ivc-inleg'), jaren = $('ivc-jaren');
-    var delen = [inleg ? inleg.value : '', jaren ? jaren.value : '', actief ? actief.id : ''];
-    var url = location.origin + location.pathname + '#scenario=' + encodeURIComponent(delen.join(','));
+    // pand alleen meesturen als de bezoeker er zelf een koos — anders deelt hij stilzwijgend het eerste pand
+    var delen = [inleg ? inleg.value : '', jaren ? jaren.value : '', pandGekozen && actief ? actief.id : ''];
+    var url = deelBasis() + '#scenario=' + encodeURIComponent(delen.join(','));
     var veld = $('ivs-url'); if (veld) veld.value = url;
     return url;
   }
@@ -126,14 +135,15 @@
     var inleg = $('ivc-inleg'), jaren = $('ivc-jaren'), out = [];
     if (inleg) out.push('€ ' + (+inleg.value).toLocaleString(EN ? 'en-GB' : 'nl-NL'));
     if (jaren) out.push(T.jaar(+jaren.value));
-    if (actief) out.push(actief.kort);
+    if (pandGekozen && actief) out.push(actief.kort);
     return out.join(' · ');
   }
 
   /* ── 1 + 3. projectkiezer en fase-tracker ────────────────────────────── */
   function L(p, k) { return (EN && p.en && p.en[k] != null) ? p.en[k] : p[k]; }
-  function toonPand(p, scrollNaar) {
+  function toonPand(p, scrollNaar, doorBezoeker) {
     actief = p;
+    if (doorBezoeker) pandGekozen = true;
     kiezer.querySelectorAll('.ivk-chip').forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-id') === p.id ? 'true' : 'false'); });
     Object.keys(pins).forEach(function (id) { pins[id].classList.toggle('on', id === p.id); });
     var fase = Math.max(1, Math.min(T.fasen.length, +p.fase || 1));
@@ -170,7 +180,7 @@
       '<div class="proc-head"><span class="t-eyebrow">' + esc(T.kiezerEyebrow) + '</span><h2>' + T.kiezerKop + '</h2><p class="proc-lede">' + esc(T.kiezerLede) + '</p></div>' +
       '<div class="ivk-grid"><div class="ivk-lijst" role="list">' + chips + '</div><div class="ivk-paneel" id="ivk-paneel" aria-live="polite"></div></div>';
     kiezer.querySelectorAll('.ivk-chip').forEach(function (c) {
-      c.addEventListener('click', function () { var p = DATA.panden.filter(function (x) { return x.id === c.getAttribute('data-id'); })[0]; if (p) toonPand(p, window.innerWidth < 900); });
+      c.addEventListener('click', function () { var p = DATA.panden.filter(function (x) { return x.id === c.getAttribute('data-id'); })[0]; if (p) toonPand(p, window.innerWidth < 900, true); });
     });
   }
 
@@ -200,7 +210,7 @@
       var c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 7); g.appendChild(c);
       var r = document.createElementNS(NS, 'circle'); r.setAttribute('cx', x); r.setAttribute('cy', y); r.setAttribute('r', 14); r.setAttribute('class', 'ivm-ring'); g.appendChild(r);
       var t = document.createElementNS(NS, 'text'); t.setAttribute('x', x + 12); t.setAttribute('y', y + 4); t.setAttribute('class', 'ivm-pin-lbl'); t.textContent = p.kort; g.appendChild(t);
-      function kies() { toonPand(p, true); }
+      function kies() { toonPand(p, true, true); }
       g.addEventListener('click', kies); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kies(); } });
       pins[p.id] = g; svg.appendChild(g);
     });
@@ -228,7 +238,9 @@
     if (form) form.addEventListener('submit', function () {
       var ta = $('iv-message'); if (!ta) return;
       var regel = T.scenarioLead + ': ' + scenarioTekst();
-      if (ta.value.indexOf(regel) === -1) ta.value = (ta.value ? ta.value + '\n' : '') + regel;
+      // een eerdere scenario-regel (bv. na een mislukte verzending) overschrijven, niet stapelen
+      var rest = ta.value.split('\n').filter(function (r) { return r.indexOf(T.scenarioLead + ': ') !== 0; }).join('\n').replace(/\n+$/, '');
+      ta.value = (rest ? rest + '\n' : '') + regel;
     }, true);
   }
 
@@ -238,7 +250,7 @@
     if (inleg && s.inleg) { inleg.value = s.inleg; inleg.dispatchEvent(new Event('input', { bubbles: true })); }
     if (jaren && s.jaren) { jaren.value = s.jaren; jaren.dispatchEvent(new Event('input', { bubbles: true })); }
     var p = DATA.panden.filter(function (x) { return x.id === s.pand; })[0];
-    if (p) toonPand(p, false);
+    if (p) toonPand(p, false, true);
   }
 
   fetch('portefeuille.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {

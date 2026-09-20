@@ -380,8 +380,9 @@ document.addEventListener('DOMContentLoaded', function () {
     bar.className = 'nl-bar'; bar.setAttribute('role', 'status'); bar.setAttribute('lang', 'en');
     bar.innerHTML = '<span>' + tekst + '</span> <a href="' + terug.replace(/"/g, '') + '">' + knop + '</a>' +
                     '<button type="button" class="nl-bar-x" aria-label="Close">\u00d7</button>';
-    bar.querySelector('.nl-bar-x').addEventListener('click', function () { bar.remove(); onthoud('nl'); });
+    bar.querySelector('.nl-bar-x').addEventListener('click', function () { bar.remove(); document.body.classList.remove('nl-bar-on'); onthoud('nl'); });
     document.body.appendChild(bar);
+    document.body.classList.add('nl-bar-on');
   });
 })();
 
@@ -400,5 +401,49 @@ document.addEventListener('DOMContentLoaded', function () {
                     '<a class="smcta-call" href="tel:+31633322257" aria-label="' + (EN ? 'Call HomeINN' : 'Bellen met HomeINN') + '">' + (EN ? 'Call' : 'Bellen') + '</a>';
     document.body.appendChild(bar);
     document.body.classList.add('smcta-on', 'has-smcta');
+  });
+})();
+
+/* ── WhatsApp-knop op grotere schermen (20 sep 2026) ──
+   Op telefoons staat WhatsApp al in de vaste contactbalk (.smcta hierboven); die balk is onder
+   601px zichtbaar. Daarboven bleef WhatsApp alleen in de footer staan, terwijl de meeste mensen
+   liever eerst appen dan bellen of een formulier invullen. Deze knop zweeft rechtsonder, met een
+   bericht dat past bij de pagina waar de bezoeker op staat. */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelector('.wa-fab')) return;
+    var EN = (document.documentElement.lang || 'nl').indexOf('en') === 0;
+    var pad = (location.pathname.split('/').pop() || 'index.html');
+    var berichten = EN ? {
+      'invest-en.html': 'Hello HomeINN, I would like to receive the project information for investors.',
+      'sell-your-property-en.html': 'Hello HomeINN, I would like a no-obligation offer for my property.',
+      'for-sale-en.html': 'Hello HomeINN, I have a question about a property you have for sale.',
+      'property-management-en.html': 'Hello HomeINN, I have a question about property management.',
+      'letting-en.html': 'Hello HomeINN, I have a question about renting.',
+      _: 'Hello HomeINN, I have a question.'
+    } : {
+      'investeren.html': 'Hallo HomeINN, ik ontvang graag de projectinformatie voor investeerders.',
+      'pand-verkopen.html': 'Hallo HomeINN, ik wil graag een vrijblijvend bod op mijn pand.',
+      'verkopen.html': 'Hallo HomeINN, ik wil graag een vrijblijvend bod op mijn pand.',
+      'te-koop.html': 'Hallo HomeINN, ik heb een vraag over een woning die te koop staat.',
+      'vastgoedbeheer.html': 'Hallo HomeINN, ik heb een vraag over vastgoedbeheer.',
+      'verhuur.html': 'Hallo HomeINN, ik heb een vraag over huren.',
+      _: 'Hallo HomeINN, ik heb een vraag.'
+    };
+    var tekst = berichten[pad] || (/^verkopen-/.test(pad) ? berichten['pand-verkopen.html'] || berichten._ : berichten._);
+    var label = EN ? 'Message us on WhatsApp' : 'Stuur ons een WhatsApp-bericht';
+    var a = document.createElement('a');
+    a.className = 'wa-fab';
+    a.href = 'https://wa.me/31633322257?text=' + encodeURIComponent(tekst);
+    a.target = '_blank'; a.rel = 'noopener';
+    a.setAttribute('aria-label', label); a.title = label;
+    a.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.73.45 3.4 1.32 4.89L2 22l5.4-1.48a9.83 9.83 0 0 0 4.64 1.18h.01c5.43 0 9.84-4.4 9.84-9.84 0-2.63-1.02-5.1-2.88-6.96A9.77 9.77 0 0 0 12.04 2Zm0 1.8c2.15 0 4.17.84 5.69 2.36a7.98 7.98 0 0 1 2.35 5.68c0 4.44-3.61 8.04-8.05 8.04a8.05 8.05 0 0 1-4.1-1.12l-.29-.17-3.2.88.85-3.12-.19-.31a7.96 7.96 0 0 1-1.22-4.2c0-4.44 3.61-8.04 8.16-8.04Zm-3.6 4.1c-.17 0-.45.06-.69.32-.24.26-.9.88-.9 2.15 0 1.26.92 2.48 1.05 2.65.13.17 1.79 2.83 4.44 3.86 2.2.86 2.65.69 3.13.65.48-.05 1.55-.63 1.77-1.24.22-.61.22-1.14.15-1.25-.06-.11-.24-.17-.5-.3-.26-.13-1.55-.77-1.79-.85-.24-.09-.41-.13-.59.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.41-2.1-1.3a7.9 7.9 0 0 1-1.46-1.8c-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.42-.8-1.94-.21-.5-.42-.44-.58-.44h-.5Z"/></svg>' +
+      '<span>WhatsApp</span>';
+    document.body.appendChild(a);
+    // de mobiele contactbalk (en de eigen balk van de homepage) hetzelfde bericht meegeven
+    document.querySelectorAll('.smcta a[href^="https://wa.me/"]').forEach(function (l) {
+      if (l.href.indexOf('?') === -1) l.href = l.href + '?text=' + encodeURIComponent(tekst);
+    });
   });
 })();

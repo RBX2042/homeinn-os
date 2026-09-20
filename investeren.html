@@ -26,9 +26,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919r">
-  <link rel="stylesheet" href="tokens.css?v=20260919r">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919r">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260920d">
+  <link rel="stylesheet" href="tokens.css?v=20260920d">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260920d">
   <style>
     .iv-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .iv-top .brand img{height:34px;width:auto;display:block}
@@ -197,16 +197,16 @@
         <div class="iv-calc rv" id="rekenvoorbeeld">
           <div class="iv-calc-head"><span class="t-eyebrow">Rekenvoorbeeld</span><h3>Wat zou <em>uw inleg</em> kunnen opleveren?</h3><p>Indicatief, op basis van het streefrendement van 7% per jaar. Het werkelijke rendement wordt per project vastgelegd en is niet gegarandeerd.</p></div>
           <div class="iv-calc-body">
-            <label class="iv-calc-lbl" for="ivc-inleg">Inleg <output for="ivc-inleg" id="ivc-inleg-out">€ 50.000</output></label>
-            <input type="range" id="ivc-inleg" min="10000" max="500000" step="5000" value="50000" aria-describedby="ivc-note">
+            <label class="iv-calc-lbl" for="ivc-inleg">Inleg <output for="ivc-inleg" id="ivc-inleg-out">€ 100.000</output></label>
+            <input type="range" id="ivc-inleg" min="100000" max="1000000" step="10000" value="100000" aria-describedby="ivc-note">
             <label class="iv-calc-lbl" for="ivc-jaren">Looptijd <output for="ivc-jaren" id="ivc-jaren-out">1 jaar</output></label>
             <input type="range" id="ivc-jaren" min="1" max="3" step="1" value="1" aria-describedby="ivc-note">
             <div class="iv-calc-res">
-              <div><span class="iv-calc-k">Indicatief rendement</span><strong id="ivc-rend">€ 3.500</strong></div>
-              <div><span class="iv-calc-k">Uitkering aan het einde</span><strong id="ivc-tot">€ 53.500</strong></div>
+              <div><span class="iv-calc-k">Indicatief rendement</span><strong id="ivc-rend">€ 7.000</strong></div>
+              <div><span class="iv-calc-k">Uitkering aan het einde</span><strong id="ivc-tot">€ 107.000</strong></div>
             </div>
             <a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
-            <p class="iv-calc-note" id="ivc-note">Rekenvoorbeeld zonder rente-op-rente, vóór belasting. Beleggen brengt risico's mee: uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
+            <p class="iv-calc-note" id="ivc-note">Deelname is uitsluitend mogelijk voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. Rekenvoorbeeld zonder rente-op-rente, vóór belasting. Beleggen brengt risico's mee: uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
           </div>
         </div>
         <div class="pf-foot">
@@ -265,7 +265,7 @@
             <li>Voortgangsupdates per e-mail, uitkering via de notaris</li>
             <li>Reactie binnen vier uur op werkdagen</li>
           </ul>
-          <p class="iv-form-bel">Liever direct bellen? <a href="tel:+31633322257">+31 6 33 32 22 57</a></p>
+          <p class="iv-form-bel">Liever appen of bellen? <a href="https://wa.me/31633322257?text=Hallo%20HomeINN%2C%20ik%20ontvang%20graag%20de%20projectinformatie%20voor%20investeerders." target="_blank" rel="noopener">WhatsApp</a> of <a href="tel:+31633322257">+31 6 33 32 22 57</a></p>
         </div>
 
         <div class="cf" id="iv-form-box">
@@ -283,12 +283,10 @@
             <div class="cf-2col">
               <div class="cf-group"><label for="iv-bedrag">Bedrag dat u wilt inleggen</label><select id="iv-bedrag" name="invest_amount">
                 <option>Nog niet bepaald</option>
-                <option>Tot € 25.000</option>
-                <option>€ 25.000 – € 50.000</option>
-                <option>€ 50.000 – € 100.000</option>
                 <option>€ 100.000 – € 250.000</option>
-                <option>Meer dan € 250.000</option>
-              </select></div>
+                <option>€ 250.000 – € 500.000</option>
+                <option>Meer dan € 500.000</option>
+              </select><small class="cf-hint">Minimale deelname € 100.000 ineens.</small></div>
               <div class="cf-group"><label for="iv-looptijd">Gewenste looptijd</label><select id="iv-looptijd" name="invest_term">
                 <option>Eén jaar</option>
                 <option>Eén tot twee jaar</option>
@@ -361,9 +359,9 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Investeren in Rotterdams vastgoed — HomeINN","url":"https://homeinn.nl/investeren.html","inLanguage":"nl-NL","about":"Particulier meedoen in vastgoedprojecten","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-<script src="lead-cloud.js?v=20260919r" defer></script>
-<script src="site-nav.js?v=20260919r"></script>
-<script src="investeer-tools.js?v=20260919r" defer></script>
+<script src="lead-cloud.js?v=20260920d" defer></script>
+<script src="site-nav.js?v=20260920d"></script>
+<script src="investeer-tools.js?v=20260920d" defer></script>
 <script>
 /* Investeerdersaanvraag — eigen leadtype, zodat deze aanvragen in de inbox
    herkenbaar los staan van verkoop- en beheeraanvragen. */

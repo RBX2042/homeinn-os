@@ -26,9 +26,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260919r">
-  <link rel="stylesheet" href="tokens.css?v=20260919r">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260919r">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260920d">
+  <link rel="stylesheet" href="tokens.css?v=20260920d">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260920d">
   <style>
     .iv-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .iv-top .brand img{height:34px;width:auto;display:block}
@@ -197,16 +197,16 @@
         <div class="iv-calc rv" id="rekenvoorbeeld">
           <div class="iv-calc-head"><span class="t-eyebrow">Worked example</span><h3>What could <em>your deposit</em> return?</h3><p>Indicative, based on the target return of 7% per year. The actual return is fixed per project and is not guaranteed.</p></div>
           <div class="iv-calc-body">
-            <label class="iv-calc-lbl" for="ivc-inleg">Deposit <output for="ivc-inleg" id="ivc-inleg-out">€50,000</output></label>
-            <input type="range" id="ivc-inleg" min="10000" max="500000" step="5000" value="50000" aria-describedby="ivc-note">
+            <label class="iv-calc-lbl" for="ivc-inleg">Deposit <output for="ivc-inleg" id="ivc-inleg-out">€100,000</output></label>
+            <input type="range" id="ivc-inleg" min="100000" max="1000000" step="10000" value="100000" aria-describedby="ivc-note">
             <label class="iv-calc-lbl" for="ivc-jaren">Term <output for="ivc-jaren" id="ivc-jaren-out">1 year</output></label>
             <input type="range" id="ivc-jaren" min="1" max="3" step="1" value="1" aria-describedby="ivc-note">
             <div class="iv-calc-res">
-              <div><span class="iv-calc-k">Indicative return</span><strong id="ivc-rend">€3,500</strong></div>
-              <div><span class="iv-calc-k">Payout at the end</span><strong id="ivc-tot">€53,500</strong></div>
+              <div><span class="iv-calc-k">Indicative return</span><strong id="ivc-rend">€7,000</strong></div>
+              <div><span class="iv-calc-k">Payout at the end</span><strong id="ivc-tot">€107,000</strong></div>
             </div>
             <a class="btn btn-primary" href="#meedoen">Request the project information <span class="arr">→</span></a>
-            <p class="iv-calc-note" id="ivc-note">Worked example without compounding, before tax. Investing involves risk: your deposit may be lost in whole or in part.</p>
+            <p class="iv-calc-note" id="ivc-note">Participation is open to professional market parties only: from €100,000 in a single amount per participant. Worked example without compounding, before tax. Investing involves risk: your deposit may be lost in whole or in part.</p>
           </div>
         </div>
         <div class="pf-foot">
@@ -267,7 +267,7 @@
             <li>Progress updates by e-mail, payout via the civil-law notary</li>
             <li>Reply within four hours on working days</li>
           </ul>
-          <p class="iv-form-bel">Prefer to call? <a href="tel:+31633322257">+31 6 33 32 22 57</a></p>
+          <p class="iv-form-bel">Prefer WhatsApp or a call? <a href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20to%20receive%20the%20project%20information%20for%20investors." target="_blank" rel="noopener">WhatsApp</a> or <a href="tel:+31633322257">+31 6 33 32 22 57</a></p>
         </div>
 
         <div class="cf" id="iv-form-box">
@@ -286,12 +286,10 @@
             <div class="cf-2col">
               <div class="cf-group"><label for="iv-bedrag">Amount you wish to invest</label><select id="iv-bedrag" name="invest_amount">
                 <option>Not yet decided</option>
-                <option>Up to €25,000</option>
-                <option>€25,000 – €50,000</option>
-                <option>€50,000 – €100,000</option>
                 <option>€100,000 – €250,000</option>
-                <option>More than €250,000</option>
-              </select></div>
+                <option>€250,000 – €500,000</option>
+                <option>More than €500,000</option>
+              </select><small class="cf-hint">Minimum participation €100,000 in a single amount.</small></div>
               <div class="cf-group"><label for="iv-looptijd">Preferred term</label><select id="iv-looptijd" name="invest_term">
                 <option>One year</option>
                 <option>One to two years</option>
@@ -364,9 +362,9 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Investing in Rotterdam property — HomeINN","url":"https://homeinn.nl/invest-en.html","inLanguage":"en","about":"Private participation in property projects","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-<script src="lead-cloud.js?v=20260919r" defer></script>
-<script src="site-nav.js?v=20260919r"></script>
-<script src="investeer-tools.js?v=20260919r" defer></script>
+<script src="lead-cloud.js?v=20260920d" defer></script>
+<script src="site-nav.js?v=20260920d"></script>
+<script src="investeer-tools.js?v=20260920d" defer></script>
 <script>
 /* Investor enquiry — its own lead type, so these requests stand apart from
    sales and management enquiries in the inbox. */
