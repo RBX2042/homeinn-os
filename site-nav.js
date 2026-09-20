@@ -362,8 +362,17 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       return;
     }
+    // Alleen een EIGEN pagina mag als terugweg in de balk komen. Zonder deze
+    // controle kan een externe site die naar ons linkt vanaf een URL met
+    // '-en.html' erin de bezoeker via onze eigen balk terugsturen naar zichzelf.
+    var eigenRef = (function () {
+      try {
+        var u = new URL(document.referrer, location.href);
+        return u.origin === location.origin && /-en\.html/.test(u.pathname) ? u.pathname + u.search : '';
+      } catch (e) { return ''; }
+    })();
     var q = new URLSearchParams(location.search);
-    var vanEN = /-en\.html/.test(document.referrer) || q.get('lang') === 'en' || (onthouden() === 'en' && !document.referrer);
+    var vanEN = !!eigenRef || q.get('lang') === 'en' || (onthouden() === 'en' && !document.referrer);
     if (q.get('lang') === 'nl') { onthoud('nl'); vanEN = false; }
     if (!vanEN) return;
     var sw = document.querySelector('.lang-sw');
@@ -372,8 +381,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var isHome = /\/(index\.html|homeinn-public\.html)?$/.test(location.pathname);
     var twin = sw && (isHome || !/index-en\.html$/.test(sw.getAttribute('href') || '')) ? sw.getAttribute('href') : null;
     // Kwam de bezoeker via de NL-schakelaar van de Engelse tweeling? Dan is Nederlands een bewuste keuze.
-    if (twin && document.referrer.indexOf(twin.replace(/^\.\//, '')) > -1) { onthoud('nl'); return; }
-    var terug = twin ? twin : (/-en\.html/.test(document.referrer) ? document.referrer : 'index-en.html');
+    if (twin && eigenRef && eigenRef.indexOf(twin.replace(/^\.\//, '')) > -1) { onthoud('nl'); return; }
+    var terug = twin ? twin : (eigenRef || 'index-en.html');
     var tekst = twin ? 'This page is also available in English.' : 'This page is only available in Dutch.';
     var knop = twin ? 'View in English \u2192' : 'Back to English \u2192';
     var bar = document.createElement('div');

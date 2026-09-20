@@ -2641,7 +2641,7 @@ body .eyebrow,body .step-count,body .ac-lbl{font-size:max(.75rem,12px)}
 .nl-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;padding:.7rem 3rem .7rem 1rem;background:var(--gold);color:var(--navy);font-size:.9rem;box-shadow:0 -6px 24px -12px rgba(0,0,0,.5)}
 .nl-bar a{color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
 .nl-bar-x{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;color:var(--navy);font-size:1.5rem;cursor:pointer}
-body:has(.nl-bar) .float-cta{bottom:4.5rem}
+body:has(.nl-bar) .float-cta{bottom:5.25rem}
 
 /* eindaudit 19 sep: artikelmeta 4,2:1 op crème → ink3 */
 .art-meta,.kn-meta{color:var(--ink3)}
@@ -2660,6 +2660,9 @@ body:has(.nl-bar) .float-cta{bottom:4.5rem}
   .smcta-auto .smcta-call{flex:0 0 36%}
   body.has-smcta{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
   body.has-smcta .nl-bar{bottom:calc(64px + env(safe-area-inset-bottom))}
+  /* De homepage heeft een eigen .smcta (zonder .has-smcta op body): ook dan moet de
+     Engelse taalbalk omhoog, anders schuift de CTA-balk er volledig overheen. */
+  body.smcta-on .nl-bar{bottom:calc(64px + env(safe-area-inset-bottom))}
 }
 
 /* WhatsApp-knop rechtsonder (site-nav.js) — alleen boven de mobiele contactbalk,
@@ -2678,6 +2681,14 @@ body:has(.nl-bar) .float-cta{bottom:4.5rem}
   body.no-scroll .wa-fab{display:none}
 }
 @media(prefers-reduced-motion:reduce){.wa-fab{transition:none}.wa-fab:hover{transform:none}}
+
+/* De homepage heeft rechtsonder al de 'Investeer mee'-pil (.float-cta, vanaf 961px).
+   De WhatsApp-knop stapelt daar netjes bovenop in plaats van eroverheen: zelfde
+   rechtermarge als de pil, en een regel hoger. */
+@media(min-width:961px){
+  body:has(.float-cta) .wa-fab{right:clamp(1rem,2.5vw,2.5rem);bottom:calc(clamp(1rem,2.5vw,2.5rem) + 3.6rem)}
+  body:has(.nl-bar):has(.float-cta) .wa-fab{bottom:calc(5.25rem + 3.6rem)}
+}
 
 /* Mobiele taalschakelaar naast de themaknop (kloon uit site-nav.js) */
 :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m,.lang-sw--m{display:none}
