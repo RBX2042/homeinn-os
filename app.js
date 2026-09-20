@@ -744,7 +744,7 @@ function setView(view, kind = null, id = null) {
   if (kind) detailId[kind] = id;
   document.body.classList.toggle('public-mode', view === 'landing');
   $$('.view').forEach(el => el.classList.toggle('active', el.id === view));
-  $$('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.view === view));
+  $$('.nav-item[data-view]').forEach(el => el.classList.toggle('active', el.dataset.view === view));
   $('#view-title').textContent = VIEWS[view];
   const action = PRIMARY_ACTIONS[view];
   $('#primary-action').style.display = action ? '' : 'none';
@@ -5264,7 +5264,7 @@ document.addEventListener('submit', event => {
 
 /* ---------- Statische listeners ---------- */
 function initStatic() {
-  $$('.nav-item').forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.view)));
+  $$('.nav-item[data-view]').forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.view)));
   $$('[data-view-jump]').forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.viewJump)));
   $('#back-to-app').addEventListener('click', () => setView('dashboard'));
   window.addEventListener('hashchange', applyHash);

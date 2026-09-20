@@ -36,6 +36,7 @@ cp kopers.html kopers.js website-online/ 2>/dev/null || true
 cp verkoper.html verkoper.js website-online/ 2>/dev/null || true
 # Beheerportaal (back-end) meeleveren zodat de login-router werkt
 cp portaal.html app.js styles.css cloud.js website-online/ 2>/dev/null || true
+cp admin.html admin.js website-online/ 2>/dev/null || true   # adminpaneel (cloudoverzicht: leads, e-maillog, rollen, systeemstatus)
 cp portefeuille.json investeer-tools.js website-online/ 2>/dev/null || true # investeerderstools (investeren.html + invest-en.html)
 cp aanbod.json website-online/ 2>/dev/null || echo '{"bijgewerkt":"","aanbod":[],"tehuur":[],"projecten":[],"verkocht":[]}' > website-online/aanbod.json
 # Funda/Pararius woningfeeds (regenereren via portaal → Verkoop → "Funda/Pararius-feed")

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>HomeINN Admin | Centraal overzicht</title>
+  <meta name="description" content="Adminpaneel van HomeINN: alle cloudgegevens, aanvragen en e-mail op één plek.">
+  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <meta name="theme-color" content="#0f1b2d">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260920a">
+  <link rel="stylesheet" href="tokens.css?v=20260920a">
+  <link rel="stylesheet" href="styles.css?v=20260920a">
+  <style>
+    /* — Adminpaneel: alleen wat de OS-stylesheet nog niet biedt — */
+    .gate { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: var(--navy); }
+    .gate-card { width: min(420px, 100%); background: #fff; border-radius: var(--radius-lg); padding: 32px; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+    .gate-card h1 { margin: 0 0 6px; font-size: var(--text-xl); }
+    .gate-card p { margin: 0 0 18px; color: var(--muted); font-size: var(--text-sm); }
+    .gate-card input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-md); font: inherit; margin-bottom: 12px; }
+    .gate-msg { margin-top: 14px; font-size: var(--text-sm); }
+    .gate-msg.err { color: #b3261e; }
+    .adm-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+    .adm-filters input, .adm-filters select, .adm-filters textarea { padding: 9px 12px; border: 1px solid var(--line); border-radius: var(--radius-md); font: inherit; font-size: var(--text-sm); }
+    .adm-filters input[type="search"] { min-width: 240px; }
+    .adm-detail { background: var(--surface-2, #f7f8fa); border-radius: var(--radius-md); padding: 14px; white-space: pre-wrap; font-size: var(--text-sm); }
+    .adm-health { display: grid; gap: 10px; }
+    .adm-health div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: var(--text-sm); }
+    .adm-health div:last-child { border-bottom: 0; }
+    .mail-form { display: grid; gap: 10px; max-width: 640px; }
+    .mail-form textarea { min-height: 140px; }
+    td.wrapcell { max-width: 380px; white-space: normal; }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#app">Naar de inhoud</a>
+
+<!-- ===== Inlogscherm (staff-only) ===== -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <h1>HomeINN Admin</h1>
+    <p>Alleen voor eigenaar- en teamaccounts. Je ontvangt een inloglink per e-mail.</p>
+    <input id="gate-email" type="email" placeholder="jouw@homeinn.nl" autocomplete="email">
+    <button class="btn primary" id="gate-send" style="width:100%">Stuur inloglink</button>
+    <p class="gate-msg" id="gate-msg"></p>
+    <p style="margin-top:18px"><a href="portaal.html" style="font-size:var(--text-sm)">← Naar HomeINN OS</a></p>
+  </div>
+</div>
+
+<!-- ===== Paneel ===== -->
+<aside class="sidebar" id="shell-nav" hidden>
+  <a class="brand" href="#overzicht" aria-label="HomeINN Admin">
+    <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="400" height="87" decoding="async">
+    <span>Admin</span>
+  </a>
+  <nav class="side-nav" aria-label="Hoofdnavigatie">
+    <p class="nav-group">Overzicht</p>
+    <button class="nav-item active" data-view="overzicht">Dashboard</button>
+    <button class="nav-item" data-view="leads">Aanvragen</button>
+    <p class="nav-group">Communicatie</p>
+    <button class="nav-item" data-view="email">E-maillog</button>
+    <button class="nav-item" data-view="versturen">Mail versturen</button>
+    <p class="nav-group">Vastgoed</p>
+    <button class="nav-item" data-view="panden">Panden</button>
+    <button class="nav-item" data-view="projecten">Projecten</button>
+    <button class="nav-item" data-view="onderhoud">Onderhoud</button>
+    <p class="nav-group">Geld</p>
+    <button class="nav-item" data-view="investeerders">Investeerders</button>
+    <button class="nav-item" data-view="financieel">Financieel</button>
+    <button class="nav-item" data-view="contracten">Contracten</button>
+    <p class="nav-group">Beheer</p>
+    <button class="nav-item" data-view="gebruikers">Gebruikers</button>
+    <button class="nav-item" data-view="systeem">Systeem</button>
+  </nav>
+  <div class="sidebar-card">
+    <span class="mini-label">Ingelogd als</span>
+    <strong id="me-email">—</strong>
+    <p id="me-role">—</p>
+  </div>
+</aside>
+
+<main class="app-shell" id="app" hidden>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">HomeINN Adminpaneel</p>
+      <h1 id="view-title">Dashboard</h1>
+    </div>
+    <div class="top-actions">
+      <button class="btn secondary" id="refresh-btn">Vernieuwen</button>
+      <a class="btn secondary" href="portaal.html">HomeINN OS</a>
+      <button class="btn primary" id="signout-btn">Uitloggen</button>
+    </div>
+  </header>
+
+  <section class="view active" id="overzicht">
+    <div class="kpi-grid six" id="kpis"></div>
+    <div class="panel">
+      <div class="panel-head"><div><h2>Laatste aanvragen</h2><p>De vijf meest recente aanvragen van de website.</p></div></div>
+      <div id="recent-leads"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h2>Laatste e-mail</h2><p>De vijf meest recente verzendingen via Resend.</p></div></div>
+      <div id="recent-mail"></div>
+    </div>
+  </section>
+
+  <section class="view" id="leads">
+    <div class="panel">
+      <div class="panel-head"><div><h2>Aanvragen via de website</h2><p>Alles wat via een formulier binnenkomt, inclusief status en notitie. Elke nieuwe aanvraag stuurt automatisch een intern alarm én een bevestiging naar de aanvrager.</p></div></div>
+      <div class="adm-filters">
+        <input type="search" id="lead-q" placeholder="Zoek op naam, e-mail, bericht…">
+        <select id="lead-status"><option value="">Alle statussen</option><option>nieuw</option><option>in behandeling</option><option>afgerond</option><option>geen interesse</option></select>
+        <select id="lead-type"><option value="">Alle typen</option></select>
+        <button class="btn secondary slim" id="lead-export">Exporteer CSV</button>
+      </div>
+      <div id="leads-table"></div>
+    </div>
+  </section>
+
+  <section class="view" id="email">
+    <div class="panel">
+      <div class="panel-head"><div><h2>E-maillogboek</h2><p>Elke mail die HomeINN via Resend verstuurt, met status en eventuele foutmelding.</p></div></div>
+      <div class="adm-filters">
+        <input type="search" id="mail-q" placeholder="Zoek op adres of onderwerp…">
+        <select id="mail-status"><option value="">Alle statussen</option><option>verzonden</option><option>mislukt</option><option>overgeslagen</option></select>
+      </div>
+      <div id="email-table"></div>
+    </div>
+  </section>
+
+  <section class="view" id="versturen">
+    <div class="panel">
+      <div class="panel-head"><div><h2>Losse mail</h2><p>Verstuurt via de <code>notify</code>-functie; komt in het logboek te staan.</p></div></div>
+      <div class="mail-form">
+        <input type="email" id="one-to" placeholder="Aan (e-mailadres)">
+        <input type="text" id="one-subject" placeholder="Onderwerp">
+        <textarea id="one-body" placeholder="Bericht (HTML mag)"></textarea>
+        <div><button class="btn primary" id="one-send">Versturen</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h2>Nieuwsbrief</h2><p>Verstuurt per ontvanger apart (privacy). Maximaal 500 adressen per keer.</p></div></div>
+      <div class="mail-form">
+        <div class="adm-filters">
+          <button class="btn secondary slim" data-fill="leads">Vul met aanvragers</button>
+          <button class="btn secondary slim" data-fill="investeerders">Vul met investeerders</button>
+          <button class="btn secondary slim" data-fill="gebruikers">Vul met gebruikers</button>
+        </div>
+        <textarea id="bulk-to" placeholder="Ontvangers, gescheiden door komma of nieuwe regel"></textarea>
+        <input type="text" id="bulk-subject" placeholder="Onderwerp">
+        <textarea id="bulk-body" placeholder="Bericht (HTML mag)"></textarea>
+        <div><button class="btn primary" id="bulk-send">Nieuwsbrief versturen</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="panden"><div class="panel"><div class="panel-head"><div><h2>Panden</h2><p>Alle panden zoals gesynchroniseerd vanuit HomeINN OS.</p></div></div><div id="panden-table"></div></div></section>
+  <section class="view" id="projecten"><div class="panel"><div class="panel-head"><div><h2>Ontwikkelprojecten</h2><p>Projecten, status en publicatie op de website.</p></div></div><div id="projecten-table"></div></div></section>
+  <section class="view" id="onderhoud"><div class="panel"><div class="panel-head"><div><h2>Onderhoudsmeldingen</h2><p>Meldingen van huurders; status is direct aanpasbaar.</p></div></div><div id="onderhoud-table"></div></div></section>
+  <section class="view" id="investeerders"><div class="panel"><div class="panel-head"><div><h2>Investeerders</h2><p>Inleg per project, inclusief WWFT-vinkje en uitkeringen.</p></div></div><div id="investeerders-table"></div></div></section>
+
+  <section class="view" id="financieel">
+    <div class="kpi-grid three" id="fin-kpis"></div>
+    <div class="panel"><div class="panel-head"><div><h2>Facturen</h2></div></div><div id="facturen-table"></div></div>
+    <div class="panel"><div class="panel-head"><div><h2>Kosten</h2></div></div><div id="kosten-table"></div></div>
+    <div class="panel"><div class="panel-head"><div><h2>Financieringen</h2></div></div><div id="leningen-table"></div></div>
+  </section>
+
+  <section class="view" id="contracten"><div class="panel"><div class="panel-head"><div><h2>Contracten</h2><p>Verstuurde stukken en hun ondertekenstatus.</p></div></div><div id="contracten-table"></div></div></section>
+
+  <section class="view" id="gebruikers"><div class="panel"><div class="panel-head"><div><h2>Gebruikers &amp; rollen</h2><p>Wie heeft toegang tot welk portaal. Een rolwijziging geldt direct.</p></div></div><div id="gebruikers-table"></div></div></section>
+
+  <section class="view" id="systeem">
+    <div class="panel">
+      <div class="panel-head"><div><h2>Systeemstatus</h2><p>Werkt de cloud, staat Resend aan, en wanneer is er voor het laatst gesynchroniseerd?</p></div></div>
+      <div class="adm-health" id="health"></div>
+      <div class="adm-filters" style="margin-top:16px">
+        <button class="btn secondary" id="test-mail">Stuur testmail naar mezelf</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h2>Rijentelling</h2><p>Aantal records per cloudtabel.</p></div></div>
+      <div id="counts-table"></div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js?v=20260920a"></script>
+</body>
+</html>
