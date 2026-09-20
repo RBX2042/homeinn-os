@@ -18,6 +18,8 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS'
 }
 
+const geldigAdres = (a: unknown) => /^[^\s@,;<>"]+@[^\s@,;<>"]+\.[a-z]{2,}$/i.test(String(a || ''))
+
 const esc = (s: unknown) =>
   String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 
@@ -80,6 +82,18 @@ Deno.serve(async (req: Request) => {
     // meteen markeren: voorkomt dubbele mail bij een herhaalde aanroep
     await admin.from('hios_leads').update({ notified_at: new Date().toISOString() }).eq('id', lead_id)
 
+    // Anti-misbruik: hios_leads staat open voor anon (dat moet, de website vult hem),
+    // dus zonder rem zou iemand ons kunnen gebruiken om een willekeurig adres te
+    // bestoken met bevestigingsmails. De database begrenst al het aantal inzendingen
+    // per uur (hios_lead_rate_ok); hier begrenzen we het per ONTVANGER.
+    async function magNaar(adres: string) {
+      const { count } = await admin.from('hios_emails')
+        .select('id', { count: 'exact', head: true })
+        .eq('to_email', adres)
+        .gte('created_at', new Date(Date.now() - 86400000).toISOString())
+      return (count || 0) < 5
+    }
+
     const key = Deno.env.get('RESEND_API_KEY')
     const from = Deno.env.get('FROM_EMAIL') || 'HomeINN <onboarding@resend.dev>'
     const operator = Deno.env.get('OPERATOR_EMAIL') || 'info@homeinn.nl'
@@ -96,7 +110,7 @@ Deno.serve(async (req: Request) => {
         const r = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ from, to, subject, html, reply_to: kind === 'lead-alert' && lead.email ? lead.email : undefined })
+          body: JSON.stringify({ from, to, subject, html, reply_to: kind === 'lead-alert' && geldigAdres(lead.email) ? lead.email : undefined })
         })
         const out = await r.json().catch(() => ({}))
         await admin.from('hios_emails').insert({
@@ -115,7 +129,9 @@ Deno.serve(async (req: Request) => {
       `Nieuwe aanvraag: ${lead.type || 'Contact'}${lead.name ? ' — ' + lead.name : ''}`,
       internHtml(lead, adminUrl))
 
-    if (lead.email && /@/.test(lead.email)) {
+    // Strikte adrescontrole: geen bevestiging naar iets dat niet als e-mailadres leest.
+    const geldig = geldigAdres(lead.email)
+    if (geldig && await magNaar(lead.email)) {
       await verstuur('lead-bevestiging', lead.email,
         en ? 'We received your request — HomeINN' : 'Wij hebben uw aanvraag ontvangen — HomeINN',
         bevestigingHtml(lead, en))

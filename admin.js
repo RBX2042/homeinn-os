@@ -91,7 +91,10 @@
     });
     $('#gate-email').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('#gate-send').click(); });
 
-    c.auth.onAuthStateChange(function () { controleer(); });
+    c.auth.onAuthStateChange(function (event) {
+      if (event === 'SIGNED_OUT') { toonGate(); return; }
+      controleer();
+    });
     await controleer();
   }
 
@@ -117,6 +120,13 @@
   }
 
   function toonGate() {
+    // Sluit de poort én gooi alles weg wat al getekend was: na uitloggen of bij een
+    // verlopen sessie mag er geen enkele rij meer in de DOM achterblijven.
+    me = null;
+    Object.keys(data).forEach(function (k) { data[k] = Array.isArray(data[k]) ? [] : null; });
+    $$('#app .panel div[id], #app .kpi-grid, #app .adm-health').forEach(function (el) { el.innerHTML = ''; });
+    $('#me-email').textContent = '—';
+    $('#me-role').textContent = '—';
     $('#gate').hidden = false;
     $('#shell-nav').hidden = true;
     $('#app').hidden = true;
@@ -437,7 +447,11 @@
     }
 
     $('#refresh-btn').addEventListener('click', function () { laadAlles().then(function () { toast('Bijgewerkt.'); }); });
-    $('#signout-btn').addEventListener('click', async function () { await client().auth.signOut(); location.reload(); });
+    $('#signout-btn').addEventListener('click', async function () {
+      await client().auth.signOut();
+      toonGate();
+      location.replace(location.pathname);   // harde herstart: geen resten in geheugen of hash
+    });
 
     ['#lead-q', '#lead-status', '#lead-type'].forEach(function (s) {
       $(s).addEventListener('input', tekenLeads);

@@ -73,3 +73,36 @@ Adminpaneel → Systeem → *Stuur testmail naar mezelf*. Daarna E-maillog bekij
 De publieke formulieren mailen nog via FormSubmit naar `info@homeinn.nl`. Zodra Resend
 draait, ontvang je die melding dubbel. FormSubmit kan dan uit de formulieren; doe dat pas
 nadat je in het E-maillog hebt gezien dat `lead-alert` er betrouwbaar doorkomt.
+
+## 4. Beveiliging
+
+Wat er tijdens de oplevering is gerepareerd en hoe het nu dichtzit:
+
+- **Het scherm ging niet dicht.** `.sidebar` en `.gate` krijgen in `styles.css` een
+  eigen `display`-waarde, en zo'n author-regel wint van het `hidden`-attribuut: het
+  paneel bleef zichtbaar zonder inlog. Opgelost met `[hidden] { display:none !important }`
+  in `admin.html`; die regel moet blijven staan. De gegevens zelf waren altijd al
+  afgeschermd door RLS — een niet-ingelogde bezoeker kreeg overal lege lijsten terug.
+- **Rechtenescalatie (kritiek, bestond al vóór het adminpaneel).** De policy
+  `profiel: eigen update` had geen `WITH CHECK`, waardoor elke ingelogde gebruiker
+  `update hios_profiles set role='eigenaar'` op zijn eigen rij kon doen en daarmee
+  staff werd. Nu bewaakt de trigger `hios_profiles_guard` dat niet-staf alleen de
+  eigen naam wijzigt; `id`, `email`, `role` en `active` worden teruggezet. Getest:
+  de rolwijziging wordt genegeerd, de naamswijziging gaat door.
+- **Mailrelay-misbruik.** `hios_leads` staat open voor anonieme inserts (de website
+  vult hem), en sinds de trigger betekent elke rij uitgaande mail. Twee remmen:
+  maximaal 40 inzendingen per uur (`hios_lead_rate_ok`, in de insert-policy) en
+  maximaal vijf mails per etmaal naar hetzelfde adres (in `lead-notify`). Alleen
+  adressen die de strikte controle doorstaan krijgen een bevestiging.
+- **Uitloggen** wist nu de hele DOM en herlaadt de pagina; een verlopen sessie sluit
+  de poort meteen.
+- Gecontroleerd en in orde: alle `hios_*`-tabellen leveren anoniem lege lijsten,
+  de storage-bucket `onderhoud` is privé met een map-per-gebruiker-policy, en alle
+  waarden uit de database worden ge-escaped voordat ze in het paneel of in een
+  mail terechtkomen.
+
+### Nog open: het Resend-domein
+De API-sleutel werkt, maar Resend weigert met *"The homeinn.nl domain is not
+verified"*. Voeg `homeinn.nl` toe op https://resend.com/domains, zet de getoonde
+DKIM- en SPF-records in de DNS bij Hostnet en verifieer. Tot die tijd komt er geen
+mail aan; elke poging staat wel in het e-maillog met de foutmelding erbij.

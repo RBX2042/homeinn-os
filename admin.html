@@ -13,7 +13,16 @@
   <link rel="stylesheet" href="styles.css?v=20260920a">
   <style>
     /* — Adminpaneel: alleen wat de OS-stylesheet nog niet biedt — */
-    .gate { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: var(--navy); }
+
+    /* LET OP — niet weghalen. styles.css geeft .sidebar (display:flex) en .gate
+       (display:grid) een eigen display-waarde, en een author-regel wint van het
+       UA-gedrag van [hidden]. Zonder deze regel bleef de hele shell zichtbaar voor
+       iemand die niet was ingelogd. De data zelf is altijd door RLS beschermd,
+       maar het scherm hoort dicht te zijn. */
+    [hidden] { display: none !important; }
+
+    /* De poort dekt de pagina volledig af, ook als er onder al iets is getekend. */
+    .gate { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 24px; background: var(--navy); overflow-y: auto; }
     .gate-card { width: min(420px, 100%); background: #fff; border-radius: var(--radius-lg); padding: 32px; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
     .gate-card h1 { margin: 0 0 6px; font-size: var(--text-xl); }
     .gate-card p { margin: 0 0 18px; color: var(--muted); font-size: var(--text-sm); }

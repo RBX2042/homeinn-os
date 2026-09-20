@@ -41,3 +41,43 @@ revoke execute on function public.hios_lead_notify() from anon, authenticated;
 drop trigger if exists hios_leads_notify on public.hios_leads;
 create trigger hios_leads_notify after insert on public.hios_leads
   for each row execute function public.hios_lead_notify();
+
+-- ---------------------------------------------------------------------------
+-- Beveiligingsronde 20 september 2026 (na oplevering van het adminpaneel)
+-- ---------------------------------------------------------------------------
+-- (1) KRITIEK: "profiel: eigen update" had geen WITH CHECK. Een UPDATE-policy
+--     zonder WITH CHECK toetst alleen WELKE rij je raakt, niet WAT je erin zet:
+--     elke ingelogde gebruiker kon zijn eigen role op 'eigenaar' zetten en zo
+--     staff worden. Een WITH CHECK kan de oude waarde niet zien, vandaar de guard.
+create or replace function public.hios_profiles_guard()
+returns trigger language plpgsql security definer set search_path to 'public' as $$
+begin
+  if (select auth.uid()) is null or public.hios_is_staff() then return new; end if;
+  new.id := old.id; new.email := old.email; new.role := old.role; new.active := old.active;
+  return new;
+end; $$;
+revoke execute on function public.hios_profiles_guard() from anon, authenticated;
+drop trigger if exists hios_profiles_guard on public.hios_profiles;
+create trigger hios_profiles_guard before update on public.hios_profiles
+  for each row execute function public.hios_profiles_guard();
+
+drop policy if exists "profiel: eigen update" on public.hios_profiles;
+create policy "profiel: eigen update" on public.hios_profiles
+  for update to authenticated
+  using (id = (select auth.uid())) with check (id = (select auth.uid()));
+
+-- (2) hios_leads is publiek beschrijfbaar (dat moet), maar sinds de mailtrigger
+--     betekent elke insert uitgaande mail. Rem: maximaal 40 inzendingen per uur.
+create or replace function public.hios_lead_rate_ok()
+returns boolean language sql stable security definer set search_path to 'public' as $$
+  select (select count(*) from hios_leads where created_at > now() - interval '1 hour') < 40;
+$$;
+grant execute on function public.hios_lead_rate_ok() to anon, authenticated;
+drop policy if exists "hios_leads: publiek meldt" on public.hios_leads;
+create policy "hios_leads: publiek meldt" on public.hios_leads
+  for insert to anon with check (handled = false and public.hios_lead_rate_ok());
+
+-- (3) e-maillog expliciet alleen voor ingelogde staf (was rol 'public').
+drop policy if exists hios_emails_staff_read on public.hios_emails;
+create policy hios_emails_staff_read on public.hios_emails
+  for select to authenticated using (public.hios_is_staff());
