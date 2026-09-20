@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="272" height="60" viewBox="0 0 272 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="lsLogoHorizTitle">
+  <title id="lsLogoHorizTitle">Lageweg Services</title>
+  <text x="0" y="38" font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="27" font-weight="300" letter-spacing="3" fill="#171412">LAGEWEG</text>
+  <line x1="150" y1="13" x2="150" y2="45" stroke="#E07A2E" stroke-width="1" />
+  <text x="163" y="33" font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="12" font-weight="400" letter-spacing="3" fill="#E07A2E">SERVICES</text>
+</svg>

@@ -35,6 +35,16 @@ verdedigbaar als een koper, investeerder of toezichthouder ernaar vraagt.
 **HomeINN bouwt uitsluitend met Lageweg Services B.V.** Er is geen eigen
 bouwpersoneel. Bevestigd door de eigenaar.
 
+Bedrijfsgegevens van de bouwpartner (overgenomen van lagewegservices.nl,
+gecontroleerd op 20 september 2026): Lageweg Services B.V., aannemersbedrijf in
+Rotterdam en Hoogvliet, Klompenmakerstraat 125, 3194 DD Hoogvliet,
+KvK 92560199, VCA-gecertificeerd. Hun site noemt HomeINN zelf als partner
+(lagewegservices.nl/partner-homeinn) — de vermelding is dus wederzijds.
+Logo en website staan op `projectontwikkeling.html`, `development-en.html`,
+de partnerlijst op de homepage en in de footer van alle pagina's. Het logo is
+hun eigen bestand (`assets/lageweg-services-logo.svg`); wijzigt hun huisstijl,
+dan dit bestand verversen.
+
 De site sprak op elf plekken over een "vast eigen bouwteam" en op twee plekken
 over "onze eigen bouwpartner" — beide onjuist. Alles staat nu op **"onze vaste
 bouwpartner"**, met de naam voluit op `over-ons.html` en

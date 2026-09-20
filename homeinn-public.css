@@ -487,6 +487,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .cf-group input:focus,.cf-group select:focus,.cf-group textarea:focus{border-color:var(--gold);background:var(--white)}
 .cf-group textarea{min-height:110px;resize:vertical}
 .cf-hint{display:block;margin-top:.45rem;font-size:max(.8125rem,13px);font-weight:300;color:var(--ink4);letter-spacing:0;text-transform:none}
+.cf-bevestig{margin:1.25rem 0 1.1rem}
+.cf-check{display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;font-size:max(.875rem,14px);font-weight:300;line-height:1.65;color:var(--ink2);letter-spacing:0;text-transform:none;margin:0}
+.cf-check input[type=checkbox]{flex:0 0 auto;width:20px;height:20px;min-height:0;margin:.15rem 0 0;padding:0;accent-color:var(--gold);cursor:pointer}
+.cf-check input[type=checkbox]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.cf-check span{flex:1}
 .cf-submit{width:100%;padding:14px;background:var(--gold);color:var(--navy);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;transition:background .25s}
 .cf-submit:hover{background:var(--gold2)}
 .hp-field{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
@@ -2680,3 +2685,25 @@ body:has(.nl-bar) .float-cta{bottom:4.5rem}
   :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m{display:inline-flex;position:absolute;right:122px;top:50%;transform:translateY(-50%);margin:0;min-height:44px;min-width:44px;padding:0 8px}
 }
 @media(max-width:600px){ :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m{right:116px} }
+
+/* ===== Bouwpartner-identiteit (logo + website Lageweg Services) ===== */
+.partner-id{margin-top:2rem;border-top:1px solid var(--cream3);padding-top:1.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:1.1rem 2rem}
+.partner-id-logo{display:inline-flex;align-items:center;flex:0 0 auto;transition:opacity .25s ease}
+.partner-id-logo:hover{opacity:.7}
+.partner-id-logo img{display:block;width:190px;height:auto}
+.partner-id-body{flex:1 1 15rem;min-width:0}
+.partner-id-meta{font-size:.74rem;font-weight:400;letter-spacing:.04em;line-height:1.7;color:var(--ink3);margin:0 0 .45rem}
+.partner-id-links{display:flex;flex-wrap:wrap;gap:.35rem 1.4rem;margin:0}
+.partner-id-links a{font-size:.78rem;font-weight:500;color:var(--gold-ink);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:2px}
+.partner-id-links a:hover{color:var(--ink2);border-bottom-color:var(--ink2)}
+@media(max-width:560px){.partner-id{gap:1rem}.partner-id-logo img{width:160px}}
+/* Bouwpartner in de partnerlijst (portefeuille/investeren) */
+.pfx-partner-list a{color:inherit;text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:1px}
+.pfx-partner-list a:hover{color:var(--gold-ink)}
+.pfx-partner-logo{display:block;margin-top:.25rem;width:172px;height:auto;opacity:.85;transition:opacity .25s ease}
+.pfx-partner-logo:hover{opacity:1}
+.pfx-partner-logo-link{display:inline-block}
+.site-foot-partner{margin:.4rem 0 0;font-size:.74rem;font-weight:300;letter-spacing:.04em;color:inherit;opacity:.8;text-align:center}
+.site-foot-partner a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.site-foot-partner a:hover{color:var(--gold)}
+@media(max-width:700px){.site-foot-partner{font-size:.8rem}}
