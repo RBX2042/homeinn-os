@@ -130,6 +130,34 @@ groepsentiteiten wordt dat opgeteld? Onze software houdt alleen een cumulatief t
 
 ---
 
+## 4b. De vijf structuurvarianten die wij overwegen
+
+Wat wij feitelijk willen: geld van derden gebruiken om een pand te kopen en te verbouwen,
+tegen een vooraf afgesproken vergoeding, waarbij HomeINN eigenaar is en het werk doet.
+Economisch is dat vreemd vermogen met een vaste vergoeding. Hieronder de routes die wij
+kennen, met wat elk ervan van ons zou vragen. **Wij vragen u aan te geven welke route bij
+onze situatie haalbaar is, en wat wij per route moeten inrichten.**
+
+| | Route | Wat het betekent | Wat wij dan moeten regelen |
+|---|---|---|---|
+| **A** | Uitsluitend professionele marktpartijen — ≥ € 100.000 ineens per deelnemer (art. 3 lid 2 Besluit definitiebepalingen Wft) | Buiten "het publiek", dus buiten art. 3:5 Wft. Dit hebben wij nu ingericht. | De beperking moet feitelijk kloppen, niet alleen op de site staan: geen enkele deelnemer onder € 100.000, vastlegging per deelnemer, en de vraag of een publiek toegankelijke website hiermee verenigbaar is |
+| **B** | Obligatielening als *effect*, aangeboden onder de prospectusvrijstelling (art. 3:5 lid 2 onder d Wft) | Wij mogen dan ook bedragen onder € 100.000 aantrekken, mits onder de vrijstellingsgrens en met de bijbehorende documenten | Melding vooraf bij de AFM met de elf gegevens (art. 53 lid 3 Vrijstellingsregeling), informatiedocument volgens bijlage A, vrijstellingsvermelding in élke uiting, en bewaking van de grens per rollend twaalfmaandsvenster (€ 12 mln of € 5 mln — zie vraag 4) |
+| **C** | Ophalen via een platform met ECSP-vergunning (art. 24b Vrijstellingsregeling) | Het platform draagt de vergunning en de informatieplichten | Selectie van een platform, kosten en afdracht, en de vraag of onze projectstructuur erin past |
+| **D** | Ontheffing van DNB (art. 3:5 lid 4 Wft) | Maatwerk | Aanvraagtraject; wij weten niet of dit realistisch is voor een partij van onze omvang |
+| **E** | Geen geld lenen maar **mede-eigendom**: de investeerder neemt deel in het pand of in een vennootschap per pand | Geen terugbetalingsverplichting, dus art. 3:5 Wft speelt niet | Maar dan komt de AIFMD in beeld (beleggingsinstelling), plus notariële levering, splitsing van zeggenschap en een uitstapregeling. Ons huidige voordeel — "algemeen bedrijfsdoel, geen collectieve belegging" — kan daarmee juist wegvallen |
+
+Onze voorlopige voorkeur is **A of B**, omdat die het dichtst bij onze huidige werkwijze
+liggen. Wij horen graag of dat juist is, en met name:
+
+- Kunnen wij route A houden terwijl onze website publiek toegankelijk blijft, of moet de
+  werving dan achter een afgeschermde omgeving of buiten de site plaatsvinden?
+- Als route B: wie doet de melding, welk informatiedocument hoort erbij, welke van de drie
+  vrijstellingsvermeldingen, en wat betekent dat voor de reeds gesloten overeenkomsten?
+- Is een combinatie denkbaar — bestaande deelnemers op de huidige voet, nieuwe onder een
+  nieuwe structuur — of maakt dat de positie juist zwakker?
+
+---
+
 ## 5. Wat wij al hebben aangepast (en bewust níét)
 
 **Doorgevoerd op 19 en 20 september 2026:**
