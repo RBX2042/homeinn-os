@@ -3,6 +3,9 @@
 **Opgesteld:** 20 september 2026 · **Opdrachtgever:** HomeINN B.V., Rotterdam
 **Onderwerp:** kwalificatie en toelaatbaarheid van de deelnamestructuur op `homeinn.nl/investeren.html`
 **Bijlage bij dit stuk:** `COMPLIANCE-INVESTEREN.md` (feitenonderzoek 19 september 2026, met bronnen)
+**Tweede bijlage:** `ONDERZOEK-STRUCTUREN-INVESTEREN.md` (praktijkonderzoek 20 september 2026:
+hoe Nederlandse vastgoedpartijen dit inrichten — obligatielening, stichting obligatiehouders,
+prospectusvrijstelling met melding en informatiedocument, ECSP-platform)
 
 > Dit document is geen juridisch advies en is niet door een jurist opgesteld. Het is een
 > overdrachtsdocument: het zet de feiten uit onze eigen website en software op een rij die
@@ -98,6 +101,13 @@ Prospectusverordening; (c) een ECSP-platform; (d) ontheffing van DNB. Wij hebben
 voorlopig ingericht (§ 5) — **is dat houdbaar, gegeven dat de pagina publiek vindbaar is?**
 Is een reikwijdtevraag bij DNB verstandig? En wat betekent dit voor de reeds gesloten
 overeenkomsten?
+
+**3b. De scharniervraag uit ons praktijkonderzoek.** Art. 3:5 lid 2 Wft zondert gelden uit
+die worden verkregen "als gevolg van het aanbieden van effecten". Geldt die uitzondering ook
+wanneer wij een obligatielening uitgeven onder een beroep op de **vrijstelling** van de
+prospectusplicht (dus zonder goedgekeurd prospectus), mits wij vooraf melden, het
+informatiedocument beschikbaar stellen en de vrijstellingsvermelding gebruiken? Daarop staat
+of valt de hele structuur die in Nederland gangbaar is.
 
 **4. Bij effecten — loop het stroomschema van de Beleidsregel verhandelbaarheid af**, met de
 standaardisatie uit § 3 als gegeven. Geldt de grens van € 12 miljoen (art. 3 lid 2
