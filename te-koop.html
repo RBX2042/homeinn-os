@@ -25,9 +25,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260921b">
-  <link rel="stylesheet" href="tokens.css?v=20260921b">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260921b">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260921c">
+  <link rel="stylesheet" href="tokens.css?v=20260921c">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260921c">
   <style>
     .tk-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .tk-top .brand img{height:34px;width:auto;display:block}
@@ -381,7 +381,7 @@
             </div>
             <div class="cf-2col">
               <div class="cf-group"><label for="tk-plaats">Gewenste plaats / wijk</label><input id="tk-plaats" type="text" name="plaats" placeholder="Bijv. Kralingen, Kop van Zuid"></div>
-              <div class="cf-group"><label for="tk-budget">Indicatief budget</label><select id="tk-budget" name="budget"><option>Geen voorkeur</option><option>tot € 300.000</option><option>€ 300.000 – € 450.000</option><option>€ 450.000 – € 600.000</option><option>€ 600.000+</option></select></div>
+              <div class="cf-group"><label for="tk-termijn">Wanneer wilt u verhuizen?</label><select id="tk-termijn" name="termijn"><option>Nog oriënterend</option><option>Zodra het juiste huis er is</option><option>Binnen zes maanden</option><option>Binnen een jaar</option></select></div>
             </div>
             <div class="cf-group"><label for="tk-message">Toelichting (optioneel)</label><textarea id="tk-message" name="message" placeholder="Aantal kamers, gewenste woonoppervlakte, met tuin..."></textarea></div>
             <button class="cf-submit" type="submit">Inschrijven voor het aanbod →</button>
@@ -431,7 +431,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Woningaanbod te koop — HomeINN Rotterdam","url":"https://homeinn.nl/te-koop.html","inLanguage":"nl-NL","about":"Te koop staande woningen in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-  <script src="lead-cloud.js?v=20260921b" defer></script>
+  <script src="lead-cloud.js?v=20260921c" defer></script>
   <script>
   (function(){
     'use strict';
@@ -508,7 +508,7 @@
       if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){ var _v=document.getElementById('tk-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
       var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();
       var knop=form.querySelector('[type=submit]');if(knop){knop.disabled=true;knop.dataset.txt=knop.textContent;knop.textContent='Bezig met verzenden\u2026';}
-      saveLead('Aanbod-interesse',{name:naam,email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),subject:'Inschrijving woningaanbod (te koop)'+(f.get('object')&&f.get('object')!=='Algemeen woningaanbod'?' — '+String(f.get('object')):''),object:String(f.get('object')||'Algemeen woningaanbod'),message:'Gewenste plaats: '+String(f.get('plaats')||'—')+' · Budget: '+String(f.get('budget')||'—')+(f.get('message')?(' · '+String(f.get('message'))):'')}).then(function(geslaagd){
+      saveLead('Aanbod-interesse',{name:naam,email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),subject:'Inschrijving woningaanbod (te koop)'+(f.get('object')&&f.get('object')!=='Algemeen woningaanbod'?' — '+String(f.get('object')):''),object:String(f.get('object')||'Algemeen woningaanbod'),message:'Gewenste plaats: '+String(f.get('plaats')||'—')+' · Termijn: '+String(f.get('termijn')||'—')+(f.get('message')?(' · '+String(f.get('message'))):'')}).then(function(geslaagd){
         if(knop){knop.disabled=false;knop.textContent=knop.dataset.txt;}
         if(!geslaagd){(function(f){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';f.appendChild(p);})(form);return;}
         form.style.display='none';
@@ -533,6 +533,6 @@
   });
 })();
 </script>
-<script src="site-nav.js?v=20260921b"></script>
+<script src="site-nav.js?v=20260921c"></script>
 </body>
 </html>
