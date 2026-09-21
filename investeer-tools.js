@@ -12,12 +12,12 @@
   var EN = (document.documentElement.lang || 'nl').toLowerCase().indexOf('en') === 0;
   var T = EN ? {
     kiezerEyebrow: 'Choose a project', kiezerKop: 'Which property would you like to <em>look at?</em>',
-    kiezerLede: 'Eleven properties, one standard. Select a property to see the figures we publish for it, its phase and the units after splitting.',
+    kiezerLede: 'Eleven properties, one standard. Select a property to see its phase, its homes after splitting and how to request the full figures.',
     kaartNote: 'Schematic map — positions are indicative. Open a location in Google Maps via the property panel.',
-    units: 'Units · indicative value after refurbishment', fase: 'Phase', status: 'Status',
+    units: 'Homes after splitting', fase: 'Phase', status: 'Status',
     fasen: ['Purchase completed', 'Planning & permits', 'Refurbishment with Lageweg Services B.V.', 'Sale or letting'],
     ctaInfo: 'Request the project information for this property', ctaMaps: 'Open in Google Maps',
-    scenarioKop: 'Share this scenario', scenarioLede: 'Your amount, term and chosen property in one link — handy for a partner or adviser. We only see it if you send us the form.',
+    scenarioKop: 'Share this scenario', scenarioLede: 'Your chosen property in one link — handy for a partner or adviser. We only see it if you send us the form.',
     kopieer: 'Copy link', gekopieerd: 'Link copied', scenarioLead: 'Scenario', pand: 'property',
     vglEyebrow: 'Compare', vglKop: 'Buying yourself or <em>taking part?</em>', vglLede: 'Facts side by side, without a return forecast. Which route fits you depends on your situation; we are happy to talk it through.',
     zelf: 'Buying a property yourself', mee: 'Taking part in a HomeINN project',
@@ -35,12 +35,12 @@
     jaar: function (n) { return n + (n === 1 ? ' year' : ' years'); }
   } : {
     kiezerEyebrow: 'Kies een project', kiezerKop: 'Welk pand wilt u <em>bekijken?</em>',
-    kiezerLede: 'Elf panden, één standaard. Kies een pand en zie de cijfers die wij ervan publiceren, de fase waarin het zit en de woningen na splitsing.',
+    kiezerLede: 'Elf panden, één standaard. Kies een pand en zie de fase waarin het zit en de woningen na splitsing — de cijfers van dat pand ontvangt u in het projectdossier.',
     kaartNote: 'Schematische kaart — posities zijn indicatief. Open een locatie in Google Maps via het pandpaneel.',
-    units: 'Woningen · indicatieve waarde na renovatie', fase: 'Fase', status: 'Status',
+    units: 'Woningen na splitsing', fase: 'Fase', status: 'Status',
     fasen: ['Aankoop afgerond', 'Planvorming & vergunning', 'Renovatie met Lageweg Services B.V.', 'Verkoop of verhuur'],
     ctaInfo: 'Projectinformatie voor dit pand aanvragen', ctaMaps: 'Open in Google Maps',
-    scenarioKop: 'Deel dit scenario', scenarioLede: 'Uw inleg, looptijd en gekozen pand in één link — handig voor een partner of adviseur. Wij zien het alleen als u het formulier verstuurt.',
+    scenarioKop: 'Deel dit scenario', scenarioLede: 'Uw gekozen pand in één link — handig voor een partner of adviseur. Wij zien het alleen als u het formulier verstuurt.',
     kopieer: 'Kopieer link', gekopieerd: 'Link gekopieerd', scenarioLead: 'Scenario', pand: 'pand',
     vglEyebrow: 'Vergelijk', vglKop: 'Zelf kopen of <em>meedoen?</em>', vglLede: 'De feiten naast elkaar, zonder rendementsvoorspelling. Welke route bij u past hangt af van uw situatie; wij denken graag mee.',
     zelf: 'Zelf een pand kopen', mee: 'Meedoen in een HomeINN-project',

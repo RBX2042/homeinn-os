@@ -1,6 +1,6 @@
 {
  "bijgewerkt": "2026-09-19",
- "bron": "homeinn-public.html portefeuille sep 2026 + aanbod.json; fase=2 (planvorming & vergunning) voor alle panden tot de eigenaar per pand een fase doorgeeft; coördinaten schematisch",
+ "bron": "homeinn-public.html portefeuille sep 2026 + aanbod.json; fase=2 (planvorming & vergunning) voor alle panden tot de eigenaar per pand een fase doorgeeft; coördinaten schematisch | bedragen per pand bewust niet gepubliceerd: die staan in het projectdossier op aanvraag",
  "fasen": [
   "Aankoop afgerond",
   "Planvorming & vergunning",
@@ -20,27 +20,21 @@
     [
      "26-A",
      "souterrain + begane grond",
-     "125 m²",
-     "€ 450.000"
+     "125 m²"
     ],
     [
      "26-B",
      "1e + halve 2e verdieping",
-     "75 m²",
-     "€ 375.000"
+     "75 m²"
     ],
     [
      "26-C",
      "halve 2e + 3e verdieping",
-     "70 m²",
-     "€ 375.000"
+     "70 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 350k",
-    "Kostenbasis": "€ 700k",
-    "Waarde na renovatie": "€ 1,20 mln",
-    "Bruto waardestijging": "€ 500k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.8985,
    "lon": 4.5035,
@@ -56,27 +50,21 @@
      [
       "26-A",
       "basement + ground floor",
-      "125 m²",
-      "€450,000"
+      "125 m²"
      ],
      [
       "26-B",
       "1st + half of 2nd floor",
-      "75 m²",
-      "€375,000"
+      "75 m²"
      ],
      [
       "26-C",
       "half of 2nd + 3rd floor",
-      "70 m²",
-      "€375,000"
+      "70 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€350k",
-     "Cost basis": "€700k",
-     "Value after renovation": "€1.20 million",
-     "Gross equity uplift": "€500k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -92,27 +80,21 @@
     [
      "28-A",
      "souterrain + begane grond",
-     "125 m²",
-     "€ 450.000"
+     "125 m²"
     ],
     [
      "28-B",
      "1e + halve 2e verdieping",
-     "75 m²",
-     "€ 375.000"
+     "75 m²"
     ],
     [
      "28-C",
      "halve 2e + 3e verdieping",
-     "70 m²",
-     "€ 375.000"
+     "70 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 350k",
-    "Kostenbasis": "€ 700k",
-    "Waarde na renovatie": "€ 1,20 mln",
-    "Bruto waardestijging": "€ 500k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.8987,
    "lon": 4.504,
@@ -128,27 +110,21 @@
      [
       "28-A",
       "basement + ground floor",
-      "125 m²",
-      "€450,000"
+      "125 m²"
      ],
      [
       "28-B",
       "1st + half of 2nd floor",
-      "75 m²",
-      "€375,000"
+      "75 m²"
      ],
      [
       "28-C",
       "half of 2nd + 3rd floor",
-      "70 m²",
-      "€375,000"
+      "70 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€350k",
-     "Cost basis": "€700k",
-     "Value after renovation": "€1.20 million",
-     "Gross equity uplift": "€500k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -164,21 +140,16 @@
     [
      "92-A",
      "begane grond",
-     "57 m²",
-     "€ 250.000"
+     "57 m²"
     ],
     [
      "92-B",
      "1e + 2e verdieping",
-     "90 m²",
-     "€ 375.000"
+     "90 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 100k",
-    "Kostenbasis": "€ 495k",
-    "Waarde na renovatie": "€ 625k",
-    "Bruto waardestijging": "€ 130k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.888,
    "lon": 4.478,
@@ -194,21 +165,16 @@
      [
       "92-A",
       "ground floor",
-      "57 m²",
-      "€250,000"
+      "57 m²"
      ],
      [
       "92-B",
       "1st + 2nd floor",
-      "90 m²",
-      "€375,000"
+      "90 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€100k",
-     "Cost basis": "€495k",
-     "Value after renovation": "€625k",
-     "Gross equity uplift": "€130k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -224,15 +190,11 @@
     [
      "396",
      "begane grond met tuin (100 m²) + 1e en 2e verdieping (75 m²)",
-     "175 m² + 200 m² tuin",
-     "€ 800.000"
+     "175 m² + 200 m² tuin"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 150k",
-    "Kostenbasis": "€ 485k",
-    "Waarde na renovatie": "€ 800k",
-    "Bruto waardestijging": "€ 315k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.8735,
    "lon": 4.468,
@@ -248,15 +210,11 @@
      [
       "396",
       "ground floor with garden (100 m²) + 1st and 2nd floor (75 m²)",
-      "175 m² + 200 m² garden",
-      "€800,000"
+      "175 m² + 200 m² garden"
      ]
     ],
     "fin": {
-     "Renovation budget": "€150k",
-     "Cost basis": "€485k",
-     "Value after renovation": "€800k",
-     "Gross equity uplift": "€315k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -272,21 +230,16 @@
     [
      "48-A",
      "begane grond + tuin",
-     "85 m² + 50 m² tuin",
-     "€ 380.000"
+     "85 m² + 50 m² tuin"
     ],
     [
      "48-B",
      "1e + 2e verdieping",
-     "95 m²",
-     "€ 420.000"
+     "95 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 143k",
-    "Kostenbasis": "€ 493k",
-    "Waarde na renovatie": "€ 800k",
-    "Bruto waardestijging": "€ 307k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.895,
    "lon": 4.508,
@@ -302,21 +255,16 @@
      [
       "48-A",
       "ground floor + garden",
-      "85 m² + 50 m² garden",
-      "€380,000"
+      "85 m² + 50 m² garden"
      ],
      [
       "48-B",
       "1st + 2nd floor",
-      "95 m²",
-      "€420,000"
+      "95 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€143k",
-     "Cost basis": "€493k",
-     "Value after renovation": "€800k",
-     "Gross equity uplift": "€307k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -332,33 +280,26 @@
     [
      "105-A",
      "begane grond + tuin",
-     "80 m² + 40 m² tuin",
-     "€ 550.000"
+     "80 m² + 40 m² tuin"
     ],
     [
      "105-B1",
      "1e verdieping",
-     "59 m²",
-     "€ 450.000"
+     "59 m²"
     ],
     [
      "105-B2",
      "2e verdieping",
-     "59 m²",
-     "€ 450.000"
+     "59 m²"
     ],
     [
      "105-B3",
      "3e + 4e verdieping",
-     "85 m²",
-     "€ 525.000"
+     "85 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 450k",
-    "Kostenbasis": "€ 1,25 mln",
-    "Waarde na renovatie": "€ 1,975 mln",
-    "Bruto waardestijging": "€ 725k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.913,
    "lon": 4.5225,
@@ -374,33 +315,26 @@
      [
       "105-A",
       "ground floor + garden",
-      "80 m² + 40 m² garden",
-      "€550,000"
+      "80 m² + 40 m² garden"
      ],
      [
       "105-B1",
       "1st floor",
-      "59 m²",
-      "€450,000"
+      "59 m²"
      ],
      [
       "105-B2",
       "2nd floor",
-      "59 m²",
-      "€450,000"
+      "59 m²"
      ],
      [
       "105-B3",
       "3rd + 4th floor",
-      "85 m²",
-      "€525,000"
+      "85 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€450k",
-     "Cost basis": "€1.25 million",
-     "Value after renovation": "€1.975 million",
-     "Gross equity uplift": "€725k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -416,33 +350,26 @@
     [
      "107-A",
      "begane grond + tuin",
-     "80 m² + 40 m² tuin",
-     "€ 550.000"
+     "80 m² + 40 m² tuin"
     ],
     [
      "107-B1",
      "1e verdieping",
-     "59 m²",
-     "€ 450.000"
+     "59 m²"
     ],
     [
      "107-B2",
      "2e verdieping",
-     "59 m²",
-     "€ 450.000"
+     "59 m²"
     ],
     [
      "107-B3",
      "3e + 4e verdieping",
-     "85 m²",
-     "€ 525.000"
+     "85 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 450k",
-    "Kostenbasis": "€ 1,27 mln",
-    "Waarde na renovatie": "€ 1,975 mln",
-    "Bruto waardestijging": "€ 705k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.9132,
    "lon": 4.523,
@@ -458,33 +385,26 @@
      [
       "107-A",
       "ground floor + garden",
-      "80 m² + 40 m² garden",
-      "€550,000"
+      "80 m² + 40 m² garden"
      ],
      [
       "107-B1",
       "1st floor",
-      "59 m²",
-      "€450,000"
+      "59 m²"
      ],
      [
       "107-B2",
       "2nd floor",
-      "59 m²",
-      "€450,000"
+      "59 m²"
      ],
      [
       "107-B3",
       "3rd + 4th floor",
-      "85 m²",
-      "€525,000"
+      "85 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€450k",
-     "Cost basis": "€1.27 million",
-     "Value after renovation": "€1.975 million",
-     "Gross equity uplift": "€705k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -500,33 +420,26 @@
     [
      "88-A",
      "souterrain + begane grond + tuin",
-     "99 m² + 120 m² tuin",
-     "€ 550.000"
+     "99 m² + 120 m² tuin"
     ],
     [
      "88-B1",
      "souterrain + begane grond",
-     "99 m²",
-     "€ 500.000"
+     "99 m²"
     ],
     [
      "88-B2",
      "1e verdieping",
-     "75 m²",
-     "€ 500.000"
+     "75 m²"
     ],
     [
      "88-B3",
      "2e verdieping",
-     "75 m²",
-     "€ 500.000"
+     "75 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 600k",
-    "Kostenbasis": "€ 1,35 mln",
-    "Waarde na renovatie": "€ 2,05 mln",
-    "Bruto waardestijging": "€ 700k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.917,
    "lon": 4.4625,
@@ -542,33 +455,26 @@
      [
       "88-A",
       "basement + ground floor + garden",
-      "99 m² + 120 m² garden",
-      "€550,000"
+      "99 m² + 120 m² garden"
      ],
      [
       "88-B1",
       "basement + ground floor",
-      "99 m²",
-      "€500,000"
+      "99 m²"
      ],
      [
       "88-B2",
       "1st floor",
-      "75 m²",
-      "€500,000"
+      "75 m²"
      ],
      [
       "88-B3",
       "2nd floor",
-      "75 m²",
-      "€500,000"
+      "75 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€600k",
-     "Cost basis": "€1.35 million",
-     "Value after renovation": "€2.05 million",
-     "Gross equity uplift": "€700k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -584,33 +490,26 @@
     [
      "90-A",
      "souterrain + begane grond + tuin",
-     "99 m² + 120 m² tuin",
-     "€ 550.000"
+     "99 m² + 120 m² tuin"
     ],
     [
      "90-B1",
      "souterrain + begane grond",
-     "99 m²",
-     "€ 500.000"
+     "99 m²"
     ],
     [
      "90-B2",
      "1e verdieping",
-     "75 m²",
-     "€ 500.000"
+     "75 m²"
     ],
     [
      "90-B3",
      "2e verdieping",
-     "75 m²",
-     "€ 500.000"
+     "75 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 600k",
-    "Kostenbasis": "€ 1,35 mln",
-    "Waarde na renovatie": "€ 2,05 mln",
-    "Bruto waardestijging": "€ 700k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.9172,
    "lon": 4.4628,
@@ -626,33 +525,26 @@
      [
       "90-A",
       "basement + ground floor + garden",
-      "99 m² + 120 m² garden",
-      "€550,000"
+      "99 m² + 120 m² garden"
      ],
      [
       "90-B1",
       "basement + ground floor",
-      "99 m²",
-      "€500,000"
+      "99 m²"
      ],
      [
       "90-B2",
       "1st floor",
-      "75 m²",
-      "€500,000"
+      "75 m²"
      ],
      [
       "90-B3",
       "2nd floor",
-      "75 m²",
-      "€500,000"
+      "75 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€600k",
-     "Cost basis": "€1.35 million",
-     "Value after renovation": "€2.05 million",
-     "Gross equity uplift": "€700k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -668,27 +560,21 @@
     [
      "4-A",
      "begane grond",
-     "70 m²",
-     "€ 350.000"
+     "70 m²"
     ],
     [
      "4-B",
      "1e verdieping",
-     "70 m²",
-     "€ 350.000"
+     "70 m²"
     ],
     [
      "4-C",
      "2e verdieping",
-     "70 m²",
-     "€ 350.000"
+     "70 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 350k",
-    "Kostenbasis": "€ 600k",
-    "Waarde na renovatie": "€ 1,05 mln",
-    "Bruto waardestijging": "€ 450k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.906,
    "lon": 4.343,
@@ -704,27 +590,21 @@
      [
       "4-A",
       "ground floor",
-      "70 m²",
-      "€350,000"
+      "70 m²"
      ],
      [
       "4-B",
       "1st floor",
-      "70 m²",
-      "€350,000"
+      "70 m²"
      ],
      [
       "4-C",
       "2nd floor",
-      "70 m²",
-      "€350,000"
+      "70 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€350k",
-     "Cost basis": "€600k",
-     "Value after renovation": "€1.05 million",
-     "Gross equity uplift": "€450k"
+     "Figures for this property": "On request"
     }
    }
   },
@@ -740,27 +620,21 @@
     [
      "32-A",
      "begane grond",
-     "70 m²",
-     "€ 350.000"
+     "70 m²"
     ],
     [
      "32-B",
      "1e verdieping",
-     "70 m²",
-     "€ 350.000"
+     "70 m²"
     ],
     [
      "32-C",
      "2e verdieping",
-     "70 m²",
-     "€ 350.000"
+     "70 m²"
     ]
    ],
    "fin": {
-    "Renovatiebudget": "€ 350k",
-    "Kostenbasis": "€ 600k",
-    "Waarde na renovatie": "€ 1,05 mln",
-    "Bruto waardestijging": "€ 450k"
+    "Cijfers van dit pand": "Op aanvraag"
    },
    "lat": 51.908,
    "lon": 4.338,
@@ -776,27 +650,21 @@
      [
       "32-A",
       "ground floor",
-      "70 m²",
-      "€350,000"
+      "70 m²"
      ],
      [
       "32-B",
       "1st floor",
-      "70 m²",
-      "€350,000"
+      "70 m²"
      ],
      [
       "32-C",
       "2nd floor",
-      "70 m²",
-      "€350,000"
+      "70 m²"
      ]
     ],
     "fin": {
-     "Renovation budget": "€350k",
-     "Cost basis": "€600k",
-     "Value after renovation": "€1.05 million",
-     "Gross equity uplift": "€450k"
+     "Figures for this property": "On request"
     }
    }
   }

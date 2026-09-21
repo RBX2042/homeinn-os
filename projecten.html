@@ -25,9 +25,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260920be">
-  <link rel="stylesheet" href="tokens.css?v=20260920be">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260920be">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260921a">
+  <link rel="stylesheet" href="tokens.css?v=20260921a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260921a">
   <style>
     .pj-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .pj-top .brand img{height:34px;width:auto;display:block}
@@ -240,7 +240,7 @@
             if(inv.doelbedrag){
               var pct=Math.min(100,Math.round((inv.opgehaald||0)/inv.doelbedrag*100));
               invHtml+='<div class="pw-wrap"><div class="pw-bar" style="width:'+pct+'%"></div></div>'+
-                '<div class="ib-row"><span>€ '+(Number(inv.opgehaald)||0).toLocaleString('nl-NL')+' opgehaald van € '+(Number(inv.doelbedrag)||0).toLocaleString('nl-NL')+'</span><span>'+pct+'%</span></div>';
+                '<div class="ib-row"><span>Gevuld — bedragen in het projectdossier</span><span>'+pct+'%</span></div>';
             } else {
               
             }
@@ -262,6 +262,6 @@
       .catch(function(){grid.innerHTML=leeg;});
   })();
   </script>
-<script src="site-nav.js?v=20260920be"></script>
+<script src="site-nav.js?v=20260921a"></script>
 </body>
 </html>

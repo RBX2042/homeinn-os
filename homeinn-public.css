@@ -2172,7 +2172,7 @@ body .blog-section > div{max-width:var(--site-content)!important;margin-left:aut
 .pfx-sum-note{margin:1.25rem 0 0;font-size:.8rem;font-weight:300;line-height:1.7;color:var(--ink3)}
 .pfx-sum-chart{background:var(--navy);color:#fff;padding:clamp(1.5rem,3vw,2.5rem);display:flex;flex-direction:column;gap:1.6rem}
 .pfx-bigs{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.5rem}
-.pfx-big-val{display:block;font-family:var(--serif);font-size:clamp(1.9rem,2.8vw,2.5rem);font-weight:300;color:var(--gold2);line-height:1;white-space:nowrap}
+.pfx-big-val{display:block;font-family:var(--serif);font-size:clamp(1.55rem,2.2vw,2rem);font-weight:300;color:var(--gold2);line-height:1;white-space:nowrap}
 .pfx-big-lbl{display:block;margin-top:.45rem;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.62);line-height:1.5}
 .pfx-bars-title{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin:0 0 .6rem}
 .pfx-bar{display:grid;grid-template-columns:minmax(7.5rem,9.5rem) 1fr auto;align-items:center;gap:.7rem;font-size:.8rem;padding:.26rem 0}
@@ -2181,6 +2181,18 @@ body .blog-section > div{max-width:var(--site-content)!important;margin-left:aut
 .pfx-bar-fill{display:block;height:100%;width:var(--w);background:var(--gold)}
 .pfx-bar-val{color:var(--gold2);font-variant-numeric:tabular-nums;white-space:nowrap}
 .pfx-chart-note{font-size:.76rem;line-height:1.6;color:rgba(255,255,255,.62);margin:0}
+/* Dossier-op-aanvraag (verving de bedragen per pand) */
+.pfx-dossier{list-style:none;margin:0 0 .4rem;padding:0;display:flex;flex-direction:column;gap:.7rem}
+.pfx-dossier li{position:relative;padding-left:1.5rem;font-size:.9rem;font-weight:300;line-height:1.6;color:rgba(255,255,255,.88)}
+.pfx-dossier li::before{content:"";position:absolute;left:0;top:.62em;width:.6rem;height:1px;background:var(--gold)}
+.pfx-sum-chart .btn{align-self:flex-start;margin-top:.2rem}
+.pfx-fin-up dt{max-width:22ch}
+.iv-stappen{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1.15rem}
+.iv-stappen li{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"n t" ". d";gap:.15rem .9rem;align-items:baseline}
+.iv-stap-n{grid-area:n;font-size:.7rem;letter-spacing:.14em;color:var(--gold2);font-variant-numeric:tabular-nums}
+.iv-stap-t{grid-area:t;font-size:1rem;color:#fff}
+.iv-stap-d{grid-area:d;font-size:.86rem;font-weight:300;line-height:1.7;color:rgba(255,255,255,.66)}
+@media(max-width:560px){.iv-stap-d{font-size:.9333rem}.pfx-dossier li{font-size:.9333rem}}
 /* Fasen, exit, risico's, partners */
 .pfx-phases{margin-top:3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .pfx-phase{background:var(--white);border:1px solid var(--cream3);padding:1.75rem}
@@ -2470,7 +2482,8 @@ body.hero-ready .page-hero--foto::after{animation:kenburnsSub 14s ease-out both}
 }
 
 /* ═══ Review groep A (19 sep 2026) — rust op homepage, projecten, over ons, contact ═══ */
-#pg-home .pfx-units-head,#pg-home .pfx-units{display:none}   /* dossierregels op projecten.html; homepage toont kop, kenmerken en cijfers */
+/* Sinds de bedragen per pand van de site af zijn, toont de homepage de woningen na splitsing wel:
+   substantie zonder bedragen. De financiele regels staan als "Op aanvraag" in .pfx-fin. */
 #pg-home .faq-list .faq-item:nth-child(n+5){display:none}     /* vier vragen op de landingspagina, de rest via kennis */
 .pf-photo-note,.map-load-sub{display:none}                     /* geen placeholder-tekst op de kaartvlakken */
 .ov-verhaal h2,.story-text h2,.page-hero h1,.proc-head h2,.cta-inner h2{text-wrap:balance}

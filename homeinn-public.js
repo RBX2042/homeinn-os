@@ -532,15 +532,14 @@ function renderProjectenPublic() {
           if (inv.doelbedrag) {
             var invPct = Math.min(100, Math.round((inv.opgehaald || 0) / inv.doelbedrag * 100));
             invHtml += '<div class="pw-wrap"><div class="pw-bar" style="width:' + invPct + '%"></div></div>' +
-              '<div class="ib-row"><span>' + escHtml('€ ' + (Number(inv.opgehaald) || 0).toLocaleString('nl-NL') + ' opgehaald van € ' + (Number(inv.doelbedrag) || 0).toLocaleString('nl-NL')) + '</span><span>' + invPct + '%</span></div>';
+              '<div class="ib-row"><span>Gevuld — bedragen in het projectdossier</span><span>' + invPct + '%</span></div>';
           }
-          if (inv.minInleg || inv.rendementPct || inv.looptijd) {
+          if (inv.rendementPct || inv.looptijd) {
             invHtml += '<div class="ib-row">' +
-              (inv.minInleg ? '<span>Min. inleg € ' + (Number(inv.minInleg) || 0).toLocaleString('nl-NL') + '</span>' : '<span></span>') +
+              '<span></span>' +
               '<span>' + (inv.rendementPct ? escHtml(String(inv.rendementPct)).replace('.', ',') + '% streefrendement/jr' + (inv.looptijd ? ' · ' : '') : '') + escHtml(inv.looptijd || '') + '</span></div>';
-          } else {
-            invHtml += '<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers na een persoonlijke kennismaking.</p>';
           }
+          invHtml += '<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers na een persoonlijke kennismaking.</p>';
           invHtml += '<button class="pillar-cta" data-open-modal data-subject="Investeren in een project" data-ref="' + refLabel + '">Investeer mee in dit project →</button>' +
             '</div>';
         }
