@@ -122,7 +122,7 @@
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Woningaanbod · Te koop &amp; in ontwikkeling</span>
         <h1>Wat wij ontwikkelen, komt hier <em>op de markt</em></h1>
-        <p>Wij ontwikkelen niet om te houden, maar om op te leveren. Elke woning is door ons aangekocht en met onze vaste bouwpartner gerenoveerd en wordt met een bouwkundig keuringsrapport opgeleverd. Hieronder staat wat eraan komt — en, zodra een pand is opgeleverd, wat er te koop staat.</p>
+        <p>Wij ontwikkelen niet om te houden, maar om op te leveren. Elke woning is door ons aangekocht en met onze vaste bouwpartner gerenoveerd en wordt met een bouwkundig keuringsrapport opgeleverd. Hieronder staat wat eraan komt — en, zodra een pand is opgeleverd, wat er te koop staat. Vraagprijzen zetten wij niet online: u krijgt ze, met het keuringsrapport en de opleverdatum, rechtstreeks van ons.</p>
         <div class="public-hero-actions"><a class="btn btn-primary" href="#komend">Bekijk de woningen <span class="arr">→</span></a><a class="hero-textlink" href="#inschrijf">Ontvang het aanbod <span class="arr">→</span></a></div>
       </div>
     </section>
@@ -441,7 +441,7 @@
     var _hpT=0;document.addEventListener('focusin',function(e){if(!_hpT&&e.target&&e.target.form)_hpT=Date.now();},true);
     function _isBot(f){return !!f.get('company_website') && (!_hpT || (Date.now()-_hpT)<4000);}
         function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
-    function fmtPrijs(n){return '€ ' + (Number(n)||0).toLocaleString('nl-NL') + ' k.k.';}
+    function fmtPrijs(){return 'Prijs op aanvraag';}   /* vraagprijzen staan niet op de site: bezoekers vragen ze op */
     var HUIS = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11 L12 4 L20.5 11"/><path d="M6 10.2 V20 H18 V10.2"/><circle cx="12" cy="13.7" r="1.5"/><path d="M12 15.2 V18"/></svg>';
     var leeg = '<div class="aanbod-leeg" style="grid-column:1/-1;text-align:center;padding:3rem 1rem"><div style="color:var(--gold-ink);margin-bottom:1rem">'+HUIS+'</div><h3 style="font-family:var(--serif);font-weight:300;font-size:1.5rem;color:var(--navy-text);margin:0 0 .5rem">Nog niets in de verkoop.</h3><p style="font-weight:300;color:var(--ink3);max-width:48ch;margin:0 auto;line-height:1.7">Onze 33 woningen in elf panden zijn nu in ontwikkeling — zie hieronder. Schrijf u in en u hoort het zodra de eerste in de verkoop gaat.</p></div>';
 
@@ -468,7 +468,7 @@
                 '<p class="aanbod-kenmerken">'+kenmerken+'</p>'+
                 '<div class="aanbod-prijs">'+fmtPrijs(w.prijs)+'</div>'+
                 '<p>'+escHtml((w.omschrijving||'').slice(0,140)+((w.omschrijving||'').length>140?'…':''))+'</p>'+
-                '<a class="pillar-cta" href="woning.html?id='+ref+'">Bekijk deze woning →</a>'+
+                '<a class="pillar-cta" href="woning.html?id='+ref+'">Bekijk deze woning →</a> <a class="pillar-cta" href="#inschrijf">Vraagprijs opvragen →</a>'+
                 '</div></article>';
             }).join('');
           } else { grid.innerHTML = leeg; }

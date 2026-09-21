@@ -392,8 +392,9 @@ function escHtml(v) {
   });
 }
 
-function fmtPrijs(n) {
-  return '€ ' + (Number(n) || 0).toLocaleString('nl-NL') + ' k.k.';
+function fmtPrijs() {
+  /* Vraagprijzen staan niet op de site: bezoekers vragen ze bij ons op. */
+  return hiT('Prijs op aanvraag', 'Price on request');
 }
 
 var aanbodCache = [];
@@ -424,7 +425,7 @@ function renderAanbod() {
           '<div class="aanbod-prijs">' + fmtPrijs(w.prijs) + '</div>' +
           '<p>' + escHtml((w.omschrijving || '').slice(0, 140) + ((w.omschrijving || '').length > 140 ? '…' : '')) + '</p>' +
           '<button class="pillar-cta" data-woning="' + i + '">Bekijk deze woning →</button> ' +
-          '<button class="pillar-cta" data-open-modal data-subject="Woningaanbod ontvangen" data-ref="' + escHtml(w.id || w.adres) + '">Plan een bezichtiging →</button>' +
+          '<button class="pillar-cta" data-open-modal data-subject="Vraagprijs en bezichtiging opvragen" data-ref="' + escHtml(w.id || w.adres) + '">' + hiT('Vraagprijs opvragen', 'Request the price') + ' →</button>' +
           '</div></article>';
       }).join('') : leeg;
       var sold = (data && Array.isArray(data.verkocht)) ? data.verkocht : [];
@@ -592,11 +593,11 @@ function openWoningDetail(w) {
   var fotos = Array.isArray(w.fotos) ? w.fotos : [];
   var mapsQ = encodeURIComponent((w.adres || '') + ', ' + (w.plaats || 'Rotterdam'));
   var isHuur = (w.huur != null) && (w.prijs == null);
-  var prijs = isHuur ? fmtHuur(w.huur) : ('€ ' + (Number(w.prijs) || 0).toLocaleString('nl-NL') + ' k.k.');
+  var prijs = isHuur ? fmtHuur(w.huur) : hiT('Prijs op aanvraag', 'Price on request');
   var statusTxt = w.status || (isHuur ? 'Te huur' : 'Te koop');
-  var bezSubject = isHuur ? 'Huurwoning bezichtigen' : 'Woningaanbod ontvangen';
+  var bezSubject = isHuur ? 'Huurwoning bezichtigen' : 'Vraagprijs en bezichtiging opvragen';
   var rows = [
-    [isHuur ? 'Huurprijs' : 'Vraagprijs', prijs],
+    [hiT(isHuur ? 'Huurprijs' : 'Vraagprijs', isHuur ? 'Rent' : 'Asking price'), isHuur ? prijs : hiT('Op aanvraag', 'On request')],
     ['Status', statusTxt],
     ['Type', w.type || ''],
     ['Woonoppervlakte', w.m2 ? w.m2 + ' m²' : ''],
@@ -622,7 +623,7 @@ function openWoningDetail(w) {
         }).join('') + '</div>' +
         (w.omschrijving ? '<p class="wd-tekst">' + escHtml(w.omschrijving) + '</p>' : '') +
         '<div class="wd-acties">' +
-          '<button class="btn btn-primary" data-open-modal data-subject="' + escHtml(bezSubject) + '" data-ref="' + escHtml((w.id || '') + ' — ' + (w.adres || '')) + '" data-wd-close>Plan een bezichtiging <span class="arr">→</span></button>' +
+          '<button class="btn btn-primary" data-open-modal data-subject="' + escHtml(bezSubject) + '" data-ref="' + escHtml((w.id || '') + ' — ' + (w.adres || '')) + '" data-wd-close>' + hiT(isHuur ? 'Plan een bezichtiging' : 'Vraagprijs opvragen', isHuur ? 'Book a viewing' : 'Request the price') + ' <span class="arr">→</span></button>' +
           '<a class="btn btn-outline-dark" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + mapsQ + '">Route & omgeving</a>' +
         '</div>' +
         '<div class="wd-map-wrap">' + mapsKnop(mapsQ, escHtml(w.adres)).replace('class="map-load"', 'class="map-load" data-hoogte="wd"') + '</div>' +

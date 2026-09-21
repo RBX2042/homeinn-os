@@ -219,7 +219,7 @@
         if (!w) { notFound(); return; }
 
         document.title = escHtml(w.adres) + ' — ' + (isHuur ? 'te huur' : 'te koop') + ' | HomeINN Rotterdam';
-        var prijs = isHuur ? ('€ ' + (Number(w.huur)||0).toLocaleString('nl-NL') + ' /mnd') : ('€ ' + (Number(w.prijs)||0).toLocaleString('nl-NL') + ' k.k.');
+        var prijs = isHuur ? ('€ ' + (Number(w.huur)||0).toLocaleString('nl-NL') + ' /mnd') : 'Prijs op aanvraag';
         var fotos = Array.isArray(w.fotos) ? w.fotos : [];
         var gallery = fotos.length
           ? '<div class="wd-gallery" data-titel="'+escHtml(w.adres)+'" data-fotos="'+escHtml(JSON.stringify(fotos))+'">'
@@ -232,7 +232,7 @@
         var mapsQ = encodeURIComponent((w.adres||'') + ', ' + (w.plaats||'Rotterdam'));
         var specs = [
           ['Type', w.type], ['Woonoppervlak', w.m2 ? w.m2+' m²' : ''], ['Kamers', w.kamers || ''],
-          ['Energielabel', w.label || ''], ['Plaats', w.plaats || ''], [isHuur?'Huurprijs':'Vraagprijs', prijs]
+          ['Energielabel', w.label || ''], ['Plaats', w.plaats || ''], [isHuur?'Huurprijs':'Vraagprijs', isHuur?prijs:'Op aanvraag']
         ].filter(function(s){ return s[1]; });
 
         main.innerHTML =
@@ -250,13 +250,13 @@
           '</div>'+
           '<aside class="wd-aside" id="wd-aside">'+
           '<div class="wd-prijs">'+prijs+'</div>'+
-          '<h3 style="margin-top:.75rem">Bezichtiging aanvragen</h3>'+
+          '<h3 style="margin-top:.75rem">'+(isHuur?'Bezichtiging aanvragen':'Vraagprijs en bezichtiging aanvragen')+'</h3>'+
           '<form id="wd-form" novalidate>'+
           '<input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">'+
           '<div class="cf-group"><label for="wd-naam">Naam</label><input id="wd-naam" type="text" autocomplete="name" name="naam" placeholder="Jan de Vries" required></div>'+
           '<div class="cf-group"><label for="wd-phone">Telefoon</label><input id="wd-phone" type="tel" autocomplete="tel" inputmode="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>'+
           '<div class="cf-group"><label for="wd-email">E-mail</label><input id="wd-email" type="email" autocomplete="email" inputmode="email" name="email" placeholder="jan@voorbeeld.nl"></div>'+
-          '<button class="cf-submit" type="submit" style="width:100%">Bezichtiging aanvragen →</button>'+
+          '<button class="cf-submit" type="submit" style="width:100%">'+(isHuur?'Bezichtiging aanvragen':'Vraagprijs opvragen')+' →</button>'+
           '<p class="m-note" style="margin-top:.7rem;font-size:.72rem">Akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>.</p>'+
           '</form>'+
           '<div class="vb-success" id="wd-success"><h4>Aanvraag ontvangen ✓</h4><p>Wij nemen binnen vier uur op werkdagen contact met u op.</p></div>'+
@@ -269,7 +269,7 @@
           "@context":"https://schema.org","@type":["Product","Residence"],
           "name": w.adres, "description": w.omschrijving || '',
           "address":{"@type":"PostalAddress","streetAddress":w.adres,"addressLocality":w.plaats||'Rotterdam',"addressCountry":"NL"},
-          "offers":{"@type":"Offer","price": String(isHuur? (w.huur||'') : (w.prijs||'')),"priceCurrency":"EUR","availability":"https://schema.org/InStock","seller":{"@type":"RealEstateAgent","name":"HomeINN"}}
+          "offers":Object.assign({"@type":"Offer","priceCurrency":"EUR","availability":"https://schema.org/InStock","seller":{"@type":"RealEstateAgent","name":"HomeINN"}}, isHuur?{"price":String(w.huur||'')}:{})
         });
         document.head.appendChild(ld);
 
