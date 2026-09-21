@@ -25,9 +25,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260921c">
-  <link rel="stylesheet" href="tokens.css?v=20260921c">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260921c">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260921d">
+  <link rel="stylesheet" href="tokens.css?v=20260921d">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260921d">
   <style>
     .pj-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .pj-top .brand img{height:34px;width:auto;display:block}
@@ -126,27 +126,34 @@
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Projects · Rotterdam</span>
         <h1>Eleven properties in our own portfolio — from acquisition to <em>completion</em></h1>
-        <p>This is not a showcase of other people's property: every building below is registered in HomeINN's name. We buy ourselves, refurbish with our fixed construction partner and complete — and you can take part per project. Address and location included; as soon as a refurbishment starts, its progress appears here.</p>
+        <p>This is not a showcase of other people's property: every building below is registered in HomeINN's name. We buy ourselves, refurbish with our fixed construction partner and complete. Participation is per project, per property, on an individual basis — no fund and no waiting list, but a conversation. The figures per property stay with us: you go through them with us in person.</p>
+        <div class="public-hero-actions"><a class="btn btn-primary" href="invest-en.html#meedoen">Request the project information <span class="arr">&#8594;</span></a><a class="hero-textlink" href="#portefeuille">View the eleven properties <span class="arr">&#8594;</span></a></div>
       </div>
     </section>
 
-    <section class="pj-sec">
+    <section class="pj-sec" id="portefeuille">
       <div class="proc-head"><span class="t-eyebrow">Our portfolio</span><h2>What we currently <em>own.</em></h2><p class="pf-meta" id="portefeuille-meta">11 properties · 33 apartment rights · all in our own portfolio</p></div>
       <div class="blog-grid" id="projecten-grid" style="margin-top:2.5rem"></div>
     </section>
 
     <div class="pj-disclaimer"><p>Participation in a project takes place on the basis of a private agreement and a personal introduction. The return, the term and the conditions are recorded per project in a private agreement; a return is never guaranteed. This page is an invitation to an introduction, not an offer. Participation is open exclusively to professional market parties: from €100,000 in a single amount per participant. Always request the full project information.</p></div>
 
-    <!-- INVEST TEASER -->
-    <section class="pj-sec" style="background:var(--cream2);margin-top:clamp(3rem,6vw,5rem)">
-      <div style="max-width:760px">
-        <div class="proc-head"><span class="t-eyebrow">Take part</span><h2>Rather not just look,<br>but <em>take part?</em></h2></div>
-        <p style="margin:1.5rem 0;font-weight:300;color:var(--ink3);line-height:1.85">You invest in bricks and mortar that we buy ourselves, refurbish with our fixed construction partner and sell. No fund, no intermediate layers — one project, one agreement, one result. Read how taking part works.</p>
-        <a class="btn btn-primary" href="invest-en.html">How investing works <span class="arr">→</span></a>
+    <!-- ACCESS TO A PROJECT -->
+    <section class="pj-sec">
+      <div class="pj-toegang">
+        <span class="t-eyebrow">Access to a project</span>
+        <h2>Our projects never reach the <em>shop window.</em></h2>
+        <p>We develop eleven properties at once, but participation is offered per property &mdash; to a small circle, after a personal introduction and exclusively to professional market parties. That is why you find the address, the phase and the approach here, and no amounts: those belong with a conversation about one concrete property.</p>
+        <ol>
+          <li><b>01 &middot; Request</b><span>You request the project information. Within one working day the dossier for that property reaches you: appraisal, budget, planning and exit.</span></li>
+          <li><b>02 &middot; Introduction</b><span>You speak to the owner, not an intermediary. We go through the figures and you view the property if you wish.</span></li>
+          <li><b>03 &middot; Agreement</b><span>Deposit, term, return and conditions go into a private agreement; the payout runs via the civil-law notary.</span></li>
+        </ol>
+        <a class="btn btn-primary" href="invest-en.html#meedoen">Request the project information <span class="arr">&#8594;</span></a>
       </div>
     </section>
 
-    <div class="cta-band"><div class="cta-inner"><h2>Take part in our next <em>project?</em></h2><a class="btn btn-dark" href="contact-en.html">Book an introduction <span class="arr">→</span></a></div></div>
+    <div class="cta-band"><div class="cta-inner"><h2>Take part in our next <em>project?</em></h2><p class="cta-lede">Tell us briefly who you are and which property appeals to you. We send the dossier and follow up once by phone &mdash; no more than that.</p><a class="btn btn-dark" href="invest-en.html#meedoen">Request the project information <span class="arr">→</span></a></div></div>
   </main>
 
   <footer class="site-foot">
@@ -264,6 +271,12 @@
             }).join('');
             updatesHtml='<div class="pj-updates"><h4>Latest updates</h4>'+ui+'</div>';
           }
+          /* Phase per property — four fixed steps, derived from the status the owner provides. */
+          var FASEN=['Purchase completed','Planning & permits','Refurbishment with our building partner','Sale or letting'];
+          var st=String(p.status||'').toLowerCase();
+          var fase=/renovat|verbouw|refurb/.test(st)?3:/verkoop|verhuur|opgeleverd|te koop|sale|let/.test(st)?4:/aankoop|purchase/.test(st)?1:2;
+          var faseHtml='<div class="pj-fase"><span class="pj-fase-k">Phase '+(fase<10?'0'+fase:fase)+' of 04</span><ol class="ivk-fasen">'+
+            FASEN.map(function(naam,i){var n=i+1;return '<li class="'+(n<fase?'af':n===fase?'nu':'')+'"><span>'+escHtml(naam)+'</span></li>';}).join('')+'</ol></div>';
           var inv=p.investering;
           var invHtml='';
           if(inv){
@@ -275,13 +288,15 @@
             } else {
               
             }
-            invHtml+='<a class="pillar-cta" href="invest-en.html?project='+encodeURIComponent(p.adres||'')+'#meedoen">Invest in this project →</a></div>';
+            invHtml+='<p class="ib-note">Participation in this property is personal: one project, one agreement, a small circle of participants. The figures are shared in the project dossier.</p>';
+            invHtml+='<a class="pillar-cta" href="invest-en.html?project='+encodeURIComponent(p.adres||'')+'#meedoen">Request the project information →</a></div>';
           }
           return '<article class="blog-card rv in">'+visual+'<div class="blog-body">'+
             '<div class="proj-status">'+escHtml(trStatus(p.status||'In ontwikkeling'))+'</div>'+
             '<h3>'+escHtml(p.titel||p.adres)+'</h3>'+
             '<p class="aanbod-kenmerken">'+kenmerken+'</p>'+
             '<p>'+escHtml(trDescr(p.omschrijving_en||p.omschrijving||''))+'</p>'+
+            faseHtml+
             (p.voortgang!=null?'<div class="pj-progress-lbl">Progress '+vp+'%</div><div class="pj-progress"><span style="width:'+vp+'%"></span></div>':'')+
             (plan?'<p class="pj-plan">'+plan+'</p>':'')+
             updatesHtml+
@@ -293,6 +308,6 @@
       .catch(function(){grid.innerHTML=leeg;});
   })();
   </script>
-<script src="site-nav.js?v=20260921c"></script>
+<script src="site-nav.js?v=20260921d"></script>
 </body>
 </html>
