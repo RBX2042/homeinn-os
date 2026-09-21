@@ -17,7 +17,7 @@
     units: 'Homes after splitting', fase: 'Phase', status: 'Status',
     fasen: ['Purchase completed', 'Planning & permits', 'Refurbishment with Lageweg Services B.V.', 'Sale or letting'],
     ctaInfo: 'Request the project information for this property', ctaMaps: 'Open in Google Maps',
-    scenarioKop: 'Share this scenario', scenarioLede: 'Your chosen property in one link — handy for a partner or adviser. We only see it if you send us the form.',
+    scenarioKop: 'Share this property', scenarioLede: 'Your chosen property in one link — handy for a partner or adviser. We only see it if you send us the form.',
     kopieer: 'Copy link', gekopieerd: 'Link copied', scenarioLead: 'Scenario', pand: 'property',
     vglEyebrow: 'Compare', vglKop: 'Buying yourself or <em>taking part?</em>', vglLede: 'Facts side by side, without a return forecast. Which route fits you depends on your situation; we are happy to talk it through.',
     zelf: 'Buying a property yourself', mee: 'Taking part in a HomeINN project',
@@ -40,7 +40,7 @@
     units: 'Woningen na splitsing', fase: 'Fase', status: 'Status',
     fasen: ['Aankoop afgerond', 'Planvorming & vergunning', 'Renovatie met Lageweg Services B.V.', 'Verkoop of verhuur'],
     ctaInfo: 'Projectinformatie voor dit pand aanvragen', ctaMaps: 'Open in Google Maps',
-    scenarioKop: 'Deel dit scenario', scenarioLede: 'Uw gekozen pand in één link — handig voor een partner of adviseur. Wij zien het alleen als u het formulier verstuurt.',
+    scenarioKop: 'Deel dit pand', scenarioLede: 'Uw gekozen pand in één link — handig voor een partner of adviseur. Wij zien het alleen als u het formulier verstuurt.',
     kopieer: 'Kopieer link', gekopieerd: 'Link gekopieerd', scenarioLead: 'Scenario', pand: 'pand',
     vglEyebrow: 'Vergelijk', vglKop: 'Zelf kopen of <em>meedoen?</em>', vglLede: 'De feiten naast elkaar, zonder rendementsvoorspelling. Welke route bij u past hangt af van uw situatie; wij denken graag mee.',
     zelf: 'Zelf een pand kopen', mee: 'Meedoen in een HomeINN-project',
@@ -80,7 +80,7 @@
     inleg.addEventListener('input', upd); jaren.addEventListener('input', upd); upd();
   })();
 
-  var kiezer = $('iv-kiezer'), kaart = $('iv-kaart'), vgl = $('iv-vergelijk'), calc = $('rekenvoorbeeld');
+  var kiezer = $('iv-kiezer'), kaart = $('iv-kaart'), vgl = $('iv-vergelijk'), calc = $('hoe-vastgelegd');
   if (!kiezer && !vgl) return;
 
   /* ── 5. vergelijker (heeft de data niet nodig) ─────────────────────────── */
@@ -110,6 +110,8 @@
 
   /* ── scenario in de URL-hash (#scenario=inleg,jaren,pand-id) ─────────── */
   function leesScenario() {
+    var kortePandLink = /pand=([^&]+)/.exec(location.hash || '');
+    if (kortePandLink) return { inleg: 0, jaren: 0, pand: decodeURIComponent(kortePandLink[1]) };
     var m = /scenario=([^&]+)/.exec(location.hash || '');
     if (!m) return null;
     var d = decodeURIComponent(m[1]).split(',');
@@ -126,8 +128,13 @@
   function schrijfScenario() {
     var inleg = $('ivc-inleg'), jaren = $('ivc-jaren');
     // pand alleen meesturen als de bezoeker er zelf een koos — anders deelt hij stilzwijgend het eerste pand
+    // Sinds de bedragen van de site af zijn, bestaan de inleg- en looptijdvelden niet meer:
+    // dan is het gekozen pand het hele "scenario" en blijft de link kort.
     var delen = [inleg ? inleg.value : '', jaren ? jaren.value : '', pandGekozen && actief ? actief.id : ''];
-    var url = deelBasis() + '#scenario=' + encodeURIComponent(delen.join(','));
+    var kort = (!inleg && !jaren);
+    var url = deelBasis() + (kort
+      ? (delen[2] ? '#pand=' + encodeURIComponent(delen[2]) : '')
+      : '#scenario=' + encodeURIComponent(delen.join(',')));
     var veld = $('ivs-url'); if (veld) veld.value = url;
     return url;
   }
@@ -152,7 +159,7 @@
       return '<li class="' + st + '"><span class="ivk-fase-n">' + (n < 10 ? '0' + n : n) + '</span><span>' + esc(naam) + '</span></li>';
     }).join('');
     var units = (L(p,'units') || []).map(function (u) {
-      return '<li><span class="pfx-u-id">' + esc(u[0]) + '</span><span class="pfx-u-lay">' + esc(u[1]) + '</span><span class="pfx-u-m2">' + esc(u[2]) + '</span><span class="pfx-u-val">' + esc(u[3]) + '</span></li>';
+      return '<li><span class="pfx-u-id">' + esc(u[0]) + '</span><span class="pfx-u-lay">' + esc(u[1]) + '</span><span class="pfx-u-m2">' + esc(u[2]) + '</span>' + (u[3] ? '<span class="pfx-u-val">' + esc(u[3]) + '</span>' : '') + '</li>';
     }).join('');
     var fin = Object.keys(L(p,'fin') || {}).map(function (k) { return '<div><dt>' + esc(k) + '</dt><dd>' + esc(L(p,'fin')[k]) + '</dd></div>'; }).join('');
     var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.maps);
