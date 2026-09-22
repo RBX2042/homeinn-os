@@ -306,7 +306,10 @@ function overviewPage(alle) {
     ${ctaBand('gesprek')}
   </main>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"CollectionPage","name":"Kennis & inzichten — HomeINN","url":"${canonical}","inLanguage":"nl-NL","about":"Vastgoed in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
+  [{"@context":"https://schema.org","@type":"CollectionPage","name":"Kennis & inzichten — HomeINN","url":"${canonical}","inLanguage":"nl-NL","about":"Vastgoed in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}},
+  {"@context":"https://schema.org","@type":"BreadcrumbList","@id":"${canonical}#kruimels","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://homeinn.nl/"},
+    {"@type":"ListItem","position":2,"name":"Kennis","item":"${canonical}"}]}]
   </script>
 ` + foot();
 }
