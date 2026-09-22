@@ -107,7 +107,8 @@ SITEMAP_PY
 
 # Cloudflare Pages security-headers + SEO-bestanden meeleveren
 cp _headers robots.txt sitemap.xml llms.txt website-online/ 2>/dev/null || true
-cp 7a22e12e33fce7b85e44fb8a26f7af89.txt website-online/ 2>/dev/null || true   # IndexNow-sleutelbestand: Bing/Yandex controleren hierop voordat zij een indexeringsverzoek accepteren
+cp 7a22e12e33fce7b85e44fb8a26f7af89.txt website-online/ 2>/dev/null || true
+cp googleb83ad0198747fcb8.html website-online/ 2>/dev/null || true   # Google Search Console-eigendomsbewijs — verwijderen betekent dat de property vervalt   # IndexNow-sleutelbestand: Bing/Yandex controleren hierop voordat zij een indexeringsverzoek accepteren
 # Vercel security-headers (Vercel leest _headers niet) meeleveren
 cp vercel.json website-online/ 2>/dev/null || true
 # Manifest meekopiëren maar start_url + naam op de publieke site (index.html) zetten i.p.v. het portaal
