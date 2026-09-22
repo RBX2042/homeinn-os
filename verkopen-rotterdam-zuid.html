@@ -22,9 +22,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260921d">
-  <link rel="stylesheet" href="tokens.css?v=20260921d">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260921d">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
+  <link rel="stylesheet" href="tokens.css?v=20260922a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260922a">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -55,6 +55,16 @@
     .spoke-buren span{font-size:.8rem;color:var(--ink4);font-weight:400}
     .spoke-buren a{font-size:.82rem;color:var(--gold-ink);text-decoration:none;border-bottom:1px solid rgba(var(--gold-rgb),.3)}
     .spoke-buren a:hover{color:var(--navy-text)}
+    .spoke-faq details{border-bottom:1px solid var(--cream3)}
+    .spoke-faq details:first-of-type{border-top:1px solid var(--cream3)}
+    .spoke-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;
+      padding:1.4rem .2rem;font-family:var(--serif);font-size:clamp(1.12rem,2vw,1.35rem);font-weight:500;color:var(--ink2)}
+    .spoke-faq summary::-webkit-details-marker{display:none}
+    .spoke-faq summary::after{content:"+";font-family:var(--sans);font-weight:300;font-size:1.3rem;color:var(--gold-ink);flex:0 0 auto;transition:transform .3s var(--ease)}
+    .spoke-faq details[open] summary::after{transform:rotate(45deg)}
+    .spoke-faq summary:hover{color:var(--gold-ink)}
+    .spoke-faq summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+    .spoke-faq .faq-body{font-size:.875rem;font-weight:300;line-height:1.85;color:var(--ink3);padding:0 .2rem 1.5rem;max-width:720px}
   </style>
 </head>
 <body>
@@ -178,6 +188,20 @@
       </div>
     </section>
 
+    <section class="faq-section spoke-faq">
+      <div class="faq-inner">
+        <div class="proc-head"><span class="t-eyebrow">Veelgestelde vragen</span><h2>Wat eigenaren in Rotterdam-Zuid<br>ons <em>vragen.</em></h2></div>
+        <details><summary>Koopt HomeINN mijn pand in Rotterdam-Zuid echt zelf, of bemiddelt u?</summary><div class="faq-body">Wij kopen zelf. HomeINN treedt op als koper en wordt eigenaar van het pand, en u betaalt ons geen courtage. Dat betekent ook dat wij vanaf het passeren het risico van staat, onderhoud en verhuur overnemen.</div></details>
+        <details><summary>Hoe snel weet ik waar ik aan toe ben?</summary><div class="faq-body">Na de opname ontvangt u binnen 48 uur een onderbouwd voorstel, met de opbouw erbij. Reageren wij op uw eerste bericht, dan doen wij dat op werkdagen binnen vier uur. Passeren kan daarna zo snel als u wilt — of juist op termijn, als u eerst nog iets te regelen heeft.</div></details>
+        <details><summary>Wat kost het verkopen van mijn pand in Rotterdam-Zuid aan HomeINN?</summary><div class="faq-body">Niets. Er is geen courtage, geen taxatierapport en geen opnamekosten. De gebruikelijke kosten koper zijn voor onze rekening; u draagt alleen wat wettelijk bij de verkoper hoort, zoals een eventuele doorhaling van de hypotheek. Wat er onder de streep voor u overblijft, staat in het voorstel.</div></details>
+        <details><summary>Mijn pand in Rotterdam-Zuid is verhuurd of verouderd. Is dat een probleem?</summary><div class="faq-body">Nee — dat is juist ons werk. Wij kopen in verhuurde staat, met achterstallig onderhoud of met een laag energielabel. Zittende huurders houden gewoon hun rechten en hun contract; wij nemen het verhuurderschap over. Ontwikkelen en verduurzamen doen wij daarna met onze vaste bouwpartner.</div></details>
+        <details><summary>Komt mijn pand op Funda te staan?</summary><div class="faq-body">Alleen als u dat wilt. Een verkoop aan HomeINN verloopt discreet: geen advertentie, geen bezichtigingen, geen open huis. Voor eigenaren die om zakelijke of persoonlijke redenen liever niet in de etalage staan, is dat vaak de doorslaggevende reden.</div></details>
+        <details><summary>In welke buurten van Rotterdam-Zuid koopt HomeINN?</summary><div class="faq-body">Wij kijken naar ieder pand in Rotterdam-Zuid en omgeving. Concreet kopen wij onder meer in Charlois, Tarwewijk, Carnisse, Pendrecht, Zuidwijk en Oud-Charlois. Staat uw buurt er niet bij? Bel of mail gerust — dat is in één zin beantwoord.</div></details>
+        <details><summary>Ik wil niet verkopen, maar wel beter renderen. Kan dat ook?</summary><div class="faq-body">Ja. Verhuur en beheer zijn twee van onze vijf disciplines. Wij zoeken en screenen huurders, regelen het contract en de indexering conform de actuele regelgeving, en nemen het technische en administratieve beheer over — tegen vaste percentages en met één vast aanspreekpunt.</div></details>
+        <p class="faq-foot">Staat uw vraag er niet bij? Bel <a href="tel:+31633322257">+31 6 33 32 22 57</a>, stuur een <a href="https://wa.me/31633322257" target="_blank" rel="noopener">WhatsApp</a> of <a href="pand-verkopen.html">vraag direct een voorstel aan</a>.</p>
+      </div>
+    </section>
+
     <nav class="spoke-buren" aria-label="Andere werkgebieden"><span>Ook actief in de regio:</span><a href="verkopen-feijenoord.html">Pand verkopen in Feijenoord</a><a href="verkopen-ijsselmonde.html">Pand verkopen in IJsselmonde</a></nav>
 
     <div class="cta-band"><div class="cta-inner"><h2>Uw pand in Rotterdam-Zuid verkopen? Vraag een vrijblijvend <em>voorstel</em> aan.</h2><a class="btn btn-dark" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div></div>
@@ -237,6 +261,9 @@
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260921d"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","@id":"https://homeinn.nl/verkopen-rotterdam-zuid.html#faq","inLanguage":"nl-NL","mainEntity":[{"@type":"Question","name":"Koopt HomeINN mijn pand in Rotterdam-Zuid echt zelf, of bemiddelt u?","acceptedAnswer":{"@type":"Answer","text":"Wij kopen zelf. HomeINN treedt op als koper en wordt eigenaar van het pand, en u betaalt ons geen courtage. Dat betekent ook dat wij vanaf het passeren het risico van staat, onderhoud en verhuur overnemen."}},{"@type":"Question","name":"Hoe snel weet ik waar ik aan toe ben?","acceptedAnswer":{"@type":"Answer","text":"Na de opname ontvangt u binnen 48 uur een onderbouwd voorstel, met de opbouw erbij. Reageren wij op uw eerste bericht, dan doen wij dat op werkdagen binnen vier uur. Passeren kan daarna zo snel als u wilt — of juist op termijn, als u eerst nog iets te regelen heeft."}},{"@type":"Question","name":"Wat kost het verkopen van mijn pand in Rotterdam-Zuid aan HomeINN?","acceptedAnswer":{"@type":"Answer","text":"Niets. Er is geen courtage, geen taxatierapport en geen opnamekosten. De gebruikelijke kosten koper zijn voor onze rekening; u draagt alleen wat wettelijk bij de verkoper hoort, zoals een eventuele doorhaling van de hypotheek. Wat er onder de streep voor u overblijft, staat in het voorstel."}},{"@type":"Question","name":"Mijn pand in Rotterdam-Zuid is verhuurd of verouderd. Is dat een probleem?","acceptedAnswer":{"@type":"Answer","text":"Nee — dat is juist ons werk. Wij kopen in verhuurde staat, met achterstallig onderhoud of met een laag energielabel. Zittende huurders houden gewoon hun rechten en hun contract; wij nemen het verhuurderschap over. Ontwikkelen en verduurzamen doen wij daarna met onze vaste bouwpartner."}},{"@type":"Question","name":"Komt mijn pand op Funda te staan?","acceptedAnswer":{"@type":"Answer","text":"Alleen als u dat wilt. Een verkoop aan HomeINN verloopt discreet: geen advertentie, geen bezichtigingen, geen open huis. Voor eigenaren die om zakelijke of persoonlijke redenen liever niet in de etalage staan, is dat vaak de doorslaggevende reden."}},{"@type":"Question","name":"In welke buurten van Rotterdam-Zuid koopt HomeINN?","acceptedAnswer":{"@type":"Answer","text":"Wij kijken naar ieder pand in Rotterdam-Zuid en omgeving. Concreet kopen wij onder meer in Charlois, Tarwewijk, Carnisse, Pendrecht, Zuidwijk en Oud-Charlois. Staat uw buurt er niet bij? Bel of mail gerust — dat is in één zin beantwoord."}},{"@type":"Question","name":"Ik wil niet verkopen, maar wel beter renderen. Kan dat ook?","acceptedAnswer":{"@type":"Answer","text":"Ja. Verhuur en beheer zijn twee van onze vijf disciplines. Wij zoeken en screenen huurders, regelen het contract en de indexering conform de actuele regelgeving, en nemen het technische en administratieve beheer over — tegen vaste percentages en met één vast aanspreekpunt."}}]}
+  </script>
+  <script src="site-nav.js?v=20260922a"></script>
 </body>
 </html>

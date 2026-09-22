@@ -81,6 +81,33 @@ function buurLinks(slug) {
   return `<nav class="spoke-buren" aria-label="Andere werkgebieden"><span>Ook actief in de regio:</span>${items}</nav>`;
 }
 
+/* ── Veelgestelde vragen per gebied ──
+   Zelfde antwoorden als op de landingspagina (één waarheid), maar toegespitst op
+   het gebied. Zichtbaar in de pagina (<details>) én als FAQPage-markup, zodat
+   Google de vragen mag uitklappen in de zoekresultaten. Geen nieuwe claims:
+   elk antwoord staat al elders op de site. */
+function faqVragen(w, buurtGebied) {
+  const n = w.naam;
+  const buurtAntwoord = (w.buurten || []).length
+    ? `Wij kijken naar ieder pand in ${buurtGebied} en omgeving. Concreet kopen wij onder meer in ${w.buurten.slice(0, -1).join(', ')} en ${w.buurten[w.buurten.length - 1]}. Staat uw buurt er niet bij? Bel of mail gerust — dat is in één zin beantwoord.`
+    : `Wij kijken naar ieder pand in ${n} en de directe omgeving. Twijfelt u of uw pand binnen ons gebied valt? Bel of mail gerust — dat is in één zin beantwoord.`;
+  return [
+    [`Koopt HomeINN mijn pand in ${n} echt zelf, of bemiddelt u?`,
+     `Wij kopen zelf. HomeINN treedt op als koper en wordt eigenaar van het pand, en u betaalt ons geen courtage. Dat betekent ook dat wij vanaf het passeren het risico van staat, onderhoud en verhuur overnemen.`],
+    [`Hoe snel weet ik waar ik aan toe ben?`,
+     `Na de opname ontvangt u binnen 48 uur een onderbouwd voorstel, met de opbouw erbij. Reageren wij op uw eerste bericht, dan doen wij dat op werkdagen binnen vier uur. Passeren kan daarna zo snel als u wilt — of juist op termijn, als u eerst nog iets te regelen heeft.`],
+    [`Wat kost het verkopen van mijn pand in ${n} aan HomeINN?`,
+     `Niets. Er is geen courtage, geen taxatierapport en geen opnamekosten. De gebruikelijke kosten koper zijn voor onze rekening; u draagt alleen wat wettelijk bij de verkoper hoort, zoals een eventuele doorhaling van de hypotheek. Wat er onder de streep voor u overblijft, staat in het voorstel.`],
+    [`Mijn pand in ${n} is verhuurd of verouderd. Is dat een probleem?`,
+     `Nee — dat is juist ons werk. Wij kopen in verhuurde staat, met achterstallig onderhoud of met een laag energielabel. Zittende huurders houden gewoon hun rechten en hun contract; wij nemen het verhuurderschap over. Ontwikkelen en verduurzamen doen wij daarna met onze vaste bouwpartner.`],
+    [`Komt mijn pand op Funda te staan?`,
+     `Alleen als u dat wilt. Een verkoop aan HomeINN verloopt discreet: geen advertentie, geen bezichtigingen, geen open huis. Voor eigenaren die om zakelijke of persoonlijke redenen liever niet in de etalage staan, is dat vaak de doorslaggevende reden.`],
+    [`In welke buurten van ${buurtGebied} koopt HomeINN?`, buurtAntwoord],
+    [`Ik wil niet verkopen, maar wel beter renderen. Kan dat ook?`,
+     `Ja. Verhuur en beheer zijn twee van onze vijf disciplines. Wij zoeken en screenen huurders, regelen het contract en de indexering conform de actuele regelgeving, en nemen het technische en administratieve beheer over — tegen vaste percentages en met één vast aanspreekpunt.`],
+  ];
+}
+
 function page(w) {
   const meta = META[w.slug] || { soort: 'regio Rotterdam', areaType: 'city', buren: [] };
   const titel = meta.titel || `Huis verkopen ${w.naam} | Voorstel in 48 uur — HomeINN`;
@@ -111,6 +138,20 @@ function page(w) {
       </div>`
     : '';
 
+  const faq = faqVragen(w, buurtGebied);
+  const faqMarkup = `<section class="faq-section spoke-faq">
+      <div class="faq-inner">
+        <div class="proc-head"><span class="t-eyebrow">Veelgestelde vragen</span><h2>Wat eigenaren in ${esc(w.naam)}<br>ons <em>vragen.</em></h2></div>
+        ${faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><div class="faq-body">${esc(a)}</div></details>`).join('\n        ')}
+        <p class="faq-foot">Staat uw vraag er niet bij? Bel <a href="tel:${TEL_HREF}">${TEL}</a>, stuur een <a href="https://wa.me/${TEL_HREF.replace('+', '')}" target="_blank" rel="noopener">WhatsApp</a> of <a href="pand-verkopen.html">vraag direct een voorstel aan</a>.</p>
+      </div>
+    </section>`;
+  const faqLD = JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'FAQPage', '@id': canonical + '#faq',
+    inLanguage: 'nl-NL',
+    mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  });
+
   const vglRows = VERGELIJK.map(r =>
     `<tr><td>${esc(r[0])}</td><td class="vgl-hi">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('');
   const stappen = STAPPEN.map(s =>
@@ -140,9 +181,9 @@ function page(w) {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts/fonts.css?v=20260921d">
-  <link rel="stylesheet" href="tokens.css?v=20260921d">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260921d">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
+  <link rel="stylesheet" href="tokens.css?v=20260922a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20260922a">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -173,6 +214,16 @@ function page(w) {
     .spoke-buren span{font-size:.8rem;color:var(--ink4);font-weight:400}
     .spoke-buren a{font-size:.82rem;color:var(--gold-ink);text-decoration:none;border-bottom:1px solid rgba(var(--gold-rgb),.3)}
     .spoke-buren a:hover{color:var(--navy-text)}
+    .spoke-faq details{border-bottom:1px solid var(--cream3)}
+    .spoke-faq details:first-of-type{border-top:1px solid var(--cream3)}
+    .spoke-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;
+      padding:1.4rem .2rem;font-family:var(--serif);font-size:clamp(1.12rem,2vw,1.35rem);font-weight:500;color:var(--ink2)}
+    .spoke-faq summary::-webkit-details-marker{display:none}
+    .spoke-faq summary::after{content:"+";font-family:var(--sans);font-weight:300;font-size:1.3rem;color:var(--gold-ink);flex:0 0 auto;transition:transform .3s var(--ease)}
+    .spoke-faq details[open] summary::after{transform:rotate(45deg)}
+    .spoke-faq summary:hover{color:var(--gold-ink)}
+    .spoke-faq summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+    .spoke-faq .faq-body{font-size:.875rem;font-weight:300;line-height:1.85;color:var(--ink3);padding:0 .2rem 1.5rem;max-width:720px}
   </style>
 </head>
 <body>
@@ -292,6 +343,8 @@ function page(w) {
       </div>
     </section>
 
+    ${faqMarkup}
+
     ${buurLinks(w.slug)}
 
     <div class="cta-band"><div class="cta-inner"><h2>Uw pand in ${esc(w.naam)} verkopen? Vraag een vrijblijvend <em>voorstel</em> aan.</h2><a class="btn btn-dark" href="pand-verkopen.html">Vraag een voorstel aan <span class="arr">→</span></a></div></div>
@@ -351,7 +404,10 @@ function page(w) {
     ]
   }
   </script>
-  <script src="site-nav.js?v=20260921d"></script>
+  <script type="application/ld+json">
+  ${faqLD}
+  </script>
+  <script src="site-nav.js?v=20260922a"></script>
 </body>
 </html>
 `;

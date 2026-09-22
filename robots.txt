@@ -7,3 +7,8 @@ Allow: /
 # resultaten kan blijven staan.
 
 Sitemap: https://homeinn.nl/sitemap.xml
+
+# Samenvatting van de site voor taalmodellen en AI-antwoordmachines (llmstxt.org).
+# Staat er zodat een AI-antwoord over HomeINN uit onze eigen woorden komt in plaats
+# van uit een gok: geen makelaar maar koper, geen courtage, 48 uur, werkgebied.
+# Llms-file: https://homeinn.nl/llms.txt
