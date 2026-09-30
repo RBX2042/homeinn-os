@@ -2593,6 +2593,7 @@ body .page-hero--foto::after{background-image:radial-gradient(70% 80% at 10% 100
 .ivs p{margin:.35rem 0 .75rem;font-size:.82rem;line-height:1.6;color:rgba(255,255,255,.7)}
 .ivs-row{display:flex;gap:.5rem}
 .ivs-row input{flex:1;min-width:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;padding:0 .75rem;font-size:.8rem;min-height:44px}
+@media (max-width:600px){.ivs-row input{font-size:16px}}
 .ivs-btn{background:var(--gold);color:var(--navy);border:0;padding:0 1.1rem;min-height:44px;font:inherit;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
 .ivs-btn:hover{background:var(--gold2)}
 .ivv-toggle{display:none;gap:.5rem;margin-bottom:1rem}
