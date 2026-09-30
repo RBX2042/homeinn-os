@@ -174,7 +174,7 @@
       '<a class="pillar-cta" target="_blank" rel="noopener" href="' + mapsUrl + '">' + esc(T.ctaMaps) + ' <span class="arr">→</span></a></div>';
     // formulier voorselecteren op het gekozen pand
     var sel = $('iv-project');
-    if (sel) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text.trim() === p.formOptie) { sel.selectedIndex = i; break; }
+    if (sel) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text.trim().replace(' and ', ' en ') === p.formOptie) { sel.selectedIndex = i; break; }
     schrijfScenario();
     if (scrollNaar) { var pnl = $('ivk-paneel'); if (pnl && pnl.scrollIntoView) pnl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
   }
