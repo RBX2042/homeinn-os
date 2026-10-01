@@ -1,9 +1,13 @@
 /* HomeINN — lead-cloud laag (Supabase, publieke site).
-   Optioneel en fail-silent: de bestaande localStorage-inbox + FormSubmit-e-mail blijven de
-   primaire, altijd-werkende paden. Deze laag stuurt elke lead ADDITIONEEL naar de centrale
-   'hios_leads'-tabel, zodat hij ook zichtbaar is in het beheerportaal als dat op een ander
-   apparaat/browser openstaat. Faalt dit (geen internet, Supabase down), dan verandert er
-   niets aan het bestaande gedrag van de site.
+   Deze laag stuurt elke lead naar de centrale 'hios_leads'-tabel (alert, bevestigingsmail en
+   admin-inbox hangen daaraan), naast de localStorage-inbox + FormSubmit-e-mail. Hij hindert de
+   bezoeker nooit: fouten worden niet gegooid.
+
+   SINDS 1 oktober 2026: pushLeadToCloud() geeft een Promise<boolean> terug (true = insert
+   gelukt). window.hiLeadOk(cloud, mail) bepaalt het resultaat van een formulier: geslaagd
+   zodra de cloud-insert óf de e-mail lukt. Zo ziet een bezoeker geen foutmelding (en verstuurt
+   hij geen dubbele lead) als alleen FormSubmit hapert, en blijft een geweigerde insert niet
+   meer onzichtbaar als ook de e-mail faalt.
 
    WAAROM EEN KALE FETCH EN GEEN SDK (gewijzigd 19 september 2026)
    De database staat op het gratis plan en gaat in hibernatie. Gemeten: een koud verzoek
@@ -32,7 +36,7 @@
 
   window.pushLeadToCloud = function (type, data, source) {
     try {
-      if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
+      if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(false);
       var rij = {
         local_id: data.id || null,
         type: type || 'Contact',
@@ -46,7 +50,7 @@
         handled: false
       };
       var body = JSON.stringify(rij);
-      fetch(ENDPOINT, {
+      return fetch(ENDPOINT, {
         method: 'POST',
         keepalive: body.length <= KEEPALIVE_MAX,
         headers: {
@@ -61,10 +65,33 @@
           r.text().then(function (t) { console.warn('Lead-cloud insert mislukt (' + r.status + '):', t); })
             .catch(function () { console.warn('Lead-cloud insert mislukt (' + r.status + ')'); });
         }
-      }).catch(function () { /* offline of geblokkeerd — lokale flow + e-mail blijven werken */ });
-    } catch (err) { /* nooit de bezoeker hinderen */ }
+        return r.ok;
+      }).catch(function () { return false; /* offline of geblokkeerd — lokale flow + e-mail blijven werken */ });
+    } catch (err) { return Promise.resolve(false); /* nooit de bezoeker hinderen */ }
   };
 })();
+
+/* Resultaat van een formulier: resolve(true) zodra de cloud-insert met true slaagt óf de
+   e-mailbelofte vervult (welke waarde ook — geef dus een mail-promise mee die bij mislukken
+   REJECT). Reject pas als beide zijn mislukt, of na 25 s zonder enig succes. */
+window.hiLeadOk = function (cloud, mail) {
+  return new Promise(function (resolve, reject) {
+    var klaar = false, mislukt = 0;
+    var timer = setTimeout(function () {
+      if (!klaar) { klaar = true; reject(new Error('Lead-bezorging duurde te lang')); }
+    }, 25000);
+    function gelukt() {
+      if (klaar) return;
+      klaar = true; clearTimeout(timer); resolve(true);
+    }
+    function fout(err) {
+      if (klaar || ++mislukt < 2) return;
+      klaar = true; clearTimeout(timer); reject(err instanceof Error ? err : new Error('Lead niet bezorgd'));
+    }
+    Promise.resolve(cloud).then(function (v) { if (v === true) gelukt(); else fout(); }, fout);
+    Promise.resolve(mail).then(gelukt, fout);
+  });
+};
 
 
 /* Tijdslimiet voor e-mailbezorging, inclusief het lezen van het antwoord. */

@@ -32,15 +32,15 @@ const PAGES = [
     slug: 'privacy', title: 'Privacybeleid', icon: 'ic-slot',
     metaDescription: 'Het privacybeleid van HomeINN: welke persoonsgegevens wij verwerken, waarom, hoe lang en welke rechten u heeft. Geen trackers, kaarten pas na uw klik.',
     heroCopy: 'HomeINN verwerkt persoonsgegevens zorgvuldig en alleen voor contact, dienstverlening en het verbeteren van de website. Hieronder leest u in duidelijke taal welke gegevens wij verwerken en waarom.',
-    versie: 'Versie 2.1 · ingangsdatum 5 september 2026',
+    versie: 'Versie 2.2 · ingangsdatum 1 oktober 2026',
     secties: [
       ['Wie is verantwoordelijk', `${BEDRIJF.naam}, ${BEDRIJF.adres}, KvK ${BEDRIJF.kvk}, is verwerkingsverantwoordelijke voor de verwerkingen die in dit privacybeleid zijn beschreven. Verzoeken over uw gegevens: <a href="mailto:info@homeinn.nl">info@homeinn.nl</a> of <a href="tel:+31633322257">${TEL}</a>.`],
       ['Welke gegevens wij verwerken en waarom', 'Vult u een formulier in (kennismakingsgesprek, pand verkopen, project volgen, investeren of contact), dan verwerken wij de gegevens die u opgeeft: naam, e-mailadres en/of telefoonnummer, het onderwerp van uw aanvraag en uw bericht. Biedt u een pand aan, dan vragen wij daarnaast het adres van het pand, het type, de bewoningssituatie (leeg of verhuurd), de bouwkundige staat, de aanleiding voor verkoop en de gewenste passeertermijn — uitsluitend om een onderbouwd voorstel te kunnen doen. Grondslag: uitvoering van (precontractuele) maatregelen op uw verzoek (art. 6 lid 1 sub b AVG) en ons gerechtvaardigd belang om aanvragen op te volgen.'],
       ['Gegevens bij verhuur, verhuurbemiddeling en beheer', 'Bemiddelen wij bij verhuur of beheren wij uw pand, dan verwerken wij daarnaast gegevens van kandidaat-huurders: identiteitsgegevens, inkomensgegevens, de uitkomst van een kredietwaardigheidscheck en referenties van een vorige verhuurder of werkgever. Wij bewaren geen kopie&euml;n van identiteitsbewijzen langer dan nodig en verstrekken deze gegevens niet aan derden. Voeren wij het beheer, dan verwerken wij bovendien de gegevens die daarvoor nodig zijn: de huurovereenkomst, contactgegevens van de huurder, huurbetalingen en achterstanden, en de correspondentie over onderhoud en meldingen. Grondslag: uitvoering van de (huur)overeenkomst en ons gerechtvaardigd belang bij een zorgvuldige selectie en een correcte huuradministratie. Verwerken wij deze gegevens in opdracht van een eigenaar, dan treden wij op als verwerker en leggen wij dat vast in een verwerkersovereenkomst.'],
       ['Gegevens van investeerders', 'Vraagt u informatie aan over een ontwikkelproject, dan verwerken wij uw naam, uw contactgegevens en het bedrag en de looptijd die u aangeeft. Wij gebruiken die gegevens uitsluitend om u de projectinformatie te sturen en contact met u op te nemen; wij verkopen ze niet en delen ze niet met derden voor hun eigen doeleinden. Komt een deelname tot stand, dan verwerken wij daarnaast de gegevens die nodig zijn voor de administratie van uw inleg, de looptijd en de uitkeringen; op die administratie zijn de wettelijke (fiscale) bewaartermijnen van 7 jaar van toepassing.'],
-      ['Doorsturen en opslaan van uw aanvraag', 'Formulierinzendingen worden per e-mail aan ons bezorgd via de verwerkersdienst FormSubmit. Daarnaast slaan wij uw aanvraag op in onze eigen beveiligde database bij Supabase (hostingregio: EU), zodat wij hem in ons beheerportaal kunnen opvolgen. Beide partijen treden op als verwerker en verwerken uw gegevens uitsluitend in onze opdracht. Wij verkopen of delen uw gegevens niet voor marketingdoeleinden van derden.'],
+      ['Doorsturen en opslaan van uw aanvraag', 'Formulierinzendingen worden per e-mail aan ons bezorgd via de verwerkersdienst FormSubmit. Daarnaast slaan wij uw aanvraag op in onze eigen beveiligde database bij Supabase (hostingregio: EU), zodat wij hem in ons beheerportaal kunnen opvolgen. Vanuit die database verstuurt de e-maildienst Resend (verzendregio: EU) een melding aan ons team en, als u een e-mailadres opgeeft, een ontvangstbevestiging aan u. Deze partijen treden op als verwerker en verwerken uw gegevens uitsluitend in onze opdracht. Wij verkopen of delen uw gegevens niet voor marketingdoeleinden van derden.'],
       ['Kaarten van Google Maps', 'Kaarten op deze site laden pas nadat u daarop klikt. Op dat moment worden gegevens (zoals uw IP-adres) door Google verwerkt; daarop is het privacybeleid van Google van toepassing. Klikt u niet, dan worden er geen gegevens met Google gedeeld. Lettertypen worden vanaf onze eigen server geladen.'],
-      ['Scripts van jsDelivr', 'Zodra u een formulierveld aanraakt, laadt uw browser één script (de Supabase-bibliotheek) van het content delivery network jsDelivr (Prospect One / Fastly). Daarbij ontvangt jsDelivr uw IP-adres en browsergegevens; jsDelivr stelt zelf geen cookies in en profileert niet. Zonder formuliergebruik wordt dit script niet geladen.'],
+      ['Scripts van jsDelivr', 'De openbare pagina\'s van deze website, ook de formulieren, laden geen scripts van derden. Alleen ons klantportaal, inclusief de inlogpagina, laadt één script (de Supabase-bibliotheek) van het content delivery network jsDelivr (Prospect One / Fastly). Daarbij ontvangt jsDelivr uw IP-adres en browsergegevens; jsDelivr stelt zelf geen cookies in en profileert niet.'],
       ['Bewaartermijnen', 'Aanvragen bewaren wij maximaal 12 maanden na afronding van het contact, tenzij er een overeenkomst tot stand komt — dan gelden de wettelijke (fiscale) bewaartermijnen van 7 jaar voor administratie.'],
       ['Uw rechten', 'U heeft recht op inzage, rectificatie, verwijdering, beperking, overdraagbaarheid en bezwaar. Mail daarvoor naar <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>; wij reageren binnen vier weken. U kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl).'],
     ],
@@ -71,11 +71,11 @@ const PAGES = [
     slug: 'cookies', title: 'Cookiebeleid', icon: 'ic-discreet',
     metaDescription: 'Het cookiebeleid van HomeINN: deze website plaatst geen cookies en gebruikt geen trackers. Alleen lokale opslag voor formulieren; kaarten pas na uw klik.',
     heroCopy: 'Deze website plaatst geen cookies en gebruikt geen trackers. Alleen uw eigen browser bewaart formuliergegevens lokaal; kaarten laden pas na uw klik.',
-    versie: 'Versie 2.1 · ingangsdatum 5 september 2026',
+    versie: 'Versie 2.2 · ingangsdatum 1 oktober 2026',
     secties: [
       ['Geen cookies', 'Deze website plaatst geen cookies en gebruikt geen analytische of advertentietrackers. Er is daarom geen cookiebanner nodig.'],
-      ['Lokale opslag', 'Vult u een formulier in, dan bewaart uw browser de inzending ook lokaal (localStorage), zodat de aanvraag niet verloren gaat. Die lokale kopie blijft op uw eigen apparaat. Om de site sneller te laden bewaart uw browser ook een lokale kopie van pagina\'s (service worker). Ook die blijft op uw eigen apparaat. De aanvraag zelf sturen wij daarnaast per e-mail en naar onze eigen database, zodat wij hem kunnen opvolgen — zie het privacybeleid voor wie die gegevens ontvangt en hoe lang wij ze bewaren.'],
-      ['Scripts van derden', 'Raakt u een formulierveld aan, dan laadt uw browser één script van het content delivery network jsDelivr; daarbij ziet jsDelivr uw IP-adres. Er wordt geen cookie geplaatst. Zie het privacybeleid voor details.'],
+      ['Lokale opslag', 'Mislukt het versturen van een formulier, dan bewaart uw browser de inzending tijdelijk lokaal (localStorage); na een geslaagde verzending wordt die kopie verwijderd. Die lokale kopie blijft op uw eigen apparaat. Om de site sneller te laden bewaart uw browser ook een lokale kopie van pagina\'s (service worker). Ook die blijft op uw eigen apparaat. De aanvraag zelf sturen wij daarnaast per e-mail en naar onze eigen database, zodat wij hem kunnen opvolgen — zie het privacybeleid voor wie die gegevens ontvangt en hoe lang wij ze bewaren.'],
+      ['Scripts van derden', 'Op de openbare pagina\'s, ook bij het invullen van formulieren, laden geen scripts van derden. Alleen ons klantportaal, inclusief de inlogpagina, laadt één script van het content delivery network jsDelivr; daarbij ziet jsDelivr uw IP-adres. Er wordt geen cookie geplaatst. Zie het privacybeleid voor details.'],
       ['Kaarten', 'Google Maps-kaarten laden uitsluitend nadat u daarop klikt. Pas op dat moment maakt uw browser verbinding met Google; tot die tijd wordt er niets met Google gedeeld. Lettertypen laden wij van onze eigen server, niet via Google Fonts.'],
       ['Vragen', 'Vragen over cookies of privacy? Mail <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.'],
     ],
@@ -97,7 +97,7 @@ function page(p, alle) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${p.title} — HomeINN Rotterdam</title>
   <meta name="description" content="${p.metaDescription}">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <meta name="theme-color" content="#0b1e30">
   <link rel="canonical" href="${canonical}">
@@ -109,7 +109,7 @@ function page(p, alle) {
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="${p.title} — HomeINN Rotterdam">
   <meta property="og:description" content="${p.metaDescription}">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
@@ -117,8 +117,8 @@ function page(p, alle) {
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260930a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
   <style>
     .lg-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .lg-top .brand img{height:34px;width:auto;display:block}
@@ -135,7 +135,8 @@ function page(p, alle) {
   ${SPRITE}
   <header class="lg-top">
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
-        <ul class="sn">
+    <nav class="sn-nav" aria-label="Hoofdmenu">
+    <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="investeren.html">Investeren</a></li>
       <li><a href="vastgoedbeheer.html">Beheer</a></li>
@@ -169,9 +170,10 @@ function page(p, alle) {
       </li>
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
+    </nav>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
     
-  <div class="right"><a class="lang-sw" href="${enTwin}" lang="en" hreflang="en" aria-label="English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+  <div class="right"><a class="lang-sw" href="${enTwin}" lang="en" hreflang="en" aria-label="EN – English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
 </header>
 
   <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
@@ -248,14 +250,14 @@ function page(p, alle) {
         <a href="werkgebied.html">Werkgebied</a>
         <a href="inloggen.html">Inloggen</a>
       </nav>
-      <p class="site-foot-partner">Vaste bouwpartner: <a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external">Lageweg Services B.V.</a></p>
+      <p class="site-foot-partner">Vaste bouwpartner: Lageweg Services B.V.</p>
       <div class="site-foot-bot">
         <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
-        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+        <div class="mini-f-social" role="group" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260922a"></script>
+  <script src="site-nav.js?v=20261001a"></script>
 </body>
 </html>
 `;

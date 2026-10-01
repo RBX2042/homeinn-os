@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Property management Rotterdam | Clear packages — HomeINN</title>
   <meta name="description" content="Property management in Rotterdam with fixed percentages and one point of contact. Three clear packages with a 24/7 fault line (from Full Operational).">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="https://homeinn.nl/property-management-en.html">
@@ -18,16 +18,16 @@
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Property Management Rotterdam — transparent packages — HomeINN">
   <meta property="og:description" content="Property management with fixed percentages and one point of contact. Three clear packages, with a 24/7 fault line from Full Operational. Request a no-obligation quote.">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-en-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="en_GB">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260930a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
   <style>
     /* Smart header + page-specific additions. Tokens from tokens.css; components from homeinn-public.css. */
     .vb-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -51,7 +51,7 @@
       font-size:1.05rem;font-weight:400;color:var(--ink2);font-family:var(--sans)}
     .vb-faq summary::-webkit-details-marker{display:none}
     .vb-faq summary::after{content:'+';position:absolute;right:.25rem;top:50%;transform:translateY(-50%);
-      font-size:1.4rem;font-weight:300;color:var(--gold);transition:transform .25s var(--ease)}
+      font-size:1.4rem;font-weight:300;color:var(--gold-ink);transition:transform .25s var(--ease)}
     .vb-faq details[open] summary::after{content:'–'}
     .vb-faq .faq-body{padding:0 0 1.5rem;font-size:.95rem;font-weight:300;line-height:1.85;color:var(--ink3);max-width:760px}
     /* Quote form reuses .cf-* from homeinn-public.css; light wrapper */
@@ -72,6 +72,7 @@
       <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
       <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
     </a>
+    <nav class="sn-nav" aria-label="Main menu">
     <ul class="sn">
       <li><a href="development-en.html">Development</a></li>
       <li><a href="invest-en.html">Invest</a></li>
@@ -106,8 +107,9 @@
       </li>
       <li><a href="about-en.html">About</a></li>
     </ul>
+    </nav>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="lang-sw" href="vastgoedbeheer.html" lang="nl" hreflang="nl" aria-label="Nederlandse versie">NL</a>
+    <div class="right"><a class="lang-sw" href="vastgoedbeheer.html" lang="nl" hreflang="nl" aria-label="NL – Nederlandse versie">NL</a>
 
       <a class="top-cta" href="contact-en.html">Book an introduction</a>
     </div>
@@ -156,10 +158,10 @@
     </section>
 
     <div class="usp-strip"><div class="usp-inner">
-      <div class="usp"><span class="usp-check">&#10003;</span>Fixed, percentage-based fees</div>
-      <div class="usp"><span class="usp-check">&#10003;</span>One fixed point of contact</div>
-      <div class="usp"><span class="usp-check">&#10003;</span>24/7 fault line for tenants (from Full Operational)</div>
-      <div class="usp"><span class="usp-check">&#10003;</span>Monthly reporting</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>Fixed, percentage-based fees</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>One fixed point of contact</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>24/7 fault line for tenants (from Full Operational)</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>Monthly reporting</div>
     </div></div>
 
     <!-- PACKAGES -->
@@ -176,7 +178,7 @@
           <div class="pk-top-line"></div>
           <div class="pk-num">01 — Core Management</div>
           <div class="pk-name">Administrative Management</div>
-          <div class="pk-sub">"The basics done properly — every month again"</div>
+          <div class="pk-sub">"The basics done properly — month after month"</div>
           <div class="pk-price"><span class="pk-pct">5%</span><span class="pk-pct-lbl">of the basic rent</span></div>
           <div class="pk-min">Minimum fee: <strong>&euro; 95 per unit per month</strong> (excl. VAT — &euro; 114.95 incl. 21% VAT)</div>
           <ul class="pk-list">
@@ -235,7 +237,7 @@
         </div>
       </div>
       <div class="pakketten-note">
-        <p>Packages 1 and 2 are standard forms of management. Package 3 is always combined with Package 2 (Full Operational) and is for owners who want to grow actively. All fees are exclusive of VAT (21%); for private landlords we also show the price inclusive of VAT. Your personal fee depends on the rent and type of property — request a no-obligation quote.</p>
+        <p>Packages 1 and 2 are standard forms of management. Package 3 is always combined with Package 2 (Full Operational) and is for owners who want to grow actively. Your personal fee depends on the rent and type of property — request a no-obligation quote.</p>
       </div>
     </div>
 
@@ -254,10 +256,10 @@
             <input type="range" min="600" max="3000" step="50" value="1200" id="c-slider" aria-labelledby="c-slider-lbl">
           </div>
           <div class="calc-toggle">
-            <button class="calc-tog-btn" id="ct-p1" type="button" onclick="setPk('p1')">Core Management · 5%</button>
-            <button class="calc-tog-btn on" id="ct-p2" type="button" onclick="setPk('p2')">Full Operational · 8%</button>
+            <button class="calc-tog-btn" id="ct-p1" type="button" aria-pressed="false" onclick="setPk('p1')">Core Management · 5%</button>
+            <button class="calc-tog-btn on" id="ct-p2" type="button" aria-pressed="true" onclick="setPk('p2')">Full Operational · 8%</button>
           </div>
-          <div class="calc-results">
+          <div class="calc-results" aria-live="polite" aria-atomic="true">
             <div class="cr-item"><div class="cr-val" id="c-fee">&euro; 135</div><div class="cr-lbl">Monthly fee</div></div>
             <div class="cr-item"><div class="cr-val" id="c-pct">11.3%</div><div class="cr-lbl">Effective rate</div></div>
             <div class="cr-item"><div class="cr-val" id="c-net">&euro; 1,065</div><div class="cr-lbl">Net payout</div></div>
@@ -316,7 +318,7 @@
       <div class="faq-inner">
         <div class="proc-head"><span class="t-eyebrow">Frequently asked questions</span><h2>What owners<br><em>ask us.</em></h2></div>
         <div class="vb-faq">
-          <details><summary>What does property management at HomeINN cost?</summary><div class="faq-body">You pay a fixed percentage of the basic rent: 5% (Core Management) or 8% (Full Operational), with a minimum fee of &euro; 95 and &euro; 135 per unit per month respectively (excl. VAT). You always pay the higher of the percentage or the minimum fee — never both. Use the calculator above for your situation.</div></details>
+          <details><summary>What does property management at HomeINN cost?</summary><div class="faq-body">You pay a fixed percentage of the basic rent: 5% (Core Management) or 8% (Full Operational), with a minimum fee of &euro; 95 and &euro; 135 per unit per month respectively (excl. VAT). You always pay the higher of the percentage or the minimum fee — never both. Use the calculator on this page for your situation.</div></details>
           <details><summary>What is the difference between the three packages?</summary><div class="faq-body">Core Management covers the administration (collection, agreements, reporting). Full Operational adds complete technical and maintenance management, with a 24/7 fault line and SLA response times. Performance Partner is for owners who want to grow actively: we co-invest in improvement projects and share in the result.</div></details>
           <details><summary>Am I tied to a long contract term?</summary><div class="faq-body">No. We believe in management that proves itself. You receive a clear agreement with a short, reasonable notice period — no multi-year commitment to keep you in.</div></details>
           <details><summary>Do you also manage a single home?</summary><div class="faq-body">Yes. Whether you let one home or run a complete portfolio — both are welcome. The minimum fee per unit ensures that even a single home is managed profitably and carefully.</div></details>
@@ -335,12 +337,13 @@
           <form method="post" action="#" id="vb-form" novalidate>
             <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="cf-2col">
-              <div class="cf-group"><label for="vb-first">First name</label><input id="vb-first" type="text" name="first_name" placeholder="John" required></div>
-              <div class="cf-group"><label for="vb-last">Surname</label><input id="vb-last" type="text" name="last_name" placeholder="Smith"></div>
+              <div class="cf-group"><label for="vb-first">First name</label><input id="vb-first" type="text" name="first_name" placeholder="John" autocomplete="given-name" required></div>
+              <div class="cf-group"><label for="vb-last">Surname (optional)</label><input id="vb-last" type="text" name="last_name" placeholder="Smith" autocomplete="family-name"></div>
             </div>
+            <p class="cf-hint" id="vb-bereik">Please fill in at least your e-mail address or telephone number.</p>
             <div class="cf-2col">
-              <div class="cf-group"><label for="vb-email">E-mail address</label><input id="vb-email" type="email" name="email" placeholder="john@example.com"></div>
-              <div class="cf-group"><label for="vb-phone">Telephone number</label><input id="vb-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
+              <div class="cf-group"><label for="vb-email">E-mail address</label><input id="vb-email" type="email" name="email" placeholder="john@example.com" autocomplete="email" inputmode="email" aria-describedby="vb-bereik"></div>
+              <div class="cf-group"><label for="vb-phone">Telephone number</label><input id="vb-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78" autocomplete="tel" inputmode="tel" aria-describedby="vb-bereik"></div>
             </div>
             <div class="cf-2col">
               <div class="cf-group"><label for="vb-portfolio">Number of units</label><select id="vb-portfolio" name="portfolio_size"><option>1 unit</option><option>2 – 5 units</option><option>6 – 10 units</option><option>11 or more units</option></select></div>
@@ -350,8 +353,8 @@
             <button class="cf-submit" type="submit">Request a no-obligation quote →</button>
             <p class="m-note" style="margin-top:.9rem">By submitting you agree to our <a href="privacy-en.html" style="color:inherit;text-decoration:underline">privacy policy</a>. We use your request to get in touch with you.</p>
           </form>
-          <div class="vb-form-success" id="vb-success">
-            <h3>Your request has been received ✓</h3>
+          <div class="vb-form-success" id="vb-success" role="status" aria-live="polite" tabindex="-1">
+            <h3>Your request has been received <span aria-hidden="true">✓</span></h3>
             <p>Thank you. We will contact you within four hours on working days and calculate your fee without obligation.</p>
           </div>
         </div>
@@ -383,7 +386,7 @@
         <a href="service-area-en.html">Service area</a>
         <a href="inloggen.html">Log in</a>
       </nav>
-      <p class="site-foot-partner">Fixed construction partner: <a href="https://lagewegservices.nl/en" target="_blank" rel="noopener noreferrer external">Lageweg Services B.V.</a></p>
+      <p class="site-foot-partner">Fixed construction partner: Lageweg Services B.V.</p>
       <div class="site-foot-bot">
         <span>&copy; 2026 HomeINN &mdash; Property partner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; VAT NL867727548B01</small></span>
         <div class="mini-f-social" aria-label="Follow HomeINN on social media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN on Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
@@ -419,7 +422,7 @@
         "name": "What does property management at HomeINN cost?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "You pay a fixed percentage of the basic rent: 5% (Core Management) or 8% (Full Operational), with a minimum fee of € 95 and € 135 per unit per month respectively (excl. VAT). You always pay the higher of the percentage or the minimum fee — never both. Use the calculator on property-management-en.html for your situation."
+          "text": "You pay a fixed percentage of the basic rent: 5% (Core Management) or 8% (Full Operational), with a minimum fee of € 95 and € 135 per unit per month respectively (excl. VAT). You always pay the higher of the percentage or the minimum fee — never both. Use the calculator on this page for your situation."
         }
       },
       {
@@ -465,7 +468,7 @@
     ]
   }
   </script>
-  <script src="lead-cloud.js?v=20260922a" defer></script>
+  <script src="lead-cloud.js?v=20261001a" defer></script>
   <script>
   (function(){
     'use strict';
@@ -481,6 +484,8 @@
       var p1 = document.getElementById('ct-p1'), p2 = document.getElementById('ct-p2');
       if (p1) p1.classList.toggle('on', p === 'p1');
       if (p2) p2.classList.toggle('on', p === 'p2');
+      if (p1) p1.setAttribute('aria-pressed', p === 'p1' ? 'true' : 'false');
+      if (p2) p2.setAttribute('aria-pressed', p === 'p2' ? 'true' : 'false');
       calcUpdate();
     };
     function calcUpdate(){
@@ -531,8 +536,11 @@
         data.type = type; data.date = new Date().toISOString(); data.handled = false;
         list.push(data); localStorage.setItem(INBOX_KEY, JSON.stringify(list));
       }catch(e){}
-      if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'property-management-en.html');
-      return stuurLeadDoor(type, data);
+      var cloud = window.pushLeadToCloud ? window.pushLeadToCloud(type, data, 'property-management-en.html') : false;
+      var mail = stuurLeadDoor(type, data);
+      if (!window.hiLeadOk) return mail;
+      return window.hiLeadOk(cloud, mail.then(function(ok){ if(!ok) throw new Error('mail'); return true; }))
+        .then(function(v){ return v !== false; }, function(){ return false; });
     }
     var form = document.getElementById('vb-form');
     if (form) form.addEventListener('submit', function(e){
@@ -541,8 +549,8 @@
       var f = new FormData(form);
       if (_isBot(f)) return; // honeypot
       var naam = (String(f.get('first_name')||'') + ' ' + String(f.get('last_name')||'')).trim();
-      if (!naam || (!String(f.get('email')||'').trim() && !String(f.get('phone')||'').trim())) {
-        var _v = document.getElementById('vb-first'); if (_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Please enter your name and at least an e-mail address or telephone number so that we can reach you.';el.insertAdjacentElement('afterend',p);el.focus();})(_v);
+      if (!naam || (!String(f.get('email')||'').trim() && String(f.get('phone')||'').replace(/\D/g,'').length<6)) {
+        var _v = document.getElementById('vb-first'); if (_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:var(--red-ink)';p.textContent='Please enter your name and at least an e-mail address or telephone number so that we can reach you.';el.insertAdjacentElement('afterend',p);el.focus();})(_v);
         return;
       }
       var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();
@@ -556,14 +564,14 @@
         message: String(f.get('message')||'').trim()
       }).then(function(geslaagd){
         if(knop){knop.disabled=false;knop.textContent=knop.dataset.txt;}
-        if(!geslaagd){ (function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';p.innerHTML='Sending failed — your details are still in the form. Please try again or call us directly: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';f.appendChild(p);})(form); return; }
+        if(!geslaagd){ (function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:var(--red-ink)';p.innerHTML='Sending failed — your details are still in the form. Please try again or call us directly: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';f.appendChild(p);})(form); return; }
         var ok = document.getElementById('vb-success');
         form.style.display = 'none';
-        if (ok) { ok.style.display = 'block'; ok.scrollIntoView({ behavior:'smooth', block:'center' }); }
+        if (ok) { ok.style.display = 'block'; ok.scrollIntoView({ behavior:'smooth', block:'center' }); try{ok.focus({preventScroll:true})}catch(e){} }
       });
     });
   })();
   </script>
-<script src="site-nav.js?v=20260922a"></script>
+<script src="site-nav.js?v=20261001a"></script>
 </body>
 </html>

@@ -65,7 +65,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -125,7 +126,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -175,7 +177,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -215,7 +218,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -265,7 +269,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -335,7 +340,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -405,7 +411,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -475,7 +482,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -545,7 +553,8 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development"
    }
   },
   {
@@ -605,7 +614,9 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development",
+    "titel": "Van der Driftstraat 4 (front)"
    }
   },
   {
@@ -665,7 +676,9 @@
     ],
     "fin": {
      "Figures for this property": "On request"
-    }
+    },
+    "status": "In development",
+    "titel": "Tollensstraat 32 (rear)"
    }
   }
  ]

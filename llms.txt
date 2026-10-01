@@ -24,9 +24,9 @@ Talen: Nederlands en Engels. Contact: +31 6 33 32 22 57 · info@homeinn.nl
 - Bedragen per pand en per portefeuille staan niet op de website; die staan in het
   projectdossier, dat op aanvraag wordt verstrekt.
 - Meedoen in een project is beleggen, geen sparen: het rendement is niet gegarandeerd.
-  Deelname staat uitsluitend open voor professionele marktpartijen, vanaf € 100.000
-  ineens per deelnemer, en komt pas tot stand na een persoonlijk gesprek en een
-  individuele overeenkomst. De website is een uitnodiging tot kennismaking, geen aanbod.
+  Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer.
+  Deelname komt pas tot stand na een persoonlijk gesprek en een individuele overeenkomst.
+  De website is een uitnodiging tot kennismaking, geen aanbod.
 
 ## Hoofdpagina's
 - [Home](https://homeinn.nl/): wie HomeINN is en wat wij ontwikkelen.
@@ -42,6 +42,7 @@ Talen: Nederlands en Engels. Contact: +31 6 33 32 22 57 · info@homeinn.nl
 - [Contact](https://homeinn.nl/contact.html): telefoon, WhatsApp, e-mail en adres.
 
 ## Kennisartikelen
+- [Kennis](https://homeinn.nl/kennis.html): overzicht van alle artikelen.
 - [Pand direct verkopen — zo werkt het](https://homeinn.nl/kennis-pand-direct-verkopen-zo-werkt-het.html)
 - [Verhuren of verkopen — de afweging](https://homeinn.nl/kennis-verhuren-of-verkopen-de-afweging.html)
 - [Verduurzamen naar label A](https://homeinn.nl/kennis-verduurzamen-naar-label-a.html)
@@ -61,4 +62,4 @@ Talen: Nederlands en Engels. Contact: +31 6 33 32 22 57 · info@homeinn.nl
 - [Ridderkerk](https://homeinn.nl/verkopen-ridderkerk.html)
 
 ## English
-- [Home](https://homeinn.nl/index-en.html) · [Sell your property](https://homeinn.nl/sell-your-property-en.html) · [Invest](https://homeinn.nl/invest-en.html) · [Development](https://homeinn.nl/development-en.html) · [Property management](https://homeinn.nl/property-management-en.html) · [Contact](https://homeinn.nl/contact-en.html)
+- [Home](https://homeinn.nl/index-en.html) · [Sell your property](https://homeinn.nl/sell-your-property-en.html) · [Invest](https://homeinn.nl/invest-en.html) · [Development](https://homeinn.nl/development-en.html) · [Property management](https://homeinn.nl/property-management-en.html) · [Contact](https://homeinn.nl/contact-en.html) · [About](https://homeinn.nl/about-en.html) · [Projects](https://homeinn.nl/projects-en.html) · [Homes for sale](https://homeinn.nl/for-sale-en.html) · [Letting](https://homeinn.nl/letting-en.html) · [Service area](https://homeinn.nl/service-area-en.html) · [Insights](https://homeinn.nl/knowledge-en.html) · [Selling directly](https://homeinn.nl/knowledge-sell-directly-en.html) · [Let or sell](https://homeinn.nl/knowledge-let-or-sell-en.html) · [Energy label A](https://homeinn.nl/knowledge-energy-label-a-en.html)

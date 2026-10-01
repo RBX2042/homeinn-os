@@ -50,16 +50,17 @@ function internHtml(l: Record<string, unknown>, adminUrl: string) {
     </p>`)
 }
 
+// De bevestiging herhaalt het bericht bewust NIET: dat bericht stelt de website samen
+// (met interne, Nederlandse labels) en hios_leads staat open voor anon, dus anders kan
+// iedereen via ons geverifieerde domein willekeurige tekst naar een willekeurig adres sturen.
 function bevestigingHtml(l: Record<string, unknown>, en: boolean) {
   const naam = String(l.name || '').split(' ')[0]
   return en
     ? shell(`<h1 style="margin:0 0 12px;font-size:20px">Thank you${naam ? ', ' + esc(naam) : ''}</h1>
-        <p style="margin:0 0 12px">We have received your request and will get back to you within one business day.</p>
-        ${l.message ? `<p style="margin:0 0 12px;color:#7b8695;font-size:13px">Your message:</p><p style="margin:0;white-space:pre-wrap;background:#f7f8fa;border-radius:10px;padding:14px;font-size:14px">${esc(l.message)}</p>` : ''}
+        <p style="margin:0 0 12px">We have received your request and will get back to you within four hours on working days.</p>
         <p style="margin:20px 0 0">Kind regards,<br><strong>HomeINN</strong></p>`)
     : shell(`<h1 style="margin:0 0 12px;font-size:20px">Bedankt${naam ? ', ' + esc(naam) : ''}</h1>
-        <p style="margin:0 0 12px">We hebben uw aanvraag ontvangen en nemen binnen één werkdag contact met u op.</p>
-        ${l.message ? `<p style="margin:0 0 12px;color:#7b8695;font-size:13px">Uw bericht:</p><p style="margin:0;white-space:pre-wrap;background:#f7f8fa;border-radius:10px;padding:14px;font-size:14px">${esc(l.message)}</p>` : ''}
+        <p style="margin:0 0 12px">We hebben uw aanvraag ontvangen en nemen binnen vier uur op werkdagen contact met u op.</p>
         <p style="margin:20px 0 0">Met vriendelijke groet,<br><strong>HomeINN</strong></p>`)
 }
 
@@ -110,7 +111,9 @@ Deno.serve(async (req: Request) => {
         const r = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ from, to, subject, html, reply_to: kind === 'lead-alert' && geldigAdres(lead.email) ? lead.email : undefined })
+          // Alarm: antwoorden gaat naar de aanvrager. Bevestiging: een antwoord van de
+          // aanvrager moet bij ons aankomen, niet op het (no-reply) afzendadres.
+          body: JSON.stringify({ from, to, subject, html, reply_to: kind === 'lead-alert' ? (geldigAdres(lead.email) ? lead.email : undefined) : operator })
         })
         const out = await r.json().catch(() => ({}))
         await admin.from('hios_emails').insert({
@@ -130,9 +133,11 @@ Deno.serve(async (req: Request) => {
       internHtml(lead, adminUrl))
 
     // Strikte adrescontrole: geen bevestiging naar iets dat niet als e-mailadres leest.
-    const geldig = geldigAdres(lead.email)
-    if (geldig && await magNaar(lead.email)) {
-      await verstuur('lead-bevestiging', lead.email,
+    // Genormaliseerd (trim + kleine letters), zodat de limiet per ontvanger in magNaar
+    // niet met hoofdletter-varianten van hetzelfde adres te omzeilen is.
+    const aan = String(lead.email || '').trim().toLowerCase()
+    if (geldigAdres(aan) && await magNaar(aan)) {
+      await verstuur('lead-bevestiging', aan,
         en ? 'We received your request — HomeINN' : 'Wij hebben uw aanvraag ontvangen — HomeINN',
         bevestigingHtml(lead, en))
     }

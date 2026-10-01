@@ -5,11 +5,11 @@
    (app.js ~320 kB, cloud.js, styles.css) wordt pas gecachet als iemand het portaal
    daadwerkelijk bezoekt — een bezoeker van de landingspagina hoort die niet te
    downloaden. HTML-pagina's worden bij bezoek gecachet (netwerk eerst). */
-const CACHE = 'homeinn-os-v121';
+const CACHE = 'homeinn-os-v122';
 const CORE = [
   'homeinn-public.html', 'homeinn-public.js', 'homeinn-public.css', 'site-nav.js', 'lead-cloud.js',
   'lightbox.js', 'tokens.css', 'fonts/fonts.css', 'manifest.webmanifest', 'aanbod.json',
-  'assets/logo-light.webp', 'assets/logo-light.png', 'assets/favicon-512.png', 'assets/favicon-maskable-512.png'
+  'assets/logo-light.webp'
 ];
 const PORTAAL = /\/(portaal|inloggen|huurders|kopers|verkoper|investeerders)\.html$/;
 
@@ -19,9 +19,12 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', e => {
+  // Navigation preload: het HTML-verzoek start al terwijl de service worker nog opstart.
   e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
+    Promise.all([
+      self.registration.navigationPreload ? self.registration.navigationPreload.enable().catch(() => {}) : null,
+      caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    ]).then(() => self.clients.claim())
   );
 });
 
@@ -37,8 +40,9 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return; // externe requests (CDN, kaarten) ongemoeid
 
-  // aanbod.json altijd vers proberen op te halen, val terug op cache (offline).
-  if (url.pathname.endsWith('aanbod.json')) {
+  // Data-JSON (aanbod.json, portefeuille.json, …) altijd vers proberen op te halen,
+  // val terug op cache (offline). Een JSON-wijziging bumpt geen CACHE.
+  if (/\.json$/.test(url.pathname)) {
     e.respondWith(fetch(req).then(r => bewaar(req, r)).catch(() => caches.match(req)));
     return;
   }
@@ -47,22 +51,28 @@ self.addEventListener('fetch', e => {
   // Offline-terugval: portaalpagina's → portaal, al het andere → de publieke site.
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req).then(r => bewaar(req, r)).catch(() =>
+      Promise.resolve(e.preloadResponse).then(p => p || fetch(req)).then(r => bewaar(req, r)).catch(() =>
         caches.match(req).then(m => m || caches.match(PORTAAL.test(url.pathname) ? 'portaal.html' : 'homeinn-public.html'))
       )
     );
     return;
   }
 
-  // Code (JS/CSS): netwerk eerst + revalideren (no-cache), zodat nieuwe code altijd direct laadt;
-  // cache alleen als offline-fallback.
+  // Code (JS/CSS). Met ?v=-token: cache eerst — elke wijziging krijgt een nieuwe ?v= (en dus een
+  // nieuwe URL), dus een treffer is altijd de juiste versie en kost geen extra rondgang.
+  // Zonder token (portaalcode): netwerk eerst + revalideren (no-cache); cache alleen als offline-fallback.
   if (req.destination === 'script' || req.destination === 'style' || /\.(js|css)$/.test(url.pathname)) {
+    if (url.searchParams.has('v')) {
+      e.respondWith(caches.match(req).then(m => m || fetch(req).then(r => bewaar(req, r))).catch(() => caches.match(req, { ignoreSearch: true })));
+      return;
+    }
     // Pagina's vragen code op mét ?v=-token, de precache staat er zónder: bij een misser
     // ook zonder querystring zoeken, anders is de precache offline waardeloos.
     e.respondWith(fetch(req, { cache: 'no-cache' }).then(r => bewaar(req, r)).catch(() => caches.match(req, { ignoreSearch: true })));
     return;
   }
 
-  // Overige assets (afbeeldingen, fonts): cache eerst, anders netwerk (en bijwerken in cache).
-  e.respondWith(caches.match(req, { ignoreSearch: true }).then(m => m || fetch(req).then(r => bewaar(req, r)).catch(() => m)));
+  // Overige assets (afbeeldingen, fonts): cache eerst (exacte URL, dus een nieuwe ?v= haalt het
+  // nieuwe bestand), anders netwerk (en bewaren); offline ook zonder querystring zoeken.
+  e.respondWith(caches.match(req).then(m => m || fetch(req).then(r => bewaar(req, r)).catch(() => caches.match(req, { ignoreSearch: true }))));
 });

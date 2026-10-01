@@ -151,6 +151,16 @@
       ],
       "destination": "https://homeinn.nl/:path*",
       "permanent": true
+    },
+    {
+      "source": "/:slug(over-ons|contact|investeren|projecten|projectontwikkeling|vastgoedbeheer|verhuur|te-koop|werkgebied|kennis|pand-verkopen|privacy|voorwaarden|cookies|verkopen-[a-z-]+|kennis-[a-z-]+|[a-z-]+-en)",
+      "destination": "/:slug.html",
+      "permanent": true
+    },
+    {
+      "source": "/:slug(over-ons|contact|investeren|projecten|projectontwikkeling|vastgoedbeheer|verhuur|te-koop|werkgebied|kennis|pand-verkopen|privacy|voorwaarden|cookies|verkopen-[a-z-]+|kennis-[a-z-]+|[a-z-]+-en)/",
+      "destination": "/:slug.html",
+      "permanent": true
     }
   ]
 }

@@ -12,9 +12,9 @@
   var EN = (document.documentElement.lang || 'nl').toLowerCase().indexOf('en') === 0;
   var T = EN ? {
     kiezerEyebrow: 'Choose a project', kiezerKop: 'Which property would you like to <em>look at?</em>',
-    kiezerLede: 'Eleven properties, one standard. Select a property to see its phase, its homes after splitting and how to request the full figures.',
+    kiezerLede: 'Eleven properties, one standard. Select a property to see its phase, its homes after subdivision and how to request the full figures.',
     kaartNote: 'Schematic map — positions are indicative. Open a location in Google Maps via the property panel.',
-    units: 'Homes after splitting', fase: 'Phase', status: 'Status',
+    units: 'Homes after subdivision', fase: 'Phase', status: 'Status',
     fasen: ['Purchase completed', 'Planning & permits', 'Refurbishment with Lageweg Services B.V.', 'Sale or letting'],
     ctaInfo: 'Request the project information for this property', ctaMaps: 'Open in Google Maps',
     scenarioKop: 'Share this property', scenarioLede: 'Your chosen property in one link — handy for a partner or adviser. We only see it if you send us the form.',
@@ -29,9 +29,9 @@
       ['Your time', 'Viewings, notary, works, tenants', 'Progress updates by e-mail'],
       ['Control', 'Full — every decision is yours', 'None — HomeINN decides on the project'],
       ['Liquidity', 'You can sell at any time', 'Fixed until the end of the project; not tradable'],
-      ['Risk', 'Market, vacancy and construction risk on your own balance sheet', 'Your contribution can be lost in whole or in part']
+      ['Risk', 'Market, vacancy and construction risk on your own balance sheet', 'Your investment can be lost in whole or in part']
     ],
-    vglNote: 'This comparison is informational and not advice. Ask for the project information and, if you wish, an independent adviser.',
+    vglNote: 'This comparison is informational and not advice. Request the project information and, if you wish, consult an independent adviser.',
     jaar: function (n) { return n + (n === 1 ? ' year' : ' years'); }
   } : {
     kiezerEyebrow: 'Kies een project', kiezerKop: 'Welk pand wilt u <em>bekijken?</em>',
@@ -54,7 +54,7 @@
       ['Liquiditeit', 'U kunt op elk moment verkopen', 'Vast tot het einde van het project; niet verhandelbaar'],
       ['Risico', 'Markt-, leegstands- en bouwrisico op uw eigen balans', 'Uw inleg kan geheel of deels verloren gaan']
     ],
-    vglNote: 'Deze vergelijking is informatief en geen advies. Vraag de projectinformatie op en desgewenst een onafhankelijk adviseur.',
+    vglNote: 'Deze vergelijking is informatief en geen advies. Vraag de projectinformatie op en raadpleeg desgewenst een onafhankelijk adviseur.',
     jaar: function (n) { return n + ' jaar'; }
   };
 
@@ -90,15 +90,15 @@
     }).join('');
     vgl.innerHTML =
       '<div class="proc-head"><span class="t-eyebrow">' + esc(T.vglEyebrow) + '</span><h2>' + T.vglKop + '</h2><p class="proc-lede">' + esc(T.vglLede) + '</p></div>' +
-      '<div class="ivv-toggle" role="tablist" aria-label="' + esc(T.vglEyebrow) + '">' +
-        '<button type="button" role="tab" aria-selected="true" data-kol="zelf">' + esc(T.zelf) + '</button>' +
-        '<button type="button" role="tab" aria-selected="false" data-kol="mee">' + esc(T.mee) + '</button></div>' +
+      '<div class="ivv-toggle" role="group" aria-label="' + esc(T.vglEyebrow) + '">' +
+        '<button type="button" aria-pressed="true" data-kol="zelf">' + esc(T.zelf) + '</button>' +
+        '<button type="button" aria-pressed="false" data-kol="mee">' + esc(T.mee) + '</button></div>' +
       '<div class="ivv-wrap"><table class="ivv-table"><thead><tr><th scope="col"></th><th scope="col">' + esc(T.zelf) + '</th><th scope="col">' + esc(T.mee) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
       '<p class="ivv-note">' + esc(T.vglNote) + '</p>';
     // Op smalle schermen één kolom tegelijk (tabs); op brede schermen staan beide naast elkaar.
     vgl.querySelectorAll('.ivv-toggle button').forEach(function (b) {
       b.addEventListener('click', function () {
-        vgl.querySelectorAll('.ivv-toggle button').forEach(function (x) { x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        vgl.querySelectorAll('.ivv-toggle button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
         vgl.setAttribute('data-kol', b.getAttribute('data-kol'));
       });
     });
@@ -165,16 +165,19 @@
     var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.maps);
     var infoUrl = '#meedoen';
     $('ivk-paneel').innerHTML =
-      '<div class="ivk-head"><div><span class="t-eyebrow">' + esc(p.gebied) + '</span><h3>' + esc(p.titel) + '</h3><p class="aanbod-kenmerken">' + esc(L(p,'kenmerken')) + '</p></div><span class="pfx-badge">' + esc(L(p,'badge')) + '</span></div>' +
+      '<div class="ivk-head"><div><span class="t-eyebrow">' + esc(p.gebied) + '</span><h3>' + esc(L(p,'titel')) + '</h3><p class="aanbod-kenmerken">' + esc(L(p,'kenmerken')) + '</p></div><span class="pfx-badge">' + esc(L(p,'badge')) + '</span></div>' +
       '<p class="pfx-desc">' + esc(L(p,'desc')) + '</p>' +
-      '<div class="ivk-fase"><span class="ivk-k">' + esc(T.fase) + ' · ' + esc(p.status) + '</span><ol class="ivk-fasen">' + fasen + '</ol></div>' +
+      '<div class="ivk-fase"><span class="ivk-k">' + esc(T.fase) + ' · ' + esc(L(p,'status')) + '</span><ol class="ivk-fasen">' + fasen + '</ol></div>' +
       '<dl class="pfx-fin">' + fin + '</dl>' +
       '<p class="pfx-units-head">' + esc(T.units) + '</p><ul class="pfx-units">' + units + '</ul>' +
       '<div class="ivk-acties"><a class="btn btn-primary" href="' + infoUrl + '" data-pand="' + esc(p.id) + '">' + esc(T.ctaInfo) + ' <span class="arr">→</span></a>' +
       '<a class="pillar-cta" target="_blank" rel="noopener" href="' + mapsUrl + '">' + esc(T.ctaMaps) + ' <span class="arr">→</span></a></div>';
     // formulier voorselecteren op het gekozen pand
+    // alleen als de bezoeker zelf een pand koos — anders blijft 'Geen voorkeur' staan
     var sel = $('iv-project');
-    if (sel) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text.trim().replace(' and ', ' en ') === p.formOptie) { sel.selectedIndex = i; break; }
+    if (sel && doorBezoeker) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text.trim().replace(' and ', ' en ') === p.formOptie) { sel.selectedIndex = i; break; }
+    // korte melding voor schermlezers, alleen bij een eigen keuze (niet bij het laden)
+    var st = $('ivk-status'); if (st && doorBezoeker) st.textContent = L(p, 'titel');
     schrijfScenario();
     if (scrollNaar) { var pnl = $('ivk-paneel'); if (pnl && pnl.scrollIntoView) pnl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
   }
@@ -185,7 +188,8 @@
     }).join('');
     kiezer.innerHTML =
       '<div class="proc-head"><span class="t-eyebrow">' + esc(T.kiezerEyebrow) + '</span><h2>' + T.kiezerKop + '</h2><p class="proc-lede">' + esc(T.kiezerLede) + '</p></div>' +
-      '<div class="ivk-grid"><div class="ivk-lijst" role="list">' + chips + '</div><div class="ivk-paneel" id="ivk-paneel" aria-live="polite"></div></div>';
+      '<div class="ivk-grid"><div class="ivk-lijst">' + chips + '</div><div class="ivk-paneel" id="ivk-paneel"></div></div>' +
+      '<p id="ivk-status" class="sr-only" aria-live="polite"></p>';
     kiezer.querySelectorAll('.ivk-chip').forEach(function (c) {
       c.addEventListener('click', function () { var p = DATA.panden.filter(function (x) { return x.id === c.getAttribute('data-id'); })[0]; if (p) toonPand(p, window.innerWidth < 900, true); });
     });
@@ -199,7 +203,7 @@
     function Y(lat) { return ((lat0 - lat) / (lat0 - lat1)) * H; }
     var NS = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); svg.setAttribute('role', 'img');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); svg.setAttribute('role', 'group');
     svg.setAttribute('aria-label', EN ? 'Schematic map of the eleven HomeINN properties in Rotterdam and Vlaardingen' : 'Schematische kaart van de elf HomeINN-panden in Rotterdam en Vlaardingen');
     // Nieuwe Maas, gestileerd (west → oost)
     var maas = document.createElementNS(NS, 'path');
@@ -244,10 +248,11 @@
     var form = $('iv-form');
     if (form) form.addEventListener('submit', function () {
       var ta = $('iv-message'); if (!ta) return;
-      var regel = T.scenarioLead + ': ' + scenarioTekst();
-      // een eerdere scenario-regel (bv. na een mislukte verzending) overschrijven, niet stapelen
-      var rest = ta.value.split('\n').filter(function (r) { return r.indexOf(T.scenarioLead + ': ') !== 0; }).join('\n').replace(/\n+$/, '');
-      ta.value = (rest ? rest + '\n' : '') + regel;
+      var s = scenarioTekst();
+      // een eerdere scenario-regel (bv. na een mislukte verzending) overschrijven, niet stapelen;
+      // zonder gekozen pand geen lege 'Scenario: '-regel toevoegen
+      var rest = ta.value.split('\n').filter(function (r) { return r.indexOf(T.scenarioLead + ':') !== 0; }).join('\n').replace(/\n+$/, '');
+      ta.value = s ? (rest ? rest + '\n' : '') + T.scenarioLead + ': ' + s : rest;
     }, true);
   }
 
@@ -266,8 +271,8 @@
     bouwKiezer(); bouwKaart(); bouwScenario();
     // hero-/homepagelinks met ?project=<adres> → dat pand tonen
     var gevraagd = new URLSearchParams(location.search).get('project');
-    var start = DATA.panden.filter(function (p) { return gevraagd && (p.kort === gevraagd.trim() || p.titel === gevraagd.trim()); })[0] || DATA.panden[0];
-    toonPand(start, false);
+    var start = DATA.panden.filter(function (p) { return gevraagd && (p.kort === gevraagd.trim() || p.titel === gevraagd.trim()); })[0];
+    toonPand(start || DATA.panden[0], false, !!start);
     pasScenarioToe();
     // site-brede reveal kent deze nieuwe blokken niet; wél zichtbaar maken
     kiezer.querySelectorAll('.rv').forEach(function (e) { e.classList.add('in'); });

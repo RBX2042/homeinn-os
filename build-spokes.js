@@ -64,7 +64,7 @@ const VERGELIJK = [
 const STAPPEN = [
   ['01', 'Vertel ons over uw pand', 'Adres, staat en uw situatie volstaan — telefonisch of via het formulier.'],
   ['02', 'Opname binnen enkele dagen', 'Eén discreet bezoek, zonder verplichtingen — ook bij verhuurde staat.'],
-  ['03', 'Onderbouwd voorstel binnen 48 uur', 'Transparant opgebouwd op staat, ligging en marktwaarde.'],
+  ['03', 'Onderbouwd voorstel binnen 48 uur', 'Transparant opgebouwd uit staat, ligging en marktwaarde.'],
   ['04', 'Passeren bij de notaris', 'Bij een notaris naar uw keuze, op het moment dat ú kiest.'],
 ];
 
@@ -95,7 +95,7 @@ function faqVragen(w, buurtGebied) {
     [`Koopt HomeINN mijn pand in ${n} echt zelf, of bemiddelt u?`,
      `Wij kopen zelf. HomeINN treedt op als koper en wordt eigenaar van het pand, en u betaalt ons geen courtage. Dat betekent ook dat wij vanaf het passeren het risico van staat, onderhoud en verhuur overnemen.`],
     [`Hoe snel weet ik waar ik aan toe ben?`,
-     `Na de opname ontvangt u binnen 48 uur een onderbouwd voorstel, met de opbouw erbij. Reageren wij op uw eerste bericht, dan doen wij dat op werkdagen binnen vier uur. Passeren kan daarna zo snel als u wilt — of juist op termijn, als u eerst nog iets te regelen heeft.`],
+     `Na de opname ontvangt u binnen 48 uur een onderbouwd voorstel, met de opbouw erbij. Op uw eerste bericht reageren wij op werkdagen binnen vier uur. Passeren kan daarna zo snel als u wilt — of juist op termijn, als u eerst nog iets te regelen heeft.`],
     [`Wat kost het verkopen van mijn pand in ${n} aan HomeINN?`,
      `Niets. Er is geen courtage, geen taxatierapport en geen opnamekosten. De gebruikelijke kosten koper zijn voor onze rekening; u draagt alleen wat wettelijk bij de verkoper hoort, zoals een eventuele doorhaling van de hypotheek. Wat er onder de streep voor u overblijft, staat in het voorstel.`],
     [`Mijn pand in ${n} is verhuurd of verouderd. Is dat een probleem?`,
@@ -153,7 +153,7 @@ function page(w) {
   });
 
   const vglRows = VERGELIJK.map(r =>
-    `<tr><td>${esc(r[0])}</td><td class="vgl-hi">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('');
+    `<tr><th scope="row">${esc(r[0])}</th><td class="vgl-hi">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('');
   const stappen = STAPPEN.map(s =>
     `<div class="pstep"><div class="pstep-n">${s[0]}</div><div class="pstep-body"><strong>${esc(s[1])}</strong><span>${esc(s[2])}</span></div></div>`).join('');
 
@@ -165,7 +165,7 @@ function page(w) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(titel)}</title>
   <meta name="description" content="${esc(w.metaDescription)}">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="${canonical}">
@@ -174,16 +174,16 @@ function page(w) {
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Pand verkopen in ${esc(w.naam)} — voorstel binnen 48 uur">
   <meta property="og:description" content="${esc(w.metaDescription)}">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260930a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -233,6 +233,7 @@ function page(w) {
       <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
       <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
     </a>
+    <nav class="sn-nav" aria-label="Hoofdmenu">
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="investeren.html">Investeren</a></li>
@@ -267,8 +268,9 @@ function page(w) {
       </li>
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
+    </nav>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="lang-sw" href="sell-your-property-en.html" lang="en" hreflang="en" aria-label="English version">EN</a>
+    <div class="right"><a class="lang-sw" href="sell-your-property-en.html" lang="en" hreflang="en" aria-label="EN – English version">EN</a>
       
       <a class="top-cta" href="contact.html">Plan een kennismaking</a>
     </div>
@@ -328,7 +330,7 @@ function page(w) {
         <div class="proc-head"><span class="t-eyebrow">Eerlijk vergeleken</span><h2>Direct aan HomeINN<br>of via de <em>makelaar?</em></h2></div>
         <div class="vgl-wrap" tabindex="0" role="region" aria-label="Vergelijkingstabel — horizontaal scrollbaar">
           <table class="vgl-table">
-            <thead><tr><th></th><th class="vgl-hi">Direct aan HomeINN</th><th>Via een makelaar</th></tr></thead>
+            <thead><tr><td></td><th class="vgl-hi">Direct aan HomeINN</th><th>Via een makelaar</th></tr></thead>
             <tbody>${vglRows}</tbody>
           </table>
         </div>
@@ -372,10 +374,10 @@ function page(w) {
         <a href="werkgebied.html">Werkgebied</a>
         <a href="inloggen.html">Inloggen</a>
       </nav>
-      <p class="site-foot-partner">Vaste bouwpartner: <a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external">Lageweg Services B.V.</a></p>
+      <p class="site-foot-partner">Vaste bouwpartner: Lageweg Services B.V.</p>
       <div class="site-foot-bot">
         <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
-        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+        <div class="mini-f-social" role="group" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
       </div>
     </div>
   </footer>
@@ -388,7 +390,7 @@ function page(w) {
     "name":"HomeINN",
     "telephone":"${TEL_HREF}",
     "email":"info@homeinn.nl",
-    "url":"${canonical}",
+    "url":"https://homeinn.nl/",
     "areaServed":${areaLD},
     "address":{"@type":"PostalAddress","streetAddress":"Rosestraat 1321","postalCode":"3071 AL","addressLocality":"Rotterdam","addressRegion":"Zuid-Holland","addressCountry":"NL"},
     "description":"HomeINN koopt panden in ${esc(w.naam)} direct aan — ook verhuurd of met achterstallig onderhoud. Voorstel binnen 48 uur, zonder makelaarskosten."
@@ -407,7 +409,7 @@ function page(w) {
   <script type="application/ld+json">
   ${faqLD}
   </script>
-  <script src="site-nav.js?v=20260922a"></script>
+  <script src="site-nav.js?v=20261001a"></script>
 </body>
 </html>
 `;

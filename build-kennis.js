@@ -28,8 +28,7 @@ const CTA = {
 };
 
 const EN_TWIN = {'kennis.html':'knowledge-en.html','kennis-pand-direct-verkopen-zo-werkt-het.html':'knowledge-sell-directly-en.html','kennis-verduurzamen-naar-label-a.html':'knowledge-energy-label-a-en.html','kennis-verhuren-of-verkopen-de-afweging.html':'knowledge-let-or-sell-en.html'};
-const DATUM_BUILD = new Date().toISOString().slice(0,10);
-function head(titel, desc, canonical) {
+function head(titel, desc, canonical, ogType = 'article') {
   const enTwin = EN_TWIN[canonical.replace('https://homeinn.nl/','')] || 'knowledge-en.html';
   return `<!doctype html>
 <html lang="nl">
@@ -39,28 +38,28 @@ function head(titel, desc, canonical) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(titel)}</title>
   <meta name="description" content="${esc(desc)}">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="${canonical}">
   <link rel="alternate" hreflang="nl" href="${canonical}">
   <link rel="alternate" hreflang="en" href="https://homeinn.nl/${enTwin}">
   <link rel="alternate" hreflang="x-default" href="${canonical}">
-  <meta property="og:type" content="article">
+  <meta property="og:type" content="${ogType}">
   <meta property="og:url" content="${canonical}">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="${esc(titel)}">
   <meta property="og:description" content="${esc(desc)}">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260930a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}
@@ -106,7 +105,7 @@ function head(titel, desc, canonical) {
     .art-faq details{border-bottom:1px solid var(--line)}
     .art-faq summary{list-style:none;cursor:pointer;padding:1.2rem 2rem 1.2rem 0;position:relative;font-size:1.02rem;font-weight:400;color:var(--ink2)}
     .art-faq summary::-webkit-details-marker{display:none}
-    .art-faq summary::after{content:'+';position:absolute;right:.1rem;top:50%;transform:translateY(-50%);font-size:1.3rem;font-weight:300;color:var(--gold)}
+    .art-faq summary::after{content:'+';position:absolute;right:.1rem;top:50%;transform:translateY(-50%);font-size:1.3rem;font-weight:300;color:var(--gold-ink)}
     .art-faq details[open] summary::after{content:'\\2013'}
     .art-faq .a{padding:0 0 1.3rem;font-size:.95rem;font-weight:300;line-height:1.8;color:var(--ink3)}
     .art-related{max-width:760px;margin:0 auto;padding:0 clamp(1.5rem,5vw,2rem) clamp(3.5rem,7vw,5.5rem)}
@@ -120,6 +119,7 @@ function head(titel, desc, canonical) {
   <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="kn-top">
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <nav class="sn-nav" aria-label="Hoofdmenu">
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="investeren.html">Investeren</a></li>
@@ -154,8 +154,9 @@ function head(titel, desc, canonical) {
       </li>
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
+    </nav>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="lang-sw" href="${enTwin}" lang="en" hreflang="en" aria-label="English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+    <div class="right"><a class="lang-sw" href="${enTwin}" lang="en" hreflang="en" aria-label="EN – English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
   </header>
   <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
     <nav aria-label="Hoofdmenu">
@@ -210,14 +211,14 @@ function foot() {
         <a href="werkgebied.html">Werkgebied</a>
         <a href="inloggen.html">Inloggen</a>
       </nav>
-      <p class="site-foot-partner">Vaste bouwpartner: <a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external">Lageweg Services B.V.</a></p>
+      <p class="site-foot-partner">Vaste bouwpartner: Lageweg Services B.V.</p>
       <div class="site-foot-bot">
         <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
-        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+        <div class="mini-f-social" role="group" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
       </div>
     </div>
   </footer>
-  <script src="site-nav.js?v=20260922a"></script>
+  <script src="site-nav.js?v=20261001a"></script>
 </body>
 </html>
 `;
@@ -225,7 +226,7 @@ function foot() {
 
 function ctaBand(ctaType) {
   var c = CTA[ctaType] || CTA.gesprek;
-  return `<section style="background:var(--navy)"><div style="max-width:760px;margin:0 auto;padding:clamp(2.5rem,5vw,3.5rem) clamp(1.5rem,5vw,2rem);text-align:center">
+  return `<section class="kn-cta" style="background:var(--navy)"><div style="max-width:760px;margin:0 auto;padding:clamp(2.5rem,5vw,3.5rem) clamp(1.5rem,5vw,2rem);text-align:center">
     <h2 style="font-family:var(--serif);font-weight:300;color:#fff;font-size:clamp(1.5rem,3vw,2rem);margin:0 0 .6rem">${esc(c.titel)}</h2>
     <p style="color:rgba(255,255,255,.6);font-weight:300;line-height:1.7;max-width:52ch;margin:0 auto 1.75rem">${esc(c.sub)}</p>
     <a class="btn btn-primary" href="${c.href}">${esc(c.label)} <span class="arr">→</span></a>
@@ -271,7 +272,7 @@ function articlePage(a, alle) {
     ${ctaBand(a.ctaType)}
   </main>
   <script type="application/ld+json">
-  [{"@context":"https://schema.org","@type":"Article","headline":${JSON.stringify(a.h1)},"description":${JSON.stringify(a.metaDescription)},"about":${JSON.stringify(a.category)},"inLanguage":"nl-NL","datePublished":${JSON.stringify(a.datum || '2026-06-22')},"dateModified":${JSON.stringify(a.bijgewerkt || DATUM_BUILD)},"image":"https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g","author":{"@type":"Organization","name":"HomeINN","@id":"https://homeinn.nl/#organisatie"},"publisher":{"@type":"Organization","name":"HomeINN","@id":"https://homeinn.nl/#organisatie","logo":{"@type":"ImageObject","url":"https://homeinn.nl/assets/favicon-512.png"}},"mainEntityOfPage":${JSON.stringify(canonical)}},
+  [{"@context":"https://schema.org","@type":"Article","headline":${JSON.stringify(a.h1)},"description":${JSON.stringify(a.metaDescription)},"about":${JSON.stringify(a.category)},"inLanguage":"nl-NL","datePublished":${JSON.stringify(a.datum || '2026-06-22')},"dateModified":${JSON.stringify(a.bijgewerkt || a.datum || '2026-06-22')},"image":"https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a","author":{"@type":"Organization","name":"HomeINN","@id":"https://homeinn.nl/#organisatie"},"publisher":{"@type":"Organization","name":"HomeINN","@id":"https://homeinn.nl/#organisatie","logo":{"@type":"ImageObject","url":"https://homeinn.nl/assets/favicon-512.png"}},"mainEntityOfPage":${JSON.stringify(canonical)}},
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://homeinn.nl/"},{"@type":"ListItem","position":2,"name":"Kennis","item":"https://homeinn.nl/kennis.html"},{"@type":"ListItem","position":3,"name":${JSON.stringify(a.category)},"item":${JSON.stringify(canonical)}}]}${faqLd}]
   </script>
 ` + foot();
@@ -293,7 +294,7 @@ function overviewPage(alle) {
 
   return head('Kennis & inzichten over vastgoed in Rotterdam — HomeINN',
     'Praktische kennis over vastgoed in Rotterdam: direct verkopen, verhuren of verkopen, en verduurzamen naar energielabel A. Helder uitgelegd door HomeINN.',
-    canonical) + `
+    canonical, 'website') + `
   <main id="main" tabindex="-1">
     <section class="kn-hero"><div class="kn-hero-in">
       <span class="t-eyebrow">Kennis &amp; inzichten</span>

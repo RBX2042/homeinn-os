@@ -14,7 +14,7 @@ Text Domain: homeinn
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 /* Design-tokens leven in tokens.css (single source of truth) — link dat
    bestand vóór deze stylesheet. */
-html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 /* overflow-x:hidden op body zet de y-as impliciet op 'auto'; of de body daardoor
    zelf een scrollcontainer wordt hangt af van de overflow-propagatie naar de
    viewport. overflow-x:clip haalt die onzekerheid weg: het knipt af zonder ooit
@@ -28,6 +28,8 @@ body{font-family:'Outfit',system-ui,sans-serif;color:var(--ink);background:var(-
 body.no-scroll{overflow:hidden}
 .skip-link{position:absolute;left:-9999px;top:0}
 .skip-link:focus{left:1rem;top:1rem;z-index:900;background:var(--navy);color:#fff;padding:.6rem 1rem;border:1px solid var(--gold2)}
+/* Alleen voor schermlezers (bv. #ivk-status in investeer-tools.js) */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0}
 body.has-custom-cursor *{cursor:none!important}
 a{color:inherit;text-decoration:none}
 button{font-family:'Outfit',system-ui,sans-serif;cursor:pointer;border:none;background:none}
@@ -176,13 +178,16 @@ body.hero-ready .hb-cable{animation:hbDraw 1.3s var(--ease-out) 1.05s both}
 
 /* HERO-ENTREE (gestaffeld) */
 @keyframes heroUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-.hero-pill,.hero-sub,.hero-actions,.hero-micro{opacity:0}
+/* heroRise: alleen beweging, geen opacity — kop, intro en hoofdknop zijn vanaf de
+   eerste paint zichtbaar (LCP telt geen opacity:0-paints). */
+@keyframes heroRise{from{transform:translateY(22px)}to{transform:none}}
+.hero-pill,.hero-micro{opacity:0}
 body.hero-ready .hero-pill{animation:heroUp .7s var(--ease-out) .15s both}
-body.hero-ready .hero-sub{animation:heroUp .8s var(--ease-out) .52s both}
-body.hero-ready .hero-actions{animation:heroUp .8s var(--ease-out) .68s both}
+.hero-sub{animation:heroRise .8s var(--ease-out) .52s both}
+.hero-actions{animation:heroRise .8s var(--ease-out) .68s both}
 body.hero-ready .hero-micro{animation:heroUp .8s var(--ease-out) .82s both}
 /* LCP: de h1 is bewust NIET JS-gated — animatie start bij first paint, ook zonder JS */
-.hero h1 .hl{display:block;animation:heroUp .85s var(--ease-out) both}
+.hero h1 .hl{display:block;animation:heroRise .85s var(--ease-out) both}
 .hero h1 .hl:nth-child(1){animation-delay:.28s}
 .hero h1 .hl:nth-child(2){animation-delay:.4s}
 .hero h1 .hl:nth-child(3){animation-delay:.54s}
@@ -485,12 +490,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .cf-group label{display:block;font-size:max(.875rem,14px);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.55rem}
 .cf-group input,.cf-group select,.cf-group textarea{width:100%;padding:11px 14px;border:1px solid var(--cream3);background:var(--cream);font-family:'Outfit',sans-serif;font-size:max(1rem,16px);min-height:48px;font-weight:300;color:var(--ink);transition:border .2s,background .2s;border-radius:0}
 .cf-group input:focus,.cf-group select:focus,.cf-group textarea:focus{border-color:var(--gold);background:var(--white)}
+.cf-group ::placeholder,.m-group ::placeholder{color:var(--ink4);opacity:1}
 .cf-group textarea{min-height:110px;resize:vertical}
 .cf-hint{display:block;margin-top:.45rem;font-size:max(.8125rem,13px);font-weight:300;color:var(--ink4);letter-spacing:0;text-transform:none}
+/* Losse 'vul e-mail of telefoon in'-hint tussen twee veldrijen (a11y-17): afstand tot het volgende label */
+p.cf-hint[id$="-bereik"]{margin:0 0 .75rem}
 .cf-bevestig{margin:1.25rem 0 1.1rem}
 .cf-check{display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;font-size:max(.875rem,14px);font-weight:300;line-height:1.65;color:var(--ink2);letter-spacing:0;text-transform:none;margin:0}
 .cf-check input[type=checkbox]{flex:0 0 auto;width:20px;height:20px;min-height:0;margin:.15rem 0 0;padding:0;accent-color:var(--gold);cursor:pointer}
-.cf-check input[type=checkbox]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.cf-check input[type=checkbox]:focus-visible{outline:2px solid var(--gold-ink);outline-offset:2px}
 .cf-check span{flex:1}
 .cf-submit{width:100%;padding:14px;background:var(--gold);color:var(--navy);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;transition:background .25s}
 .cf-submit:hover{background:var(--gold2)}
@@ -560,7 +568,7 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 .footer-links a:hover{color:var(--gold2)}
 
 /* MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(6,14,24,.88);z-index:900;display:none;align-items:flex-start;justify-content:center;padding:2rem;backdrop-filter:blur(10px);overflow-y:auto}
+.modal-bg{position:fixed;inset:0;background:rgba(6,14,24,.88);z-index:900;display:none;align-items:flex-start;justify-content:center;padding:2rem;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);overflow-y:auto}
 .modal-bg.on{display:flex}
 .modal{background:var(--cream);max-width:500px;width:100%;margin:auto;position:relative;animation:mshow .32s var(--ease-out)}
 @keyframes mshow{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
@@ -598,7 +606,7 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 .post-hero-copy h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.25rem,6vw,5.9rem);font-weight:300;line-height:1.02;color:#fff;letter-spacing:-.025em;margin-bottom:1.35rem}
 .post-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5)}
 .post-intro{margin-top:1.65rem;max-width:720px;font-size:1.08rem;line-height:1.9;color:rgba(255,255,255,.72)}
-.post-hero-panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);padding:1.6rem;border-radius:0}
+.post-hero-panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:1.6rem;border-radius:0}
 .post-panel-label{display:inline-block;margin-bottom:.85rem;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2)}
 .post-hero-panel p{font-size:.88rem;line-height:1.85;color:rgba(255,255,255,.68);margin-bottom:1rem}
 .post-panel-meta{display:flex;justify-content:space-between;gap:1rem;padding:.8rem 0;border-top:1px solid rgba(255,255,255,.08)}
@@ -1028,7 +1036,10 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 .vgl-table td{font-size:.84rem;font-weight:300;line-height:1.6;color:var(--ink3);padding:1rem 1.5rem;border-bottom:1px solid var(--cream2);vertical-align:top}
 .vgl-table td:first-child{font-weight:500;color:var(--ink2);width:24%}
 .vgl-table td.vgl-hi{background:var(--gold-light);color:var(--ink2);font-weight:400}
-.vgl-table tr:last-child td{border-bottom:0}
+.vgl-table tbody tr:last-child :is(td,th){border-bottom:0}
+/* Rijkop (<th scope="row">, a11y-23) oogt als de vroegere eerste <td>; lege kopcel linksboven als de kolomkoppen */
+.vgl-table tbody th{font-family:inherit;font-size:.84rem;font-weight:500;line-height:1.6;color:var(--ink2);text-align:left;padding:1rem 1.5rem;border-bottom:1px solid var(--cream2);vertical-align:top;width:24%}
+.vgl-table thead td{padding:1.3rem 1.5rem;border-bottom:2px solid var(--cream3)}
 .vgl-note{max-width:760px;margin:1.8rem auto 0;font-size:.8rem;font-weight:300;line-height:1.8;color:var(--ink4);text-align:center;font-style:italic}
 
 /* ===== FAQ-accordion ===== */
@@ -1195,7 +1206,9 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 /* Op donkere vlakken haalt --gold-ink te weinig; daar de lichte goudtint (7,5:1 op navy). */
 #nav :focus-visible,#mob :focus-visible,.hero :focus-visible,.jstats-band :focus-visible,.cta-band--navy :focus-visible,
 .pakketten-section :focus-visible,.pk :focus-visible,.calc-section :focus-visible,.tc-head.dark :focus-visible,
-.usp-strip :focus-visible,.pfx-exit :focus-visible,.mvw-strip :focus-visible,#pg-home > footer :focus-visible,.modal-nav :focus-visible{outline-color:var(--gold2)}
+.usp-strip :focus-visible,.pfx-exit :focus-visible,.mvw-strip :focus-visible,#pg-home > footer :focus-visible,.modal-nav :focus-visible,
+.iv-calc :focus-visible,.proc-aside :focus-visible,.pfx-sum-chart :focus-visible,.vh-eigenaren :focus-visible,.nf :focus-visible,.kn-cta :focus-visible{outline-color:var(--gold2)}
+.page-hero :focus-visible{outline-color:var(--gold3)}
 .btn:focus-visible,.nav-cta:focus-visible{outline-offset:4px}
 .nav-links a:focus-visible{outline:none}
 .nav-links a:focus-visible::after{transform:scaleX(1)}
@@ -1273,7 +1286,7 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 /* Mobiele sticky CTA — stille balk onderaan (homepage) */
 .smcta{display:none}
 @media(max-width:600px){
-  .smcta{display:flex;align-items:stretch;position:fixed;left:0;right:0;bottom:0;z-index:850;gap:.5rem;background:rgba(11,30,48,.97);backdrop-filter:blur(12px) saturate(135%);-webkit-backdrop-filter:blur(12px) saturate(135%);border-top:1px solid rgba(var(--gold-rgb),.32);padding:.55rem .8rem calc(.55rem + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .35s var(--ease)}
+  .smcta{display:flex;align-items:stretch;position:fixed;left:0;right:0;bottom:0;z-index:850;gap:.5rem;background:rgba(11,30,48,.97);border-top:1px solid rgba(var(--gold-rgb),.32);padding:.55rem .8rem calc(.55rem + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .35s var(--ease)}
   body.smcta-on .smcta{transform:translateY(0)}
   .smcta-primary,.smcta-call{display:flex;align-items:center;justify-content:center;gap:.4rem;min-height:46px;font-size:.74rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:background .25s var(--ease),color .25s var(--ease)}
   .smcta-primary{flex:1;background:var(--gold);color:var(--navy)}
@@ -1337,7 +1350,7 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
    ════════════════════════════════════════════════════════════ */
 
 /* ── Ankers vrijhouden van de vaste nav (72px) ── */
-#diensten,#werkwijze,#werk,#vragen{scroll-margin-top:92px}
+#diensten,#werkwijze,#werk,#vragen,#portefeuille,#meedoen,#meedoen-stappen,#inschrijf,#komend,#zoek,#offerte{scroll-margin-top:92px}
 
 /* ── Fotolaag hero — warmte zodra er echte fotografie is; zonder foto
       verwijdert de laag zichzelf (onerror) en blijft de line-art intact ── */
@@ -1364,6 +1377,8 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 .partner-intro .partner-head p{font-size:1rem}
 .development-photo{margin:0;min-width:0}
 .development-photo img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:45% center}
+/* WebP-<picture> rond de sfeerfoto (perf-6): de wrapper gedraagt zich als blok */
+.pfx-vision-foto picture,.development-photo picture{display:block}
 .development-photo figcaption{font-size:.8125rem;line-height:1.6;color:var(--ink3);padding:1rem 0;border-bottom:1px solid var(--line)}
 @media(max-width:900px){.partner-intro{grid-template-columns:1fr}.development-photo img{aspect-ratio:3/2}}
 @media(max-width:720px){
@@ -1403,11 +1418,13 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 /* ── FAQ — a11y en lange antwoorden ── */
 .faq-section{border-top:1px solid var(--cream3)}
 .faq-q{transition:color .2s var(--ease)}
-.faq-q:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.faq-q:focus-visible{outline:2px solid var(--gold-ink);outline-offset:3px}
 .faq-item.open .faq-a{max-height:none}
 .faq-foot{margin-top:2.25rem;font-size:.85rem;font-weight:300;color:var(--ink3)}
 .faq-foot a{color:var(--gold-ink);border-bottom:1px solid rgba(var(--gold-rgb),.45)}
 .faq-foot a:hover{color:var(--gold-text)}
+/* Link in de bevestigingsmelding na verzenden (investeren/contact) niet alleen door kleur herkenbaar */
+.ct-success p a{text-decoration:underline;text-underline-offset:2px}
 
 /* ── Slot-CTA: inleidende zin ── */
 .cta-band--navy .cta-lede{max-width:520px;margin:1rem 0 2rem;font-size:.95rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.72)}
@@ -1465,6 +1482,12 @@ a.nav-cta{display:inline-flex;align-items:center;text-decoration:none}
 #mob{justify-content:flex-start}
 #mob > *:first-child{margin-top:auto}
 #mob > *:last-child{margin-bottom:auto}
+/* Sluitknop in de dialoog (site-nav.js, a11y-5): direct onder de burger, net onder de kop
+   (64px; #mob opent alleen ≤1100px). Alleen zichtbaar bij toetsenbordfocus — touch/muis
+   gebruiken de burger-X. De nav erna houdt de verticale centrering. */
+#mob .mob-x{position:absolute;z-index:1;top:calc(64px + .25rem);right:clamp(20px,4vw,40px);width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;margin:0;color:#fff;font-size:1.8rem;line-height:1;background:none;border:0;cursor:pointer}
+#mob .mob-x:not(:focus-visible){clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
+#mob > .mob-x + *{margin-top:auto}
 #mob nav a{font-size:clamp(1.7rem,5.2vw,2.6rem);line-height:1.34}
 #mob .mob-btn,#mob .mob-sub{margin-top:2rem}
 @media(max-height:720px){
@@ -1486,6 +1509,8 @@ a.nav-cta{display:inline-flex;align-items:center;text-decoration:none}
    .spoke-top, .kn-top, …) zodat die pagina's hun eigen opmaak houden
    maar wél dezelfde navigatie krijgen als de homepage.
    ════════════════════════════════════════════════════════════ */
+/* <nav class="sn-nav"> is het landmark rond de menulijst (.sn / .nav-links) */
+.sn-nav{display:flex;align-items:center;min-width:0;flex-shrink:1}
 .sn{display:flex;align-items:center;gap:1.6rem;list-style:none;margin:0;padding:0}
 .sn > li{margin:0}
 .sn a,.sn .nav-sub-toggle{
@@ -1512,7 +1537,7 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 
 @media(max-width:1080px){.sn{gap:1.15rem}.sn a,.sn .nav-sub-toggle{letter-spacing:.06em}}
 @media(max-width:960px){
-  .sn{display:none}
+  .sn,.sn-nav{display:none}
   .sn-burger{display:flex}
   /* Telefoon en actieknop wijken op mobiel voor de burger — ze staan in het menu */
   .ov-top .right,.kn-top .right,.tk-top .right,.vh-top .right,.vb-top .right,
@@ -1583,9 +1608,9 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 .proc-section--invest .pa-note{color:rgba(255,255,255,.82)}
 /* Tijdelijke projectpresentatie: een locatiekaart, nooit een fictieve pandfoto.
    De bestaande echte foto bedekt dit vlak automatisch zodra hij beschikbaar is. */
-.pf-visual .map-load{height:250px;min-height:250px;padding:1.5rem 1.75rem;align-items:flex-start;text-align:left;gap:.5rem;border:0;border-top:2px solid var(--gold);background:linear-gradient(125deg,var(--navy),var(--navy3));color:var(--cream);position:relative}
+.pf-visual .map-load{height:250px;min-height:250px;padding:1.5rem 1.75rem;align-items:flex-start;text-align:left;gap:.5rem;border:0;border-top:2px solid var(--gold);background:linear-gradient(125deg,var(--navy),var(--navy3));color:#f5f2ec;position:relative}
 .pf-visual .map-load:hover{background:linear-gradient(125deg,var(--navy2),var(--navy4))}
-.pf-visual .map-load::before{content:attr(data-titel);font-family:var(--serif);font-size:1.65rem;line-height:1.12;max-width:95%;order:1;color:var(--cream);margin-bottom:.45rem}
+.pf-visual .map-load::before{content:attr(data-titel);font-family:var(--serif);font-size:1.65rem;line-height:1.12;max-width:95%;order:1;color:#f5f2ec;margin-bottom:.45rem}
 .pf-visual .map-load-icoon{order:0;margin-bottom:.35rem}
 .pf-visual .map-load-icoon svg{stroke:var(--gold2);width:25px;height:25px}
 .pf-visual .map-load strong{order:2;color:var(--gold3);font-size:.875rem;font-weight:500}
@@ -1612,7 +1637,7 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
   .legal-hero-copy p,.proc-lede,.cta-lede,.statement-body p,
   .val-card p,.journey-head p,.jstep-body p,.partner-head p,.blog-body p,
   .faq-a p,.story-text p,.pk-list li,.wd-tekst,.disc-desc,.hero-sub,
-  .pa-list li,.pcard p,.f-desc,.f-col ul a,.vgl-table td{font-size:1.0667rem}
+  .pa-list li,.pcard p,.f-desc,.f-col ul a,.vgl-table td,.vgl-table tbody th{font-size:1.0667rem}
 }
 
 /* Lange Nederlandse samenstellingen mogen afbreken i.p.v. onzichtbaar overlopen */
@@ -1716,7 +1741,7 @@ header[class$="-top"] ~ main .legal-hero{padding-top:clamp(2.5rem,6vw,5rem)}
    ════════════════════════════════════════════════════════════ */
 .cf-group input:focus-visible,.cf-group select:focus-visible,.cf-group textarea:focus-visible,
 .m-group input:focus-visible,.m-group select:focus-visible,.m-group textarea:focus-visible{
-  outline:2px solid var(--gold2);outline-offset:2px}
+  outline:2px solid var(--gold-ink);outline-offset:2px}
 /* De schuifregelaar (rekenmodule vastgoedbeheer) onderdrukte de ring eveneens. */
 input[type=range]:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
 
@@ -1983,7 +2008,7 @@ body .page-hero,body .vh-top~main .page-hero{
  position:relative;overflow:hidden;padding:clamp(3rem,5.5vw,5rem) var(--site-gutter) clamp(3.5rem,6vw,6rem);
  background:linear-gradient(90deg,rgba(4,11,20,.82),rgba(4,11,20,.52) 34%,rgba(4,11,20,.18)),radial-gradient(ellipse 120% 80% at 70% 120%,#1a3a5c,var(--navy) 55%,#060f1a)
 }
-body .page-hero::before{content:'';position:absolute;inset:0;background:url('assets/hero-bridge.svg') right center/auto 115% no-repeat;opacity:.12;mask:linear-gradient(90deg,transparent 35%,#000 85%);pointer-events:none}
+body .page-hero::before{content:'';position:absolute;inset:0;background:url('assets/hero-bridge.svg') right center/auto 115% no-repeat;opacity:.12;-webkit-mask:linear-gradient(90deg,transparent 35%,#000 85%);mask:linear-gradient(90deg,transparent 35%,#000 85%);pointer-events:none}
 body .page-hero .page-hero-inner,body .vh-top~main .page-hero-inner{position:relative;z-index:1;max-width:var(--site-content);margin:0 auto;padding:0}
 body .hero{min-height:0;display:block}
 body .hero-content{min-height:0;max-width:calc(var(--site-content) + 2 * var(--site-gutter));padding:clamp(3rem,5.5vw,5rem) var(--site-gutter) clamp(3.5rem,6vw,6rem)}
@@ -1999,6 +2024,7 @@ body .hero-scroll-ind{display:none}
 body .hero-risico{max-width:600px;font-size:.875rem;color:rgba(255,255,255,.8)}
 body .iv-hero-micro{flex-basis:100%;max-width:65ch;font-size:.875rem;line-height:1.7;color:rgba(255,255,255,.8)}
 body .pp-hero-micro,body .vh-hero-micro{font-size:.875rem;line-height:1.6;color:rgba(255,255,255,.75)}
+body .vb-hero-micro{font-size:.875rem;line-height:1.6;color:rgba(255,255,255,.9)}
 body .site-foot{background:var(--navy);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.75)}
 body .site-foot nav a,body .site-foot-bot,body .site-foot-bot small{color:rgba(255,255,255,.75)}
 body .site-foot-contact a,body .site-foot nav a:hover{color:var(--gold3)}
@@ -2048,14 +2074,15 @@ body .nav-mega a::after{content:none}
 :is(#nav, #nav.light, header[class$="-top"]) :is(.nav-logo,.brand) img{
   display:block;width:170px;height:auto;max-width:100%;max-height:40px;object-fit:contain;
 }
-:is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn){
+:is(#nav, #nav.light, header[class$="-top"]) > .sn-nav{grid-column:2;grid-row:1;justify-self:center}
+:is(#nav, #nav.light, header[class$="-top"], :is(#nav, header[class$="-top"]) > .sn-nav) > :is(.nav-links,.sn){
   grid-column:2;grid-row:1;justify-self:center;
   display:flex;align-items:center;justify-content:center;
   flex-wrap:nowrap;gap:clamp(16px,1.8vw,28px);
   margin:0;padding:0;list-style:none;min-width:0;
 }
-:is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn) > li{margin:0;padding:0}
-:is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle){
+:is(#nav, #nav.light, header[class$="-top"], :is(#nav, header[class$="-top"]) > .sn-nav) > :is(.nav-links,.sn) > li{margin:0;padding:0}
+:is(#nav, #nav.light, header[class$="-top"], :is(#nav, header[class$="-top"]) > .sn-nav) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle){
   display:inline-flex;align-items:center;justify-content:center;
   position:relative;min-height:44px;padding:0;
   font-family:'Outfit',system-ui,sans-serif;font-size:11px;font-weight:500;
@@ -2063,12 +2090,12 @@ body .nav-mega a::after{content:none}
   color:rgba(255,255,255,.82);opacity:1;text-decoration:none;text-shadow:none;
   border:0;background:none;
 }
-:is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle)::after{
+:is(#nav, #nav.light, header[class$="-top"], :is(#nav, header[class$="-top"]) > .sn-nav) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle)::after{
   content:'';position:absolute;left:0;right:0;bottom:1px;height:1px;
   background:var(--gold2);transform:scaleX(0);transition:transform .2s;opacity:1;
 }
-:is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle):is(:hover,.on,[aria-current="page"],[aria-expanded="true"]){color:var(--gold2)}
-:is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle):is(:hover,.on,[aria-current="page"],[aria-expanded="true"])::after{transform:scaleX(1)}
+:is(#nav, #nav.light, header[class$="-top"], :is(#nav, header[class$="-top"]) > .sn-nav) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle):is(:hover,.on,[aria-current="page"],[aria-expanded="true"]){color:var(--gold2)}
+:is(#nav, #nav.light, header[class$="-top"], :is(#nav, header[class$="-top"]) > .sn-nav) > :is(.nav-links,.sn) > li > :is(a,.nav-sub-toggle):is(:hover,.on,[aria-current="page"],[aria-expanded="true"])::after{transform:scaleX(1)}
 :is(#nav, #nav.light, header[class$="-top"]) :is(a,button):focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
 :is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-right,.right){grid-column:3;grid-row:1;justify-self:end;display:flex;align-items:center;margin:0;padding:0;gap:0}
 :is(#nav, #nav.light, header[class$="-top"]) :is(.nav-cta,.top-cta){
@@ -2084,7 +2111,7 @@ body .nav-mega a::after{content:none}
 :is(#nav, #nav.light, header[class$="-top"]) > :is(.burger,.sn-burger){display:none}
 @media(max-width:1100px){
   :is(#nav, #nav.light, header[class$="-top"]){height:64px;min-height:64px;grid-template-columns:minmax(0,1fr) 44px;column-gap:20px;padding:0 clamp(20px,4vw,40px)}
-  :is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn,.nav-right,.right){display:none}
+  :is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-links,.sn,.sn-nav,.nav-right,.right){display:none}
   :is(#nav, #nav.light, header[class$="-top"]) > :is(.nav-logo,.brand){width:158px}
   :is(#nav, #nav.light, header[class$="-top"]) :is(.nav-logo,.brand) img{width:158px;max-width:100%;max-height:36px}
   :is(#nav, #nav.light, header[class$="-top"]) > :is(.burger,.sn-burger){
@@ -2233,7 +2260,8 @@ body .blog-section > div{max-width:var(--site-content)!important;margin-left:aut
 .pfx-wrap .pf-risico{margin-top:2.5rem}
 /* Responsief */
 @media(max-width:1180px){.pfx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:960px){.pfx-summary,.pfx-partners{grid-template-columns:1fr}.pfx-phases{grid-template-columns:1fr;gap:1rem}}
+@media(max-width:960px){.pfx-summary,.pfx-partners{grid-template-columns:minmax(0,1fr)}.pfx-phases{grid-template-columns:1fr;gap:1rem}}
+@media(max-width:360px){.pfx-sum-table dd{white-space:normal;text-align:right}}
 @media(max-width:720px){
   .pfx-section{padding-left:1.25rem;padding-right:1.25rem}
   .pfx-grid,.pfx-vision-list{grid-template-columns:1fr}
@@ -2345,12 +2373,12 @@ body .hero-bridge-m{display:none!important}
 .pfx-card.pfx-pop{animation:pfxPop .45s var(--ease) both}
 @keyframes pfxPop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 /* Zwevende desktop-CTA (mobiel heeft al een vaste balk) */
-.float-cta{position:fixed;right:clamp(1rem,2.5vw,2.5rem);bottom:clamp(1rem,2.5vw,2.5rem);z-index:60;display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 1.4rem;background:var(--navy);color:#fff;border:1px solid rgba(var(--gold-rgb),.55);font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;box-shadow:0 18px 40px rgba(8,23,38,.35);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .35s var(--ease),transform .35s var(--ease),background .25s}
-.float-cta.on{opacity:1;transform:none;pointer-events:auto}
+.float-cta{position:fixed;right:clamp(1rem,2.5vw,2.5rem);bottom:clamp(1rem,2.5vw,2.5rem);z-index:60;display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 1.4rem;background:var(--navy);color:#fff;border:1px solid rgba(var(--gold-rgb),.55);font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;box-shadow:0 18px 40px rgba(8,23,38,.35);opacity:0;transform:translateY(14px);pointer-events:none;visibility:hidden;transition:opacity .35s var(--ease),transform .35s var(--ease),background .25s,visibility 0s linear .35s}
+.float-cta.on{opacity:1;transform:none;pointer-events:auto;visibility:visible;transition-delay:0s}
 .float-cta:hover{background:var(--gold2);color:var(--navy);border-color:var(--gold2)}
 .float-cta .arr{transition:transform .3s var(--ease)}
 .float-cta:hover .arr{transform:translateX(4px)}
-.float-cta-dot{width:8px;height:8px;border-radius:50%;background:var(--gold2);box-shadow:0 0 0 0 rgba(var(--gold-rgb),.6);animation:fcPulse 2.2s infinite}
+.float-cta-dot{width:8px;height:8px;border-radius:50%;background:var(--gold2);box-shadow:0 0 0 0 rgba(var(--gold-rgb),.6);animation:fcPulse 2.2s 2}
 @keyframes fcPulse{0%{box-shadow:0 0 0 0 rgba(var(--gold-rgb),.55)}70%{box-shadow:0 0 0 10px rgba(var(--gold-rgb),0)}100%{box-shadow:0 0 0 0 rgba(var(--gold-rgb),0)}}
 @media(max-width:960px){.float-cta{display:none}}
 @media(prefers-reduced-motion:reduce){.float-cta,.pfx-card.pfx-pop{animation:none;transition:none}.float-cta-dot{animation:none}}
@@ -2368,7 +2396,7 @@ body .hero-bridge-m{display:none!important}
 .iv-calc-res strong{font-family:var(--serif);font-size:clamp(1.6rem,2.4vw,2.1rem);font-weight:300;color:#fff;font-variant-numeric:tabular-nums;transition:opacity .2s}
 .iv-calc-res strong.tick{opacity:.55}
 .iv-calc-note{margin:1rem 0 0;font-size:.78rem;line-height:1.6;color:rgba(255,255,255,.62)}
-@media(max-width:900px){.iv-calc{grid-template-columns:1fr}}
+@media(max-width:900px){.iv-calc{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:560px){.iv-calc-res{grid-template-columns:1fr}.iv-calc-note{font-size:.9333rem}}
 
 /* Ondergrens, aanvulling 19 sep (regressiemeting): badges en labels in de nieuwe
@@ -2407,7 +2435,7 @@ body .page-hero::before{opacity:.2}
 /* 4. vergelijkingstabellen: leesbaar en met scrollhint */
 @media(max-width:720px){
   .anv,.vgl-wrap,.vgl-table-wrap{position:relative}
-  .anv table td,.anv table th,.vgl-table td,.vgl-table th{font-size:.9333rem}
+  .anv table td,.anv table th,.vgl-table td,.vgl-table th,.vgl-table tbody th{font-size:.9333rem}
   .anv::after,.vgl-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:36px;background:linear-gradient(90deg,transparent,var(--cream));pointer-events:none}
 }
 /* 5/6. raakvlakken van tekstlinks */
@@ -2449,6 +2477,8 @@ body.hero-ready .page-hero-inner > *:nth-child(2){animation-delay:.24s}
 body.hero-ready .page-hero-inner > *:nth-child(3){animation-delay:.4s}
 body.hero-ready .page-hero-inner > *:nth-child(4){animation-delay:.54s}
 body.hero-ready .page-hero-inner > *:nth-child(n+5){animation-delay:.66s}
+/* Kop, intro en knop alleen laten opschuiven, niet onzichtbaar maken (LCP). */
+body.hero-ready .page-hero-inner > :not(.t-eyebrow){animation-name:heroRise}
 
 .page-hero{position:relative;overflow:hidden}
 .page-hero--foto::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
@@ -2544,9 +2574,12 @@ body #ct-map .map-load-sub{display:block}   /* privacy-melding bij de kaart op c
 @media(max-width:720px){.page-hero--foto-l::after{background-position:58% center}.page-hero--foto-r::after{background-position:52% center}}
 /* Warmer (19 sep 2026, wens eigenaar): foto's voller en met goudzweem, plus een warme gloed
    linksonder in dezelfde laag (::before blijft van het lijn-motief). Kop blijft wit op donker. */
-.page-hero--foto{--hero-foto:url('fotos/hero-rotterdam.jpg')}
-.page-hero--foto-l{--hero-foto:url('fotos/hero-erasmus-lucht.jpg')}
-.page-hero--foto-r{--hero-foto:url('fotos/hero-hef.jpg')}
+.page-hero--foto{--hero-foto:url('fotos/hero-rotterdam-1800.webp')}
+.page-hero--foto-l{--hero-foto:url('fotos/hero-erasmus-lucht-1800.webp')}
+.page-hero--foto-r{--hero-foto:url('fotos/hero-hef-1800.webp')}
+/* Telefoon: 1000px-uitsnede op volle hoogte; x-offset = mobiele background-position × (2400−1000),
+   dus hetzelfde zichtbare stuk als bij de brede foto. */
+@media(max-width:720px){.page-hero--foto{--hero-foto:url('fotos/hero-rotterdam-m.webp')}.page-hero--foto-l{--hero-foto:url('fotos/hero-erasmus-lucht-m.webp')}.page-hero--foto-r{--hero-foto:url('fotos/hero-hef-m.webp')}}
 body .page-hero--foto::after{background-image:radial-gradient(70% 80% at 10% 100%,rgba(var(--gold-rgb),.45),transparent 70%),var(--hero-foto);
   background-size:auto,cover;background-repeat:no-repeat;opacity:.4;filter:saturate(.95) sepia(.22) brightness(1.05)}
 @media(max-width:720px){body .page-hero--foto::after{opacity:.34}}
@@ -2559,11 +2592,12 @@ body .page-hero--foto::after{background-image:radial-gradient(70% 80% at 10% 100
 .iv-kaart{position:relative;background:var(--navy);padding:clamp(1rem,2vw,1.5rem);margin-bottom:2.5rem}
 .iv-kaart svg{display:block;width:100%;height:auto;font-family:'Outfit',system-ui,sans-serif}
 .ivm-maas{fill:none;stroke:rgba(255,255,255,.18);stroke-width:26;stroke-linecap:round}
-.ivm-lbl{fill:rgba(255,255,255,.45);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.ivm-lbl{fill:rgba(255,255,255,.6);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
 .ivm-pin{cursor:pointer;outline:none}
 .ivm-pin circle{fill:var(--gold2);transition:fill .25s}
 .ivm-pin .ivm-ring{fill:none;stroke:rgba(var(--gold-rgb),.45);stroke-width:1;opacity:0;transition:opacity .25s}
 .ivm-pin:hover .ivm-ring,.ivm-pin.on .ivm-ring,.ivm-pin:focus-visible .ivm-ring{opacity:1}
+.ivm-pin:focus-visible .ivm-ring{stroke:#fff;stroke-width:2;opacity:1}
 .ivm-pin.on circle:not(.ivm-ring){fill:#fff}
 .ivm-pin-lbl{fill:rgba(255,255,255,.82);font-size:11.5px;pointer-events:none}
 .ivm-note{margin:.9rem 0 0;font-size:.78rem;color:rgba(255,255,255,.55)}
@@ -2593,12 +2627,12 @@ body .page-hero--foto::after{background-image:radial-gradient(70% 80% at 10% 100
 .ivs p{margin:.35rem 0 .75rem;font-size:.82rem;line-height:1.6;color:rgba(255,255,255,.7)}
 .ivs-row{display:flex;gap:.5rem}
 .ivs-row input{flex:1;min-width:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;padding:0 .75rem;font-size:.8rem;min-height:44px}
-@media (max-width:600px){.ivs-row input{font-size:16px}}
+@media (max-width:600px),(hover:none) and (pointer:coarse){.ivs-row input{font-size:16px}}
 .ivs-btn{background:var(--gold);color:var(--navy);border:0;padding:0 1.1rem;min-height:44px;font:inherit;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
 .ivs-btn:hover{background:var(--gold2)}
 .ivv-toggle{display:none;gap:.5rem;margin-bottom:1rem}
 .ivv-toggle button{flex:1;background:var(--white);border:1px solid var(--cream3);padding:.75rem;min-height:44px;font:inherit;font-size:.82rem;font-weight:500;color:var(--navy-text);cursor:pointer}
-.ivv-toggle button[aria-selected=true]{background:var(--navy);color:#fff;border-color:var(--navy-text)}
+.ivv-toggle button[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy-text)}
 .ivv-table{width:100%;border-collapse:collapse}
 .ivv-table th,.ivv-table td{padding:.9rem 1rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--cream3);font-size:.92rem;line-height:1.55}
 .ivv-table thead th{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);border-bottom:2px solid var(--navy)}
@@ -2628,7 +2662,7 @@ body .page-hero--foto::after{background-image:radial-gradient(70% 80% at 10% 100
 .iv-kaart{max-width:960px;margin-left:auto;margin-right:auto}
 
 /* ═══ Rest van de rapporten (A, D, meet-workflow) — 19 sep 2026 ═══ */
-body .nav-mega-btn,body .nav-mega-btn:hover{color:var(--navy-text)}         /* wit op goud (2,9:1) → navy op goud */
+body .nav-mega-btn,body .nav-mega-btn:hover{color:var(--navy)}         /* wit op goud (2,9:1) → navy op goud */
 .pk-num{opacity:1;color:var(--gold2)}                                    /* 4,4:1 door opacity .7 → volle kleur */
 .wb-pill{font-size:.7rem}
 .partner-bq-naam{font-size:.72rem}
@@ -2661,18 +2695,19 @@ body .eyebrow,body .step-count,body .ac-lbl{font-size:max(.75rem,12px)}
 
 /* Donkere modus — restpunten uit de meting (19 sep 2026) */
 .cta-band:not(.cta-band--navy) .btn-outline-dark{color:var(--navy);border-color:var(--navy)}
+.cta-band:not(.cta-band--navy) .cta-lede{color:var(--navy)}
 :root[data-theme="dark"] .wb-pill.navy{color:var(--navy-text);border-color:var(--ink4)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .wb-pill.navy{color:var(--navy-text);border-color:var(--ink4)}}
 /* Schakelaar naast de hamburger op smalle schermen (het desktop-deel .right/.nav-right is daar verborgen) */
 .theme-sw--m{display:none}
-@media(max-width:960px){.theme-sw--m{display:inline-flex;position:absolute;right:72px;top:50%;transform:translateY(-50%);margin:0}}
+@media(max-width:1100px){:is(#nav,#nav.light,header[class$="-top"]) .theme-sw--m{display:inline-flex;position:absolute;top:50%;transform:translateY(-50%);margin:0;right:calc(clamp(20px,4vw,40px) + 50px)}}
 
 /* NL/EN-continuïteit */
 .nl-tag{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.12em;line-height:1;padding:3px 5px;margin-left:.35rem;border:1px solid currentColor;opacity:.7;vertical-align:middle;border-radius:2px}
 .nl-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;padding:.7rem 3rem .7rem 1rem;background:var(--gold);color:var(--navy);font-size:.9rem;box-shadow:0 -6px 24px -12px rgba(0,0,0,.5)}
 .nl-bar a{color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
 .nl-bar-x{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;color:var(--navy);font-size:1.5rem;cursor:pointer}
-body:has(.nl-bar) .float-cta{bottom:5.25rem}
+body.nl-bar-on .float-cta{bottom:5.25rem}
 
 /* eindaudit 19 sep: artikelmeta 4,2:1 op crème → ink3 */
 .art-meta,.kn-meta{color:var(--ink3)}
@@ -2680,7 +2715,6 @@ body:has(.nl-bar) .float-cta{bottom:5.25rem}
 @media(max-width:720px){
   body :is(small,figcaption,.wb-pill,.ivs-btn,.ivm-note,.ivk-k,.ivk-fase-n,.map-load-sub,.lg-toc span,.wg-link,.art-meta,.kn-meta,.c,.usp-check,.t-eyebrow,.pk-tag,.pk-num,.ci-tag){font-size:max(.8rem,12px)}
   .theme-sw,.theme-sw--m{width:44px;height:44px}
-  .theme-sw--m{right:66px}
 }
 
 /* Mobiele contactbalk op subpagina's (site-nav.js) — altijd zichtbaar, geen scroll-drempel */
@@ -2710,6 +2744,8 @@ body:has(.nl-bar) .float-cta{bottom:5.25rem}
   [data-theme="dark"] .wa-fab{background:var(--navy3);border-color:rgba(var(--gold-rgb),.6)}
   body.nl-bar-on .wa-fab{bottom:calc(1.5rem + 58px)}
   body.no-scroll .wa-fab{display:none}
+  /* ruimte onder de footer zodat de knop de social-/partnerlinks niet afdekt */
+  body .site-foot .in,#pg-home ~ footer{padding-bottom:5.5rem}
 }
 @media(prefers-reduced-motion:reduce){.wa-fab{transition:none}.wa-fab:hover{transform:none}}
 
@@ -2717,21 +2753,22 @@ body:has(.nl-bar) .float-cta{bottom:5.25rem}
    De WhatsApp-knop stapelt daar netjes bovenop in plaats van eroverheen: zelfde
    rechtermarge als de pil, en een regel hoger. */
 @media(min-width:961px){
-  body:has(.float-cta) .wa-fab{right:clamp(1rem,2.5vw,2.5rem);bottom:calc(clamp(1rem,2.5vw,2.5rem) + 3.6rem)}
-  body:has(.nl-bar):has(.float-cta) .wa-fab{bottom:calc(5.25rem + 3.6rem)}
+  body.has-float-cta .wa-fab{right:clamp(1rem,2.5vw,2.5rem);bottom:calc(clamp(1rem,2.5vw,2.5rem) + 3.6rem)}
+  body.nl-bar-on.has-float-cta .wa-fab{bottom:calc(5.25rem + 3.6rem)}
 }
 
 /* Mobiele taalschakelaar naast de themaknop (kloon uit site-nav.js) */
 :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m,.lang-sw--m{display:none}
-@media(max-width:960px){
-  :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m{display:inline-flex;position:absolute;right:122px;top:50%;transform:translateY(-50%);margin:0;min-height:44px;min-width:44px;padding:0 8px}
+@media(max-width:1100px){
+  :is(#nav,#nav.light,header[class$="-top"]) .lang-sw--m{display:inline-flex;position:absolute;top:50%;transform:translateY(-50%);margin:0;min-height:44px;min-width:44px;padding:0 8px;right:calc(clamp(20px,4vw,40px) + 100px)}
 }
-@media(max-width:600px){ :is(#nav, #nav.light, header[class$="-top"]) .lang-sw--m{right:116px} }
+/* Onder 360px: logo iets smaller zodat de EN-knop er niet overheen valt */
+@media(max-width:359px){:is(#nav,#nav.light,header[class$="-top"]) > :is(.nav-logo,.brand),:is(#nav,#nav.light,header[class$="-top"]) :is(.nav-logo,.brand) img{width:120px}}
 
 /* ===== Bouwpartner-identiteit (logo + website Lageweg Services) ===== */
 .partner-id{margin-top:2rem;border-top:1px solid var(--cream3);padding-top:1.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:1.1rem 2rem}
 .partner-id-logo{display:inline-flex;align-items:center;flex:0 0 auto;transition:opacity .25s ease}
-.partner-id-logo:hover{opacity:.7}
+a.partner-id-logo:hover{opacity:.7}
 .partner-id-logo img{display:block;width:190px;height:auto}
 .partner-id-body{flex:1 1 15rem;min-width:0}
 .partner-id-meta{font-size:.74rem;font-weight:400;letter-spacing:.04em;line-height:1.7;color:var(--ink3);margin:0 0 .45rem}
@@ -2743,7 +2780,7 @@ body:has(.nl-bar) .float-cta{bottom:5.25rem}
 .pfx-partner-list a{color:inherit;text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:1px}
 .pfx-partner-list a:hover{color:var(--gold-ink)}
 .pfx-partner-logo{display:block;margin-top:.25rem;width:172px;height:auto;opacity:.85;transition:opacity .25s ease}
-.pfx-partner-logo:hover{opacity:1}
+a:hover > .pfx-partner-logo{opacity:1}
 .pfx-partner-logo-link{display:inline-block}
 .site-foot-partner{margin:.4rem 0 0;font-size:.74rem;font-weight:300;letter-spacing:.04em;color:inherit;opacity:.8;text-align:center}
 .site-foot-partner a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}

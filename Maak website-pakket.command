@@ -45,6 +45,7 @@ cp pararius-feed.xml website-online/ 2>/dev/null || printf '%s\n' '<?xml version
 cp sw.js website-online/ 2>/dev/null || true
 # Kopieer foto's vóór de controle; anders worden ook bestaande beelden gestript.
 cp -R fotos website-online/fotos 2>/dev/null || true
+rm -f website-online/fotos/*.md(N)                     # interne werknotities (shotlist, beeldrechten) horen niet op de live site
 # Fotoplekken waarvan het bestand (nog) niet bestaat uit de BUNDEL strippen. De bron blijft
 # fotoklaar (zet het bestand in fotos/ en het verschijnt), maar de live site vraagt niets op
 # wat er niet is — geen 404's in logs, geen verspilde requests, geen fetchpriority op niets.
@@ -88,10 +89,45 @@ schoon(data)
 with open(pad, 'w', encoding='utf-8') as f: json.dump(data, f, ensure_ascii=False, indent=2)
 FOTO_PY
 
-# Sitemap-datums (lastmod) gelijkzetten aan de werkelijke wijzigingsdatum van elke pagina.
-# Zonder deze stap blijft lastmod op een oude datum staan en slaan zoekmachines het herindexeren over.
+# Sitemap-datums (lastmod) volgen de INHOUD van elke pagina, niet de bestandsdatum (mtime).
+# Een cache-buster-ronde (?v=) raakt ~80 bestanden tegelijk; met mtime kreeg dan elke URL dezelfde
+# lastmod en gaat Google lastmod negeren. Per pagina bewaren we [hash, datum] in sitemap-hashes.json
+# (repo-root, gaat NIET mee in de bundel). Alleen als de hash verandert wordt lastmod vandaag.
+# De hash negeert ?v=-tokens en de dateModified die build-kennis.js per build stempelt.
 python3 - <<'SITEMAP_PY'
-import io, re, os, datetime
+import io, re, os, json, hashlib, datetime, subprocess
+HASHES = 'sitemap-hashes.json'
+try:
+    opgeslagen = json.load(io.open(HASHES, encoding='utf-8'))
+except Exception:
+    opgeslagen = {}
+vandaag = datetime.date.today().isoformat()
+def tekst_hash(t):
+    t = re.sub(r'\?v=[0-9a-z]+', '', t)
+    t = re.sub(r'"dateModified":\s*"[0-9-]*"', '', t)
+    return hashlib.sha1(t.encode('utf-8')).hexdigest()
+def eerste_datum(p, h, huidig):
+    # Nog geen hash bewaard: zoek in git de oudste commit van een ononderbroken reeks met dezelfde
+    # inhoud (dus een commit die alleen ?v= wijzigde telt niet). Wijkt de huidige inhoud (zonder ?v=)
+    # al af van de laatste commit, dan breekt de reeks meteen af = vandaag. Een niet-gecommitte
+    # ?v=-bump alleen telt dus ook niet. Zonder git: de lastmod die al in de sitemap stond.
+    try:
+        rc = subprocess.call(['git', 'diff', '--quiet', 'HEAD', '--', p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if rc not in (0, 1): return huidig or vandaag
+        log = subprocess.check_output(['git', 'log', '--format=%H %cs', '--', p], stderr=subprocess.DEVNULL).decode().split('\n')
+        datum = None
+        for regel in log:
+            if not regel.strip(): continue
+            sha, d = regel.split()
+            try:
+                oud = subprocess.check_output(['git', 'show', sha + ':' + p], stderr=subprocess.DEVNULL).decode('utf-8', 'replace')
+            except Exception:
+                break
+            if tekst_hash(oud) != h: break
+            datum = d
+        return datum or vandaag
+    except Exception:
+        return huidig or vandaag
 s = io.open('sitemap.xml', encoding='utf-8').read()
 def blok(m):
     b = m.group(0)
@@ -99,10 +135,20 @@ def blok(m):
     p = re.sub(r'https?://(www\.)?home-?inn\.nl/?', '', loc) or 'homeinn-public.html'
     if not p.endswith('.html'): p += '.html'
     if not os.path.exists(p): return b
-    d = datetime.date.fromtimestamp(os.path.getmtime(p)).isoformat()
+    h = tekst_hash(io.open(p, encoding='utf-8').read())
+    oud = opgeslagen.get(p)
+    if oud and oud[0] == h:
+        d = oud[1]
+    elif oud:
+        d = vandaag
+    else:
+        huidig = re.search(r'<lastmod>(.*?)</lastmod>', b)
+        d = eerste_datum(p, h, huidig.group(1) if huidig else None)
+    opgeslagen[p] = [h, d]
     return re.sub(r'<lastmod>.*?</lastmod>', '<lastmod>%s</lastmod>' % d, b)
 io.open('sitemap.xml', 'w', encoding='utf-8').write(re.sub(r'<url>.*?</url>', blok, s, flags=re.S))
-print("  ✓ sitemap lastmod bijgewerkt")
+io.open(HASHES, 'w', encoding='utf-8').write(json.dumps(opgeslagen, indent=1, sort_keys=True) + '\n')
+print("  ✓ sitemap lastmod bijgewerkt (op inhoud)")
 SITEMAP_PY
 
 # Cloudflare Pages security-headers + SEO-bestanden meeleveren

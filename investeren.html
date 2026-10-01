@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Investeren in Rotterdams vastgoed | HomeINN</title>
   <meta name="description" content="Meedoen in vastgoedprojecten in Rotterdam: elf panden, 33 appartementsrechten, rendement per project vastgelegd. Vanaf € 100.000. Beleggen kent risico's.">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="https://homeinn.nl/investeren.html">
@@ -18,16 +18,17 @@
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Investeren in Rotterdams vastgoed — HomeINN">
   <meta property="og:description" content="Meedoen in vastgoedprojecten in Rotterdam: elf panden, 33 appartementsrechten, rendement per project vastgelegd. Vanaf € 100.000. Beleggen kent risico's.">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260930a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
   <style>
     .iv-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .iv-top .brand img{height:34px;width:auto;display:block}
@@ -56,6 +57,7 @@
 <a class="skip-link" href="#main">Naar de inhoud</a>
   <header class="iv-top">
     <a class="brand" href="./" aria-label="HomeINN home"><picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture></a>
+    <nav class="sn-nav" aria-label="Hoofdmenu">
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="investeren.html">Investeren</a></li>
@@ -90,8 +92,9 @@
       </li>
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
+    </nav>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="lang-sw" href="invest-en.html" lang="en" hreflang="en" aria-label="English version">EN</a><a class="top-cta" href="contact.html">Plan een kennismaking</a></div>
+    <div class="right"><a class="lang-sw" href="invest-en.html" lang="en" hreflang="en" aria-label="EN – English version">EN</a><a class="top-cta" href="#meedoen">Plan een kennismaking</a></div>
   </header>
 
 <div id="mob" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
@@ -165,7 +168,7 @@
           <div><dt>Planning, splitsing en vergunningen</dt><dd>In het dossier</dd></div>
           <div class="pfx-sum-tot"><dt>Rendement, looptijd en voorwaarden</dt><dd>In de overeenkomst</dd></div>
         </dl>
-        <p class="pfx-sum-note">Wij publiceren geen bedragen per pand. De volledige cijfers &mdash; kostenbasis, renovatiebudget, de getaxeerde waarde na renovatie en de exit per appartementsrecht &mdash; ontvangt u per project en op naam, nadat wij elkaar gesproken hebben. Zo kijkt u naar &eacute;&eacute;n concreet pand met de onderbouwing erbij, in plaats van naar een gemiddelde over elf panden.</p>
+        <p class="pfx-sum-note">Wij publiceren geen bedragen per pand. De volledige cijfers &mdash; kostenbasis, renovatiebudget, de getaxeerde waarde na renovatie en de exit per appartementsrecht &mdash; ontvangt u per project en op naam, binnen &eacute;&eacute;n werkdag na uw aanvraag. Zo kijkt u naar &eacute;&eacute;n concreet pand met de onderbouwing erbij, in plaats van naar een gemiddelde over elf panden.</p>
       </div>
       <div class="pfx-sum-chart rv d1">
         <div class="pfx-bigs">
@@ -187,7 +190,7 @@
         <div class="iv-data-punten rv-stagger">
           <div class="iv-dp"><span class="iv-dp-val">7%</span><span class="iv-dp-lbl">Streefrendement per jaar — vastgelegd per project, niet gegarandeerd</span></div>
           <div class="iv-dp"><span class="iv-dp-val">1 jaar</span><span class="iv-dp-lbl">Looptijd vanaf één jaar, afgestemd op de planning van het pand</span></div>
-          <div class="iv-dp"><span class="iv-dp-val">één</span><span class="iv-dp-lbl">Vaste bouwpartner voor alle renovaties: <a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external" style="color:inherit;border-bottom:1px solid var(--gold);text-decoration:none">Lageweg Services B.V.</a></span></div>
+          <div class="iv-dp"><span class="iv-dp-val">één</span><span class="iv-dp-lbl">Vaste bouwpartner voor alle renovaties: Lageweg Services B.V.</span></div>
           <div class="iv-dp"><span class="iv-dp-val">2.724 m²</span><span class="iv-dp-lbl">Woonoppervlak na splitsing, plus 570 m² tuin</span></div>
         </div>
         <div class="iv-calc rv" id="hoe-vastgelegd">
@@ -199,14 +202,35 @@
               <li><span class="iv-stap-n">03</span><span class="iv-stap-t">Alles zwart op wit</span><span class="iv-stap-d">Inleg, looptijd, rendementspercentage en voorwaarden komen in een onderhandse overeenkomst; de uitkering loopt via de notaris.</span></li>
             </ol>
             <a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">&#8594;</span></a>
-            <p class="iv-calc-note" id="ivc-note">Deelname is uitsluitend mogelijk voor professionele marktpartijen: vanaf &euro; 100.000 ineens per deelnemer. Het streefrendement van 7% per jaar is geen garantie. Beleggen brengt risico&#39;s mee: uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
+            <p class="iv-calc-note" id="ivc-note">Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. Het streefrendement van 7% per jaar is geen garantie. Beleggen brengt risico&#39;s mee: uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
           </div>
         </div>
         <div class="pf-foot">
           <a class="btn btn-primary rv" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
-          <a class="btn btn-outline-dark rv" href="homeinn-public.html#portefeuille">Bekijk alle elf panden <span class="arr">→</span></a>
+          <a class="btn btn-outline-dark rv" href="./#portefeuille">Bekijk alle elf panden <span class="arr">→</span></a>
         </div>
         <p class="pf-risico">Dit overzicht dient uitsluitend ter informatie en is geen aanbod, advies of uitnodiging tot beleggen. De waarde na renovatie is een taxatie; aan de cijfers en rendementsverwachtingen kunnen geen rechten worden ontleend. Uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
+
+        <div class="pfx-risks">
+          <div class="pfx-risks-head rv"><span class="t-eyebrow">Belangrijke overwegingen</span><h3>Waar u als investeerder <em>rekening mee houdt.</em></h3></div>
+          <ul class="pfx-risk-list rv-stagger">
+            <li><strong>Marktrisico</strong><span>De waarde na renovatie blijft een taxatie/inschatting en kan afwijken van de werkelijk gerealiseerde verkoopprijs.</span></li>
+            <li><strong>Bouwrisico</strong><span>Planning, beschikbaarheid en kosten van de renovatie kunnen tijdens de uitvoering veranderen.</span></li>
+            <li><strong>Financieringsrisico</strong><span>Rente, voorwaarden en herfinancieringsmogelijkheden kunnen wijzigen.</span></li>
+            <li><strong>Splitsing &amp; vergunningen</strong><span>Uitvoering blijft afhankelijk van de vereiste juridische, bouwkundige en gemeentelijke voorwaarden.</span></li>
+            <li><strong>Liquiditeit</strong><span>Vastgoed is niet direct liquide; timing en doorlooptijd van een verkoop verschillen per pand.</span></li>
+          </ul>
+        </div>
+
+        <div class="pfx-partners rv">
+          <p class="pfx-partners-lede">Een renovatie is zo sterk als het team dat haar uitvoert. HomeINN werkt daarom met vaste partners voor bouw, financiering en architectuur.</p>
+          <ul class="pfx-partner-list">
+            <li><span class="t-eyebrow">Bouwpartner</span><img class="pfx-partner-logo" src="assets/lageweg-services-logo.svg?v=20260920b" alt="Logo Lageweg Services B.V." width="272" height="60" loading="lazy" decoding="async"></li>
+            <li><span class="t-eyebrow">Vastgoedfinancieel adviseur</span><strong>Dutch Investment Network B.V.</strong></li>
+            <li><span class="t-eyebrow">Architect</span><strong>3Hoog Architecten</strong></li>
+          </ul>
+          <a class="pillar-cta" href="over-ons.html">Lees ons verhaal <span class="arr">→</span></a>
+        </div>
       </div>
     </section>
     <!-- Interactieve investeerderstools (script: investeer-tools, data: portefeuille.json) -->
@@ -263,23 +287,25 @@
 
         <div class="cf" id="iv-form-box">
           <h3 class="iv-form-kop">Projectinformatie aanvragen</h3>
-          <form method="post" action="#" id="iv-form" novalidate>
+          <form method="post" action="https://formsubmit.co/info@homeinn.nl" id="iv-form" novalidate>
+            <input type="hidden" name="_subject" value="Website-aanvraag (zonder JavaScript): investeren.html">
             <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="cf-2col">
               <div class="cf-group"><label for="iv-first">Voornaam</label><input id="iv-first" type="text" name="first_name" placeholder="Jan" autocomplete="given-name" required></div>
-              <div class="cf-group"><label for="iv-last">Achternaam</label><input id="iv-last" type="text" name="last_name" placeholder="de Vries" autocomplete="family-name"></div>
+              <div class="cf-group"><label for="iv-last">Achternaam (optioneel)</label><input id="iv-last" type="text" name="last_name" placeholder="de Vries" autocomplete="family-name"></div>
+            </div>
+            <p class="cf-hint" id="iv-bereik">Vul minstens uw e-mailadres of telefoonnummer in.</p>
+            <div class="cf-2col">
+              <div class="cf-group"><label for="iv-email">E-mailadres</label><input id="iv-email" type="email" name="email" placeholder="jan@voorbeeld.nl" autocomplete="email" inputmode="email" aria-describedby="iv-bereik"></div>
+              <div class="cf-group"><label for="iv-phone">Telefoonnummer</label><input id="iv-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78" autocomplete="tel" inputmode="tel" aria-describedby="iv-bereik"></div>
             </div>
             <div class="cf-2col">
-              <div class="cf-group"><label for="iv-email">E-mailadres</label><input id="iv-email" type="email" name="email" placeholder="jan@voorbeeld.nl" autocomplete="email" inputmode="email"></div>
-              <div class="cf-group"><label for="iv-phone">Telefoonnummer</label><input id="iv-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78" autocomplete="tel" inputmode="tel"></div>
-            </div>
-            <div class="cf-2col">
-              <div class="cf-group"><label for="iv-bedrag">Waarin wilt u deelnemen?</label><select id="iv-bedrag" name="invest_amount">
+              <div class="cf-group"><label for="iv-bedrag">Waarin wilt u deelnemen?</label><select id="iv-bedrag" name="invest_amount" aria-describedby="iv-bedrag-hint">
                 <option>Nog niet bepaald</option>
                 <option>Eén project</option>
                 <option>Meerdere projecten</option>
                 <option>Eerst kennismaken, daarna beslissen</option>
-              </select><small class="cf-hint">Minimale deelname € 100.000 ineens.</small></div>
+              </select><small class="cf-hint" id="iv-bedrag-hint">Minimale deelname € 100.000 ineens.</small></div>
               <div class="cf-group"><label for="iv-looptijd">Gewenste looptijd</label><select id="iv-looptijd" name="invest_term">
                 <option>Eén jaar</option>
                 <option>Eén tot twee jaar</option>
@@ -304,8 +330,8 @@
             <p class="m-note" style="margin-top:.9rem">Vrijblijvend. Meedoen is beleggen: het rendement is niet gegarandeerd en uw inleg kan geheel of gedeeltelijk verloren gaan. Met verzenden gaat u akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>. Wij verkopen uw gegevens niet en sturen geen nieuwsbrief zonder uw toestemming.</p>
           </form>
           <div class="ct-success" id="iv-success" style="display:none" role="status" aria-live="polite" tabindex="-1">
-            <h3>Uw aanvraag is ontvangen ✓</h3>
-            <p>Wij nemen binnen vier uur op werkdagen contact met u op en sturen u de volledige projectinformatie. Liever meteen contact? Bel <a href="tel:+31633322257">+31 6 33 32 22 57</a>.</p>
+            <h3>Uw aanvraag is ontvangen <span aria-hidden="true">✓</span></h3>
+            <p>Wij nemen binnen vier uur op werkdagen contact met u op; de volledige projectinformatie ontvangt u binnen één werkdag. Liever meteen contact? Bel <a href="tel:+31633322257">+31 6 33 32 22 57</a>.</p>
           </div>
         </div>
       </div>
@@ -343,20 +369,20 @@
         <a href="werkgebied.html">Werkgebied</a>
         <a href="inloggen.html">Inloggen</a>
       </nav>
-      <p class="site-foot-partner">Vaste bouwpartner: <a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external">Lageweg Services B.V.</a></p>
+      <p class="site-foot-partner">Vaste bouwpartner: Lageweg Services B.V.</p>
       <div class="site-foot-bot">
         <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
-        <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
+        <div class="mini-f-social" role="group" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
       </div>
     </div>
   </footer>
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebPage","name":"Investeren in Rotterdams vastgoed — HomeINN","url":"https://homeinn.nl/investeren.html","inLanguage":"nl-NL","about":"Particulier meedoen in vastgoedprojecten","publisher":{"@type":"Organization","name":"HomeINN"}}
+  {"@context":"https://schema.org","@type":"WebPage","name":"Investeren in Rotterdams vastgoed — HomeINN","url":"https://homeinn.nl/investeren.html","inLanguage":"nl-NL","about":"Deelname in vastgoedprojecten voor professionele marktpartijen (vanaf € 100.000 ineens per deelnemer)","publisher":{"@type":"Organization","@id":"https://homeinn.nl/#organisatie","name":"HomeINN","url":"https://homeinn.nl/"}}
   </script>
-<script src="lead-cloud.js?v=20260922a" defer></script>
-<script src="site-nav.js?v=20260922a"></script>
-<script src="investeer-tools.js?v=20260930a" defer></script>
+<script src="lead-cloud.js?v=20261001a" defer></script>
+<script src="site-nav.js?v=20261001a"></script>
+<script src="investeer-tools.js?v=20261001a" defer></script>
 <script>
 /* Investeerdersaanvraag — eigen leadtype, zodat deze aanvragen in de inbox
    herkenbaar los staan van verkoop- en beheeraanvragen. */
@@ -371,16 +397,20 @@
   function verwijderLokaleLead(id){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))return;l=l.filter(function(x){return x&&x.id!==id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}
   function saveLead(type,d){
     try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];d.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);d.type=type;d.date=new Date().toISOString();d.handled=false;l.push(d);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}
-    if(window.pushLeadToCloud) window.pushLeadToCloud(type,d,'investeren.html');
+    var cloud=window.pushLeadToCloud?window.pushLeadToCloud(type,d,'investeren.html'):false;
     try{
       if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);
-      return (window.fetchLeadWithTimeout || fetch)(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-        body:JSON.stringify({_subject:'Investeerdersaanvraag: '+(d.subject||type),_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Bedrag:d.bedrag||'',Looptijd:d.looptijd||'',Project:d.subject||'',Bericht:d.message||''})})
+      var mail=(window.fetchLeadWithTimeout || fetch)(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({_subject:'Investeerdersaanvraag: '+(d.subject||type),_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Deelname:d.bedrag||'',Looptijd:d.looptijd||'',Project:d.subject||'',Bericht:d.message||''})})
         .then(function(r){return r.json().catch(function(){return null;}).then(function(j){
           var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==='true');
           if(ok)verwijderLokaleLead(d.id);
           return ok;});})
         .catch(function(){return false;});
+      /* Geslaagd zodra de cloud-insert óf de e-mail slaagt (hiLeadOk uit lead-cloud.js).
+         Een mislukte e-mail (false) telt niet als geslaagd; de uitkomst blijft een boolean
+         zodat de bestaande .then(ok) hieronder ongewijzigd werkt. */
+      return window.hiLeadOk ? window.hiLeadOk(cloud,mail.then(function(ok){if(!ok)throw new Error('mail');return true;})).then(function(v){return v!==false;},function(){return false;}) : mail;
     }catch(e){return Promise.resolve(false);}
   }
   /* Projectkaarten elders op de site linken hierheen met ?project=<adres>.
@@ -407,9 +437,9 @@
     var naam=(String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
     var email=String(f.get('email')||'').trim(), tel=String(f.get('phone')||'').trim();
     var oudeFout=form.querySelector('.verzend-fout');if(oudeFout)oudeFout.remove();
-    if(!naam||(!email&&!tel)){
+    if(!naam||(!email&&tel.replace(/\D/g,'').length<6)){
       var err=document.getElementById('iv-form-err');
-      if(!err){err=document.createElement('p');err.id='iv-form-err';err.setAttribute('role','alert');err.style.cssText='color:#b03a3a;font-size:.82rem;font-weight:500;margin:.7rem 0 0';form.appendChild(err);}
+      if(!err){err=document.createElement('p');err.id='iv-form-err';err.setAttribute('role','alert');err.style.cssText='color:var(--red-ink);font-size:.82rem;font-weight:500;margin:.7rem 0 0';form.appendChild(err);}
       err.textContent=!naam?'Vul uw voornaam in.':'Vul een telefoonnummer of e-mailadres in, anders kunnen wij u de projectinformatie niet sturen.';
       var fr=document.getElementById(!naam?'iv-first':'iv-email');if(fr)fr.focus();
       return;
@@ -422,7 +452,7 @@
     // hios_leads kent geen aparte kolommen voor bedrag/looptijd; in het bericht meeschrijven
     // zodat ze ook in de portaal-inbox zichtbaar zijn en niet alleen in de e-mail.
     var pmp=f.get('pmp_bevestiging')?'Bevestigd: professionele marktpartij, minimaal € 100.000 ineens':'NIET bevestigd';
-    var bericht=['Bedrag: '+bedrag,'Looptijd: '+looptijd,pmp].join(' · ')+(toelichting?'\n\n'+toelichting:'');
+    var bericht=['Deelname: '+bedrag,'Looptijd: '+looptijd,pmp].join(' · ')+(toelichting?'\n\n'+toelichting:'');
     saveLead('Investeerder',{
       name:naam,email:email,phone:tel,
       bedrag:bedrag,
@@ -433,13 +463,13 @@
       if(knop){knop.disabled=false;knop.textContent=knop.dataset.txt;}
       if(!ok){
         var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');
-        p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';
-        p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';
+        p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:var(--red-ink)';
+        p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>. Of <a href="https://wa.me/31633322257" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">WhatsApp</a> \u00b7 <a href="mailto:info@homeinn.nl" style="color:inherit;text-decoration:underline">info@homeinn.nl</a>.';
         form.appendChild(p);return;
       }
       form.style.display='none';
       var s=document.getElementById('iv-success');
-      if(s){s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});}
+      if(s){s.style.display='block';try{s.focus({preventScroll:true})}catch(e){}s.scrollIntoView({behavior:'smooth',block:'center'});}
     });
   });
   /* Voorkeursproject voorvullen vanuit ?ref= op een projectkaart. */

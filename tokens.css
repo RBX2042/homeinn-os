@@ -193,6 +193,7 @@
   --line:        rgba(255, 255, 255, .1);
   --hairline:    rgba(255, 255, 255, .14);
   --green-bg:    #152a1e;  --green-line: #3f9a5c;  --green-ink: #9fd9b3;
+  --red:         #e0705c;
   --red-bg:      #331b17;  --red-line:   #d0684c;  --red-ink:   #f0a898;
   }
 }
@@ -215,5 +216,6 @@
   --line:        rgba(255, 255, 255, .1);
   --hairline:    rgba(255, 255, 255, .14);
   --green-bg:    #152a1e;  --green-line: #3f9a5c;  --green-ink: #9fd9b3;
+  --red:         #e0705c;
   --red-bg:      #331b17;  --red-line:   #d0684c;  --red-ink:   #f0a898;
 }

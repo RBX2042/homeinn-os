@@ -315,12 +315,20 @@ function saveLead(type, data) {
     list.push(data);
     localStorage.setItem(INBOX_KEY, JSON.stringify(list));
   } catch (err) { console.warn('Aanvraag kon niet worden opgeslagen:', err); }
-  if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'homeinn-public.html');
+  // Bron = de eigen pagina: lead-notify kiest daarop de taal van de bevestigingsmail
+  // (index-en.html → Engels). De root '/' en index.html zijn de NL-homepage.
+  var bron = location.pathname.split('/').pop() || 'homeinn-public.html';
+  if (bron === 'index.html') bron = 'homeinn-public.html';
+  var cloud = window.pushLeadToCloud ? window.pushLeadToCloud(type, data, bron) : false;
   // Lokale kopie alleen bewaren als de bezorging NIET is gelukt (privacy op gedeelde apparaten).
-  return stuurLeadDoor(type, data).then(function (ok) {
+  var mail = stuurLeadDoor(type, data).then(function (ok) {
     if (ok) verwijderLokaleLead(data.id);
     return ok;
   });
+  // Geslaagd zodra de cloud-insert óf de e-mail lukt (window.hiLeadOk uit lead-cloud.js).
+  if (!window.hiLeadOk) return mail;
+  return window.hiLeadOk(cloud, mail.then(function (ok) { if (!ok) throw new Error('mail'); return true; }))
+    .then(function () { return true; }, function () { return false; });
 }
 function verwijderLokaleLead(id) {
   try {
@@ -356,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var fout0 = mform.querySelector('.m-fout'); if (fout0) fout0.remove();
       var p0 = document.createElement('p');
       p0.className = 'm-fout'; p0.setAttribute('role', 'alert');
-      p0.innerHTML = hiT('Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31633322257">+31 6 33 32 22 57</a>.', 'Sending failed. Please try again, or call us directly on +31 6 33 32 22 57 — we will then schedule the conversation by phone.');
+      p0.innerHTML = hiT('Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31633322257">+31 6 33 32 22 57</a>.', 'Sending failed. Please try again, or call us directly on <a href="tel:+31633322257">+31 6 33 32 22 57</a> — we will then schedule the conversation by phone.');
       mform.querySelector('.modal-body').appendChild(p0);
       return;
     }
@@ -376,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var p = document.createElement('p');
       p.className = 'm-fout';
       p.setAttribute('role', 'alert');
-      p.innerHTML = 'Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31633322257">+31 6 33 32 22 57</a> — dan plannen wij het gesprek telefonisch in.';
+      p.innerHTML = hiT('Het versturen is niet gelukt. Probeer het nog eens, of bel ons direct op <a href="tel:+31633322257">+31 6 33 32 22 57</a> — dan plannen wij het gesprek telefonisch in.', 'Sending failed. Please try again, or call us directly on <a href="tel:+31633322257">+31 6 33 32 22 57</a> — we will then schedule the conversation by phone.');
       mform.querySelector('.modal-body').appendChild(p);
     });
   });
@@ -495,6 +503,16 @@ function fmtDatumNl(iso) {
   var m = MAANDEN_NL[parseInt(d[1], 10) - 1];
   return m ? parseInt(d[2], 10) + ' ' + m + ' ' + d[0] : d[2] + '-' + d[1] + '-' + d[0];
 }
+/* Engelse datum zonder Date-parsing: '2026-09-19' als UTC zou ten westen van UTC '18 September' geven. */
+var MONTHS_EN = ['January','February','March','April','May','June',
+                 'July','August','September','October','November','December'];
+function fmtDateEn(iso) {
+  if (!iso) return '';
+  var d = iso.split('-');
+  if (d.length !== 3) return iso;
+  var m = MONTHS_EN[parseInt(d[1], 10) - 1];
+  return m ? parseInt(d[2], 10) + ' ' + m + ' ' + d[0] : iso;
+}
 
 /* De portefeuilleregel staat ook op pagina's zonder projectenraster (de
    homepage). Los bijwerken, anders loopt hij nooit mee met aanbod.json. */
@@ -506,7 +524,7 @@ function renderPortefeuilleMeta() {
     .then(function (data) {
       var pf = data && data.portefeuille;
       if (pf && pf.panden) {
-        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · own portfolio · as at ' + fmtDatumNl(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
+        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · in our own portfolio · as at ' + fmtDateEn(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
       }
     })
     .catch(function () { /* statische tekst in de HTML blijft staan */ });
@@ -540,7 +558,7 @@ function renderProjectenPublic() {
               '<span></span>' +
               '<span>' + (inv.rendementPct ? escHtml(String(inv.rendementPct)).replace('.', ',') + '% streefrendement/jr' + (inv.looptijd ? ' · ' : '') : '') + escHtml(inv.looptijd || '') + '</span></div>';
           }
-          invHtml += '<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers na een persoonlijke kennismaking.</p>';
+          invHtml += '<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers per project en op naam.</p>';
           invHtml += '<button class="pillar-cta" data-open-modal data-subject="Investeren in een project" data-ref="' + refLabel + '">Investeer mee in dit project →</button>' +
             '</div>';
         }
@@ -568,7 +586,7 @@ function renderProjectenPublic() {
       var meta = document.getElementById('portefeuille-meta');
       var pf = data && data.portefeuille;
       if (meta && pf && pf.panden) {
-        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · own portfolio · as at ' + fmtDatumNl(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
+        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · in our own portfolio · as at ' + fmtDateEn(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
       }
     })
     .catch(function () { grid.innerHTML = leeg; });

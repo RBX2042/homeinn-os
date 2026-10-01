@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Projectontwikkeling Rotterdam | Naar label A — HomeINN</title>
   <meta name="description" content="HomeINN ontwikkelt zelf: renovaties, herindelingen en verduurzaming naar label A, met één vaste bouwpartner. Van casco tot instapklaar in Rotterdam.">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="https://homeinn.nl/projectontwikkeling.html">
@@ -18,16 +18,16 @@
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Projectontwikkeling Rotterdam — van casco tot instapklaar — HomeINN">
   <meta property="og:description" content="Volledige renovaties en verduurzaming naar energielabel A met één vaste bouwpartner. Van casco tot instapklaar.">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260930a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
   <style>
     .pp-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
       padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
@@ -61,6 +61,7 @@
       <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
       <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
     </a>
+    <nav class="sn-nav" aria-label="Hoofdmenu">
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="investeren.html">Investeren</a></li>
@@ -95,8 +96,9 @@
       </li>
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
+    </nav>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="lang-sw" href="development-en.html" lang="en" hreflang="en" aria-label="English version">EN</a>
+    <div class="right"><a class="lang-sw" href="development-en.html" lang="en" hreflang="en" aria-label="EN – English version">EN</a>
       
       <a class="top-cta" href="contact.html">Plan een kennismaking</a>
     </div>
@@ -136,19 +138,19 @@
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Projectontwikkeling · Rotterdam</span>
         <h1>Projectontwikkeling.<br><em>Van casco tot instapklaar.</em></h1>
-        <p>Wij kopen niet alleen aan, wij ontwikkelen ook zelf: volledige renovaties, herindelingen en verduurzaming naar energielabel A — met onze vaste bouwpartner en strakke budget- en planningsbewaking.</p>
+        <p>Wij kopen niet alleen aan, wij ontwikkelen ook zelf: volledige renovaties, herindelingen en verduurzaming naar het hoogst haalbare energielabel, waar mogelijk A — met onze vaste bouwpartner en strakke budget- en planningsbewaking.</p>
         <div class="pp-hero-cta">
           <a class="btn btn-primary" href="projecten.html">Bekijk alle projecten <span class="arr">→</span></a>
-          <span class="pp-hero-micro">Vaste bouwpartner · Eén aanspreekpunt · Kwaliteit binnen begroting</span>
+          <span class="pp-hero-micro">Vaste bouwpartner · Eén aanspreekpunt · Budgetbewaking per fase</span>
         </div>
       </div>
     </section>
 
     <div class="usp-strip"><div class="usp-inner">
-      <div class="usp"><span class="usp-check">&#10003;</span>Volledige renovaties &amp; herindelingen</div>
-      <div class="usp"><span class="usp-check">&#10003;</span>Verduurzaming naar energielabel A</div>
-      <div class="usp"><span class="usp-check">&#10003;</span>Eén vaste bouwpartner</div>
-      <div class="usp"><span class="usp-check">&#10003;</span>Strakke budget- en planningsbewaking</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>Volledige renovaties &amp; herindelingen</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>Verduurzaming naar het hoogst haalbare label</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>Eén vaste bouwpartner</div>
+      <div class="usp"><span class="usp-check" aria-hidden="true">&#10003;</span>Strakke budget- en planningsbewaking</div>
     </div></div>
 
     <!-- VASTE BOUWPARTNER + WAT WE DOEN -->
@@ -163,15 +165,14 @@
           <p>Elk HomeINN-project — van gevelherstel tot complete woningrenovatie — wordt samen met dit team voorbereid, gecalculeerd en uitgevoerd. Eén aanspreekpunt, ingespeelde vaklieden en een gedeelde standaard: kwaliteit, betrouwbaarheid en duurzame oplossingen. Zo weet u vooraf wie er op de steiger staat — en dat het resultaat klopt met de begroting.</p>
           <div class="partner-bq"><blockquote>"Samen bouwen aan tevredenheid."</blockquote><span class="partner-bq-naam">— Lageweg Services B.V.</span></div>
           <div class="partner-id">
-            <a class="partner-id-logo" href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external" aria-label="Website van Lageweg Services B.V. (opent in een nieuw tabblad)"><img src="assets/lageweg-services-logo.svg?v=20260920b" alt="Logo Lageweg Services B.V." width="272" height="60" loading="lazy" decoding="async"></a>
+            <span class="partner-id-logo"><img src="assets/lageweg-services-logo.svg?v=20260920b" alt="Logo Lageweg Services B.V." width="272" height="60" loading="lazy" decoding="async"></span>
             <div class="partner-id-body">
               <p class="partner-id-meta">Lageweg Services B.V. · aannemersbedrijf in Rotterdam en Hoogvliet · VCA-gecertificeerd · KvK 92560199</p>
-              <p class="partner-id-links"><a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external">lagewegservices.nl</a><a href="https://lagewegservices.nl/partner-homeinn" target="_blank" rel="noopener noreferrer external">Onze samenwerking</a></p>
             </div>
           </div>
         </div>
         <figure class="development-photo">
-          <img src="fotos/interieur-sfeer.jpg" alt="Lichte woonkamer met houten vloer, hoge ramen en een blauwe bank" width="1200" height="801" loading="lazy" decoding="async">
+          <picture><source type="image/webp" srcset="fotos/interieur-sfeer.webp"><img src="fotos/interieur-sfeer.jpg" alt="Lichte woonkamer met houten vloer, hoge ramen en een blauwe bank" width="1200" height="801" loading="lazy" decoding="async"></picture>
           <figcaption>Sfeerbeeld · afwerking en woonkwaliteit. Geen HomeINN-project.</figcaption>
         </figure>
         </div>
@@ -193,8 +194,8 @@
       <div class="proc-head"><span class="t-eyebrow">Onze aanpak</span><h2>Eén team. Eén standaard.<br><em>Eén resultaat.</em></h2></div>
       <div class="pp-aanpak-grid">
         <div class="pp-aanpak-card"><div class="n">01</div><h3>Vaste bouwpartner</h3><p>Geen wisselende onderaannemers. Ingespeelde vaklieden die de HomeINN-standaard kennen — u weet vooraf wie er op de steiger staat.</p></div>
-        <div class="pp-aanpak-card"><div class="n">02</div><h3>Budget &amp; planning bewaakt</h3><p>Vooraf gecalculeerd, strak gepland en bewaakt. Wat in de begroting staat, is wat u betaalt — geen verrassingen achteraf.</p></div>
-        <div class="pp-aanpak-card"><div class="n">03</div><h3>Verduurzaming naar label A</h3><p>Isolatie, warmtepomp en moderne installaties. Wij leveren instapklare, energiezuinige woningen op — gekeurd en zonder verrassingen.</p></div>
+        <div class="pp-aanpak-card"><div class="n">02</div><h3>Budget &amp; planning bewaakt</h3><p>Vooraf gecalculeerd door onze vaste bouwpartner, strak gepland en per fase bewaakt. Afwijkingen bespreken wij vóórdat ze worden uitgevoerd.</p></div>
+        <div class="pp-aanpak-card"><div class="n">03</div><h3>Verduurzaming, waar mogelijk naar label A</h3><p>Isolatie, warmtepomp en moderne installaties. Wij leveren instapklare, energiezuinige woningen op — gekeurd en zonder verrassingen.</p></div>
       </div>
     </section>
 
@@ -438,7 +439,7 @@
     </section>
 
     <!-- PROJECTEN-TEASER -->
-    <div class="cta-band"><div class="cta-inner"><h2>Meedoen in een van onze <em>elf panden?</em></h2><div class="cta-acties"><a class="btn btn-dark" href="investeren.html">Zo werkt investeren <span class="arr">→</span></a><a class="btn btn-outline-dark" href="contact.html?onderwerp=Investeren%20in%20een%20project">Plan een kennismaking <span class="arr">→</span></a></div></div></div>
+    <div class="cta-band"><div class="cta-inner"><h2>Meedoen in een van onze <em>elf panden?</em></h2><div class="cta-acties"><a class="btn btn-dark" href="investeren.html">Zo werkt investeren <span class="arr">→</span></a><a class="btn btn-outline-dark" href="investeren.html#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a></div></div></div>
   </main>
 
   <footer class="site-foot">
@@ -463,7 +464,7 @@
         <a href="werkgebied.html">Werkgebied</a>
         <a href="inloggen.html">Inloggen</a>
       </nav>
-      <p class="site-foot-partner">Vaste bouwpartner: <a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external">Lageweg Services B.V.</a></p>
+      <p class="site-foot-partner">Vaste bouwpartner: Lageweg Services B.V.</p>
       <div class="site-foot-bot">
         <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
         <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
@@ -482,7 +483,7 @@
     "description":"HomeINN ontwikkelt vastgoed in Rotterdam: volledige renovaties, herindelingen en verduurzaming naar energielabel A, uitgevoerd met één vaste bouwpartner (Lageweg Services B.V.)."
   }
   </script>
-<script src="site-nav.js?v=20260922a"></script>
+<script src="site-nav.js?v=20261001a"></script>
 <script>
 /* Kaart pas laden na een klik: geen Google-verzoek zonder toestemming van de bezoeker. */
 (function(){

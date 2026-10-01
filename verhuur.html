@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Huurwoningen &amp; verhuurservice Rotterdam — HomeINN</title>
   <meta name="description" content="Gerenoveerde, energiezuinige huurwoningen in Rotterdam, plus verhuurservice voor eigenaren: screening, contract en beheer onder één dak.">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="https://homeinn.nl/verhuur.html">
@@ -18,16 +18,16 @@
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Huurwoningen Rotterdam & verhuurservice — HomeINN">
   <meta property="og:description" content="Gerenoveerde huurwoningen in Rotterdam met één aanspreekpunt en een 24/7 storingslijn voor huurders van onze eigen woningen. Of laat uw woning verhuren via HomeINN.">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20260930a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
   <style>
     .vh-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
       padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
@@ -88,6 +88,7 @@
       <picture><source srcset="assets/logo-light.webp?v=20260616g" type="image/webp">
       <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34"></picture>
     </a>
+    <nav class="sn-nav" aria-label="Hoofdmenu">
     <ul class="sn">
       <li><a href="projectontwikkeling.html">Projectontwikkeling</a></li>
       <li><a href="investeren.html">Investeren</a></li>
@@ -122,8 +123,9 @@
       </li>
       <li><a href="over-ons.html">Over ons</a></li>
     </ul>
+    </nav>
     <button class="sn-burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mob" onclick="toggleMob()"><span></span><span></span><span></span></button>
-    <div class="right"><a class="lang-sw" href="letting-en.html" lang="en" hreflang="en" aria-label="English version">EN</a>
+    <div class="right"><a class="lang-sw" href="letting-en.html" lang="en" hreflang="en" aria-label="EN – English version">EN</a>
       
       <a class="top-cta" href="contact.html">Plan een kennismaking</a>
     </div>
@@ -184,10 +186,10 @@
     <section class="public-colour-band"><div class="vh-sec">
       <div class="proc-head"><span class="t-eyebrow">Zo huurt u bij ons</span><h2>Helder, eerlijk<br>en <em>zorgeloos.</em></h2></div>
       <div class="vh-steps">
-        <div class="vh-step"><span class="vh-check">&#10003;</span><div><h3>Transparante voorwaarden</h3><p>Heldere huurprijs en servicekosten, een correct contract en geen verborgen kosten — u weet vooraf waar u aan toe bent.</p></div></div>
-        <div class="vh-step"><span class="vh-check">&#10003;</span><div><h3>Nette, gerenoveerde woningen</h3><p>Wij renoveren onze woningen met onze vaste bouwpartner, met aandacht voor energiezuinig en comfortabel wonen. Het energielabel vermelden wij per woning.</p></div></div>
-        <div class="vh-step"><span class="vh-check">&#10003;</span><div><h3>Eén vast aanspreekpunt</h3><p>Geen doorverwijzen. Eén contactpersoon voor uw vragen, met een 24/7 storingslijn voor spoed als u huurt in een van onze eigen woningen.</p></div></div>
-        <div class="vh-step"><span class="vh-check">&#10003;</span><div><h3>Eerlijke screening</h3><p>Een correcte, transparante screening voor iedereen — zodat u in een betrouwbare omgeving woont.</p></div></div>
+        <div class="vh-step"><span class="vh-check" aria-hidden="true">&#10003;</span><div><h3>Transparante voorwaarden</h3><p>Heldere huurprijs en servicekosten, een correct contract en geen verborgen kosten — u weet vooraf waar u aan toe bent.</p></div></div>
+        <div class="vh-step"><span class="vh-check" aria-hidden="true">&#10003;</span><div><h3>Nette, gerenoveerde woningen</h3><p>Wij renoveren onze woningen met onze vaste bouwpartner, met aandacht voor energiezuinig en comfortabel wonen. Het energielabel vermelden wij per woning.</p></div></div>
+        <div class="vh-step"><span class="vh-check" aria-hidden="true">&#10003;</span><div><h3>Eén vast aanspreekpunt</h3><p>Geen doorverwijzen. Eén contactpersoon voor uw vragen, met een 24/7 storingslijn voor spoed als u huurt in een van onze eigen woningen.</p></div></div>
+        <div class="vh-step"><span class="vh-check" aria-hidden="true">&#10003;</span><div><h3>Eerlijke screening</h3><p>Een correcte, transparante screening voor iedereen — zodat u in een betrouwbare omgeving woont.</p></div></div>
       </div>
     </div></section>
 
@@ -201,12 +203,13 @@
             <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
             <input type="hidden" name="object" id="vh-object" value="">
             <div class="cf-2col">
-              <div class="cf-group"><label for="vh-first">Voornaam</label><input id="vh-first" type="text" name="first_name" placeholder="Jan" required></div>
-              <div class="cf-group"><label for="vh-last">Achternaam</label><input id="vh-last" type="text" name="last_name" placeholder="de Vries"></div>
+              <div class="cf-group"><label for="vh-first">Voornaam</label><input id="vh-first" type="text" name="first_name" placeholder="Jan" autocomplete="given-name" required></div>
+              <div class="cf-group"><label for="vh-last">Achternaam (optioneel)</label><input id="vh-last" type="text" name="last_name" placeholder="de Vries" autocomplete="family-name"></div>
             </div>
+            <p class="cf-hint" id="vh-bereik">Vul minstens uw e-mailadres of telefoonnummer in.</p>
             <div class="cf-2col">
-              <div class="cf-group"><label for="vh-email">E-mailadres</label><input id="vh-email" type="email" name="email" placeholder="jan@voorbeeld.nl"></div>
-              <div class="cf-group"><label for="vh-phone">Telefoonnummer</label><input id="vh-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>
+              <div class="cf-group"><label for="vh-email">E-mailadres</label><input id="vh-email" type="email" name="email" placeholder="jan@voorbeeld.nl" autocomplete="email" inputmode="email" aria-describedby="vh-bereik"></div>
+              <div class="cf-group"><label for="vh-phone">Telefoonnummer</label><input id="vh-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78" autocomplete="tel" inputmode="tel" aria-describedby="vh-bereik"></div>
             </div>
             <div class="cf-2col">
               <div class="cf-group"><label for="vh-plaats">Gewenste plaats / wijk</label><input id="vh-plaats" type="text" name="plaats" placeholder="Bijv. Kralingen, Rotterdam-West"></div>
@@ -216,8 +219,8 @@
             <button class="cf-submit" type="submit">Mijn woonwens doorgeven →</button>
             <p class="m-note" style="margin-top:.9rem">Met verzenden gaat u akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>. Wij gebruiken uw aanvraag om contact met u op te nemen.</p>
           </form>
-          <div class="vh-form-success" id="vh-success">
-            <h3>Bedankt — uw woonwens is ontvangen ✓</h3>
+          <div class="vh-form-success" id="vh-success" role="status" aria-live="polite" tabindex="-1">
+            <h3>Bedankt — uw woonwens is ontvangen <span aria-hidden="true">✓</span></h3>
             <p>Wij nemen contact met u op zodra er een passende huurwoning vrijkomt. Bij urgentie belt u ons gerust op +31 6 33 32 22 57.</p>
           </div>
         </div>
@@ -240,7 +243,7 @@
         </div>
         <div class="vh-eig-card">
           <div class="price">€ 395,-</div>
-          <div class="price-lbl">eenmalige plaatsingsvergoeding per plaatsing (excl. btw) — huurder vinden &amp; screenen</div>
+          <div class="price-lbl">eenmalige vergoeding per plaatsing (excl. btw) — huurder vinden &amp; screenen</div>
           <p>Liever volledig ontzorgd, ook ná de verhuur? Combineer met doorlopend vastgoedbeheer: huurincasso, onderhoud en — vanaf Full Operational — een 24/7 storingslijn. De plaatsingsvergoeding staat daar los van en wordt apart per plaatsing berekend, naast het beheerhonorarium.</p>
           <a class="btn btn-primary" href="vastgoedbeheer.html#offerte">Vraag een beheerofferte aan <span class="arr">→</span></a>
         </div>
@@ -272,7 +275,7 @@
         <a href="werkgebied.html">Werkgebied</a>
         <a href="inloggen.html">Inloggen</a>
       </nav>
-      <p class="site-foot-partner">Vaste bouwpartner: <a href="https://lagewegservices.nl/" target="_blank" rel="noopener noreferrer external">Lageweg Services B.V.</a></p>
+      <p class="site-foot-partner">Vaste bouwpartner: Lageweg Services B.V.</p>
       <div class="site-foot-bot">
         <span>&copy; 2026 HomeINN &mdash; Vastgoedpartner Rotterdam<small>HomeINN B.V. &middot; Rosestraat 1321, 3071 AL Rotterdam &middot; KvK 96713437 &middot; Btw NL867727548B01</small></span>
         <div class="mini-f-social" aria-label="Volg HomeINN op sociale media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN op Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div>
@@ -286,13 +289,13 @@
     "@type":"RealEstateAgent","@id":"https://homeinn.nl/#organisatie","name":"HomeINN",
     "telephone":"+31633322257",
     "email":"info@homeinn.nl",
-    "url":"https://homeinn.nl/verhuur.html",
+    "url":"https://homeinn.nl/",
     "areaServed":{"@type":"City","name":"Rotterdam"},
     "address":{"@type":"PostalAddress","streetAddress":"Rosestraat 1321","postalCode":"3071 AL","addressLocality":"Rotterdam","addressRegion":"Zuid-Holland","addressCountry":"NL"},
     "description":"Huurwoningen in Rotterdam en verhuurservice voor eigenaren: gerenoveerde, energiezuinige woningen met één aanspreekpunt en een 24/7 storingslijn voor huurders van onze eigen woningen; voor eigenaren advertentie, screening en huurcontract."
   }
   </script>
-  <script src="lead-cloud.js?v=20260922a" defer></script>
+  <script src="lead-cloud.js?v=20261001a" defer></script>
   <script>
   (function(){
     'use strict';
@@ -370,8 +373,11 @@
         data.type=type; data.date=new Date().toISOString(); data.handled=false;
         list.push(data); localStorage.setItem(INBOX_KEY, JSON.stringify(list));
       }catch(e){}
-      if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'verhuur.html');
-      return stuurLeadDoor(type, data);
+      var cloud = window.pushLeadToCloud ? window.pushLeadToCloud(type, data, 'verhuur.html') : false;
+      var mail = stuurLeadDoor(type, data);
+      if (!window.hiLeadOk) return mail;
+      return window.hiLeadOk(cloud, mail.then(function(ok){ if(!ok) throw new Error('mail'); return true; }))
+        .then(function(v){ return v !== false; }, function(){ return false; });
     }
     var form = document.getElementById('vh-form');
     if (form) form.addEventListener('submit', function(e){
@@ -380,7 +386,7 @@
       var f = new FormData(form);
       if (_isBot(f)) return; // honeypot
       var naam = (String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
-      if (!naam || (!String(f.get('email')||'').trim() && !String(f.get('phone')||'').trim())) { var _v=document.getElementById('vh-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
+      if (!naam || (!String(f.get('email')||'').trim() && String(f.get('phone')||'').replace(/\D/g,'').length<6)) { var _v=document.getElementById('vh-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:var(--red-ink)';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
       var obj = String(f.get('object')||'').trim();
       var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();
       var knop=form.querySelector('[type=submit]'); if(knop){knop.disabled=true;knop.dataset.txt=knop.textContent;knop.textContent='Bezig met verzenden\u2026';}
@@ -392,14 +398,14 @@
         message: 'Gewenste plaats: '+String(f.get('plaats')||'—')+' · Budget: '+String(f.get('budget')||'—')+(f.get('message')?(' · '+String(f.get('message'))):'')
       }).then(function(geslaagd){
         if(knop){knop.disabled=false;knop.textContent=knop.dataset.txt;}
-        if(!geslaagd){ (function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:#b03a3a';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';f.appendChild(p);})(form); return; }
+        if(!geslaagd){ (function(f,tel){var o=f.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:var(--red-ink)';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';f.appendChild(p);})(form); return; }
         var ok = document.getElementById('vh-success');
         form.style.display='none';
-        if (ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
+        if (ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); try{ok.focus({preventScroll:true})}catch(e){} }
       });
     });
   })();
   </script>
-<script src="site-nav.js?v=20260922a"></script>
+<script src="site-nav.js?v=20261001a"></script>
 </body>
 </html>

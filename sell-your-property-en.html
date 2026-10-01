@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sell your property in Rotterdam | Proposal in 48 hours</title>
   <meta name="description" content="Selling a property in Rotterdam? HomeINN buys directly, tenanted or dated too. A substantiated proposal within 48 hours, no agent fees.">
-  <link rel="icon" href="assets/favicon-512.png?v=20260616g">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="canonical" href="https://homeinn.nl/sell-your-property-en.html">
@@ -18,15 +18,15 @@
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Sell your property in Rotterdam — no-obligation proposal within 48 hours">
   <meta property="og:description" content="HomeINN buys your property directly, with no financing condition. Proposal within 48 hours. No estate agent fees. Discreet.">
-  <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20260616g">
+  <meta property="og:image" content="https://homeinn.nl/assets/og-home-en-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="en_GB">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
-  <link rel="stylesheet" href="tokens.css?v=20260922a">
+  <link rel="stylesheet" href="tokens.css?v=20261001a">
   <style>
     /* ───────────────────────────────────────────────────────────────
        Bod-flow (/pand-verkopen) — navigatie-loze meerstaps intake.
@@ -36,7 +36,8 @@
        (border-radius:0), serif-koppen op gewicht 300, fijne hairlines.
        ─────────────────────────────────────────────────────────────── */
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+    #flow{scroll-margin-top:88px}
     body{margin:0;font-family:var(--sans);background:var(--cream);color:var(--ink);line-height:var(--leading-normal);-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
     a{color:var(--gold-ink)}
     img{max-width:100%;display:block}
@@ -111,7 +112,7 @@
     input:focus,select:focus,textarea:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 2px rgba(var(--gold-rgb),.16)}
     input.err,select.err{border-color:var(--red);box-shadow:0 0 0 2px rgba(176,58,58,.14)}
     textarea{min-height:104px;resize:vertical}
-    .field-err{display:none;color:var(--red);font-size:var(--text-xs);font-weight:500;margin:var(--space-2) 0 0}
+    .field-err{display:none;color:var(--red-ink);font-size:var(--text-xs);font-weight:500;margin:var(--space-2) 0 0}
     .field-err.show{display:block}
 
     /* option cards (radio) */
@@ -125,7 +126,7 @@
     .opt-card input{position:absolute;opacity:0;width:0;height:0}
     .opt-card .tick{flex:0 0 19px;width:19px;height:19px;border-radius:50%;border:1px solid var(--cream3);
       display:grid;place-items:center;margin-top:1px;transition:border-color var(--t-fast),background var(--t-fast)}
-    .opt-card .tick svg{width:10px;height:10px;color:var(--navy-text);opacity:0;transform:scale(.6);transition:opacity var(--t-fast),transform var(--t-fast)}
+    .opt-card .tick svg{width:10px;height:10px;color:var(--navy);opacity:0;transform:scale(.6);transition:opacity var(--t-fast),transform var(--t-fast)}
     .opt-card .opt-body{flex:1;min-width:0}
     .opt-card .opt-t{display:block;font-weight:500;color:var(--navy-text);font-size:.95rem;line-height:1.3}
     .opt-card .opt-d{display:block;font-size:var(--text-xs);color:var(--ink3);font-weight:300;margin-top:3px;line-height:1.5}
@@ -133,6 +134,10 @@
     .opt-card:has(input:checked){border-color:var(--gold);background:var(--gold-light)}
     .opt-card:has(input:checked) .tick{border-color:var(--gold);background:var(--gold)}
     .opt-card:has(input:checked) .tick svg{opacity:1;transform:scale(1)}
+    /* Terugval voor browsers zonder :has() (iOS 15.0–15.3, Firefox < 121): de vink blijft zichtbaar. */
+    .opt-card input:checked + .tick{border-color:var(--gold);background:var(--gold)}
+    .opt-card input:checked + .tick svg{opacity:1;transform:scale(1)}
+    @supports not selector(:has(*)){.opt-card input:focus-visible + .tick{outline:2px solid var(--gold-ink);outline-offset:2px}}
     .opt-group{margin:0 0 var(--space-8)}
     .opt-group:last-child{margin-bottom:0}
 
@@ -225,6 +230,8 @@
     .skip-link{position:absolute;left:-9999px;top:0}
     /* Focusring 5,07:1 (--gold-ink op crème); de velden zetten geen outline:none meer. */
     input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold-ink);outline-offset:2px}
+    /* Op de navy topbar en het navy aanbrengblok is --gold-ink te donker (2,98:1): daar --gold2. */
+    .topbar a:focus-visible,.pv-tip a:focus-visible{outline-color:var(--gold2)}
     .skip-link:focus{left:1rem;top:1rem;z-index:900;background:var(--navy);color:#fff;padding:.6rem 1rem;border:1px solid var(--gold);text-decoration:none}
     footer{border-top:1px solid var(--cream3);background:var(--panel)}
     footer .f-in{max-width:1140px;margin:0 auto;padding:var(--space-8) clamp(var(--space-5),5vw,var(--space-12));
@@ -232,6 +239,8 @@
     footer .f-in nav a{color:var(--ink3);text-decoration:none;margin-left:var(--space-4)}
     footer .f-in nav a:first-child{margin-left:0}
     footer .f-in nav a:hover{color:var(--gold-ink)}
+    /* Vanaf 601px staat de WhatsApp-knop rechtsonder vast: ruimte vrijhouden zodat hij de sociale links niet afdekt. */
+    @media(min-width:601px){footer .f-in{padding-bottom:5.5rem}}
     /* Raakvlakken op telefoons. Deze pagina laadt homeinn-public.css niet, dus de
        site-brede 44px-regels bereiken haar niet: hier staan ze apart.
        De footerlinks waren 15px, het telefoonnummer 18 en 33px, het logo 34px. */
@@ -279,7 +288,7 @@
         <img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="158" height="34">
       </picture>
     </a>
-    <a class="tel" href="pand-verkopen.html" lang="nl" hreflang="nl" aria-label="Nederlandse versie">Nederlands</a>
+    <a class="tel" href="pand-verkopen.html" lang="nl" hreflang="nl" aria-label="NL – Nederlandse versie">Nederlands</a>
   </header>
 
   <div class="wrap">
@@ -291,7 +300,7 @@
       <div class="done-steps">
         <div class="ds"><span class="ds-n">1</span><span class="ds-t"><strong>We call you</strong>Within four hours on working days, for a brief explanation and to schedule one discreet inspection.</span></div>
         <div class="ds"><span class="ds-n">2</span><span class="ds-t"><strong>Inspection of your property</strong>One visit, with no obligations — if you prefer, your tenant need not notice a thing.</span></div>
-        <div class="ds"><span class="ds-n">3</span><span class="ds-t"><strong>Proposal within 48 hours of the inspection</strong>Transparently built on condition, location and market value. You decide at your own pace.</span></div>
+        <div class="ds"><span class="ds-n">3</span><span class="ds-t"><strong>Proposal within 48 hours of the inspection</strong>Transparently built up from condition, location and market value. You decide at your own pace.</span></div>
       </div>
       <a class="btn btn-ghost home-link" href="index-en.html">Back to the website</a>
     </div>
@@ -321,7 +330,7 @@
           </div>
         </div>
 
-        <form class="flow-card" id="bodForm" novalidate>
+        <form class="flow-card" id="bodForm" method="post" action="https://formsubmit.co/info@homeinn.nl" novalidate>
           <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
 
           <!-- STAP 1 — Adres -->
@@ -439,12 +448,12 @@
             </div>
             <div class="grid-2">
               <div class="field">
-                <label class="lbl" for="telefoon">Telephone number</label>
+                <label class="lbl" for="telefoon">Telephone number <span class="opt">(or e-mail)</span></label>
                 <input type="tel" id="telefoon" name="telefoon" autocomplete="tel" placeholder="+31 6 12 34 56 78">
                 <p class="field-err" id="err-telefoon" role="alert" data-for="telefoon">Please enter a telephone number or e-mail address.</p>
               </div>
               <div class="field">
-                <label class="lbl" for="email">E-mail address <span class="opt">(optional)</span></label>
+                <label class="lbl" for="email">E-mail address <span class="opt">(or phone)</span></label>
                 <input type="email" id="email" name="email" autocomplete="email" placeholder="john@example.com">
                 <p class="field-err" id="err-email" role="alert" data-for="email">Please check the e-mail address.</p>
               </div>
@@ -472,10 +481,10 @@
       <aside class="aside">
         <div class="aside-card">
           <h3>Why HomeINN</h3>
-          <div class="trust-row"><span class="num">2007</span><span class="lbl">Our team has been in Rotterdam property since</span></div>
-          <div class="trust-row"><span class="num">13</span><span class="lbl">Homes currently owned and in development</span></div>
+          <div class="trust-row"><span class="num">2007</span><span class="lbl">Our team’s first Rotterdam purchase</span></div>
+          <div class="trust-row"><span class="num">11</span><span class="lbl">Properties in our own portfolio and in development, 33 apartment rights in total</span></div>
           <div class="trust-row"><span class="num">€0</span><span class="lbl">Agent, styling or advisory fees</span></div>
-          <div class="trust-row"><span class="num">48u</span><span class="lbl">A substantiated proposal, no obligation</span></div>
+          <div class="trust-row"><span class="num">48h</span><span class="lbl">A substantiated proposal, no obligation</span></div>
         </div>
         <div class="aside-card" style="margin-top:var(--space-5)">
           <h3>What we look for</h3>
@@ -495,7 +504,7 @@
         <div class="aside-call">
           <span class="ac-lbl">Prefer to get in touch directly?</span>
           <span class="ac-num"><a href="tel:+31633322257">+31 6 33 32 22 57</a></span>
-          <span class="ac-sub"><a href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20offer%20for%20my%20property." target="_blank" rel="noopener">Message us on WhatsApp</a> · Monday to Friday 08:00 – 18:00</span>
+          <span class="ac-sub"><a href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20proposal%20for%20my%20property." target="_blank" rel="noopener">Message us on WhatsApp</a> · Monday to Friday 08:00 – 18:00</span>
         </div>
       </aside>
     </div>
@@ -512,8 +521,8 @@
         <p class="pv-tip-hoe">Send us the address and your details. Within 48 hours we will let you know whether the property is of interest to us, and confirm the arrangement in writing. We never approach an owner without involving you.</p>
       </div>
       <div class="pv-tip-actie">
-        <a class="btn btn-primary" href="contact-en.html?onderwerp=Een%20pand%20aanbrengen%20(aanbrengvergoeding)">Introduce a property →</a>
-        <span class="pv-tip-sub">Or <a href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20offer%20for%20my%20property." target="_blank" rel="noopener">message us on WhatsApp</a> · <a href="tel:+31633322257">+31 6 33 32 22 57</a></span>
+        <a class="btn btn-primary" href="contact-en.html?onderwerp=Introducing%20a%20property%20(referral%20fee)">Introduce a property →</a>
+        <span class="pv-tip-sub">Or <a href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20to%20introduce%20a%20property%20to%20you." target="_blank" rel="noopener">message us on WhatsApp</a> · <a href="tel:+31633322257">+31 6 33 32 22 57</a></span>
         <span class="pv-tip-note">The amount of the fee is agreed per property — ask about it when you first register.</span>
       </div>
     </div>
@@ -528,7 +537,7 @@
         <a href="terms-en.html">Terms</a>
         <a href="cookies-en.html">Cookies</a>
       </nav>
-      <div class="mini-f-social" aria-label="Follow HomeINN on social media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN on Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
+      <div class="mini-f-social" role="group" aria-label="Follow HomeINN on social media"><a href="https://www.facebook.com/profile.php?id=61591037544281" target="_blank" rel="noopener noreferrer" aria-label="HomeINN on Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.2"/><path d="M14.6 7.9 H13.2 a2 2 0 0 0 -2 2 V20.4"/><path d="M9.2 12.7 H14.4"/></svg></a><a href="https://www.instagram.com/homeinn_b.v/" target="_blank" rel="noopener noreferrer" aria-label="HomeINN on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="4.8"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.5" cy="7.5" r="1.05" fill="currentColor" stroke="none"/></svg></a></div></div>
   </footer>
 
   <!-- Structured data: dienst + lokaal bedrijf -->
@@ -541,7 +550,7 @@
     "serviceType":"Direct purchase of property",
     "areaServed":{"@type":"City","name":"Rotterdam"},
     "provider":{
-      "@type":"RealEstateAgent","@id":"https://homeinn.nl/#organisatie","name":"HomeINN",
+      "@type":"RealEstateAgent","@id":"https://homeinn.nl/#organisatie","name":"HomeINN","url":"https://homeinn.nl/",
       "telephone":"+31633322257",
       "email":"info@homeinn.nl",
       "areaServed":"Rotterdam and surroundings",
@@ -550,7 +559,7 @@
     "description":"HomeINN buys houses, apartments and walk-up buildings in Rotterdam directly — tenanted or with overdue maintenance too. Proposal within 48 hours, no estate agent fees."
   }
   </script>
-  <script src="lead-cloud.js?v=20260922a" defer></script>
+  <script src="lead-cloud.js?v=20261001a" defer></script>
   <script>
   (function () {
     'use strict';
@@ -604,12 +613,17 @@
         localStorage.setItem(INBOX_KEY, JSON.stringify(list));
       } catch (err) {}
       
-      if (window.pushLeadToCloud) window.pushLeadToCloud(type, data, 'sell-your-property-en.html');
-      return stuurLeadDoor(type, data);
+      /* Geslaagd zodra de cloud-insert óf de e-mail lukt (window.hiLeadOk uit lead-cloud.js).
+         Een mislukte e-mail (false) telt als mislukt; mislukt alles, dan wordt dat false voor de foutmelding. */
+      var cloud = window.pushLeadToCloud ? window.pushLeadToCloud(type, data, 'sell-your-property-en.html') : false;
+      var mail = stuurLeadDoor(type, data);
+      if (!window.hiLeadOk) return mail;
+      return window.hiLeadOk(cloud, mail.then(function (ok) { if (ok === false) throw new Error('mail'); return ok; }))
+        .catch(function () { return false; });
     }
 
     /* ── Navigatie ── */
-    function showStep(i) {
+    function showStep(i, zetFocus) {
       steps.forEach(function (s, idx) {
         var on = idx === i;
         s.classList.toggle('on', on);
@@ -624,17 +638,22 @@
       current = i;
       // focus eerste veld voor toetsenbord/SR-gebruikers, zonder de pagina te scrollen
       var firstField = steps[i].querySelector('input:not([type=radio]):not(.hp-field), select, textarea, input[type=radio]');
-      if (firstField) { try { firstField.focus({ preventScroll: true }); } catch (e) {} }
+      if (zetFocus !== false && firstField) { try { firstField.focus({ preventScroll: true }); } catch (e) {} }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function clearErr(step) {
       step.querySelectorAll('.field-err.show').forEach(function (e) { e.classList.remove('show'); });
       step.querySelectorAll('.err').forEach(function (e) { e.classList.remove('err'); });
+      step.querySelectorAll('[aria-invalid],[aria-describedby]').forEach(function (v) { v.removeAttribute('aria-invalid'); v.removeAttribute('aria-describedby'); });
     }
     function showErr(step, name) {
       var msg = step.querySelector('.field-err[data-for="' + name + '"]');
-      if (msg) msg.classList.add('show');
+      if (msg) {
+        msg.classList.add('show');
+        var v = step.querySelector('[name="' + name + '"]');
+        if (v) { v.setAttribute('aria-invalid', 'true'); v.setAttribute('aria-describedby', msg.id); }
+      }
     }
 
     function validateStep(i) {
@@ -662,7 +681,7 @@
       if (i === TOTAL - 1) {
         var tel = step.querySelector('input[name=telefoon]');
         var em2 = step.querySelector('input[name=email]');
-        if (tel && em2 && !tel.value.trim() && !em2.value.trim()) {
+        if (tel && em2 && tel.value.replace(/\D/g, '').length < 6 && !em2.value.trim()) {
           tel.classList.add('err'); showErr(step, 'telefoon'); ok = false; firstBad = firstBad || tel;
         }
       }
@@ -680,20 +699,18 @@
     // fout-styling wegnemen zodra de gebruiker corrigeert
     form.addEventListener('input', function (e) {
       if (e.target.classList && e.target.classList.contains('err')) e.target.classList.remove('err');
+      if (e.target.removeAttribute) e.target.removeAttribute('aria-invalid');
     });
     form.addEventListener('change', function (e) {
       if (e.target.type === 'radio') {
         var step = steps[current];
         var msg = step.querySelector('.field-err[data-for="' + e.target.name + '"]');
         if (msg) msg.classList.remove('show');
+        step.querySelectorAll('input[type=radio][name="' + e.target.name + '"]').forEach(function (v) { v.removeAttribute('aria-invalid'); v.removeAttribute('aria-describedby'); });
       }
     });
 
-    // aria-describedby: koppel elk veld aan zijn foutmelding (schermlezers lezen de fout bij het veld)
-    form.querySelectorAll('.field-err[data-for]').forEach(function (p) {
-      var veld = form.querySelector('[name="' + p.getAttribute('data-for') + '"]');
-      if (veld && !veld.getAttribute('aria-describedby')) veld.setAttribute('aria-describedby', p.id);
-    });
+    // aria-describedby + aria-invalid worden pas gezet bij een echte fout (showErr), niet bij het laden.
     // Enter in een tussenstap verstuurt niet het hele formulier maar gaat naar de volgende stap
     form.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.type === 'submit') return;
@@ -737,7 +754,7 @@
         if (ok === false) {
           var p = document.createElement('p');
           p.className = 'field-err show verzend-fout'; p.setAttribute('role', 'alert');
-          p.innerHTML = 'Sending failed — your details are still in the form. Please try again or call us directly: <a href="tel:+31633322257">+31 6 33 32 22 57</a>.';
+          p.innerHTML = 'Sending failed — your details are still in the form. Please try again or call us directly: <a href="tel:+31633322257">+31 6 33 32 22 57</a>. Or <a href="https://wa.me/31633322257" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:info@homeinn.nl">info@homeinn.nl</a>.';
           verzend.parentElement.insertAdjacentElement('afterend', p);
           return;
         }
@@ -749,9 +766,9 @@
       });
     });
 
-    showStep(0);
+    showStep(0, false);
   })();
   </script>
-<a class="pv-wa" href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20offer%20for%20my%20property." target="_blank" rel="noopener" aria-label="Message us on WhatsApp" title="Message us on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.73.45 3.4 1.32 4.89L2 22l5.4-1.48a9.83 9.83 0 0 0 4.64 1.18h.01c5.43 0 9.84-4.4 9.84-9.84 0-2.63-1.02-5.1-2.88-6.96A9.77 9.77 0 0 0 12.04 2Zm0 1.8c2.15 0 4.17.84 5.69 2.36a7.98 7.98 0 0 1 2.35 5.68c0 4.44-3.61 8.04-8.05 8.04a8.05 8.05 0 0 1-4.1-1.12l-.29-.17-3.2.88.85-3.12-.19-.31a7.96 7.96 0 0 1-1.22-4.2c0-4.44 3.61-8.04 8.16-8.04Zm-3.6 4.1c-.17 0-.45.06-.69.32-.24.26-.9.88-.9 2.15 0 1.26.92 2.48 1.05 2.65.13.17 1.79 2.83 4.44 3.86 2.2.86 2.65.69 3.13.65.48-.05 1.55-.63 1.77-1.24.22-.61.22-1.14.15-1.25-.06-.11-.24-.17-.5-.3-.26-.13-1.55-.77-1.79-.85-.24-.09-.41-.13-.59.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.41-2.1-1.3a7.9 7.9 0 0 1-1.46-1.8c-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.42-.8-1.94-.21-.5-.42-.44-.58-.44h-.5Z"/></svg><span>WhatsApp</span></a>
+<a class="pv-wa" href="https://wa.me/31633322257?text=Hello%20HomeINN%2C%20I%20would%20like%20a%20no-obligation%20proposal%20for%20my%20property." target="_blank" rel="noopener" aria-label="Message us on WhatsApp" title="Message us on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.73.45 3.4 1.32 4.89L2 22l5.4-1.48a9.83 9.83 0 0 0 4.64 1.18h.01c5.43 0 9.84-4.4 9.84-9.84 0-2.63-1.02-5.1-2.88-6.96A9.77 9.77 0 0 0 12.04 2Zm0 1.8c2.15 0 4.17.84 5.69 2.36a7.98 7.98 0 0 1 2.35 5.68c0 4.44-3.61 8.04-8.05 8.04a8.05 8.05 0 0 1-4.1-1.12l-.29-.17-3.2.88.85-3.12-.19-.31a7.96 7.96 0 0 1-1.22-4.2c0-4.44 3.61-8.04 8.16-8.04Zm-3.6 4.1c-.17 0-.45.06-.69.32-.24.26-.9.88-.9 2.15 0 1.26.92 2.48 1.05 2.65.13.17 1.79 2.83 4.44 3.86 2.2.86 2.65.69 3.13.65.48-.05 1.55-.63 1.77-1.24.22-.61.22-1.14.15-1.25-.06-.11-.24-.17-.5-.3-.26-.13-1.55-.77-1.79-.85-.24-.09-.41-.13-.59.13-.17.26-.67.85-.82 1.02-.15.17-.3.2-.56.07-.26-.13-1.1-.41-2.1-1.3a7.9 7.9 0 0 1-1.46-1.8c-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.43.09-.17.04-.33-.02-.46-.07-.13-.58-1.42-.8-1.94-.21-.5-.42-.44-.58-.44h-.5Z"/></svg><span>WhatsApp</span></a>
 </body>
 </html>

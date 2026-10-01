@@ -53,6 +53,22 @@ function toggleMob() {
   if (eerste) { try { eerste.focus(); } catch (_) {} }
 }
 
+/* Sluitknop binnen het mobiele menu. #mob is role="dialog" aria-modal="true"; daardoor is de
+   burger-X in de kop (buiten de dialoog) onbereikbaar voor Tab en voor VoiceOver/TalkBack.
+   Deze knop staat als eerste in de dialoog, zodat de focus-trap en toggleMob hem vanzelf
+   meenemen. De opmaak (.mob-x) staat in homeinn-public.css. */
+document.addEventListener('DOMContentLoaded', function () {
+  var mob = document.getElementById('mob');
+  if (!mob || mob.querySelector('.mob-x')) return;
+  var x = document.createElement('button');
+  x.type = 'button';
+  x.className = 'mob-x';
+  x.setAttribute('aria-label', (document.documentElement.lang || 'nl').indexOf('en') === 0 ? 'Close menu' : 'Sluit menu');
+  x.innerHTML = '<span aria-hidden="true">\u00d7</span>';
+  x.addEventListener('click', function () { closeMob(); });
+  mob.insertBefore(x, mob.firstChild);
+});
+
 /* Sluitroutes horen bij het gedeelde menu, ook op pagina's zonder homepage-script. */
 window.addEventListener('resize', function () {
   if (window.innerWidth > 1100) closeMob();
@@ -292,8 +308,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function label(knop) {
     var donker = huidig() === 'dark';
     knop.setAttribute('aria-pressed', donker ? 'true' : 'false');
-    knop.setAttribute('aria-label', EN ? (donker ? 'Switch to light mode' : 'Switch to dark mode') : (donker ? 'Naar lichte modus' : 'Naar donkere modus'));
-    knop.title = knop.getAttribute('aria-label');
+    knop.setAttribute('aria-label', EN ? 'Dark mode' : 'Donkere modus');
+    knop.title = EN ? (donker ? 'Switch to light mode' : 'Switch to dark mode') : (donker ? 'Naar lichte modus' : 'Naar donkere modus');
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', donker ? '#14161a' : (meta.dataset.licht || meta.getAttribute('content')));
   }
@@ -420,20 +436,22 @@ document.addEventListener('DOMContentLoaded', function () {
    bericht dat past bij de pagina waar de bezoeker op staat. */
 (function () {
   document.addEventListener('DOMContentLoaded', function () {
+    // Klasse-haak voor de CSS (body.has-float-cta .wa-fab): werkt ook zonder :has()-ondersteuning.
+    if (document.querySelector('.float-cta')) document.body.classList.add('has-float-cta');
     if (document.querySelector('.wa-fab')) return;
     var EN = (document.documentElement.lang || 'nl').indexOf('en') === 0;
     var pad = (location.pathname.split('/').pop() || 'index.html');
     var berichten = EN ? {
       'invest-en.html': 'Hello HomeINN, I would like to receive the project information for investors.',
-      'sell-your-property-en.html': 'Hello HomeINN, I would like a no-obligation offer for my property.',
+      'sell-your-property-en.html': 'Hello HomeINN, I would like a no-obligation proposal for my property.',
       'for-sale-en.html': 'Hello HomeINN, I have a question about a property you have for sale.',
       'property-management-en.html': 'Hello HomeINN, I have a question about property management.',
       'letting-en.html': 'Hello HomeINN, I have a question about renting.',
       _: 'Hello HomeINN, I have a question.'
     } : {
       'investeren.html': 'Hallo HomeINN, ik ontvang graag de projectinformatie voor investeerders.',
-      'pand-verkopen.html': 'Hallo HomeINN, ik wil graag een vrijblijvend bod op mijn pand.',
-      'verkopen.html': 'Hallo HomeINN, ik wil graag een vrijblijvend bod op mijn pand.',
+      'pand-verkopen.html': 'Hallo HomeINN, ik ontvang graag een vrijblijvend voorstel voor mijn pand.',
+      'verkopen.html': 'Hallo HomeINN, ik ontvang graag een vrijblijvend voorstel voor mijn pand.',
       'te-koop.html': 'Hallo HomeINN, ik heb een vraag over een woning die te koop staat.',
       'vastgoedbeheer.html': 'Hallo HomeINN, ik heb een vraag over vastgoedbeheer.',
       'verhuur.html': 'Hallo HomeINN, ik heb een vraag over huren.',
