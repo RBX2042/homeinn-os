@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HomeINN — Investeerdersportaal</title>
-  <meta name="description" content="Beveiligd portaal voor investeerders van HomeINN: bekijk uw inleg, rendement, uitkeringen en projectupdates.">
+  <title>HomeINN — Portaal voor geldgevers</title>
+  <meta name="description" content="Portaal voor geldgevers van HomeINN: uw hoofdsom, rentebetalingen, vervaldatum en projectupdates.">
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
@@ -55,8 +55,6 @@
     .contract-doc table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
     .contract-doc .doc-sign{display:flex;gap:24px;margin-top:14px}
     .contract-doc .doc-sign .line{border-top:1px solid #999;margin-top:24px;padding-top:3px;color:var(--ink3);font-size:.74rem}
-    .signname{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;margin-top:4px;transition:border-color .18s ease,box-shadow .18s ease}
-    .signname:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.13)}
     .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw}
     .toast.show{opacity:1}
     .foot{text-align:center;color:var(--ink3);font-size:.8rem;margin-top:30px}
@@ -66,11 +64,11 @@
 <body>
 <a class="skip-link" href="#app">Naar de inhoud</a>
   <header class="topbar">
-    <a class="brand" href="./"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="400" height="87" decoding="async"><span>Investeerders</span></a>
+    <a class="brand" href="./"><img src="assets/logo-light.png?v=20260616g" alt="HomeINN" width="400" height="87" decoding="async"><span>Geldgevers</span></a>
     <div class="who" id="who"></div>
   </header>
   <main id="app">
-    <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">Investeerdersportaal HomeINN</h1>
+    <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">Portaal voor geldgevers HomeINN</h1>
     <div class="card login-card"><p class="muted"><span class="hi-spin"></span>Laden…</p></div>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

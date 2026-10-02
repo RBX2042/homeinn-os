@@ -6,3 +6,7 @@ website-online/
 # Werkmap van auditsessies: check-scripts, rapporten en de uploadbare zip.
 # Geen broncode — hoort niet in de repo.
 audit/
+
+# Vertrouwelijk: juridische dossiers, compliance-onderzoek en bewijslijsten.
+# NOOIT committen: de repo is openbaar en GitHub Pages serveert de repo-root.
+vertrouwelijk/

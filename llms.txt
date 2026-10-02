@@ -23,9 +23,13 @@ Talen: Nederlands en Engels. Contact: +31 6 33 32 22 57 · info@homeinn.nl
   tenzij de verkoper dat zelf wil.
 - Bedragen per pand en per portefeuille staan niet op de website; die staan in het
   projectdossier, dat op aanvraag wordt verstrekt.
-- Meedoen in een project is beleggen, geen sparen: het rendement is niet gegarandeerd.
+- Investeren: een achtergestelde lening aan HomeINN B.V. tegen een vaste rente (7% per jaar
+  bij een looptijd van één jaar), bestemd voor één concreet project. De vordering is op HomeINN B.V.
+  als geheel; bij faillissement worden eerst alle andere schuldeisers betaald, ook de bank.
+  Geen eigendom van of zekerheid op het pand; rente en aflossing zijn niet gegarandeerd en de lening
+  is niet overdraagbaar.
   Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer.
-  Deelname komt pas tot stand na een persoonlijk gesprek en een individuele overeenkomst.
+  Een lening komt pas tot stand na een persoonlijk gesprek en een individuele leningsovereenkomst.
   De website is een uitnodiging tot kennismaking, geen aanbod.
 
 ## Hoofdpagina's
@@ -36,7 +40,7 @@ Talen: Nederlands en Engels. Contact: +31 6 33 32 22 57 · info@homeinn.nl
 - [Verhuur](https://homeinn.nl/verhuur.html): huuraanbod en verhuurservice.
 - [Woningaanbod](https://homeinn.nl/te-koop.html): opgeleverde woningen die te koop komen.
 - [Projecten](https://homeinn.nl/projecten.html): de panden in eigen bezit, per fase.
-- [Investeren](https://homeinn.nl/investeren.html): meedoen in één concreet project.
+- [Investeren](https://homeinn.nl/investeren.html): meefinancieren met een achtergestelde lening aan HomeINN B.V., per project.
 - [Werkgebied](https://homeinn.nl/werkgebied.html): wijken en gemeenten waar HomeINN koopt.
 - [Over ons](https://homeinn.nl/over-ons.html): het bedrijf en de mensen erachter.
 - [Contact](https://homeinn.nl/contact.html): telefoon, WhatsApp, e-mail en adres.

@@ -586,6 +586,7 @@ footer{background:var(--surface-darker);padding:clamp(4rem,8vw,8rem) clamp(1.5re
 .m-submit{width:100%;padding:14px;background:var(--gold);color:var(--navy);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;margin-top:.75rem;transition:background .25s}
 .m-submit:hover{background:var(--gold2)}
 .m-note{text-align:center;font-size:.76rem;font-weight:300;color:var(--ink4);margin-top:.85rem}
+.m-hint{display:block;margin-top:.55rem;font-size:.8rem;line-height:1.5;color:var(--ink3)}.m-hint a{color:var(--gold-ink);text-decoration:underline}
 .modal-success{display:none;padding:3.5rem 2.5rem;text-align:center}
 .success-icon{width:52px;height:52px;background:var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1.75rem;font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--navy)}
 .modal-success h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:300;color:var(--navy-text);margin-bottom:.75rem}
@@ -1605,7 +1606,7 @@ body.no-scroll .sn-burger span:nth-child(3){transform:translateY(-7px) rotate(-4
 /* Tweede werkwijze-blok (investeerders) — zelfde component, andere ondergrond
    zodat de twee trechters visueel uit elkaar te houden zijn. */
 .proc-section--invest{background:var(--cream)}
-.proc-section--invest .pa-note{color:rgba(255,255,255,.82)}
+.proc-section--invest .pa-note{color:rgba(255,255,255,.9)}
 /* Tijdelijke projectpresentatie: een locatiekaart, nooit een fictieve pandfoto.
    De bestaande echte foto bedekt dit vlak automatisch zodra hij beschikbaar is. */
 .pf-visual .map-load{height:250px;min-height:250px;padding:1.5rem 1.75rem;align-items:flex-start;text-align:left;gap:.5rem;border:0;border-top:2px solid var(--gold);background:linear-gradient(125deg,var(--navy),var(--navy3));color:#f5f2ec;position:relative}
@@ -2021,7 +2022,7 @@ body .hero-pill-dot{display:none}
 body .hero-pill span{color:var(--gold2);font-size:.7rem;letter-spacing:.18em}
 body .mvw-strip{position:relative;inset:auto}
 body .hero-scroll-ind{display:none}
-body .hero-risico{max-width:600px;font-size:.875rem;color:rgba(255,255,255,.8)}
+body .hero-risico{max-width:600px;font-size:.875rem;color:rgba(255,255,255,.9)}
 body .iv-hero-micro{flex-basis:100%;max-width:65ch;font-size:.875rem;line-height:1.7;color:rgba(255,255,255,.8)}
 body .pp-hero-micro,body .vh-hero-micro{font-size:.875rem;line-height:1.6;color:rgba(255,255,255,.75)}
 body .vb-hero-micro{font-size:.875rem;line-height:1.6;color:rgba(255,255,255,.9)}
@@ -2502,8 +2503,8 @@ body.hero-ready .page-hero--foto::after{animation:kenburnsSub 14s ease-out both}
   body .hero-sub{margin-bottom:1.5rem;max-width:30rem}
   body .hero-actions{gap:.35rem}
   body .hero-micro{display:none}
-  body .hero-risico{margin-top:1rem;font-size:.8rem;line-height:1.55;color:rgba(255,255,255,.62);max-width:30rem}
-  body .hero-risico a{color:rgba(255,255,255,.72)}
+  body .hero-risico{margin-top:1rem;font-size:.8667rem;line-height:1.55;color:rgba(255,255,255,.9);max-width:30rem}
+  body .hero-risico a{color:rgba(255,255,255,.9)}
   body .hero-copy{padding-bottom:clamp(8rem,38vw,12rem)}
   body .hero-bridge-m{bottom:5.5rem;height:clamp(170px,46vw,250px);opacity:.55}
 }

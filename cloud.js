@@ -74,8 +74,13 @@
       });
       if (props.length) { var r1 = await c.from('hios_properties').upsert(props, { onConflict: 'local_id' }); if (r1.error) throw r1.error; }
 
+      // hios_projects is leesbaar voor elke geldgever van het project (en bij publish voor elke
+      // ingelogde gebruiker). De geldgevers zelf staan in hios_investors met eigen RLS; hun namen,
+      // e-mails, bedragen en betalingen horen dus NIET in data (AVG, 2 oktober 2026).
       var projs = state.projects.map(function (pr) {
-        return { local_id: pr.id, ref: pr.ref, name: pr.name, status: pr.status, published: !!pr.publish, data: pr };
+        var data = Object.assign({}, pr);
+        delete data.investeerders; delete data.capitalCalls;
+        return { local_id: pr.id, ref: pr.ref, name: pr.name, status: pr.status, published: !!pr.publish, data: data };
       });
       if (projs.length) { var r2 = await c.from('hios_projects').upsert(projs, { onConflict: 'local_id' }); if (r2.error) throw r2.error; }
 

@@ -8,6 +8,13 @@ var mobEl = document.getElementById('mob');
 var burgerEl = document.getElementById('burger');
 var modalEl = document.getElementById('modal');
 var modalFormEl = document.getElementById('mf');
+/* Kiest iemand in het kennismakingsformulier "Investeren bij HomeINN", dan verwijzen we naar
+   het aanvraagformulier voor geldgevers (met de PMP-bevestiging) en tonen we de risicozin. */
+function mInvestHint() {
+  var s = modalFormEl && modalFormEl.querySelector('select[name="meeting_package"]'), h = document.getElementById('m-invest-hint');
+  if (s && h) h.style.display = /^(Investeren bij HomeINN|Investing with HomeINN)$/.test(s.value) ? 'block' : 'none';
+}
+if (modalFormEl) modalFormEl.addEventListener('change', function (e) { if (e.target && e.target.name === 'meeting_package') mInvestHint(); });
 var modalSuccessEl = document.getElementById('ms');
 
 /* Aangepaste cursor verwijderd — een strakke, stille pagina gebruikt de native cursor. */
@@ -174,6 +181,7 @@ function openModal(subject, ref) {
       sel.value = subject;
     } else { sel.selectedIndex = 0; }
   }
+  mInvestHint();
   var refEl = modalFormEl.querySelector('input[name="meeting_ref"]');
   if (refEl) refEl.value = ref || '';
   var firstField = modalFormEl.querySelector('#m-naam') || getModalFocusable()[0];
@@ -524,7 +532,7 @@ function renderPortefeuilleMeta() {
     .then(function (data) {
       var pf = data && data.portefeuille;
       if (pf && pf.panden) {
-        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · in our own portfolio · as at ' + fmtDateEn(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
+        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · in the name of HomeINN B.V. · as at ' + fmtDateEn(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · op naam van HomeINN B.V. · peildatum ' + fmtDatumNl(pf.peildatum));
       }
     })
     .catch(function () { /* statische tekst in de HTML blijft staan */ });
@@ -534,7 +542,7 @@ document.addEventListener('DOMContentLoaded', renderPortefeuilleMeta);
 function renderProjectenPublic() {
   var grid = document.getElementById('projecten-grid');
   if (!grid) return;
-  var leeg = '<div class="aanbod-leeg"><div class="leeg-spot hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></div><h3>Geen lopende projecten zichtbaar.</h3><p>Nieuwe ontwikkelprojecten worden hier gepubliceerd zodra ze starten. Wilt u meedoen in een volgend project? Plan een kennismaking.</p></div>';
+  var leeg = '<div class="aanbod-leeg"><div class="leeg-spot hi-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-ontwikkeling"/></svg></div><h3>Geen lopende projecten zichtbaar.</h3><p>Nieuwe ontwikkelprojecten worden hier gepubliceerd zodra ze starten. Wilt u meefinancieren aan een volgend project? Vraag de projectinformatie aan.</p></div>';
   fetch('aanbod.json', { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('geen data'); return r.json(); })
     .then(function (data) {
@@ -546,21 +554,15 @@ function renderProjectenPublic() {
         var inv = pr.investering;
         var invHtml = '';
         if (inv) {
-          invHtml = '<div class="invest-box">' +
-            '<div class="ib-title">Open voor investeerders</div>';
-          if (inv.doelbedrag) {
-            var invPct = Math.min(100, Math.round((inv.opgehaald || 0) / inv.doelbedrag * 100));
-            invHtml += '<div class="pw-wrap"><div class="pw-bar" style="width:' + invPct + '%"></div></div>' +
-              '<div class="ib-row"><span>Gevuld — bedragen in het projectdossier</span><span>' + invPct + '%</span></div>';
-          }
-          if (inv.rendementPct || inv.looptijd) {
-            invHtml += '<div class="ib-row">' +
-              '<span></span>' +
-              '<span>' + (inv.rendementPct ? escHtml(String(inv.rendementPct)).replace('.', ',') + '% streefrendement/jr' + (inv.looptijd ? ' · ' : '') : '') + escHtml(inv.looptijd || '') + '</span></div>';
-          }
-          invHtml += '<p class="ib-note">Aankoopsom, verbouwbudget, planning en het rendementspercentage leggen wij per project vast. U ontvangt de volledige cijfers per project en op naam.</p>';
-          invHtml += '<button class="pillar-cta" data-open-modal data-subject="Investeren in een project" data-ref="' + refLabel + '">Investeer mee in dit project →</button>' +
-            '</div>';
+          // Zelfde tekst als projecten.html: een achtergestelde lening aan HomeINN B.V. — geen
+          // vulmeter, geen bedragen, geen "rendement" (juridische afstemming 2 oktober 2026).
+          var rp = inv.rentePct || inv.rendementPct;
+          var rij = [rp ? escHtml(String(rp)).replace('.', ',') + '% rente per jaar' : '', inv.looptijd ? escHtml(inv.looptijd) : '', 'achtergesteld, niet gegarandeerd'].filter(Boolean).join(' · ');
+          rij = rij.charAt(0).toUpperCase() + rij.slice(1);
+          invHtml = '<div class="invest-box"><div class="ib-title">Voor geldgevers</div>' +
+            '<div class="ib-row"><span>' + rij + '</span></div>' +
+            '<p class="ib-note">Een achtergestelde lening aan HomeINN B.V., bestemd voor dit project. Uw vordering is op HomeINN B.V. als geheel. Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer.</p>' +
+            '<a class="pillar-cta" href="investeren.html?project=' + encodeURIComponent(pr.adres || '') + '#meedoen">Vraag de projectinformatie aan →</a></div>';
         }
         var prFotos = Array.isArray(pr.fotos) ? pr.fotos : [];
         var prVisual = '<div class="pf-visual">' + mapsKnop(mapsQ, escHtml(pr.adres)).replace('</button>', '<span class="pf-photo-note">Projectfoto’s volgen</span></button>') +
@@ -586,7 +588,7 @@ function renderProjectenPublic() {
       var meta = document.getElementById('portefeuille-meta');
       var pf = data && data.portefeuille;
       if (meta && pf && pf.panden) {
-        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · in our own portfolio · as at ' + fmtDateEn(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · eigen bezit · peildatum ' + fmtDatumNl(pf.peildatum));
+        meta.textContent = (document.documentElement.lang === 'en') ? (pf.panden + ' properties · ' + pf.appartementsrechten + ' apartment rights · in the name of HomeINN B.V. · as at ' + fmtDateEn(pf.peildatum)) : (pf.panden + ' panden · ' + pf.appartementsrechten + ' appartementsrechten · op naam van HomeINN B.V. · peildatum ' + fmtDatumNl(pf.peildatum));
       }
     })
     .catch(function () { grid.innerHTML = leeg; });
@@ -826,20 +828,5 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-/* ===== Rekenvoorbeeld investeren (indicatief, 7% streefrendement, geen garantie) ===== */
-document.addEventListener('DOMContentLoaded', function () {
-  var inleg = document.getElementById('ivc-inleg'), jaren = document.getElementById('ivc-jaren');
-  if (!inleg || !jaren) return;
-  var en = document.documentElement.lang === 'en';
-  function eur(n) { return en ? '€' + Math.round(n).toLocaleString('en-GB') : '€ ' + Math.round(n).toLocaleString('nl-NL'); }
-  function upd() {
-    var i = +inleg.value, j = +jaren.value, r = i * 0.07 * j;
-    document.getElementById('ivc-inleg-out').textContent = eur(i);
-    document.getElementById('ivc-jaren-out').textContent = j + ' ' + (en ? (j === 1 ? 'year' : 'years') : 'jaar');
-    ['ivc-rend', 'ivc-tot'].forEach(function (id, k) {
-      var el = document.getElementById(id); el.classList.add('tick'); el.textContent = eur(k ? i + r : r);
-      setTimeout(function () { el.classList.remove('tick'); }, 120);
-    });
-  }
-  inleg.addEventListener('input', upd); jaren.addEventListener('input', upd); upd();
-});
+/* Rekenvoorbeeld investeren verwijderd (2 oktober 2026): een lening heeft een vaste rente,
+   en een rekenvoorbeeld met bedragen hoort niet op de site. Niet terugzetten. */

@@ -123,7 +123,7 @@
   function renderChooser(email, opts) {
     var buttons = '';
     if (opts.staff) buttons += '<a class="btn primary" href="portaal.html">Beheerportaal</a>';
-    if (opts.investeerder) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="investeerders.html">Investeerdersportaal</a>';
+    if (opts.investeerder) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="investeerders.html">Portaal voor geldgevers</a>';
     if (opts.huurder) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="huurders.html">Huurdersportaal</a>';
     if (opts.koper) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="kopers.html">Kopersportaal</a>';
     if (opts.verkoper) buttons += '<a class="btn ' + (buttons ? 'secondary' : 'primary') + '" href="verkoper.html">Verkopersportaal</a>';

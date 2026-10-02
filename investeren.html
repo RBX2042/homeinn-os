@@ -5,7 +5,7 @@
   <script>try{var t=localStorage.getItem('hi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Investeren in Rotterdams vastgoed | HomeINN</title>
-  <meta name="description" content="Meedoen in vastgoedprojecten in Rotterdam: elf panden, 33 appartementsrechten, rendement per project vastgelegd. Vanaf € 100.000. Beleggen kent risico's.">
+  <meta name="description" content="Financier mee aan vastgoedprojecten in Rotterdam: een achtergestelde lening aan HomeINN B.V. tegen vaste rente. Vanaf € 100.000 ineens. Niet gegarandeerd.">
   <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
   <meta name="theme-color" content="#0b1e30">
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
@@ -17,18 +17,19 @@
   <meta property="og:url" content="https://homeinn.nl/investeren.html">
   <meta property="og:site_name" content="HomeINN">
   <meta property="og:title" content="Investeren in Rotterdams vastgoed — HomeINN">
-  <meta property="og:description" content="Meedoen in vastgoedprojecten in Rotterdam: elf panden, 33 appartementsrechten, rendement per project vastgelegd. Vanaf € 100.000. Beleggen kent risico's.">
+  <meta property="og:description" content="Financier mee aan vastgoedprojecten in Rotterdam: een achtergestelde lening aan HomeINN B.V. tegen vaste rente. Vanaf € 100.000 ineens. Niet gegarandeerd.">
   <meta property="og:image" content="https://homeinn.nl/assets/og-home-1200x630.png?v=20261001a">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:description" content="Financier mee aan vastgoedprojecten in Rotterdam: een achtergestelde lening aan HomeINN B.V. tegen vaste rente. Vanaf € 100.000 ineens. Niet gegarandeerd.">
   <link rel="preload" href="fonts/CormorantGaramond-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
   <link rel="stylesheet" href="tokens.css?v=20261001a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261002a">
   <style>
     .iv-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .iv-top .brand img{height:34px;width:auto;display:block}
@@ -38,11 +39,16 @@
     .iv-top .top-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--navy);text-decoration:none;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:11px 20px}
     @media(max-width:620px){.iv-top .tel{display:none}}
     .iv-hero-cta{margin-top:2rem;display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center}
-    .iv-hero-micro{color:rgba(255,255,255,.5);font-size:.8rem;font-weight:300}
+    .iv-hero-micro{color:#fff;font-size:.8rem;font-weight:400}
+    body .page-hero .iv-hero-micro{color:#fff;font-weight:400}
+    @media print{body .page-hero .iv-hero-micro{color:#000!important}}
+    .iv-data .pfx-big-val{white-space:normal;hyphens:auto;-webkit-hyphens:auto}
     .iv-disclaimer{max-width:900px;margin:0 auto;padding:0 clamp(1.5rem,5vw,2rem) clamp(3.5rem,7vw,5rem)}
     .iv-disclaimer .box{background:var(--gold-light);border-left:3px solid var(--gold);padding:1.75rem 2rem;font-size:.9rem;font-weight:300;line-height:1.8;color:var(--ink2)}
     .iv-disclaimer .box strong{font-weight:600;color:var(--gold-text)}
     .sla-gold{background:rgba(204,169,74,.16);color:var(--gold2)}
+    .iv-faq .faq-item .faq-a{max-height:none}
+    body.faq-ready .iv-faq .faq-item:not(.open) .faq-a{max-height:0}
     
     .ct-success{background:var(--panel);border:1px solid var(--line);padding:2.5rem;text-align:center}
     .ct-success h3{font-family:var(--serif);font-weight:300;font-size:1.8rem;color:var(--navy-text);margin:0 0 .75rem}
@@ -78,7 +84,7 @@
               <span class="nav-mega-h">Aanbod &amp; achtergrond</span>
               <a href="te-koop.html"><span class="nav-sub-t">Woningaanbod</span><span class="nav-sub-d">Wat er te koop komt uit onze ontwikkeling</span></a>
               <a href="verhuur.html"><span class="nav-sub-t">Huuraanbod</span><span class="nav-sub-d">Huurwoningen en verhuurservice</span></a>
-              <a href="projecten.html"><span class="nav-sub-t">Projecten &amp; investeren</span><span class="nav-sub-d">Meelopen in een lopende ontwikkeling</span></a>
+              <a href="projecten.html"><span class="nav-sub-t">Projecten &amp; investeren</span><span class="nav-sub-d">Lopende projecten en meefinancieren</span></a>
               <a href="kennis.html"><span class="nav-sub-t">Kennis</span><span class="nav-sub-d">Wat wij zien in de Rotterdamse markt</span></a>
               <a href="werkgebied.html"><span class="nav-sub-t">Werkgebied</span><span class="nav-sub-d">Rotterdam en omstreken</span></a>
             </div>
@@ -114,7 +120,7 @@
     <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
     <a class="mob-sm" href="contact.html">Contact</a>
   </nav>
-  <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">→</span></a>
+  <a class="btn btn-primary mob-btn" href="investeren.html">Investeren bij HomeINN <span class="arr">→</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan →</a>
   <p class="mob-sub"><a href="contact.html">Contact &amp; kennismaken</a> · Rotterdam</p>
   <div class="mob-legal">
@@ -130,11 +136,11 @@
     <section class="page-hero page-hero--foto page-hero--foto-m">
       <div class="page-hero-inner">
         <span class="t-eyebrow" style="display:block;margin-bottom:1.5rem">Investeren · Rotterdam</span>
-        <h1>Investeren in Rotterdam.<br><em>Meedoen in onze projecten.</em></h1>
-        <p>U investeert in panden die wij zelf aankopen, met onze vaste bouwpartner verbouwen en daarna verkopen of verhuren — tegen een rendement dat wij per project vooraf schriftelijk met u vastleggen. Geen fonds, geen tussenlagen.</p>
+        <h1>Investeren in Rotterdam.<br><em>Financier mee aan onze projecten.</em></h1>
+        <p>U leent rechtstreeks aan HomeINN B.V. voor één concreet project: panden die wij zelf aankopen, met onze vaste bouwpartner Lageweg Services B.V. verbouwen en daarna verkopen of verhuren. Vaste rente, vaste looptijd, één leningsovereenkomst.</p>
         <div class="iv-hero-cta">
           <a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
-          <span class="iv-hero-micro">Uitsluitend voor professionele marktpartijen: deelname vanaf € 100.000 ineens · Streefrendement 7% per jaar · Looptijd vanaf één jaar · Uitkering via de notaris · Geen gegarandeerd rendement</span>
+          <span class="iv-hero-micro">Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. · Achtergestelde lening aan HomeINN B.V. · Vaste rente 7% per jaar bij een looptijd van één jaar · Geen zekerheid · Rente en aflossing niet gegarandeerd</span>
         </div>
       </div>
     </section>
@@ -146,7 +152,7 @@
         <div class="jstat"><div class="jstat-val" data-count="11">11</div><div class="jstat-lbl">Panden in Rotterdam en Vlaardingen</div></div>
         <div class="jstat"><div class="jstat-val" data-count="33">33</div><div class="jstat-lbl">Appartementsrechten na splitsing</div></div>
         <div class="jstat"><div class="jstat-val"><span data-count="2724">2.724</span><span class="jstat-unit">m²</span></div><div class="jstat-lbl">Woonoppervlak na splitsing</div></div>
-        <div class="jstat"><div class="jstat-val"><span data-count="100">100</span><span class="jstat-unit">%</span></div><div class="jstat-lbl">In eigen bezit — geen fonds, geen tussenlagen</div></div>
+        <div class="jstat"><div class="jstat-val"><span data-count="100">100</span><span class="jstat-unit">%</span></div><div class="jstat-lbl">Op naam van HomeINN B.V., deels met bankfinanciering</div></div>
       </div>
     </section>
 
@@ -155,7 +161,7 @@
         <div class="proc-head">
           <span class="t-eyebrow rv">De cijfers</span>
           <h2 class="rv">De cijfers krijgt u <em>voordat u beslist.</em></h2>
-          <p class="proc-lede rv d1">Geen fonds en geen prognose-op-papier: dit is de bestaande portefeuille van HomeINN, panden die wij zelf in eigendom hebben. De bedragen per pand — kostenbasis, renovatiebudget en de getaxeerde waarde na renovatie — zetten wij bewust niet online: die horen bij het project waar u naar kijkt en bij een gesprek. Vraag de projectinformatie aan en u ontvangt ze volledig, vóór u beslist.</p>
+          <p class="proc-lede rv d1">Geen prognose op papier: dit is de bestaande portefeuille van HomeINN B.V., panden die op onze naam staan en deels met bankfinanciering zijn gekocht. De bedragen per pand zetten wij bewust niet online: die horen bij het project waar u naar kijkt en bij een gesprek. Vraag de projectinformatie aan en u ontvangt ze volledig, vóór u beslist.</p>
         </div>
     <div class="pfx-summary">
       <div class="pfx-sum-table rv">
@@ -166,21 +172,23 @@
           <div><dt>Renovatiebegroting van onze vaste bouwpartner</dt><dd>In het dossier</dd></div>
           <div class="pfx-sum-sub"><dt>Taxatie van de waarde na renovatie</dt><dd>In het dossier</dd></div>
           <div><dt>Planning, splitsing en vergunningen</dt><dd>In het dossier</dd></div>
-          <div class="pfx-sum-tot"><dt>Rendement, looptijd en voorwaarden</dt><dd>In de overeenkomst</dd></div>
+          <div><dt>Cijfers en schuldpositie van HomeINN B.V.</dt><dd>In het dossier</dd></div>
+          <div class="pfx-sum-tot"><dt>Rente, looptijd en voorwaarden</dt><dd>In de leningsovereenkomst</dd></div>
         </dl>
-        <p class="pfx-sum-note">Wij publiceren geen bedragen per pand. De volledige cijfers &mdash; kostenbasis, renovatiebudget, de getaxeerde waarde na renovatie en de exit per appartementsrecht &mdash; ontvangt u per project en op naam, binnen &eacute;&eacute;n werkdag na uw aanvraag. Zo kijkt u naar &eacute;&eacute;n concreet pand met de onderbouwing erbij, in plaats van naar een gemiddelde over elf panden.</p>
+        <p class="pfx-sum-note">Wij publiceren geen bedragen per pand. De volledige cijfers (kostenbasis, renovatiebudget, de getaxeerde waarde na renovatie en de exit per appartementsrecht) ontvangt u per project en op naam, binnen &eacute;&eacute;n werkdag na uw aanvraag, samen met de cijfers van HomeINN B.V. Uw lening is bestemd voor &eacute;&eacute;n project, maar uw vordering is op HomeINN B.V. als geheel. Tegenvallers in andere projecten kunnen daardoor ook uw betaling raken.</p>
       </div>
       <div class="pfx-sum-chart rv d1">
         <div class="pfx-bigs">
           <div class="pfx-big"><span class="pfx-big-val">1 werkdag</span><span class="pfx-big-lbl">Zo snel ligt het projectdossier bij u</span></div>
-          <div class="pfx-big"><span class="pfx-big-val">Notaris</span><span class="pfx-big-lbl">Uitkering en vastlegging lopen via de notaris</span></div>
+          <div class="pfx-big"><span class="pfx-big-val">Achtergesteld</span><span class="pfx-big-lbl">Bij faillissement gaan alle andere schuldeisers vóór, ook de bank</span></div>
         </div>
         <p class="pfx-bars-title">Wat u na uw aanvraag ontvangt</p>
         <ul class="pfx-dossier">
           <li>Het projectdossier van het pand van uw keuze, met taxatie en begroting</li>
+          <li>De financiële cijfers en de schuldpositie van HomeINN B.V., waaronder de bankfinanciering en de uitstaande achtergestelde leningen</li>
           <li>De planning per fase: aankoop, splitsing, renovatie, verkoop of verhuur</li>
-          <li>Een concept van de onderhandse overeenkomst, met rendement en looptijd</li>
-          <li>Een persoonlijk gesprek in Rotterdam &mdash; of bij u op kantoor</li>
+          <li>Een concept van de leningsovereenkomst, met rente en looptijd</li>
+          <li>Een persoonlijk gesprek in Rotterdam of bij u op kantoor</li>
         </ul>
         <a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">&#8594;</span></a>
         <p class="pfx-chart-note">Geen nieuwsbrief en geen verkoopdruk: u ontvangt het dossier en wij bellen u &eacute;&eacute;n keer na.</p>
@@ -188,45 +196,46 @@
     </div>
 
         <div class="iv-data-punten rv-stagger">
-          <div class="iv-dp"><span class="iv-dp-val">7%</span><span class="iv-dp-lbl">Streefrendement per jaar — vastgelegd per project, niet gegarandeerd</span></div>
-          <div class="iv-dp"><span class="iv-dp-val">1 jaar</span><span class="iv-dp-lbl">Looptijd vanaf één jaar, afgestemd op de planning van het pand</span></div>
+          <div class="iv-dp"><span class="iv-dp-val">7%</span><span class="iv-dp-lbl">Vaste rente per jaar bij een looptijd van één jaar; achtergesteld en niet gegarandeerd</span></div>
+          <div class="iv-dp"><span class="iv-dp-val">1 jaar</span><span class="iv-dp-lbl">Vaste looptijd, vanaf één jaar; niet tussentijds opeisbaar</span></div>
           <div class="iv-dp"><span class="iv-dp-val">één</span><span class="iv-dp-lbl">Vaste bouwpartner voor alle renovaties: Lageweg Services B.V.</span></div>
           <div class="iv-dp"><span class="iv-dp-val">2.724 m²</span><span class="iv-dp-lbl">Woonoppervlak na splitsing, plus 570 m² tuin</span></div>
         </div>
         <div class="iv-calc rv" id="hoe-vastgelegd">
-          <div class="iv-calc-head"><span class="t-eyebrow">Hoe het wordt vastgelegd</span><h3>Wat <em>uw deelname</em> concreet oplevert, staat in uw overeenkomst.</h3><p>Wij zetten geen rekenvoorbeeld op de website: het rendement, de looptijd en de voorwaarden verschillen per pand en leggen wij per project schriftelijk vast. U ziet ze op papier v&oacute;&oacute;r u beslist.</p></div>
+          <div class="iv-calc-head"><span class="t-eyebrow">Hoe het wordt vastgelegd</span><h3>Wat <em>uw lening</em> oplevert, staat in uw leningsovereenkomst.</h3><p>Wij zetten geen rekenvoorbeeld op de website: de rente, de looptijd en de voorwaarden leggen wij per project schriftelijk vast. U ziet ze op papier v&oacute;&oacute;r u beslist.</p></div>
           <div class="iv-calc-body">
             <ol class="iv-stappen">
-              <li><span class="iv-stap-n">01</span><span class="iv-stap-t">U vraagt de projectinformatie aan</span><span class="iv-stap-d">Binnen &eacute;&eacute;n werkdag ontvangt u het dossier van het pand: taxatie, begroting, planning en de exit per appartementsrecht.</span></li>
+              <li><span class="iv-stap-n">01</span><span class="iv-stap-t">U vraagt de projectinformatie aan</span><span class="iv-stap-d">Binnen &eacute;&eacute;n werkdag ontvangt u het dossier van het pand (taxatie, begroting, planning en de exit per appartementsrecht) en de cijfers van HomeINN B.V.</span></li>
               <li><span class="iv-stap-n">02</span><span class="iv-stap-t">Wij spreken elkaar persoonlijk</span><span class="iv-stap-d">U loopt de cijfers met ons door, stelt uw vragen en bekijkt het pand als u dat wilt. Geen callcenter, u spreekt de eigenaar.</span></li>
-              <li><span class="iv-stap-n">03</span><span class="iv-stap-t">Alles zwart op wit</span><span class="iv-stap-d">Inleg, looptijd, rendementspercentage en voorwaarden komen in een onderhandse overeenkomst; de uitkering loopt via de notaris.</span></li>
+              <li><span class="iv-stap-n">03</span><span class="iv-stap-t">Alles zwart op wit</span><span class="iv-stap-d">Hoofdsom, looptijd, rente en voorwaarden komen in een individuele leningsovereenkomst met HomeINN B.V.; rente en aflossing ontvangt u per bankoverschrijving.</span></li>
             </ol>
             <a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">&#8594;</span></a>
-            <p class="iv-calc-note" id="ivc-note">Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. Het streefrendement van 7% per jaar is geen garantie. Beleggen brengt risico&#39;s mee: uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
+            <p class="iv-calc-note" id="ivc-note">Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. De rente ligt vast; de betaling van rente en hoofdsom is niet gegarandeerd. U kunt rente en uw hoofdsom geheel of gedeeltelijk verliezen.</p>
           </div>
         </div>
         <div class="pf-foot">
           <a class="btn btn-primary rv" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a>
           <a class="btn btn-outline-dark rv" href="./#portefeuille">Bekijk alle elf panden <span class="arr">→</span></a>
         </div>
-        <p class="pf-risico">Dit overzicht dient uitsluitend ter informatie en is geen aanbod, advies of uitnodiging tot beleggen. De waarde na renovatie is een taxatie; aan de cijfers en rendementsverwachtingen kunnen geen rechten worden ontleend. Uw inleg kan geheel of gedeeltelijk verloren gaan.</p>
+        <p class="pf-risico">Dit overzicht is informatie, geen aanbod en geen advies. De waarde na renovatie is een taxatie. Een lening aan HomeINN B.V. is geen spaargeld: zij is achtergesteld en zonder zekerheid, en u kunt rente en (een deel van) uw geld verliezen. Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer.</p>
 
         <div class="pfx-risks">
-          <div class="pfx-risks-head rv"><span class="t-eyebrow">Belangrijke overwegingen</span><h3>Waar u als investeerder <em>rekening mee houdt.</em></h3></div>
+          <div class="pfx-risks-head rv"><span class="t-eyebrow">Belangrijke overwegingen</span><h3>Waar u als geldgever <em>rekening mee houdt.</em></h3></div>
           <ul class="pfx-risk-list rv-stagger">
-            <li><strong>Marktrisico</strong><span>De waarde na renovatie blijft een taxatie/inschatting en kan afwijken van de werkelijk gerealiseerde verkoopprijs.</span></li>
-            <li><strong>Bouwrisico</strong><span>Planning, beschikbaarheid en kosten van de renovatie kunnen tijdens de uitvoering veranderen.</span></li>
-            <li><strong>Financieringsrisico</strong><span>Rente, voorwaarden en herfinancieringsmogelijkheden kunnen wijzigen.</span></li>
-            <li><strong>Splitsing &amp; vergunningen</strong><span>Uitvoering blijft afhankelijk van de vereiste juridische, bouwkundige en gemeentelijke voorwaarden.</span></li>
-            <li><strong>Liquiditeit</strong><span>Vastgoed is niet direct liquide; timing en doorlooptijd van een verkoop verschillen per pand.</span></li>
+            <li><strong>Betaalcapaciteit</strong><span>U bent afhankelijk van het vermogen van HomeINN B.V. om rente en hoofdsom te betalen.</span></li>
+            <li><strong>Achterstelling</strong><span>Bij faillissement wordt u pas betaald na alle andere schuldeisers, ook na de bank.</span></li>
+            <li><strong>Geen zekerheid</strong><span>Geen hypotheek, geen pandrecht, geen recht op de opbrengst en geen garantie.</span></li>
+            <li><strong>Eén onderneming</strong><span>Uw vordering is op HomeINN B.V. als geheel; tegenvallers in andere projecten raken ook u.</span></li>
+            <li><strong>Aflossing</strong><span>Vertraagt een verkoop, verhuur of herfinanciering, dan kan uw betaling vertragen of uitblijven.</span></li>
+            <li><strong>Geen tussentijdse uitstap</strong><span>Niet tussentijds opeisbaar en niet overdraagbaar.</span></li>
+            <li><strong>Project</strong><span>Markt, bouw, financiering, splitsing en vergunningen: wat daar tegenvalt, raakt de betaalcapaciteit van HomeINN B.V.</span></li>
           </ul>
         </div>
 
         <div class="pfx-partners rv">
-          <p class="pfx-partners-lede">Een renovatie is zo sterk als het team dat haar uitvoert. HomeINN werkt daarom met vaste partners voor bouw, financiering en architectuur.</p>
+          <p class="pfx-partners-lede">Een renovatie is zo sterk als het team dat haar uitvoert. HomeINN werkt daarom met vaste partners voor bouw en architectuur.</p>
           <ul class="pfx-partner-list">
             <li><span class="t-eyebrow">Bouwpartner</span><img class="pfx-partner-logo" src="assets/lageweg-services-logo.svg?v=20260920b" alt="Logo Lageweg Services B.V." width="272" height="60" loading="lazy" decoding="async"></li>
-            <li><span class="t-eyebrow">Vastgoedfinancieel adviseur</span><strong>Dutch Investment Network B.V.</strong></li>
             <li><span class="t-eyebrow">Architect</span><strong>3Hoog Architecten</strong></li>
           </ul>
           <a class="pillar-cta" href="over-ons.html">Lees ons verhaal <span class="arr">→</span></a>
@@ -240,30 +249,68 @@
         <div id="iv-kiezer" class="iv-kiezer"></div>
       </div>
     </section>
-    <section class="iv-tools iv-tools--vgl" id="vergelijk" aria-label="Zelf kopen of meedoen">
-      <div class="proc-inner"><div id="iv-vergelijk" class="iv-vergelijk"></div></div>
-    </section>
 
 
     <section class="proc-section">
       <div class="proc-inner">
-        <div class="proc-head"><span class="t-eyebrow">Zo werkt het</span><h2>Van kennismaking tot uitkering.<br><em>In drie stappen.</em></h2></div>
+        <div class="proc-head"><span class="t-eyebrow">Zo werkt het</span><h2>Van kennismaking tot aflossing.<br><em>In drie stappen.</em></h2></div>
         <div class="proc-panel on">
           <div class="proc-steps">
-            <div class="pstep"><div class="pstep-n">01</div><div class="pstep-body"><strong>Dossier &amp; kennismaking</strong><span>U ontvangt binnen één werkdag het projectdossier; daarna spreken wij elkaar persoonlijk over uw doelen, het bedrag en de looptijd die bij u past.</span></div></div>
-            <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Overeenkomst</strong><span>Inleg, looptijd en rendementspercentage — bij een looptijd van één jaar een streefrendement van 7% per jaar — leggen wij vast in een onderhandse overeenkomst.</span></div></div>
-            <div class="pstep"><div class="pstep-n">03</div><div class="pstep-body"><strong>Volgen &amp; uitkeren</strong><span>Zodra de verbouwing start ontvangt u per e-mail een voortgangsupdate; de status van elk pand staat op de projectenpagina. Bij verkoop wordt uw inleg plus het afgesproken rendement uitgekeerd via de notaris.</span></div></div>
+            <div class="pstep"><div class="pstep-n">01</div><div class="pstep-body"><strong>Dossier &amp; kennismaking</strong><span>U ontvangt binnen één werkdag het projectdossier en de cijfers van HomeINN B.V.; daarna spreken wij elkaar persoonlijk over uw doelen, het bedrag en de looptijd.</span></div></div>
+            <div class="pstep"><div class="pstep-n">02</div><div class="pstep-body"><strong>Leningsovereenkomst</strong><span>Hoofdsom, looptijd en rente, bij een looptijd van één jaar 7% per jaar, leggen wij vast in een individuele leningsovereenkomst met HomeINN B.V. De lening is achtergesteld. De rente ligt vast; de betaling van rente en hoofdsom is niet gegarandeerd.</span></div></div>
+            <div class="pstep"><div class="pstep-n">03</div><div class="pstep-body"><strong>Volgen &amp; aflossing</strong><span>Zodra de verbouwing start ontvangt u per e-mail voortgangsupdates; de status van elk pand staat op de projectenpagina. De rente betalen wij jaarlijks en de hoofdsom aan het einde van de looptijd, per bankoverschrijving. Rente en aflossing zijn niet gegarandeerd.</span></div></div>
           </div>
           <div class="proc-aside">
-            <div class="proc-aside-title">Waarom meedoen bij HomeINN</div>
-            <p class="proc-aside-desc">U investeert in stenen die wij zelf aankopen, met onze vaste bouwpartner verbouwen en daarna via onze makelaar verkopen. Geen fonds, geen tussenlagen — één project, één overeenkomst, één resultaat.</p>
-            <div class="sla-row"><span class="sla-row-label">Streefrendement</span><span class="sla-tag sla-gold">7% per jaar — niet gegarandeerd</span></div>
-            <div class="sla-row"><span class="sla-row-label">Looptijd</span><span class="sla-tag sla-blue">Vanaf één jaar</span></div>
-            <div class="sla-row"><span class="sla-row-label">Portefeuille</span><span class="sla-tag sla-blue">11 panden · 33 appartementsrechten</span></div>
-            <div class="sla-row"><span class="sla-row-label">Uitvoering</span><span class="sla-tag sla-blue">Vaste bouwpartner</span></div>
+            <div class="proc-aside-title">Zo werkt een lening aan HomeINN</div>
+            <p class="proc-aside-desc">Een lening aan HomeINN B.V. voor één project dat wij zelf aankopen, met Lageweg Services B.V. verbouwen en daarna verkopen of verhuren. Eén leningsovereenkomst, rechtstreeks met ons.</p>
+            <div class="sla-row"><span class="sla-row-label">Rente</span><span class="sla-tag sla-gold">7% per jaar bij één jaar, niet gegarandeerd</span></div>
+            <div class="sla-row"><span class="sla-row-label">Rang</span><span class="sla-tag sla-gold">Achtergesteld</span></div>
+            <div class="sla-row"><span class="sla-row-label">Zekerheid</span><span class="sla-tag sla-gold">Geen</span></div>
+            <div class="sla-row"><span class="sla-row-label">Looptijd</span><span class="sla-tag sla-blue">Vast, vanaf één jaar</span></div>
+            <div class="sla-row"><span class="sla-row-label">Betaling</span><span class="sla-tag sla-blue">Per bankoverschrijving</span></div>
             <div class="sla-row"><span class="sla-row-label">Voortgang</span><span class="sla-tag sla-blue">Update per e-mail + projectenpagina</span></div>
-            <div class="sla-row"><span class="sla-row-label">Uitkering</span><span class="sla-tag sla-blue">Via de notaris</span></div>
             <div style="margin-top:1.75rem"><a class="btn btn-primary" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VEELGESTELDE VRAGEN — tekst identiek aan de FAQPage-JSON-LD onderaan -->
+    <section class="faq-section iv-faq" id="vragen">
+      <div class="faq-inner">
+        <div class="disc-head rv" style="margin-bottom:2.5rem">
+          <span class="t-eyebrow">Veelgestelde vragen</span>
+          <div class="rule"></div>
+          <h2>Wat geldgevers ons <em>meestal eerst vragen.</em></h2>
+        </div>
+        <div class="faq-list rv d1">
+          <div class="faq-item">
+            <button class="faq-q" type="button">Wat is een deelname precies?<span class="faq-tog" aria-hidden="true">+</span></button>
+            <div class="faq-a"><p>Een achtergestelde lening aan HomeINN B.V., bestemd voor één concreet project. U hebt recht op een vaste rente en op terugbetaling van uw hoofdsom aan het einde van de looptijd; rente en aflossing zijn niet gegarandeerd. U wordt geen eigenaar van het pand en krijgt geen zekerheidsrecht en geen recht op de verkoop- of huuropbrengst: uw vordering is op HomeINN B.V. als geheel. U sluit één leningsovereenkomst, rechtstreeks met HomeINN B.V.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button">Hoeveel rente ontvang ik, en wanneer krijg ik mijn geld terug?<span class="faq-tog" aria-hidden="true">+</span></button>
+            <div class="faq-a"><p>De rente is vast: 7% per jaar bij een looptijd van één jaar; voor een langere looptijd leggen wij de rente per project vast. De rente hangt niet af van de winst of de opbrengst van het project. Wij betalen de rente jaarlijks en lossen de hoofdsom aan het einde van de looptijd in één keer af, per bankoverschrijving, ook als het pand dan nog niet is verkocht. Dat doen wij uit de algemene middelen van HomeINN B.V.: verkoop- en huuropbrengsten, herfinanciering of nieuwe financiering. Loopt een verkoop of herfinanciering vertraging op, dan kan uw betaling vertragen of uitblijven. De rente ligt vast; de betaling van rente en hoofdsom is niet gegarandeerd.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button">Wat gebeurt er als het project tegenvalt, of als HomeINN B.V. failliet gaat?<span class="faq-tog" aria-hidden="true">+</span></button>
+            <div class="faq-a"><p>De rente blijft verschuldigd, ook als het project minder oplevert. Maar tegenvallers in dit of een ander project kunnen het vermogen van HomeINN B.V. om te betalen aantasten; dan kan de betaling van rente of hoofdsom vertragen of uitblijven. Bij faillissement, surseance van betaling of vereffening worden eerst alle andere schuldeisers volledig betaald, waaronder de bank die onze panden mede financiert en de Belastingdienst. Pas daarna komen de achtergestelde geldgevers aan de beurt, onderling naar verhouding. Er blijft dan vaak weinig of niets over.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button">Welke zekerheid heb ik?<span class="faq-tog" aria-hidden="true">+</span></button>
+            <div class="faq-a"><p>Geen. U krijgt geen hypotheek, geen pandrecht en geen recht op de verkoop- of huuropbrengst, en niemand staat garant voor de betaling. Uw lening is bovendien achtergesteld: bij faillissement wordt u pas betaald nadat alle andere schuldeisers volledig zijn betaald. Een lening aan HomeINN B.V. is daarom geen spaargeld: u kunt rente en uw hoofdsom geheel of gedeeltelijk verliezen.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button">Kan ik eerder uitstappen of mijn lening overdragen?<span class="faq-tog" aria-hidden="true">+</span></button>
+            <div class="faq-a"><p>Nee. De lening is persoonlijk: u kunt haar niet tussentijds opeisen en uw vordering niet overdragen of verpanden. Reken erop dat u tot het einde van de looptijd niet over het geld beschikt. HomeINN B.V. mag de lening wel in haar geheel eerder aflossen; u ontvangt dan rente tot de dag van aflossing.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button">Voor wie is dit bedoeld, en hoe komt een lening tot stand?<span class="faq-tog" aria-hidden="true">+</span></button>
+            <div class="faq-a"><p>Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. U vraagt het projectdossier aan, wij spreken elkaar persoonlijk en daarna tekent u een individuele leningsovereenkomst. Vóór u iets overmaakt, stellen wij uw identiteit en de herkomst van het geld vast. De hoofdsom maakt u in één keer over, vanaf een rekening op uw eigen naam. Deze pagina is een uitnodiging tot kennismaking, geen aanbod.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button">Welke kosten betaal ik?<span class="faq-tog" aria-hidden="true">+</span></button>
+            <div class="faq-a"><p>HomeINN B.V. brengt u voor de lening geen kosten in rekening. De kosten van uw eigen adviseurs en uw eigen belastingpositie zijn voor uw rekening. Dit is geen beleggings-, fiscaal of juridisch advies; laat u zo nodig onafhankelijk adviseren.</p></div>
           </div>
         </div>
       </div>
@@ -273,16 +320,16 @@
     <section class="iv-form-sec" id="meedoen">
       <div class="iv-form-wrap">
         <div class="iv-form-intro">
-          <span class="t-eyebrow">Meedoen</span>
+          <span class="t-eyebrow">Aanvraag</span>
           <h2>Vraag de <em>projectinformatie</em> op.</h2>
-          <p>Laat hieronder weten waar uw interesse ligt. U ontvangt de volledige cijfers van het project — aankoopsom, verbouwbudget, planning, looptijd en het rendementspercentage — en wij plannen een persoonlijke kennismaking. U beslist pas daarna.</p>
+          <p>Laat hieronder weten waar uw interesse ligt. U ontvangt het projectdossier (aankoopsom, verbouwbudget en planning), de financiële cijfers van HomeINN B.V. en een concept van de leningsovereenkomst met rente en looptijd. Daarna plannen wij een persoonlijke kennismaking. U beslist pas daarna.</p>
           <ul class="iv-form-punten">
-            <li>Elf panden met 33 appartementsrechten in eigen bezit</li>
-            <li>Eén project, één overeenkomst — geen fonds en geen tussenlagen</li>
-            <li>Voortgangsupdates per e-mail, uitkering via de notaris</li>
+            <li>Elf panden op naam van HomeINN B.V., deels met bankfinanciering gekocht</li>
+            <li>Eén leningsovereenkomst, rechtstreeks met HomeINN B.V.</li>
+            <li>Rente jaarlijks, aflossing aan het einde van de looptijd</li>
             <li>Reactie binnen vier uur op werkdagen</li>
           </ul>
-          <p class="iv-form-bel">Liever appen of bellen? <a href="https://wa.me/31633322257?text=Hallo%20HomeINN%2C%20ik%20ontvang%20graag%20de%20projectinformatie%20voor%20investeerders." target="_blank" rel="noopener">WhatsApp</a> of <a href="tel:+31633322257">+31 6 33 32 22 57</a></p>
+          <p class="iv-form-bel">Liever appen of bellen? <a href="https://wa.me/31633322257?text=Hallo%20HomeINN%2C%20ik%20ontvang%20graag%20de%20projectinformatie%20over%20investeren%20bij%20HomeINN." target="_blank" rel="noopener">WhatsApp</a> of <a href="tel:+31633322257">+31 6 33 32 22 57</a></p>
         </div>
 
         <div class="cf" id="iv-form-box">
@@ -300,7 +347,7 @@
               <div class="cf-group"><label for="iv-phone">Telefoonnummer</label><input id="iv-phone" type="tel" name="phone" placeholder="+31 6 12 34 56 78" autocomplete="tel" inputmode="tel" aria-describedby="iv-bereik"></div>
             </div>
             <div class="cf-2col">
-              <div class="cf-group"><label for="iv-bedrag">Waarin wilt u deelnemen?</label><select id="iv-bedrag" name="invest_amount" aria-describedby="iv-bedrag-hint">
+              <div class="cf-group"><label for="iv-bedrag">Wat wilt u meefinancieren?</label><select id="iv-bedrag" name="invest_amount" aria-describedby="iv-bedrag-hint">
                 <option>Nog niet bepaald</option>
                 <option>Eén project</option>
                 <option>Meerdere projecten</option>
@@ -325,9 +372,9 @@
                   <option>Tollensstraat 32</option>
             </select></div>
             <div class="cf-group"><label for="iv-message">Uw vraag of toelichting (optioneel)</label><textarea id="iv-message" name="message" placeholder="Bijvoorbeeld: ik wil eerst de cijfers van één project zien voordat ik een gesprek inplan."></textarea></div>
-            <div class="cf-group cf-bevestig"><label class="cf-check" for="iv-pmp"><input type="checkbox" id="iv-pmp" name="pmp_bevestiging" required><span>Ik neem deel als professionele marktpartij en leg minimaal € 100.000 ineens in. Ik begrijp dat HomeINN deelname onder dat bedrag niet aanbiedt.</span></label></div>
+            <div class="cf-group cf-bevestig"><label class="cf-check" for="iv-pmp"><input type="checkbox" id="iv-pmp" name="pmp_bevestiging" required><span>Ik neem deel als professionele marktpartij: ik leen minimaal € 100.000 ineens, voor eigen rekening. Ik begrijp dat HomeINN geen leningen onder dat bedrag sluit.</span></label></div>
+            <p class="m-note" style="margin:0 0 .9rem">Vrijblijvend. Een lening aan HomeINN B.V. is geen spaargeld: zij is achtergesteld en zonder zekerheid, en u kunt rente en (een deel van) uw geld verliezen. Met verzenden gaat u akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>. Wij verkopen uw gegevens niet en sturen geen nieuwsbrief zonder uw toestemming.</p>
             <button class="cf-submit" type="submit">Vraag de projectinformatie aan →</button>
-            <p class="m-note" style="margin-top:.9rem">Vrijblijvend. Meedoen is beleggen: het rendement is niet gegarandeerd en uw inleg kan geheel of gedeeltelijk verloren gaan. Met verzenden gaat u akkoord met ons <a href="privacy.html" style="color:inherit;text-decoration:underline">privacybeleid</a>. Wij verkopen uw gegevens niet en sturen geen nieuwsbrief zonder uw toestemming.</p>
           </form>
           <div class="ct-success" id="iv-success" style="display:none" role="status" aria-live="polite" tabindex="-1">
             <h3>Uw aanvraag is ontvangen <span aria-hidden="true">✓</span></h3>
@@ -340,11 +387,11 @@
     <!-- DISCLAIMER -->
     <section class="iv-disclaimer" aria-label="Belangrijke informatie over risico en deelname">
       <div class="box">
-        <strong>Belangrijk.</strong> Deelname staat uitsluitend open voor professionele marktpartijen in de zin van artikel 3 lid 2 van het Besluit definitiebepalingen Wft: u legt minimaal € 100.000 ineens in. Deelname gebeurt op basis van een onderhandse overeenkomst en een persoonlijke kennismaking. Het streefrendement van 7% op jaarbasis bij een looptijd van één jaar wordt per project vastgelegd in die overeenkomst, maar is geen gegarandeerd rendement: bij tegenvallende verkoop- of verhuurresultaten kan het daadwerkelijke rendement lager uitvallen of kan (een deel van) uw inleg verloren gaan. In het verleden behaalde resultaten bieden geen zekerheid voor de toekomst. Deze pagina is een <strong>uitnodiging tot kennismaking, geen aanbod</strong>: deelname komt pas tot stand na een persoonlijk gesprek en ondertekening van een individuele overeenkomst. Dit is geen beleggings-, fiscaal of juridisch advies. Vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren voordat u een beslissing neemt.
+        <strong>Belangrijk.</strong> Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. U neemt deel door HomeINN B.V. een achtergestelde lening te verstrekken, bestemd voor één concreet project, op basis van een individuele leningsovereenkomst en na een persoonlijke kennismaking. De rente is vast: 7% per jaar bij een looptijd van één jaar, voor een langere looptijd per project vastgelegd. Zij hangt niet af van de winst of de opbrengst van het project. Wij betalen de rente jaarlijks en lossen de hoofdsom aan het einde van de looptijd af, uit de algemene middelen van HomeINN B.V. Uw vordering is op HomeINN B.V. als geheel: u wordt geen eigenaar van het pand en krijgt geen zekerheidsrecht en geen recht op de opbrengst. Rente en aflossing zijn niet gegarandeerd: kan HomeINN B.V. niet betalen, dan kunt u rente en uw hoofdsom geheel of gedeeltelijk verliezen, ook door tegenvallers in andere projecten. Bij faillissement worden eerst alle andere schuldeisers volledig betaald, waaronder de bank die onze panden mede financiert. De lening is niet tussentijds opeisbaar en niet overdraagbaar. Deze pagina is een <strong>uitnodiging tot kennismaking, geen aanbod</strong>: een lening komt pas tot stand na een persoonlijk gesprek en ondertekening van een individuele leningsovereenkomst. Dit is geen beleggings-, fiscaal of juridisch advies. Vraag altijd de volledige projectinformatie op en laat u zo nodig onafhankelijk adviseren voordat u een beslissing neemt.
       </div>
     </section>
 
-    <div class="cta-band"><div class="cta-inner"><h2>Elf panden in eigen bezit. <em>Doe mee in een project.</em></h2><div class="cta-acties"><a class="btn btn-dark" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a><a class="btn btn-outline-dark" href="projecten.html">Bekijk alle projecten <span class="arr">→</span></a></div></div></div>
+    <div class="cta-band"><div class="cta-inner"><h2>Elf panden op naam van HomeINN B.V. <em>Financier mee aan één project.</em></h2><div class="cta-acties"><a class="btn btn-dark" href="#meedoen">Vraag de projectinformatie aan <span class="arr">→</span></a><a class="btn btn-outline-dark" href="projecten.html">Bekijk alle projecten <span class="arr">→</span></a></div></div></div>
   </main>
 
   <footer class="site-foot">
@@ -378,11 +425,27 @@
   </footer>
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebPage","name":"Investeren in Rotterdams vastgoed — HomeINN","url":"https://homeinn.nl/investeren.html","inLanguage":"nl-NL","about":"Deelname in vastgoedprojecten voor professionele marktpartijen (vanaf € 100.000 ineens per deelnemer)","publisher":{"@type":"Organization","@id":"https://homeinn.nl/#organisatie","name":"HomeINN","url":"https://homeinn.nl/"}}
+  [{"@context":"https://schema.org","@type":"WebPage","name":"Investeren in Rotterdams vastgoed — HomeINN","url":"https://homeinn.nl/investeren.html","inLanguage":"nl-NL","about":"Achtergestelde leningen aan HomeINN B.V. voor vastgoedprojecten, uitsluitend voor professionele marktpartijen (vanaf € 100.000 ineens per deelnemer)","publisher":{"@type":"Organization","@id":"https://homeinn.nl/#organisatie","name":"HomeINN","url":"https://homeinn.nl/"}},{"@context":"https://schema.org","@type":"FAQPage","@id":"https://homeinn.nl/investeren.html#vragen","inLanguage":"nl-NL","mainEntity":[{"@type":"Question","name":"Wat is een deelname precies?","acceptedAnswer":{"@type":"Answer","text":"Een achtergestelde lening aan HomeINN B.V., bestemd voor één concreet project. U hebt recht op een vaste rente en op terugbetaling van uw hoofdsom aan het einde van de looptijd; rente en aflossing zijn niet gegarandeerd. U wordt geen eigenaar van het pand en krijgt geen zekerheidsrecht en geen recht op de verkoop- of huuropbrengst: uw vordering is op HomeINN B.V. als geheel. U sluit één leningsovereenkomst, rechtstreeks met HomeINN B.V."}},{"@type":"Question","name":"Hoeveel rente ontvang ik, en wanneer krijg ik mijn geld terug?","acceptedAnswer":{"@type":"Answer","text":"De rente is vast: 7% per jaar bij een looptijd van één jaar; voor een langere looptijd leggen wij de rente per project vast. De rente hangt niet af van de winst of de opbrengst van het project. Wij betalen de rente jaarlijks en lossen de hoofdsom aan het einde van de looptijd in één keer af, per bankoverschrijving, ook als het pand dan nog niet is verkocht. Dat doen wij uit de algemene middelen van HomeINN B.V.: verkoop- en huuropbrengsten, herfinanciering of nieuwe financiering. Loopt een verkoop of herfinanciering vertraging op, dan kan uw betaling vertragen of uitblijven. De rente ligt vast; de betaling van rente en hoofdsom is niet gegarandeerd."}},{"@type":"Question","name":"Wat gebeurt er als het project tegenvalt, of als HomeINN B.V. failliet gaat?","acceptedAnswer":{"@type":"Answer","text":"De rente blijft verschuldigd, ook als het project minder oplevert. Maar tegenvallers in dit of een ander project kunnen het vermogen van HomeINN B.V. om te betalen aantasten; dan kan de betaling van rente of hoofdsom vertragen of uitblijven. Bij faillissement, surseance van betaling of vereffening worden eerst alle andere schuldeisers volledig betaald, waaronder de bank die onze panden mede financiert en de Belastingdienst. Pas daarna komen de achtergestelde geldgevers aan de beurt, onderling naar verhouding. Er blijft dan vaak weinig of niets over."}},{"@type":"Question","name":"Welke zekerheid heb ik?","acceptedAnswer":{"@type":"Answer","text":"Geen. U krijgt geen hypotheek, geen pandrecht en geen recht op de verkoop- of huuropbrengst, en niemand staat garant voor de betaling. Uw lening is bovendien achtergesteld: bij faillissement wordt u pas betaald nadat alle andere schuldeisers volledig zijn betaald. Een lening aan HomeINN B.V. is daarom geen spaargeld: u kunt rente en uw hoofdsom geheel of gedeeltelijk verliezen."}},{"@type":"Question","name":"Kan ik eerder uitstappen of mijn lening overdragen?","acceptedAnswer":{"@type":"Answer","text":"Nee. De lening is persoonlijk: u kunt haar niet tussentijds opeisen en uw vordering niet overdragen of verpanden. Reken erop dat u tot het einde van de looptijd niet over het geld beschikt. HomeINN B.V. mag de lening wel in haar geheel eerder aflossen; u ontvangt dan rente tot de dag van aflossing."}},{"@type":"Question","name":"Voor wie is dit bedoeld, en hoe komt een lening tot stand?","acceptedAnswer":{"@type":"Answer","text":"Deelname staat uitsluitend open voor professionele marktpartijen: vanaf € 100.000 ineens per deelnemer. U vraagt het projectdossier aan, wij spreken elkaar persoonlijk en daarna tekent u een individuele leningsovereenkomst. Vóór u iets overmaakt, stellen wij uw identiteit en de herkomst van het geld vast. De hoofdsom maakt u in één keer over, vanaf een rekening op uw eigen naam. Deze pagina is een uitnodiging tot kennismaking, geen aanbod."}},{"@type":"Question","name":"Welke kosten betaal ik?","acceptedAnswer":{"@type":"Answer","text":"HomeINN B.V. brengt u voor de lening geen kosten in rekening. De kosten van uw eigen adviseurs en uw eigen belastingpositie zijn voor uw rekening. Dit is geen beleggings-, fiscaal of juridisch advies; laat u zo nodig onafhankelijk adviseren."}}]}]
   </script>
 <script src="lead-cloud.js?v=20261001a" defer></script>
-<script src="site-nav.js?v=20261001a"></script>
-<script src="investeer-tools.js?v=20261001a" defer></script>
+<script src="site-nav.js?v=20261002a"></script>
+<script src="investeer-tools.js?v=20261002a" defer></script>
+<script>
+/* FAQ-accordeon. Zonder JavaScript staan alle antwoorden open (zie .iv-faq in de stijl). */
+(function(){
+  if(window.syncFaqState)return; /* homeinn-public.js regelt het al als dat ooit wordt geladen */
+  var lijst=document.querySelector('.iv-faq .faq-list');if(!lijst)return;
+  function sync(item){var b=item.querySelector('.faq-q'),a=item.querySelector('.faq-a'),o=item.classList.contains('open');if(b)b.setAttribute('aria-expanded',o?'true':'false');if(a)a.setAttribute('aria-hidden',o?'false':'true');}
+  lijst.addEventListener('click',function(e){
+    var q=e.target.closest?e.target.closest('.faq-q'):null;if(!q)return;
+    var item=q.parentElement,open=item.classList.contains('open');
+    lijst.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');sync(el);});
+    if(!open){item.classList.add('open');sync(item);}
+  });
+  document.body.classList.add('faq-ready');
+  lijst.querySelectorAll('.faq-item').forEach(sync);
+})();
+</script>
 <script>
 /* Investeerdersaanvraag — eigen leadtype, zodat deze aanvragen in de inbox
    herkenbaar los staan van verkoop- en beheeraanvragen. */
@@ -451,7 +514,7 @@
     var toelichting=String(f.get('message')||'').trim();
     // hios_leads kent geen aparte kolommen voor bedrag/looptijd; in het bericht meeschrijven
     // zodat ze ook in de portaal-inbox zichtbaar zijn en niet alleen in de e-mail.
-    var pmp=f.get('pmp_bevestiging')?'Bevestigd: professionele marktpartij, minimaal € 100.000 ineens':'NIET bevestigd';
+    var pmp=f.get('pmp_bevestiging')?'Bevestigd: professionele marktpartij, leent minimaal € 100.000 ineens, voor eigen rekening':'NIET bevestigd';
     var bericht=['Deelname: '+bedrag,'Looptijd: '+looptijd,pmp].join(' · ')+(toelichting?'\n\n'+toelichting:'');
     saveLead('Investeerder',{
       name:naam,email:email,phone:tel,

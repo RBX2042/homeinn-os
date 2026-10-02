@@ -865,10 +865,10 @@
       <h3 class="modal-section">Website &amp; investeren</h3>
       <div class="form-grid">
         <label class="check-label" style="margin:0"><input type="checkbox" name="publish"> Toon dit project op de website (volgen)</label>
-        <label class="check-label" style="margin:0"><input type="checkbox" name="investOpen"> Open voor investeerders (inkopen)</label>
-        <label>Doelbedrag investering (€)<input name="doelbedrag" type="number" min="0" step="any"></label>
-        <label>Minimale inleg (€)<input name="minInleg" type="number" min="0" step="any"></label>
-        <label>Verwacht rendement (% per jaar)<input name="rendementPct" type="number" min="0" step="any"></label>
+        <label class="check-label" style="margin:0"><input type="checkbox" name="investOpen"> Open voor geldgevers (achtergestelde lening)</label>
+        <label>Financieringsbehoefte (€, intern — niet publiek)<input name="doelbedrag" type="number" min="0" step="any"></label>
+        <label>Minimale lening (€, minimaal 100.000 ineens)<input name="minInleg" type="number" min="100000" step="any"></label>
+        <label>Vaste rente (% per jaar; verschijnt op de website en in het portaal van geldgevers)<input name="rendementPct" type="number" min="0" step="any"></label>
         <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden"></label>
       </div>
       <label>Notitie<textarea name="note" rows="2"></textarea></label>
@@ -1158,7 +1158,7 @@
             <option>HomeINN verkoopt</option>
             <option>HomeINN koopt</option>
             <option>HomeINN verhuurt</option>
-            <option>HomeINN ontvangt investering</option>
+            <option>HomeINN ontvangt lening (achtergesteld)</option>
             <option>HomeINN geeft opdracht</option>
           </select>
         </label>
@@ -1168,11 +1168,11 @@
         <label>Wederpartij (naam, indien geen relatie)<input name="partijNaam"></label>
         <label>Adres wederpartij<input name="partijAdres"></label>
         <label>E-mail wederpartij (voor digitaal tekenen)<input name="partijEmail" type="email"></label>
-        <label>Bedrag (€) — koopsom / maandhuur / inleg / aanneemsom<input name="bedrag" type="number" min="0" step="any"></label>
+        <label>Bedrag (€) — koopsom / maandhuur / hoofdsom lening / aanneemsom<input name="bedrag" type="number" min="0" step="any"></label>
         <label>Contractdatum<input name="datum" type="date"></label>
-        <label>Ingangs-/leverdatum<input name="ingangsdatum" type="date"></label>
+        <label>Ingangs-/leverdatum (lening: uiterste stortingsdatum)<input name="ingangsdatum" type="date"></label>
         <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden / onbepaalde tijd"></label>
-        <label>Rendement (% p/j, investering)<input name="rendementPct" type="number" min="0" step="any"></label>
+        <label>Vaste rente (% per jaar, lening)<input name="rendementPct" type="number" min="0" step="any"></label>
       </div>
       <label>Bijzondere bepalingen<textarea name="note" rows="2" placeholder="Ontbindende voorwaarden, waarborgsom, opleverpunten…"></textarea></label>
       <menu>
@@ -1192,7 +1192,7 @@
       <input type="hidden" name="id">
       <div class="form-grid">
         <label>Soort
-          <select name="kind"><option value="rente">Rente</option><option value="aflossing">Aflossing</option><option value="overig">Overig</option></select>
+          <select name="kind"><option value="rente">Rente</option><option value="aflossing">Aflossing</option></select>
         </label>
         <label>Bedrag (€)<input name="amount" type="number" min="0" step="any" required></label>
         <label>Datum<input name="date" type="date" required></label>
@@ -1221,7 +1221,7 @@
         <label>Naam<input name="naam" required></label>
         <label>E-mail (voor login portaal)<input name="email" type="email"></label>
         <label>Inleg (€)<input name="bedrag" type="number" min="0" step="any" required></label>
-        <label>Datum van inleg<input name="datum" type="date" required></label>
+        <label>Stortingsdatum<input name="datum" type="date" required></label>
       </div>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
@@ -1306,7 +1306,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div id="print-area" aria-hidden="true"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=20260623"></script>
-  <script src="app.js?v=20260922a"></script>
+  <script src="cloud.js?v=20261002a"></script>
+  <script src="app.js?v=20261002a"></script>
 </body>
 </html>

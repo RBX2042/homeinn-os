@@ -233,8 +233,8 @@ function seedData() {
           { id: 'u2', date: addDaysISO(t, -14), text: 'Installaties gestart: warmtepomp en nieuwe groepenkast geplaatst.' },
           { id: 'u3', date: addDaysISO(t, -2), text: 'Afbouw in volle gang — stucwerk gereed, keukenplaatsing gepland.' }
         ],
-        invest: { open: true, doelbedrag: 150000, minInleg: 25000, rendementPct: 8, looptijd: '12 maanden' },
-        investeerders: [{ id: 'inv1', naam: 'J. Smits', bedrag: 50000, datum: addDaysISO(t, -35) }],
+        invest: { open: true, doelbedrag: 150000, minInleg: 100000, rendementPct: 7, looptijd: '12 maanden' },
+        investeerders: [{ id: 'inv1', naam: 'J. Smits', bedrag: 100000, wwft: true, datum: addDaysISO(t, -35) }],
         phases: [
           { id: 'ph1', name: 'Voorbereiding', status: 'Klaar' },
           { id: 'ph2', name: 'Vergunning & ontwerp', status: 'Klaar' },
@@ -311,7 +311,7 @@ function seedData() {
     cloudMaintenance: [], // uit de cloud opgehaalde huurder-meldingen (via Cloud → synchroniseren)
     campaigns: [], // verzonden mailings (nieuwsbrief)
     audit: [], // wijzigingshistorie (wie/wat/wanneer)
-    capitalCalls: [], // kapitaaloproepen per project (raise-mechanisme)
+    capitalCalls: [], // oude kapitaaloproepen: uitgeschakeld, alleen-lezen bewaard voor de audit
     accounts: [
       { id: 'acc1', naam: 'Zakelijke rekening', type: 'Zakelijk', saldo: 84500, updatedAt: addDaysISO(t, -2) },
       { id: 'acc2', naam: 'Spaarrekening (buffer)', type: 'Spaar', saldo: 120000, updatedAt: addDaysISO(t, -2) }
@@ -497,9 +497,10 @@ function computeDeal(input) {
 }
 
 /* ---------- Rendementsmotor: XIRR (intern rendement op datumcashflows) ----------
-   flows: [{date:'YYYY-MM-DD', amount:Number}] — negatief = inleg, positief = ontvangst.
+   flows: [{date:'YYYY-MM-DD', amount:Number}] — negatief = uitgave, positief = ontvangst.
    Geeft het op jaarbasis samengestelde rendement in % terug, of null bij te weinig data.
-   Newton-Raphson met bisectie-fallback; herbruikt door calculator (hold-vs-flip) én investeerders. */
+   Newton-Raphson met bisectie-fallback; alleen voor HomeINN's eigen dealcalculator (hold-vs-flip),
+   niet voor geldgevers: hun lening heeft een vaste rente. */
 function xirr(flows) {
   const f = (flows || []).filter(x => x && x.date && isFinite(Number(x.amount)) && Number(x.amount) !== 0)
     .map(x => ({ date: x.date, amount: Number(x.amount) }));
@@ -532,14 +533,8 @@ function xirr(flows) {
   return ((lo + hi) / 2) * 100;
 }
 
-/* Compacte IRR-weergave + kleurbadge t.o.v. doel-ROI. */
+/* Compacte procentweergave (dealcalculator). */
 function fmtPct(v, dec = 1) { return (v === null || v === undefined || !isFinite(v)) ? '—' : fmtNum(v, dec) + '%'; }
-function irrBadge(irr) {
-  if (irr === null || irr === undefined || !isFinite(irr)) return '<span class="badge gray">—</span>';
-  const doel = Number(state.settings.doelROI) || 15;
-  const cls = irr >= doel ? 'green' : irr >= 0 ? '' : 'red';
-  return `<span class="badge ${cls}">${fmtNum(irr, 1)}%</span>`;
-}
 
 /* Volledige financiële stand van een pand in bezit. */
 function propertyFinance(p) {
@@ -653,14 +648,7 @@ function buildSignals() {
       signals.push({ level: 'middel', text: `${pr.name} is over de geplande opleverdatum (${fmtDate(pr.endDate)}) — elke maand uitloop kost houdkosten.`, go: 'project:' + pr.id });
     }
   });
-  // Kapitaaloproepen: deadline verstreken en nog niet iedereen heeft gereageerd
-  (state.capitalCalls || []).filter(c => c.status === 'Open' && c.deadline && c.deadline < t).forEach(c => {
-    const open = (c.perInvesteerder || []).filter(r => r.status === 'Verstuurd' || r.status === 'Te laat');
-    if (open.length) {
-      const openBedrag = open.reduce((s, r) => s + (Number(r.bedragVerschuldigd) || 0), 0);
-      signals.push({ level: 'hoog', text: `Kapitaaloproep (${propertyLabel(projectById(c.projectId)?.propertyId)}): ${open.length} investeerder${open.length === 1 ? '' : 's'} nog niet gereageerd op oproep van ${fmtMoney(c.bedrag)} — ${fmtMoney(openBedrag)} openstaand sinds ${fmtDate(c.deadline)}.`, go: 'project:' + c.projectId });
-    }
-  });
+  // Kapitaaloproepen zijn uitgeschakeld (één storting ineens per leningsovereenkomst): geen signaal meer.
   // Betalingen
   const openFacturen = state.costs.filter(k => k.status === 'Factuur ontvangen');
   if (openFacturen.length) {
@@ -796,7 +784,7 @@ function logAudit(action, detail) {
   state.audit.unshift({ id: uid('au'), ts: new Date().toISOString(), user: (window.HCloud && HCloud.status().email) || 'lokaal', action, detail });
   if (state.audit.length > 800) state.audit.length = 800;
 }
-const FORM_LABEL = { 'deal-form': 'aankoopkans', 'property-form': 'pand', 'project-form': 'project', 'cost-form': 'kostenpost', 'invoice-form': 'factuur', 'loan-form': 'lening', 'account-form': 'rekening', 'contact-form': 'relatie', 'plan-form': 'planning', 'contract-form': 'contract', 'sale-form': 'verkoop', 'acquire-form': 'aankoop', 'payout-form': 'uitkering', 'insurance-form': 'verzekering', 'ad-form': 'advertentie', 'offer-form': 'bod', 'bid-form': 'bod', 'viewing-form': 'bezichtiging', 'investor-form': 'investeerder' };
+const FORM_LABEL = { 'deal-form': 'aankoopkans', 'property-form': 'pand', 'project-form': 'project', 'cost-form': 'kostenpost', 'invoice-form': 'factuur', 'loan-form': 'lening', 'account-form': 'rekening', 'contact-form': 'relatie', 'plan-form': 'planning', 'contract-form': 'contract', 'sale-form': 'verkoop', 'acquire-form': 'aankoop', 'payout-form': 'betaling', 'insurance-form': 'verzekering', 'ad-form': 'advertentie', 'offer-form': 'bod', 'bid-form': 'bod', 'viewing-form': 'bezichtiging', 'investor-form': 'geldgever' };
 
 function goTo(target) {
   $('#search-results').hidden = true;
@@ -1700,25 +1688,7 @@ function burnUpSvg(pr) {
     <span class="cf-dot" style="background:#b8933a"></span>Budget</p>`;
 }
 
-/* ---------- Kapitaaloproepen (capital calls): het raise-mechanisme ---------- */
-const CC_STATES = ['Verstuurd', 'Toegezegd', 'Gestort', 'Te laat'];
-
-/* Pro-rata verdeling van een oproepbedrag over de investeerders, naar inleg. */
-function capitalCallSplit(pr, bedrag) {
-  const invs = pr.investeerders || [];
-  const totaalInleg = invs.reduce((s, i) => s + (Number(i.bedrag) || 0), 0);
-  let toegewezen = 0;
-  return invs.map((i, idx) => {
-    const aandeel = totaalInleg > 0 ? (Number(i.bedrag) || 0) / totaalInleg : (invs.length ? 1 / invs.length : 0);
-    // De laatste rij krijgt het restbedrag, zodat de som altijd exact het opgeroepen bedrag is
-    // (i.p.v. elk aandeel los af te ronden, wat structureel een paar euro's kan laten verdwijnen).
-    const isLast = idx === invs.length - 1;
-    const bedragVerschuldigd = isLast ? (bedrag - toegewezen) : Math.round(bedrag * aandeel);
-    toegewezen += bedragVerschuldigd;
-    return { investorKey: i.id || i.email || i.naam, naam: i.naam, email: i.email || '', aandeelPct: aandeel * 100, bedragVerschuldigd, status: 'Verstuurd', respondedAt: '' };
-  });
-}
-
+/* ---------- Kapitaaloproepen: uitgeschakeld (alleen-lezen archief) ---------- */
 function capitalCallProgress(call) {
   const rows = call.perInvesteerder || [];
   const totaal = rows.reduce((s, r) => s + (Number(r.bedragVerschuldigd) || 0), 0);
@@ -1728,70 +1698,36 @@ function capitalCallProgress(call) {
   return { totaal, gestort, toegezegd, open, pct: totaal ? Math.round(gestort / totaal * 100) : 0 };
 }
 
-function openCapitalCallModal(projectId) {
-  const pr = projectById(projectId);
-  if (!pr) return;
-  const form = $('#capitalcall-form');
-  form.reset();
-  form.elements.projectId.value = projectId;
-  form.elements.deadline.value = addDaysISO(todayISO(), 14);
-  $('#capitalcall-title').textContent = `Kapitaaloproep — ${pr.name}`;
-  const invs = pr.investeerders || [];
-  $('#capitalcall-investors').textContent = invs.length
-    ? `${invs.length} investeerder${invs.length === 1 ? '' : 's'} · samen ${fmtMoney(invs.reduce((s, i) => s + (Number(i.bedrag) || 0), 0))} ingelegd. Het bedrag wordt pro-rata verdeeld.`
-    : 'Let op: dit project heeft nog geen investeerders. Voeg ze eerst toe.';
-  refreshCapitalCallPreview();
-  $('#capitalcall-modal').showModal();
-}
-
-function refreshCapitalCallPreview() {
-  const form = $('#capitalcall-form');
-  if (!form) return;
-  const pr = projectById(form.elements.projectId.value);
-  const bedrag = Number(form.elements.bedrag.value) || 0;
-  const box = $('#capitalcall-preview');
-  if (!pr || !bedrag) { box.innerHTML = ''; return; }
-  const split = capitalCallSplit(pr, bedrag);
-  box.innerHTML = `<table class="cc-preview-table"><thead><tr><th>Investeerder</th><th>Aandeel</th><th>Verschuldigd</th></tr></thead>
-    <tbody>${split.map(s => `<tr><td>${esc(s.naam)}</td><td>${fmtNum(s.aandeelPct, 1)}%</td><td><strong>${fmtMoney(s.bedragVerschuldigd)}</strong></td></tr>`).join('') || emptyRow(3, 'Geen investeerders.')}</tbody></table>`;
-}
-
-/* Sectie met kapitaaloproepen in het projectdetail. */
+/* Kapitaaloproepen zijn uitgeschakeld: een lening wordt in één keer gestort (ten minste € 100.000
+   ineens) en de Geldnemer doet geen kapitaal- of stortingsoproepen. Oude oproepen blijven alleen-lezen
+   zichtbaar voor de audit; zonder oude oproepen verschijnt de sectie niet. */
+const KAPITAALOPROEP_UIT = 'Kapitaaloproepen zijn uitgeschakeld: elke lening wordt in één keer gestort, en een nieuwe lening vereist een nieuwe overeenkomst.';
 function renderCapitalCalls(pr) {
   const calls = (state.capitalCalls || []).filter(c => c.projectId === pr.id).slice().sort((a, b) => (b.aanmaakdatum || '').localeCompare(a.aanmaakdatum || ''));
-  const t = todayISO();
+  if (!calls.length) return '';
   return `<section class="panel">
-    <div class="panel-head compact"><h2>Kapitaaloproepen</h2>
-      <button class="btn primary slim" data-action="new-capitalcall" data-id="${pr.id}">+ Oproep</button>
-    </div>
-    <p class="hint">Roep extra kapitaal op bij je investeerders, pro-rata naar inleg. Volg per investeerder of het is toegezegd en gestort.</p>
-    ${calls.length ? calls.map(call => {
+    <div class="panel-head compact"><h2>Kapitaaloproepen (archief)</h2><span class="badge gray">Alleen-lezen</span></div>
+    <p class="hint">${KAPITAALOPROEP_UIT} Onderstaande oude oproepen blijven bewaard voor de audit en de advocaat; wijzig of verstuur ze niet.</p>
+    ${calls.map(call => {
       const pg = capitalCallProgress(call);
-      const overdue = call.status === 'Open' && call.deadline && call.deadline < t;
       return `<div class="cc-card ${call.status === 'Geannuleerd' ? 'cancelled' : ''}">
         <div class="cc-head">
           <div>
-            <strong>${fmtMoney(call.bedrag)}</strong> ${statusBadge(call.status === 'Open' ? (pg.pct === 100 ? 'Betaald' : 'Geplaatst') : call.status)}
-            <span class="sub">deadline ${fmtDate(call.deadline)}${overdue ? ' <span class="alert">(verlopen)</span>' : ''}${call.omschrijving ? ' · ' + esc(call.omschrijving) : ''}</span>
+            <strong>${fmtMoney(call.bedrag)}</strong> ${statusBadge(call.status)}
+            <span class="sub">aangemaakt ${fmtDate(call.aanmaakdatum)} · deadline ${fmtDate(call.deadline)}${call.omschrijving ? ' · ' + esc(call.omschrijving) : ''}</span>
           </div>
-          ${call.status === 'Open' ? `<div class="head-actions">
-            <button class="btn secondary slim" data-action="cc-remind" data-id="${call.id}">Herinnering</button>
-            <button class="btn secondary slim danger" data-action="cc-cancel" data-id="${call.id}">Annuleren</button>
-          </div>` : `<button class="icon-btn" data-action="cc-del" data-id="${call.id}" title="Verwijderen">🗑</button>`}
         </div>
-        <div class="cc-progress"><div class="progress"><i style="width:${pg.pct}%"></i></div><span class="sub">${fmtMoney(pg.gestort)} van ${fmtMoney(pg.totaal)} gestort · ${pg.open} openstaand</span></div>
+        <div class="cc-progress"><span class="sub">${fmtMoney(pg.gestort)} van ${fmtMoney(pg.totaal)} gestort · ${pg.open} openstaand</span></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Investeerder</th><th>Verschuldigd</th><th>Status</th></tr></thead>
+          <thead><tr><th>Geldgever</th><th>Bedrag</th><th>Status</th></tr></thead>
           <tbody>${(call.perInvesteerder || []).map(r => `<tr>
             <td>${esc(r.naam)}${r.email ? `<br><span class="sub">${esc(r.email)}</span>` : ''}</td>
             <td>${fmtMoney(r.bedragVerschuldigd)}</td>
-            <td>${call.status === 'Open' ? `<select class="row-status" data-action="cc-status" data-id="${call.id}" data-item="${esc(r.investorKey)}">
-              ${CC_STATES.map(s => `<option ${r.status === s ? 'selected' : ''}>${s}</option>`).join('')}
-            </select>` : statusBadge(r.status === 'Gestort' ? 'Betaald' : r.status)}</td>
-          </tr>`).join('') || emptyRow(3, 'Geen investeerders.')}</tbody>
+            <td>${esc(r.status || '—')}</td>
+          </tr>`).join('') || emptyRow(3, 'Geen geldgevers.')}</tbody>
         </table></div>
       </div>`;
-    }).join('') : '<p class="empty">Nog geen kapitaaloproepen voor dit project.</p>'}
+    }).join('')}
   </section>`;
 }
 
@@ -1957,56 +1893,55 @@ function renderProjectDetail() {
         </form>
       </section>
       <section class="panel">
-        <div class="panel-head compact"><h2>Investeerders</h2>${pr.invest?.open ? '<span class="badge green">Open voor inleg</span>' : '<span class="badge gray">Gesloten</span>'}</div>
+        <div class="panel-head compact"><h2>Geldgevers</h2>${pr.invest?.open ? '<span class="badge green">Open voor nieuwe leningen</span>' : '<span class="badge gray">Gesloten</span>'}</div>
         ${(() => {
           const doel = Number(pr.invest?.doelbedrag) || 0;
-          const opgehaald = (pr.investeerders || []).reduce((s, i) => s + (Number(i.bedrag) || 0), 0);
-          const pct = doel ? Math.min(100, Math.round(opgehaald / doel * 100)) : 0;
+          const geleend = (pr.investeerders || []).reduce((s, i) => s + (Number(i.bedrag) || 0), 0);
+          const pct = doel ? Math.min(100, Math.round(geleend / doel * 100)) : 0;
           return `<div class="totals-box">
-            <div><dt>Opgehaald</dt><dd>${fmtMoney(opgehaald)}${doel ? ' van ' + fmtMoney(doel) + ' (' + pct + '%)' : ''}</dd></div>
+            <div><dt>Hoofdsom geleend</dt><dd>${fmtMoney(geleend)}${doel ? ' van ' + fmtMoney(doel) + ' financieringsbehoefte (' + pct + '%)' : ''}</dd></div>
             ${doel ? `<div class="progress"><i style="width:${pct}%"></i></div>` : ''}
-            ${pr.invest?.open ? `<div><dt>Min. inleg · rendement · looptijd</dt><dd>${fmtMoney(pr.invest.minInleg)} · ${fmtNum(pr.invest.rendementPct, 1)}%/jr · ${esc(pr.invest.looptijd || '—')}</dd></div>` : ''}
+            ${pr.invest?.open ? `<div><dt>Min. hoofdsom · rente · looptijd</dt><dd>${fmtMoney(pr.invest.minInleg)} · ${fmtNum(pr.invest.rendementPct, 1)}% vast/jr · ${esc(pr.invest.looptijd || '—')}</dd></div>` : ''}
           </div>`;
         })()}
         ${(() => {
           const inv = pr.investeerders || [];
           const geverifieerd = inv.filter(i => i.wwft).length;
           const rPct = Number(pr.invest?.rendementPct) || 0;
-          return `<p class="hint">Wwft (anti-witwas): controleer en leg identiteit + herkomst van de inleg vast vóór je geld aanneemt. ${inv.length ? `<b>${geverifieerd}/${inv.length}</b> investeerders geverifieerd.` : ''} Haal je geld op via de website? Check de AFM-vrijstelling (prospectusplicht).</p>
+          return `<p class="hint">Alleen professionele marktpartijen: minimaal € 100.000 ineens per geldgever, in één overboeking vanaf een rekening op eigen naam. Leg identiteit, uiteindelijk belanghebbenden, herkomst van de middelen en de sanctielijstcontrole vast en bevestig dat per e-mail vóór je een storting aanneemt; laat het BSN op de kopie ID afschermen. ${inv.length ? `<b>${geverifieerd}/${inv.length}</b> geldgevers geïdentificeerd.` : ''}</p>
         <div class="table-wrap"><table>
-          <thead><tr><th>Naam</th><th>Inleg</th><th>Rendement/jr</th><th>Uitgekeerd</th><th>Wwft</th><th></th></tr></thead>
+          <thead><tr><th>Geldgever</th><th>Hoofdsom</th><th>Rente/jr</th><th>Rente betaald / Afgelost</th><th>Identificatie</th><th></th></tr></thead>
           <tbody>${inv.map(i => {
-            const uitkeringen = i.uitkeringen || [];
-            const uitbetaald = uitkeringen.filter(u => u.status === 'Uitbetaald').reduce((s, u) => s + (Number(u.amount) || 0), 0);
-            const uitkRows = uitkeringen.length ? `<tr class="sub-row"><td colspan="6"><div class="table-wrap"><table class="mini-table">
-              <thead><tr><th>Type</th><th>Bedrag</th><th>Datum</th><th>Status</th><th></th></tr></thead>
-              <tbody>${uitkeringen.map(u => `<tr><td>${esc(u.kind || '—')}</td><td>${fmtMoney(u.amount)}</td><td>${fmtDate(u.date)}</td><td>${esc(u.status || '—')}</td>
+            const betalingen = i.uitkeringen || [];
+            const l = leningStatus(pr, i);
+            const betRows = betalingen.length ? `<tr class="sub-row"><td colspan="6"><div class="table-wrap"><table class="mini-table">
+              <thead><tr><th>Soort</th><th>Bedrag</th><th>Datum</th><th>Status</th><th></th></tr></thead>
+              <tbody>${betalingen.map(u => `<tr><td>${esc(betalingSoort(u.kind))}</td><td>${fmtMoney(u.amount)}</td><td>${fmtDate(u.date)}</td><td>${esc(betalingStatus(u.status))}</td>
                 <td class="row-actions"><button class="icon-btn" data-action="edit-payout" data-id="${pr.id}" data-item="${i.id}" data-payout="${u.id}" title="Bewerken">✎</button>
                 <button class="icon-btn" data-action="del-payout" data-id="${pr.id}" data-item="${i.id}" data-payout="${u.id}" title="Verwijderen">🗑</button></td></tr>`).join('')}</tbody>
             </table></div></td></tr>` : '';
-            return `<tr><td>${esc(i.naam)}<br><span class="sub">${fmtDate(i.datum)}</span></td><td><strong>${fmtMoney(i.bedrag)}</strong></td>
+            return `<tr><td>${esc(i.naam)}<br><span class="sub">${i.datum ? 'Storting ' + fmtDate(i.datum) + (l.vervaldatum ? ' · vervalt ' + fmtDate(l.vervaldatum) : '') : 'Nog niet gestort'}</span></td><td><strong>${fmtMoney(i.bedrag)}</strong>${(Number(i.bedrag) || 0) < MIN_HOOFDSOM ? '<br><span class="sub alert">onder € 100.000</span>' : ''}</td>
             <td>${fmtMoney(Math.round((Number(i.bedrag) || 0) * (rPct || 0) / 100))}</td>
-            <td>${fmtMoney(uitbetaald)}${uitkeringen.length ? `<br><span class="sub">${uitkeringen.length} uitkering(en)</span>` : ''}</td>
-            <td><button class="link-toggle ${i.wwft ? 'maint-done' : 'maint-open'}" data-action="wwft-toggle" data-id="${pr.id}" data-item="${i.id}" title="Klik om te wisselen">${i.wwft ? '✔ Geverifieerd' : '⚠ Te doen'}</button></td>
-            <td class="row-actions"><button class="icon-btn" data-action="edit-investor" data-id="${pr.id}" data-item="${i.id}" title="Bewerken">✎</button>
-            <button class="icon-btn" data-action="add-payout" data-id="${pr.id}" data-item="${i.id}" title="Uitkering registreren">€+</button>
-            <button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>${uitkRows}`;
-          }).join('') || emptyRow(6, 'Nog geen investeerders geregistreerd.')}</tbody>
+            <td>${fmtMoney(l.renteBetaald)} / ${fmtMoney(l.afgelost)}${betalingen.length ? `<br><span class="sub">${betalingen.length} betaling${betalingen.length === 1 ? '' : 'en'}</span>` : ''}</td>
+            <td><button class="link-toggle ${i.wwft ? 'maint-done' : 'maint-open'}" data-action="wwft-toggle" data-id="${pr.id}" data-item="${i.id}" title="Klik om te wisselen">${i.wwft ? '✔ Bevestigd' : '⚠ Te doen'}</button></td>
+            <td class="row-actions"><button class="icon-btn" data-action="edit-investor" data-id="${pr.id}" data-item="${i.id}" title="Bewerken (stortingsdatum vastleggen na identificatie)">✎</button>
+            <button class="icon-btn" data-action="add-payout" data-id="${pr.id}" data-item="${i.id}" title="Rente of aflossing registreren">€+</button>
+            <button class="icon-btn" data-action="del-investor" data-id="${pr.id}" data-item="${i.id}" title="Verwijderen">🗑</button></td></tr>${betRows}`;
+          }).join('') || emptyRow(6, 'Nog geen geldgevers geregistreerd.')}</tbody>
         </table></div>`;
         })()}
         <form class="inline-form" data-form="add-investor" data-id="${pr.id}">
-          <input name="naam" placeholder="Naam investeerder…" required>
+          <input name="naam" placeholder="Naam geldgever…" required>
           <input name="email" type="email" placeholder="E-mail (voor login portaal)">
-          <input name="bedrag" type="number" step="any" placeholder="€ inleg" required>
-          <input name="datum" type="date" value="${todayISO()}" title="Datum van inleg">
-          <button class="btn primary slim" type="submit">+</button>
+          <input name="bedrag" type="number" step="any" min="${MIN_HOOFDSOM}" placeholder="€ hoofdsom (min. 100.000)" required>
+          <button class="btn primary slim" type="submit" title="Registreer de lening; de stortingsdatum leg je vast via ✎ na bevestigde identificatie">+</button>
         </form>
       </section>
     </div>
     ${renderCapitalCalls(pr)}
     <section class="panel">
       <div class="panel-head compact"><h2>Voortgangsfoto's</h2>
-        <span class="sub">${(pr.fotos || []).length} foto's — getoond op de website (volgen) en in het investeerdersportaal</span>
+        <span class="sub">${(pr.fotos || []).length} foto's — getoond op de website (volgen) en in het portaal voor geldgevers</span>
       </div>
       <div class="foto-grid">
         ${(pr.fotos || []).map((src, i) => `
@@ -2026,7 +1961,7 @@ function renderProjectDetail() {
       <div class="head-actions">
         <label class="btn secondary slim file-btn">Foto's toevoegen vanaf computer<input type="file" id="foto-upload" data-kind="project" data-id="${pr.id}" accept="image/*" multiple hidden></label>
       </div>
-      <p class="hint">Voortgangsfoto's van de bouw/renovatie. Op de website 'projecten volgen' en in het investeerdersportaal worden deze getoond.</p>
+      <p class="hint">Voortgangsfoto's van de bouw/renovatie. Op de website 'projecten volgen' en in het portaal voor geldgevers worden deze getoond.</p>
     </section>`;
 }
 
@@ -2262,7 +2197,7 @@ function renderCloudPanel() {
       <div><dt>Rol</dt><dd>${esc(st.role || '—')} ${st.staff ? '<span class="badge green">staff</span>' : '<span class="badge gray">extern</span>'}</dd></div>
     </div>
     ${st.staff ? `
-      <p class="hint">${sync} Synchroniseren stuurt je panden, projecten, investeerders en updates naar de cloud (voor de portalen) én haalt nieuwe huurder-meldingen (incl. foto) terug naar je portaal.</p>
+      <p class="hint">${sync} Synchroniseren stuurt je panden, projecten, geldgevers en updates naar de cloud (voor de portalen) én haalt nieuwe huurder-meldingen (incl. foto) terug naar je portaal.</p>
       <div class="head-actions">
         <button class="btn primary slim" data-action="cloud-sync">Synchroniseer nu</button>
         <button class="btn secondary slim" data-action="cloud-backup">Backup naar cloud</button>
@@ -2270,7 +2205,7 @@ function renderCloudPanel() {
         <button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button>
       </div>
       <p class="hint">"Backup naar cloud" bewaart je volledige werkstaat (multi-device). "Herstel van cloud" haalt 'm terug op een ander apparaat — dat overschrijft je lokale gegevens, dus vraagt eerst bevestiging.</p>`
-    : `<p class="hint">Dit account heeft geen eigenaar/team-rol; synchroniseren is daarom niet beschikbaar. Een investeerder logt in via <a href="inloggen.html">de inlogpagina</a> en komt automatisch in het investeerdersportaal.</p>
+    : `<p class="hint">Dit account heeft geen eigenaar/team-rol; synchroniseren is daarom niet beschikbaar. Een geldgever logt in via <a href="inloggen.html">de inlogpagina</a> en komt automatisch in het portaal voor geldgevers.</p>
       <div class="head-actions"><button class="btn secondary slim" data-action="cloud-logout">Uitloggen</button></div>`}`;
 }
 
@@ -2403,7 +2338,7 @@ function renderReports() {
   const eigenGeldBedrijf = Math.max(0, r.eigenVermogenIngelegd - investeerdersInleg);
   const herkomstDonut = donutSvg([
     { label: 'Bankfinanciering', value: r.openFinanciering, color: '#0b1e30' },
-    { label: 'Investeerders', value: investeerdersInleg, color: '#b8933a' },
+    { label: 'Achtergestelde leningen', value: investeerdersInleg, color: '#b8933a' },
     { label: 'Eigen geld', value: eigenGeldBedrijf, color: '#1e6a42' }
   ], 'Herkomst');
   const inzetDonut = donutSvg([
@@ -2506,142 +2441,153 @@ function renderAdMetricsPanel() {
   </section>`;
 }
 
-/* ---------- Investeerders-overzicht ---------- */
+/* ---------- Geldgevers-overzicht (leningen) ----------
+   Een geldgever verstrekt HomeINN B.V. een achtergestelde lening tegen vaste, enkelvoudige rente
+   (act/365) vanaf de stortingsdatum. Geen IRR, multiple of 'huidige waarde': het overzicht toont
+   wat de overeenkomst zegt — hoofdsom, uitstaande hoofdsom, betaalde rente, volgende rentebetaling
+   en vervaldatum. Het veld i.datum is de stortingsdatum; leeg = nog niet gestort. */
+// Een lening kent alleen rente en aflossing; oude 'overig'-regels blijven leesbaar (archief).
+const BETALING_SOORT = { rente: 'Rente', aflossing: 'Aflossing', overig: 'Overige betaling (archief)' };
+function betalingSoort(kind) { return BETALING_SOORT[kind] || (kind ? String(kind) : '—'); }
+function betalingStatus(status) { return status === 'Uitbetaald' ? 'Betaald' : (status || '—'); }
+
+/* '12 maanden' → 12, '1 jaar' → 12, '18 mnd' → 18; onleesbaar → null. */
+function looptijdMaanden(looptijd) {
+  const m = String(looptijd || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(maand|mnd|jaar|jr)/);
+  if (!m) return null;
+  const n = Number(m[1].replace(',', '.'));
+  if (!(n > 0)) return null;
+  return Math.round(m[2] === 'jaar' || m[2] === 'jr' ? n * 12 : n);
+}
+
+function addMonthsISO(iso, months) {
+  const [y, mo, d] = String(iso).split('-').map(Number);
+  const target = new Date(y, mo - 1 + months, 1, 12);
+  const laatste = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+  target.setDate(Math.min(d, laatste));
+  return `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`;
+}
+
+/* Stand van één lening (één geldgever-record in een project). */
+function leningStatus(pr, i) {
+  const hoofdsom = Number(i.bedrag) || 0;
+  const rPct = Number(pr.invest?.rendementPct) || 0;
+  const betaald = (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald');
+  const som = arr => arr.reduce((s, u) => s + (Number(u.amount) || 0), 0);
+  const renteBetaald = som(betaald.filter(u => u.kind === 'rente'));
+  const afgelost = som(betaald.filter(u => u.kind === 'aflossing'));
+  const uitstaand = Math.max(0, hoofdsom - afgelost);
+  const storting = i.datum || '';
+  const looptijd = pr.invest?.looptijd || '';
+  const maanden = looptijdMaanden(looptijd);
+  // Vervaldatum = laatste dag van de looptijd, gerekend vanaf de stortingsdatum.
+  const vervaldatum = storting && maanden ? addDaysISO(addMonthsISO(storting, maanden), -1) : '';
+  let volgendeRente = '';
+  if (storting && uitstaand > 0) {
+    const t = todayISO();
+    let k = 1, verjaardag = addMonthsISO(storting, 12);
+    while (verjaardag < t && k < 100) { k++; verjaardag = addMonthsISO(storting, 12 * k); }
+    volgendeRente = vervaldatum && vervaldatum < verjaardag ? vervaldatum : verjaardag;
+  }
+  return { hoofdsom, rPct, renteJaar: uitstaand * rPct / 100, renteBetaald, afgelost, uitstaand, storting, looptijd, vervaldatum, volgendeRente };
+}
+
 function investorReportData() {
-  const map = {}; // key = email||naam → geaggregeerde investeerder
+  const map = {}; // key = email||naam → geaggregeerde geldgever
   state.projects.forEach(pr => {
-    const rPct = Number(pr.invest?.rendementPct) || 0;
-    const afgerond = pr.status === 'Afgerond';
     (pr.investeerders || []).forEach(i => {
       const key = (i.email || i.naam || '').toLowerCase().trim() || i.id;
-      const e = map[key] || (map[key] = { naam: i.naam, email: i.email || '', inleg: 0, gewogenRendement: 0, verwachtJaar: 0, uitbetaaldPerJaar: {}, wwft: true, projecten: [], cashflows: [], nav: 0 });
-      const bedrag = Number(i.bedrag) || 0;
-      e.inleg += bedrag;
-      e.gewogenRendement += bedrag * rPct;
-      if (!afgerond) e.verwachtJaar += bedrag * rPct / 100; // afgeronde projecten keren niet langer jaarlijks uit
+      const e = map[key] || (map[key] = { naam: i.naam, email: i.email || '', hoofdsom: 0, uitstaand: 0, renteJaar: 0, gewogenRente: 0, renteBetaald: 0, afgelost: 0, renteBetaaldPerJaar: {}, wwft: true, leningen: [], betalingen: [], volgendeRente: '', vervaldatum: '' });
+      const l = leningStatus(pr, i);
+      e.hoofdsom += l.hoofdsom;
+      e.uitstaand += l.uitstaand;
+      e.renteJaar += l.renteJaar;
+      e.gewogenRente += l.hoofdsom * l.rPct;
+      e.renteBetaald += l.renteBetaald;
+      e.afgelost += l.afgelost;
       if (!i.wwft) e.wwft = false;
-      e.projecten.push({ project: pr.name, bedrag, rPct, datum: i.datum, uitkeringen: i.uitkeringen || [] });
-      // Cashflows voor IRR/MOIC: inleg negatief op instapdatum, uitbetaalde uitkeringen positief.
-      if (bedrag) e.cashflows.push({ date: i.datum || pr.startDate || todayISO(), amount: -bedrag });
-      // Lopende projecten houden de inleg als huidige waarde (NAV) — MINUS al uitbetaalde
-      // aflossingen op ditzelfde project. Zonder deze correctie telt een aflossing dubbel: eenmaal
-      // als uitbetaling (uitbetaaldTotaal) én nogmaals in de volledige NAV, wat MOIC/IRR opblaast.
-      const afgelostOpDitProject = (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald' && u.kind === 'aflossing').reduce((s, u) => s + (Number(u.amount) || 0), 0);
-      if (!afgerond) e.nav += Math.max(0, bedrag - afgelostOpDitProject);
-      (i.uitkeringen || []).filter(u => u.status === 'Uitbetaald').forEach(u => {
-        const jr = (u.date || '').slice(0, 4) || '—';
-        const bedr = Number(u.amount) || 0;
-        e.uitbetaaldPerJaar[jr] = (e.uitbetaaldPerJaar[jr] || 0) + bedr;
-        if (bedr) e.cashflows.push({ date: u.date || todayISO(), amount: bedr });
+      e.leningen.push(Object.assign({ project: pr.name, identificatie: !!i.wwft }, l));
+      (i.uitkeringen || []).forEach(u => {
+        e.betalingen.push({ project: pr.name, date: u.date || '', kind: u.kind, amount: Number(u.amount) || 0, status: u.status });
+        if (u.status === 'Uitbetaald' && u.kind === 'rente') {
+          const jr = (u.date || '').slice(0, 4) || '—';
+          e.renteBetaaldPerJaar[jr] = (e.renteBetaaldPerJaar[jr] || 0) + (Number(u.amount) || 0);
+        }
       });
+      if (l.volgendeRente && (!e.volgendeRente || l.volgendeRente < e.volgendeRente)) e.volgendeRente = l.volgendeRente;
+      if (l.vervaldatum && l.uitstaand > 0 && (!e.vervaldatum || l.vervaldatum < e.vervaldatum)) e.vervaldatum = l.vervaldatum;
     });
   });
-  const list = Object.values(map).map(e => {
-    e.rendementPct = e.inleg ? e.gewogenRendement / e.inleg : 0;
-    e.uitbetaaldTotaal = Object.values(e.uitbetaaldPerJaar).reduce((s, v) => s + v, 0);
-    // Netto IRR: cashflows + huidige waarde (NAV) als slotbedrag vandaag.
-    const flows = e.cashflows.slice();
-    if (e.nav > 0) flows.push({ date: todayISO(), amount: e.nav });
-    e.irr = xirr(flows);
-    // MOIC = (uitbetaald + huidige waarde) / inleg.
-    e.moic = e.inleg ? (e.uitbetaaldTotaal + e.nav) / e.inleg : null;
+  return Object.values(map).map(e => {
+    e.rentePct = e.hoofdsom ? e.gewogenRente / e.hoofdsom : 0;
     return e;
-  }).sort((a, b) => b.inleg - a.inleg);
-  return list;
+  }).sort((a, b) => b.hoofdsom - a.hoofdsom);
 }
 
 function renderInvestorReports() {
   const list = investorReportData();
   const jaar = new Date().getFullYear();
   const jaren = [jaar - 2, jaar - 1, jaar].map(String);
-  const totInleg = list.reduce((s, e) => s + e.inleg, 0);
-  const totVerwacht = list.reduce((s, e) => s + e.verwachtJaar, 0);
-  const totUitbetaaldYtd = list.reduce((s, e) => s + (e.uitbetaaldPerJaar[String(jaar)] || 0), 0);
-  // Inleg-gewogen gemiddelde netto-IRR over alle investeerders met een berekenbare IRR.
-  const irrPool = list.filter(e => e.irr !== null && isFinite(e.irr));
-  const irrWeight = irrPool.reduce((s, e) => s + e.inleg, 0);
-  const gemIrr = irrWeight ? irrPool.reduce((s, e) => s + e.irr * e.inleg, 0) / irrWeight : null;
+  const t = todayISO();
+  const totHoofdsom = list.reduce((s, e) => s + e.hoofdsom, 0);
+  const totUitstaand = list.reduce((s, e) => s + e.uitstaand, 0);
+  const totRenteJaar = list.reduce((s, e) => s + e.renteJaar, 0);
+  const totRenteYtd = list.reduce((s, e) => s + (e.renteBetaaldPerJaar[String(jaar)] || 0), 0);
+  const eerstvolgend = list.map(e => e.vervaldatum).filter(Boolean).sort()[0] || '';
   const body = $('#investors-body'); if (!body) return;
-  const colCount = 6 + jaren.length;
+  const colCount = 7 + jaren.length;
   body.innerHTML = `
     <div class="kpi-grid">
-      <article class="kpi"><span>Totaal opgehaald</span><strong>${fmtMoney(totInleg)}</strong><small>${list.length} investeerder${list.length === 1 ? '' : 's'}</small></article>
-      <article class="kpi"><span>Gem. netto IRR</span><strong>${fmtPct(gemIrr, 1)}</strong><small>inleg-gewogen, incl. huidige waarde</small></article>
-      <article class="kpi"><span>Verwacht rendement / jaar</span><strong>${fmtMoney(Math.round(totVerwacht))}</strong></article>
-      <article class="kpi"><span>Uitbetaald ${jaar}</span><strong>${fmtMoney(totUitbetaaldYtd)}</strong></article>
-      <article class="kpi"><span>Wwft-geverifieerd</span><strong>${list.filter(e => e.wwft).length}/${list.length}</strong></article>
+      <article class="kpi"><span>Uitstaande hoofdsom</span><strong>${fmtMoney(totUitstaand)}</strong><small>${list.length} geldgever${list.length === 1 ? '' : 's'} · ${fmtMoney(totHoofdsom)} geleend</small></article>
+      <article class="kpi"><span>Rente per jaar (vast)</span><strong>${fmtMoney(Math.round(totRenteJaar))}</strong><small>over de uitstaande hoofdsom</small></article>
+      <article class="kpi"><span>Rente betaald ${jaar}</span><strong>${fmtMoney(totRenteYtd)}</strong></article>
+      <article class="kpi"><span>Eerstvolgende vervaldatum</span><strong>${eerstvolgend ? fmtDate(eerstvolgend) : '—'}</strong>${eerstvolgend && eerstvolgend < t ? '<small class="alert">verstreken — aflossing open</small>' : ''}</article>
+      <article class="kpi"><span>Identificatie bevestigd</span><strong>${list.filter(e => e.wwft).length}/${list.length}</strong></article>
     </div>
     <div class="panel">
       <div class="panel-head">
-        <div><h2>Investeerders-roster</h2><p>Alle investeerders over alle projecten, met inleg, netto-IRR, multiple en uitkeringen per jaar. Klik een rij open voor de cashflow-tijdlijn.</p></div>
-        <button class="btn primary slim" data-action="export-investors">Exporteer ledger</button>
+        <div><h2>Geldgevers</h2><p>Alle achtergestelde leningen over alle projecten: hoofdsom, uitstaande hoofdsom, betaalde rente, volgende rentebetaling en vervaldatum. Klik een rij open voor de leningen en betalingen.</p></div>
+        <button class="btn primary slim" data-action="export-investors">Exporteer overzicht</button>
       </div>
       <div class="table-wrap"><table class="investor-table">
-        <thead><tr><th>Investeerder</th><th>Inleg</th><th>Netto IRR</th><th>Multiple</th><th>Verwacht/jr</th>${jaren.map(j => `<th>Uitbetaald ${j}</th>`).join('')}<th>Wwft</th></tr></thead>
+        <thead><tr><th>Geldgever</th><th>Hoofdsom</th><th>Uitstaand</th><th>Rente/jr</th>${jaren.map(j => `<th>Rente betaald ${j}</th>`).join('')}<th>Volgende rentebetaling</th><th>Vervaldatum</th><th>Identificatie</th></tr></thead>
         <tbody>${list.map((e, idx) => `<tr class="investor-row" data-action="toggle-investor" data-idx="${idx}">
-          <td><strong>${esc(e.naam)}</strong>${e.email ? `<br><span class="sub">${esc(e.email)}</span>` : ''}<br><span class="sub">${e.projecten.length} project${e.projecten.length === 1 ? '' : 'en'} · ${fmtNum(e.rendementPct, 1)}% afgesproken</span></td>
-          <td><strong>${fmtMoney(e.inleg)}</strong></td>
-          <td>${irrBadge(e.irr)}</td>
-          <td>${e.moic === null || !isFinite(e.moic) ? '—' : fmtNum(e.moic, 2) + '×'}</td>
-          <td>${fmtMoney(Math.round(e.verwachtJaar))}</td>
-          ${jaren.map(j => `<td>${e.uitbetaaldPerJaar[j] ? fmtMoney(e.uitbetaaldPerJaar[j]) : '—'}</td>`).join('')}
+          <td><strong>${esc(e.naam)}</strong>${e.email ? `<br><span class="sub">${esc(e.email)}</span>` : ''}<br><span class="sub">${e.leningen.length} lening${e.leningen.length === 1 ? '' : 'en'} · ${fmtNum(e.rentePct, 1)}% vaste rente</span></td>
+          <td><strong>${fmtMoney(e.hoofdsom)}</strong></td>
+          <td>${fmtMoney(e.uitstaand)}</td>
+          <td>${fmtMoney(Math.round(e.renteJaar))}</td>
+          ${jaren.map(j => `<td>${e.renteBetaaldPerJaar[j] ? fmtMoney(e.renteBetaaldPerJaar[j]) : '—'}</td>`).join('')}
+          <td>${e.volgendeRente ? fmtDate(e.volgendeRente) : '—'}</td>
+          <td class="${e.vervaldatum && e.vervaldatum < t ? 'alert' : ''}">${e.vervaldatum ? fmtDate(e.vervaldatum) : '—'}</td>
           <td>${e.wwft ? '<span class="badge green">✔</span>' : '<span class="badge red">⚠</span>'}</td>
         </tr>
-        <tr class="investor-detail" id="inv-detail-${idx}" hidden><td colspan="${colCount}">${investorCashflowDetail(e)}</td></tr>`).join('') || emptyRow(colCount, 'Nog geen investeerders. Voeg ze toe bij een ontwikkelproject.')}</tbody>
-        <tfoot><tr><td><strong>Totaal</strong></td><td><strong>${fmtMoney(totInleg)}</strong></td><td><strong>${fmtPct(gemIrr, 1)}</strong></td><td></td><td><strong>${fmtMoney(Math.round(totVerwacht))}</strong></td>${jaren.map(j => `<td><strong>${fmtMoney(list.reduce((s, e) => s + (e.uitbetaaldPerJaar[j] || 0), 0))}</strong></td>`).join('')}<td></td></tr></tfoot>
+        <tr class="investor-detail" id="inv-detail-${idx}" hidden><td colspan="${colCount}">${investorLoanDetail(e)}</td></tr>`).join('') || emptyRow(colCount, 'Nog geen geldgevers. Registreer ze bij een ontwikkelproject.')}</tbody>
+        <tfoot><tr><td><strong>Totaal</strong></td><td><strong>${fmtMoney(totHoofdsom)}</strong></td><td><strong>${fmtMoney(totUitstaand)}</strong></td><td><strong>${fmtMoney(Math.round(totRenteJaar))}</strong></td>${jaren.map(j => `<td><strong>${fmtMoney(list.reduce((s, e) => s + (e.renteBetaaldPerJaar[j] || 0), 0))}</strong></td>`).join('')}<td></td><td></td><td></td></tr></tfoot>
       </table></div>
-      <p class="report-note">Investeerders worden samengevoegd op e-mailadres (of naam). <strong>Netto IRR</strong> is het werkelijke, op datum gewogen rendement (cashflows + huidige waarde van lopende inleg); <strong>multiple</strong> = (uitbetaald + huidige waarde) ÷ inleg. Lopende projecten waarderen de inleg op 100%; afgeronde projecten gelden als afgewikkeld.</p>
+      <p class="report-note">Geldgevers worden samengevoegd op e-mailadres (of naam). De rente is vast en enkelvoudig, over het werkelijke aantal dagen op basis van 365 dagen, vanaf de stortingsdatum; de vervaldatum is de laatste dag van de looptijd. Een lening zonder stortingsdatum is nog niet gestort.</p>
     </div>`;
 }
 
-/* Uitklap-detail per investeerder: cashflow-tijdlijn (SVG) + tabel met alle stromen. */
-function investorCashflowDetail(e) {
-  const flows = (e.cashflows || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-  if (e.nav > 0) flows.push({ date: todayISO(), amount: e.nav, nav: true });
-  const svg = cashflowTimelineSvg(flows);
-  const rows = flows.map(f => `<tr>
-    <td>${fmtDate(f.date)}</td>
-    <td>${f.nav ? 'Huidige waarde (lopend)' : f.amount < 0 ? 'Inleg' : 'Uitkering'}</td>
-    <td class="${f.amount < 0 ? 'alert' : ''}" style="text-align:right">${fmtMoney(f.amount)}</td>
+/* Uitklap-detail per geldgever: leningen + betalingen (rente en aflossing). */
+function investorLoanDetail(e) {
+  const leningen = e.leningen.map(l => `<tr>
+    <td>${esc(l.project)}</td>
+    <td style="text-align:right">${fmtMoney(l.hoofdsom)}</td>
+    <td>${fmtNum(l.rPct, 1)}%</td>
+    <td>${l.storting ? fmtDate(l.storting) : '<span class="alert">nog niet gestort</span>'}</td>
+    <td>${esc(l.looptijd || '—')}</td>
+    <td>${l.volgendeRente ? fmtDate(l.volgendeRente) : '—'}</td>
+    <td>${l.vervaldatum ? fmtDate(l.vervaldatum) : '—'}</td>
+    <td style="text-align:right">${fmtMoney(l.uitstaand)}</td>
+  </tr>`).join('');
+  const betalingen = e.betalingen.slice().sort((a, b) => (a.date || '').localeCompare(b.date || '')).map(b => `<tr>
+    <td>${fmtDate(b.date)}</td><td>${esc(b.project)}</td><td>${esc(betalingSoort(b.kind))}</td>
+    <td style="text-align:right">${fmtMoney(b.amount)}</td><td>${esc(betalingStatus(b.status))}</td>
   </tr>`).join('');
   return `<div class="investor-detail-inner">
-    <div class="cashflow-chart">${svg}</div>
-    <table class="cashflow-table"><thead><tr><th>Datum</th><th>Soort</th><th style="text-align:right">Bedrag</th></tr></thead><tbody>${rows || emptyRow(3, 'Geen cashflows.')}</tbody></table>
+    <table class="cashflow-table"><thead><tr><th>Project</th><th style="text-align:right">Hoofdsom</th><th>Rente</th><th>Storting</th><th>Looptijd</th><th>Volgende rentebetaling</th><th>Vervaldatum</th><th style="text-align:right">Uitstaand</th></tr></thead><tbody>${leningen || emptyRow(8, 'Geen leningen.')}</tbody></table>
+    <table class="cashflow-table"><thead><tr><th>Datum</th><th>Project</th><th>Soort</th><th style="text-align:right">Bedrag</th><th>Status</th></tr></thead><tbody>${betalingen || emptyRow(5, 'Nog geen rente of aflossing geregistreerd.')}</tbody></table>
   </div>`;
-}
-
-/* Pure inline-SVG cashflow-tijdlijn: inleg omlaag (rood), uitkeringen omhoog (groen),
-   cumulatieve lijn (blauw). Geen dependencies. */
-function cashflowTimelineSvg(flows) {
-  const data = (flows || []).filter(f => f && isFinite(Number(f.amount)));
-  if (data.length < 2) return '<p class="empty">Onvoldoende data voor een tijdlijn.</p>';
-  const W = 760, H = 240, padL = 56, padR = 16, padT = 20, padB = 34;
-  const innerW = W - padL - padR, innerH = H - padT - padB, zeroY = padT + innerH / 2;
-  const maxAbs = Math.max(...data.map(f => Math.abs(Number(f.amount))), 1);
-  let cum = 0; const cums = data.map(f => (cum += Number(f.amount)));
-  const cumMax = Math.max(...cums.map(Math.abs), maxAbs, 1);
-  const n = data.length;
-  const slot = innerW / n, barW = Math.max(6, Math.min(40, slot * 0.45));
-  const x = i => padL + slot * (i + 0.5);
-  const barH = v => Math.abs(v) / maxAbs * (innerH / 2 - 4);
-  const cumY = v => zeroY - (v / cumMax) * (innerH / 2 - 4);
-  const bars = data.map((f, i) => {
-    const v = Number(f.amount), h = barH(v), cx = x(i);
-    const y = v < 0 ? zeroY : zeroY - h;
-    const fill = f.nav ? '#3a6ea5' : v < 0 ? 'var(--red,#b03a3a)' : 'var(--green,#1e6a42)';
-    return `<rect x="${(cx - barW / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${Math.max(1, h).toFixed(1)}" rx="2" fill="${fill}"><title>${esc(fmtDate(f.date))}: ${esc(fmtMoney(v))}${f.nav ? ' (huidige waarde)' : ''}</title></rect>`;
-  }).join('');
-  const linePts = cums.map((c, i) => `${x(i).toFixed(1)},${cumY(c).toFixed(1)}`).join(' ');
-  const dots = cums.map((c, i) => `<circle cx="${x(i).toFixed(1)}" cy="${cumY(c).toFixed(1)}" r="3" fill="#3a6ea5"><title>Cumulatief ${esc(fmtDate(data[i].date))}: ${esc(fmtMoney(c))}</title></circle>`).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" class="cf-svg" role="img" aria-label="Cashflow-tijdlijn">
-    <line x1="${padL}" y1="${zeroY}" x2="${W - padR}" y2="${zeroY}" stroke="var(--line,#ccc)" stroke-width="1"/>
-    <text x="6" y="${padT + 8}" class="cf-axis">+</text>
-    <text x="6" y="${H - padB}" class="cf-axis">−</text>
-    ${bars}
-    <polyline points="${linePts}" fill="none" stroke="#3a6ea5" stroke-width="2"/>
-    ${dots}
-  </svg>
-  <p class="cf-legend"><span class="cf-dot" style="background:var(--red,#b03a3a)"></span>Inleg <span class="cf-dot" style="background:var(--green,#1e6a42)"></span>Uitkering <span class="cf-dot" style="background:#3a6ea5"></span>Cumulatief / huidige waarde</p>`;
 }
 
 /* ---------- Adverteren ---------- */
@@ -2780,7 +2726,7 @@ function renderMoney() {
     </div>
     <div class="panel">
       <div class="panel-head">
-        <div><h2>Uitgaande facturen &amp; huur</h2><p>Huurnota's, servicekosten, verkoopopbrengsten en rente-uitkeringen aan investeerders.</p></div>
+        <div><h2>Uitgaande facturen &amp; huur</h2><p>Huurnota's, servicekosten, verkoopopbrengsten en rentebetalingen aan geldgevers.</p></div>
         <div class="head-actions">
           <button class="btn secondary slim" id="gen-rent" data-action="gen-rent">Huurnota's deze maand</button>
           <button class="btn primary slim" data-action="new-invoice">+ Factuur</button>
@@ -2961,7 +2907,7 @@ function renderFinance() {
     </div>`;
 }
 
-/* ---------- Investeerders-uitkeringen ---------- */
+/* ---------- Betalingen aan geldgevers: rente en aflossing ---------- */
 function openPayoutModal(projectId, investorId, id = null) {
   const pr = projectById(projectId);
   const inv = pr && (pr.investeerders || []).find(x => x.id === investorId);
@@ -2971,7 +2917,7 @@ function openPayoutModal(projectId, investorId, id = null) {
   form.elements.projectId.value = projectId;
   form.elements.investorId.value = investorId;
   form.elements.id.value = id || '';
-  $('#payout-modal-title').textContent = id ? 'Uitkering bewerken' : `Uitkering — ${inv.naam}`;
+  $('#payout-modal-title').textContent = id ? 'Betaling bewerken' : `Rente of aflossing — ${inv.naam}`;
   const u = id ? (inv.uitkeringen || []).find(x => x.id === id) : null;
   if (u) ['kind', 'amount', 'date', 'status', 'note'].forEach(k => form.elements[k].value = u[k] ?? '');
   else form.elements.date.value = todayISO();
@@ -2988,6 +2934,11 @@ function openInvestorModal(projectId, investorId) {
   form.elements.projectId.value = projectId;
   form.elements.id.value = investorId;
   ['naam', 'email', 'bedrag', 'datum'].forEach(k => form.elements[k].value = inv[k] ?? '');
+  // Nieuwe hoofdsommen: ten minste € 100.000 (bestaande lagere bedragen blijven ongewijzigd opslaanbaar).
+  form.elements.bedrag.min = (Number(inv.bedrag) || 0) < MIN_HOOFDSOM ? '0' : String(MIN_HOOFDSOM);
+  // Geen stortingsdatum zonder bevestigde identificatie.
+  form.elements.datum.required = !!inv.wwft;
+  $('#investor-modal-title').textContent = inv.wwft ? `Geldgever — ${inv.naam}` : `Geldgever — ${inv.naam} (identificatie nog niet bevestigd)`;
   $('#investor-modal').showModal();
 }
 
@@ -3079,7 +3030,7 @@ function mailingAudienceEmails(audiences) {
   const out = [];
   if (audiences.includes('investeerders')) state.projects.forEach(p => (p.investeerders || []).forEach(i => { if (i.email) out.push(i.email); }));
   if (audiences.includes('relaties')) state.contacts.forEach(c => { if (c.email && !c.geenMailing) out.push(c.email); });
-  if (audiences.includes('leads')) combinedInbox().forEach(l => { if (l.email && !l.handled) out.push(l.email); });
+  if (audiences.includes('leads')) combinedInbox().forEach(l => { if (l.email && !l.handled && l.type !== 'Investeerder') out.push(l.email); /* geldgevers is 'geen nieuwsbrief' beloofd */ });
   return [...new Set(out.map(e => String(e).trim().toLowerCase()).filter(e => /.+@.+\..+/.test(e)))];
 }
 
@@ -3090,7 +3041,7 @@ function mailingHtml(body) {
     ${para}
     <hr style="border:none;border-top:1px solid #ddd;margin:24px 0">
     <p style="font-size:12px;color:#888">${esc(s.companyName || 'HomeINN')} · ${esc(s.address || 'Rotterdam')}${s.email ? ' · ' + esc(s.email) : ''}<br>
-    Je ontvangt deze e-mail omdat je relatie bent van HomeINN. Geen mails meer ontvangen? Antwoord met "afmelden".</p>
+    U ontvangt deze e-mail omdat u een relatie bent van HomeINN B.V. Wilt u geen e-mails meer ontvangen? Antwoord dan met "afmelden".</p>
   </div>`;
 }
 
@@ -3136,15 +3087,89 @@ function renderMailing() {
 /* ---------- Contracten ---------- */
 const CONTRACT_TYPES = ['Koopovereenkomst', 'Huurovereenkomst', 'Investeringsovereenkomst', 'Aannemingsovereenkomst'];
 
+/* Leningen van geldgevers. De opgeslagen type-sleutel blijft 'Investeringsovereenkomst', omdat
+   hios_contracts en het geldgeversportaal daarop filteren; de geprinte titel is de juridische naam. */
+const INV_CONTRACT = 'Investeringsovereenkomst';
+const MIN_HOOFDSOM = 100000; // professionele marktpartij: ten minste € 100.000 ineens per geldgever
+const HOMEINN_BV = { naam: 'HomeINN B.V.', kvk: '96713437', adres: 'Rosestraat 1321, 3071 AL Rotterdam' };
+const KERNARTIKEL_WOORDEN = ['winst', 'opbrengst', 'verkoop', 'notaris', 'hypotheek', 'zekerheid', 'pandrecht', 'garantie', 'overdra', 'uitker', 'aandeel', 'termijn', 'achterstel'];
+
+/* Oude leningsovereenkomsten (beslissing 3). Het document wordt telkens opnieuw opgemaakt uit de
+   artikelen hierboven; een overeenkomst die vóór 2 oktober 2026 met het oude model is verstuurd of
+   getekend, zou dan ten onrechte met de nieuwe tekst worden afgedrukt. Zo'n record (zonder modelstempel,
+   status Verstuurd of Getekend) blijft daarom ongemoeid: niet afdrukken, versturen, wijzigen of
+   verwijderen. Het verstuurde of getekende exemplaar is leidend en gaat naar de advocaat. */
+const LENING_MODEL = 'achtergestelde-geldlening-2026-10-02';
+const OUD_MODEL_MELDING = 'deze leningsovereenkomst is vóór 2 oktober 2026 met het oude model verstuurd of getekend; het verstuurde of getekende exemplaar is leidend. Niet opnieuw afdrukken, versturen, wijzigen of verwijderen; leg haar voor aan de advocaat';
+function isOudLeningsmodel(c) {
+  return !!c && c.type === INV_CONTRACT && !c.model && (c.status === 'Verstuurd' || c.status === 'Getekend');
+}
+
+function contractTitle(c) {
+  return c && c.type === INV_CONTRACT ? 'Overeenkomst van achtergestelde geldlening' : String((c && c.type) || 'Contract');
+}
+
+/* Zoekt het geldgever-record (project → investeerders) dat bij een leningsovereenkomst hoort:
+   zelfde project (of het project op het gekozen pand) en dezelfde e-mail, anders dezelfde naam. */
+function contractInvestor(c) {
+  const projecten = c.projectId ? [projectById(c.projectId)].filter(Boolean)
+    : (c.propertyId ? state.projects.filter(pr => pr.propertyId === c.propertyId) : []);
+  const rel = contactById(c.contactId);
+  const email = String(c.partijEmail || (rel && rel.email) || '').toLowerCase().trim();
+  const naam = String((rel && rel.name) || c.partijNaam || '').toLowerCase().trim();
+  for (const pr of projecten) {
+    const invs = pr.investeerders || [];
+    const hit = (email && invs.find(i => String(i.email || '').toLowerCase().trim() === email))
+      || (naam && invs.find(i => String(i.naam || '').toLowerCase().trim() === naam));
+    if (hit) return hit;
+  }
+  return null;
+}
+
+/* Harde blokkades voor printen, 'Verstuurd' en 'Getekend' bij een leningsovereenkomst.
+   Opslaan als 'Concept' blijft mogelijk; de lijst toont dan welke regel faalt. */
+function investmentContractIssues(c) {
+  if (!c || c.type !== INV_CONTRACT) return [];
+  if (isOudLeningsmodel(c)) return [OUD_MODEL_MELDING];
+  const issues = [];
+  if ((Number(c.bedrag) || 0) < MIN_HOOFDSOM) issues.push('hoofdsom lager dan € 100.000');
+  if (!String(c.looptijd || '').trim()) issues.push('looptijd ontbreekt');
+  if (!(Number(c.rendementPct) > 0)) issues.push('rente ontbreekt of is 0%');
+  if (!c.projectId && !c.propertyId) issues.push('geen project of pand gekozen');
+  const inv = (c.projectId || c.propertyId) ? contractInvestor(c) : null;
+  if (!inv) issues.push('geen geldgever in het project geregistreerd met dezelfde naam of e-mail');
+  else if (inv.wwft !== true) issues.push('identificatie van de geldgever nog niet bevestigd');
+  // Contract, registratie en portaal moeten dezelfde kerncijfers tonen.
+  const prj = c.projectId ? projectById(c.projectId) : state.projects.find(p => p.propertyId === c.propertyId);
+  if (inv && Number(inv.bedrag) !== Number(c.bedrag)) issues.push('hoofdsom wijkt af van de geregistreerde lening (het portaal toont die)');
+  if (prj && (Number(prj.invest?.rendementPct) !== Number(c.rendementPct) || String(prj.invest?.looptijd || '').trim() !== String(c.looptijd || '').trim())) issues.push('rente of looptijd wijkt af van het project (portaal en projectkaart tonen de projectwaarden)');
+  if (!c.ingangsdatum) issues.push('uiterste stortingsdatum ontbreekt');
+  return issues;
+}
+
+function kernartikelWaarschuwing(c) {
+  if (!c || c.type !== INV_CONTRACT || !c.note) return '';
+  const tekst = String(c.note).toLowerCase();
+  return KERNARTIKEL_WOORDEN.some(w => tekst.includes(w)) ? 'Deze bepaling raakt een kernartikel; laat de advocaat meelezen.' : '';
+}
+
 function contractParties(c) {
   const b = state.settings;
+  const leeg = v => !String(v || '').trim() || /^\s*\[.*\]\s*$/.test(String(v));
   const homeinn = { naam: b.companyName || 'HomeINN', adres: b.address || '', kvk: b.kvk || '', btw: b.btw || '' };
+  if (c.type === INV_CONTRACT) {
+    // De Geldnemer is altijd de rechtspersoon, nooit de handelsnaam.
+    homeinn.naam = HOMEINN_BV.naam;
+    if (leeg(homeinn.kvk)) homeinn.kvk = HOMEINN_BV.kvk;
+    if (leeg(homeinn.adres) || !/\d/.test(homeinn.adres)) homeinn.adres = HOMEINN_BV.adres;
+    if (leeg(homeinn.btw)) homeinn.btw = '';
+  }
   const rel = contactById(c.contactId);
   const ander = { naam: (rel && rel.name) || c.partijNaam || '[Wederpartij]', adres: (rel && rel.address) || c.partijAdres || '' };
   let aRol, bRol;
   if (c.type === 'Koopovereenkomst') { const verkoopt = c.positie !== 'HomeINN koopt'; aRol = verkoopt ? 'Verkoper' : 'Koper'; bRol = verkoopt ? 'Koper' : 'Verkoper'; }
   else if (c.type === 'Huurovereenkomst') { aRol = 'Verhuurder'; bRol = 'Huurder'; }
-  else if (c.type === 'Investeringsovereenkomst') { aRol = 'Onderneming'; bRol = 'Investeerder'; }
+  else if (c.type === INV_CONTRACT) { aRol = 'Geldnemer'; bRol = 'Geldgever'; }
   else { aRol = 'Opdrachtgever'; bRol = 'Aannemer'; }
   return { homeinn, ander, aRol, bRol };
 }
@@ -3173,14 +3198,24 @@ function contractClauses(c, ctx) {
     { kop: 'Bijzondere bepalingen', tekst: bijz },
     { kop: 'Toepasselijk recht', tekst: recht }
   ];
-  if (c.type === 'Investeringsovereenkomst') return [
-    { kop: 'De investering', tekst: `Investeerder verstrekt aan de Onderneming een bedrag van <strong>${fmtMoney(bedrag)}</strong> ten behoeve van ${esc(onderwerp)}.` },
-    { kop: 'Rendement', tekst: `De Onderneming vergoedt over de inleg een rendement van <strong>${fmtNum(Number(c.rendementPct) || 0, 1)}% per jaar</strong>, jaarlijks uit te keren.` },
-    { kop: 'Looptijd & terugbetaling', tekst: `De looptijd bedraagt ${esc(c.looptijd || 'nader overeen te komen')}. Aan het einde van de looptijd wordt de hoofdsom terugbetaald.` },
-    { kop: 'Risico', tekst: `Investeerder is ermee bekend dat aan investeren in vastgoed risico's verbonden zijn en dat rendement noch hoofdsom gegarandeerd zijn. De inleg dient als achtergestelde financiering.` },
-    { kop: 'Identiteit & Wwft', tekst: `Partijen voldoen aan de toepasselijke regelgeving, waaronder identificatie conform de Wwft.` },
-    { kop: 'Bijzondere bepalingen', tekst: bijz },
-    { kop: 'Toepasselijk recht', tekst: recht }
+  if (c.type === INV_CONTRACT) return [
+    { kop: 'De lening', tekst: `De Geldgever leent aan de Geldnemer, die van hem leent, een bedrag van <strong>${fmtMoney(bedrag)}</strong> (de Hoofdsom). Deze overeenkomst is een overeenkomst van geldlening. De Geldgever verkrijgt uitsluitend een geldvordering op de Geldnemer tot betaling van rente en aflossing van de Hoofdsom volgens deze overeenkomst.` },
+    { kop: 'Bestemming; geen recht op een pand of opbrengst', tekst: `De Geldnemer gebruikt de Hoofdsom voor de financiering van ${esc(onderwerp)} (het Project). Deze bestemming maakt de Hoofdsom niet tot een afgescheiden vermogen en geeft de Geldgever geen voorrang. De Geldgever verkrijgt geen eigendom van of aandeel in een pand of project, geen hypotheek, pandrecht of ander zekerheidsrecht, geen recht op (een deel van) de opbrengst, de waardestijging of de winst van een pand, een project of de Geldnemer, en geen zeggenschap of stemrecht. Zijn vordering is een vordering op de Geldnemer als geheel; ook de resultaten van haar andere projecten zijn van invloed op haar vermogen om te betalen.` },
+    { kop: 'Minimale hoofdsom en storting ineens', tekst: `Deze lening is uitsluitend bestemd voor geldgevers die ten minste € 100.000 ineens ter beschikking stellen; de Hoofdsom bedraagt daarom ten minste € 100.000. De Geldgever stelt de volledige Hoofdsom in één keer ter beschikking, door één overboeking vanaf een rekening op zijn eigen naam bij een bank in de Europese Economische Ruimte, naar de rekening op naam van HomeINN B.V. die is vermeld in de bevestiging bedoeld in het artikel 'Identificatie vóór storting'. Uiterste stortingsdatum: ${lever}. De dag waarop de volledige Hoofdsom op die rekening is bijgeschreven, is de Stortingsdatum; de verplichtingen van de Geldnemer uit deze overeenkomst ontstaan pas op die dag. Storting in termijnen, gedeeltelijke storting, contante betaling en betaling door of via een derde zijn uitgesloten; zulke bedragen betaalt de Geldnemer onverwijld en zonder rente terug naar de rekening waarvan zij afkomstig zijn. De Geldgever leent voor eigen rekening en met eigen middelen, en niet namens, ten behoeve van of samen met anderen. De Geldgever is niet verplicht tot een aanvullende storting en de Geldnemer doet geen kapitaal- of stortingsoproepen. Rente wordt nooit bij de Hoofdsom gevoegd. Een nieuwe lening vereist een nieuwe overeenkomst die aan dit artikel voldoet.` },
+    { kop: 'Identificatie vóór storting', tekst: `De Geldgever stort niet, en de Geldnemer aanvaardt geen storting, voordat de Geldnemer schriftelijk of per e-mail heeft bevestigd dat zij (a) de identiteit van de Geldgever heeft vastgesteld en geverifieerd en, als de Geldgever een rechtspersoon is, ook die van zijn vertegenwoordigers en uiteindelijk belanghebbenden; (b) de herkomst van de middelen heeft vastgelegd; en (c) heeft vastgesteld dat geen van hen voorkomt op een nationale of Europese sanctielijst. In die bevestiging vermeldt de Geldnemer de rekening op naam van HomeINN B.V. waarop de Hoofdsom moet worden gestort. De Geldgever verstrekt de daarvoor gevraagde stukken en meldt wijzigingen onverwijld. Een kopie van een identiteitsbewijs levert hij aan met afgeschermd burgerservicenummer. Is de bevestiging niet binnen dertig dagen na ondertekening gegeven, dan kan ieder van partijen deze overeenkomst kosteloos door een schriftelijke mededeling beëindigen; een bedrag dat toch is ontvangen, betaalt de Geldnemer dan zonder rente terug naar de rekening waarvan het afkomstig is.` },
+    { kop: 'Rente', tekst: `Over de uitstaande Hoofdsom is de Geldnemer een vaste rente verschuldigd van <strong>${fmtNum(Number(c.rendementPct) || 0, 1)}% per jaar</strong>, zonder rente op rente. De rente loopt vanaf de Stortingsdatum tot de dag van volledige aflossing en wordt berekend over het werkelijke aantal dagen, op basis van een jaar van 365 dagen. De rente staat vast voor de gehele looptijd en hangt niet af van de opbrengst, de waarde of het resultaat van het Project, van andere projecten of van de Geldnemer. De Geldnemer betaalt de rente achteraf, telkens binnen tien werkdagen nadat een jaar sinds de Stortingsdatum is verstreken, en het restant tegelijk met de aflossing van de Hoofdsom. Lost de Geldnemer de Hoofdsom niet op tijd af, dan loopt de rente van dit artikel over de Hoofdsom door tot de dag van betaling.` },
+    { kop: 'Looptijd en aflossing', tekst: `De lening heeft een looptijd van ${esc(c.looptijd || 'nader overeen te komen')}, gerekend vanaf de Stortingsdatum; de laatste dag daarvan is de Vervaldatum. Op de Vervaldatum lost de Geldnemer de Hoofdsom in één keer af en betaalt zij de dan nog verschuldigde rente, per bankoverschrijving op de rekening van waaruit de Hoofdsom is ontvangen of op een andere rekening op naam van de Geldgever die hij schriftelijk opgeeft. Deze verplichting hangt niet af van de verkoop, de verhuur of de afronding van het Project. De looptijd wordt niet eenzijdig of automatisch verlengd; verlenging is alleen mogelijk als partijen dat vóór de Vervaldatum schriftelijk overeenkomen.` },
+    { kop: 'Vervroegde aflossing; geen tussentijdse opeising', tekst: `De Geldnemer mag de lening op ieder moment in haar geheel vervroegd aflossen, met betaling van de rente tot de dag van aflossing en zonder boete of andere vergoeding, na een schriftelijke mededeling van ten minste tien werkdagen. Gedeeltelijke vervroegde aflossing is uitgesloten. De Geldgever kan de lening niet opzeggen en de Hoofdsom niet eerder opeisen dan op de Vervaldatum, behalve in de gevallen van het artikel 'Opeisbaarheid'.` },
+    { kop: 'Achterstelling', tekst: `Alle vorderingen van de Geldgever uit deze overeenkomst (Hoofdsom, rente en kosten) zijn achtergesteld bij alle bestaande en toekomstige vorderingen van alle andere schuldeisers van de Geldnemer, behalve vorderingen die op gelijke wijze of verder zijn achtergesteld; dit is een rangafspraak in de zin van artikel 3:277 lid 2 BW. Tot de vorderingen die vóórgaan behoren in elk geval die van banken en andere financiers van de Geldnemer, met of zonder zekerheidsrecht, van de Belastingdienst en van leveranciers en aannemers. Bij faillissement, surseance van betaling, een akkoord met schuldeisers (ook buiten faillissement), ontbinding of vereffening van de Geldnemer, en bij iedere verdeling van haar vermogen onder haar schuldeisers (samen: Insolventie), ontvangt de Geldgever pas een betaling nadat alle vorderingen die vóórgaan volledig zijn voldaan. De vorderingen van de Geldgever hebben gelijke rang met die van andere geldgevers die op gelijke voorwaarden achtergesteld aan de Geldnemer hebben geleend, ongeacht voor welk project; zij worden onderling naar verhouding van hun vorderingen voldaan. Ontvangt de Geldgever tijdens Insolventie toch een betaling waarop hij op grond van dit artikel geen recht had, dan draagt hij die onverwijld af aan de curator, bewindvoerder of vereffenaar. Tijdens Insolventie kan de Geldgever zijn vorderingen niet verrekenen met een schuld aan de Geldnemer. Buiten Insolventie betaalt de Geldnemer rente en Hoofdsom op de overeengekomen data; de achterstelling geeft haar geen recht op uitstel. De Geldgever kan als gevolg van deze achterstelling zijn Hoofdsom en de rente geheel of gedeeltelijk verliezen.` },
+    { kop: 'Geen zekerheid of garantie', tekst: `Voor de verplichtingen van de Geldnemer is geen hypotheek, pandrecht of ander zekerheidsrecht gevestigd en geen garantie of borgtocht afgegeven, door de Geldnemer noch door een ander, ook niet door haar aandeelhouders of bestuurders. De Geldnemer is verplicht rente en Hoofdsom te betalen. De Geldgever draagt het risico dat zij daartoe niet of niet volledig in staat is, ook als gevolg van ontwikkelingen in haar andere projecten; hij kan dan rente en Hoofdsom geheel of gedeeltelijk verliezen.` },
+    { kop: 'Niet overdraagbaar', tekst: `De vorderingen van de Geldgever uit deze overeenkomst zijn niet overdraagbaar en niet vatbaar voor verpanding of voor vestiging van een ander beperkt recht (artikel 3:83 lid 2 BW). De Geldgever zal het economische belang bij deze lening ook niet op een andere manier geheel of gedeeltelijk aan een ander laten toekomen, zoals door een subparticipatie, een derivaat of een volmacht tot inning. Voor deze lening worden geen certificaten, obligaties of andere waardebewijzen uitgegeven. Overgang onder algemene titel, zoals door erfopvolging of fusie, blijft mogelijk; de rechtsopvolger is aan deze overeenkomst gebonden.` },
+    { kop: 'Opeisbaarheid', tekst: `Met inachtneming van het artikel 'Achterstelling' kan de Geldgever de Hoofdsom met de verschuldigde rente door een schriftelijke mededeling direct opeisbaar maken als (a) de Geldnemer een opeisbaar bedrag uit deze overeenkomst niet binnen dertig dagen na een schriftelijke aanmaning heeft betaald; (b) de Geldnemer in staat van faillissement wordt verklaard of surseance van betaling aanvraagt; (c) de Geldnemer wordt ontbonden of haar onderneming staakt; of (d) de Geldnemer de Hoofdsom wezenlijk anders gebruikt dan voor het Project en dit niet binnen dertig dagen na een schriftelijke aanmaning herstelt, een en ander voor zover de wet het inroepen van deze gronden toelaat.` },
+    { kop: 'Informatie', tekst: `De Geldnemer informeert de Geldgever per e-mail over de voortgang van het Project, in elk geval bij de start en bij de oplevering van de verbouwing. Zij stuurt de Geldgever jaarlijks, binnen vier weken na vaststelling, haar jaarrekening met een overzicht van haar schuldpositie, waaronder de bankfinanciering en de uitstaande achtergestelde leningen. Zij meldt het de Geldgever onverwijld als zij verwacht een betaling uit deze overeenkomst niet op tijd te kunnen doen.` },
+    { kop: 'Verklaringen van de Geldgever', tekst: `De Geldgever verklaart dat hij (a) vóór ondertekening deze overeenkomst, het projectdossier en de financiële cijfers en de schuldpositie van de Geldnemer heeft ontvangen en gelezen; (b) begrijpt dat hij aan de Geldnemer als geheel een achtergestelde lening zonder zekerheid verstrekt, die niet overdraagbaar en niet tussentijds opeisbaar is, en dat hij rente en Hoofdsom geheel of gedeeltelijk kan verliezen; (c) in de gelegenheid is geweest zich onafhankelijk juridisch, fiscaal en financieel te laten adviseren; (d) de Hoofdsom verstrekt uit eigen, rechtmatig verkregen middelen; en (e) van de Geldnemer geen beleggingsadvies heeft ontvangen.` },
+    { kop: 'Betalingen en kosten', tekst: `Alle betalingen gebeuren in euro, per bankoverschrijving en zonder inhouding, tenzij de wet inhouding voorschrijft. Valt een betaaldag niet op een werkdag, dan wordt op de eerstvolgende werkdag betaald. De Geldnemer brengt de Geldgever voor deze lening geen kosten in rekening; ieder van partijen draagt de kosten van haar eigen adviseurs.` },
+    { kop: 'Ondertekening, mededelingen en wijziging', tekst: `Deze overeenkomst wordt ondertekend met de hand of met een geavanceerde of gekwalificeerde elektronische handtekening. Mededelingen gebeuren schriftelijk of per e-mail aan de adressen die partijen elkaar schriftelijk hebben opgegeven. Wijzigingen en aanvullingen gelden alleen als partijen ze schriftelijk overeenkomen. Algemene voorwaarden van de Geldnemer zijn op deze lening niet van toepassing.` },
+    { kop: 'Bijzondere bepalingen', tekst: `${bijz} Een bijzondere bepaling kan niet afwijken van de artikelen 'De lening', 'Bestemming; geen recht op een pand of opbrengst', 'Minimale hoofdsom en storting ineens', 'Identificatie vóór storting', 'Rente', 'Looptijd en aflossing', 'Vervroegde aflossing; geen tussentijdse opeising', 'Achterstelling', 'Geen zekerheid of garantie', 'Niet overdraagbaar' en 'Betalingen en kosten'.` },
+    { kop: 'Toepasselijk recht en bevoegde rechter', tekst: `Op deze overeenkomst is Nederlands recht van toepassing. Geschillen worden voorgelegd aan de rechtbank Rotterdam. Is de Geldgever een natuurlijk persoon die niet handelt in de uitoefening van een beroep of bedrijf, dan is de rechter bevoegd die volgens de wet bevoegd is.` }
   ];
   return [
     { kop: 'Het werk', tekst: `Opdrachtgever draagt aan Aannemer op, die aanneemt, de uitvoering van het werk aan: <strong>${esc(onderwerp)}</strong>, conform de bij partijen bekende omschrijving.` },
@@ -3196,16 +3231,31 @@ function contractClauses(c, ctx) {
 
 function buildContractDoc(c) {
   const { homeinn, ander, aRol, bRol } = contractParties(c);
-  const pand = propertyById(c.propertyId);
+  const isLening = c.type === INV_CONTRACT;
   const project = projectById(c.projectId);
-  const onderwerp = pand ? `${pand.address}, ${pand.city}` : (project ? project.name : (c.type === 'Investeringsovereenkomst' ? 'de onderneming HomeINN' : 'het in deze overeenkomst omschreven object'));
+  const pand = propertyById(c.propertyId) || (isLening && project ? propertyById(project.propertyId) : null);
+  let onderwerp;
+  if (isLening) {
+    // Een leningsovereenkomst vereist een project of pand; geen terugval op 'de onderneming'.
+    const adres = pand ? `${pand.address}${pand.city ? ', ' + pand.city : ''}` : '';
+    onderwerp = project ? `het project "${project.name}"${adres ? ' aan ' + adres : ''}`
+      : (adres ? `het project aan ${adres}` : '[project of pand ontbreekt]');
+  } else {
+    onderwerp = pand ? `${pand.address}, ${pand.city}` : (project ? project.name : 'het in deze overeenkomst omschreven object');
+  }
   const clauses = contractClauses(c, { onderwerp });
+  const concept = isLening && (c.status || 'Concept') === 'Concept'
+    ? '<p class="doc-concept" style="display:inline-block;margin:4px 0 0;padding:2px 10px;border:2px solid #b03a3a;color:#b03a3a;font-weight:700;letter-spacing:.2em">CONCEPT</p>' : '';
+  const voet = isLening
+    ? 'Model van HomeINN B.V. Laat deze overeenkomst vóór ondertekening controleren door een advocaat.'
+    : 'Opgesteld met HomeINN OS. Dit is een concept-modelovereenkomst — laat deze vóór ondertekening controleren door een jurist of notaris. Aan dit document kunnen geen rechten worden ontleend.';
   return `
     <header class="doc-head">
       <div>
         <img src="assets/logo-dark.png?v=20260614" alt="" class="doc-logo">
-        <h1>${esc(c.type.toUpperCase())}</h1>
+        <h1>${esc(contractTitle(c).toUpperCase())}</h1>
         <p class="doc-number">${esc(c.ref)} · ${fmtDate(c.datum || todayISO())}</p>
+        ${concept}
       </div>
       <div class="doc-company">
         <strong>${esc(homeinn.naam)}</strong><br>${esc(homeinn.adres)}<br>
@@ -3213,7 +3263,7 @@ function buildContractDoc(c) {
       </div>
     </header>
     <p class="doc-note"><strong>De ondergetekenden:</strong><br>
-      1. <strong>${esc(homeinn.naam)}</strong>, gevestigd te ${esc(homeinn.adres || '—')}, KvK ${esc(homeinn.kvk || '—')}, hierna "<strong>${aRol}</strong>";<br>
+      1. <strong>${esc(homeinn.naam)}</strong>, ${isLening ? `kantoorhoudende aan ${esc(homeinn.adres)}, ingeschreven in het handelsregister onder nummer ${esc(homeinn.kvk)}` : `gevestigd te ${esc(homeinn.adres || '—')}, KvK ${esc(homeinn.kvk || '—')}`}, hierna "<strong>${aRol}</strong>";<br>
       2. <strong>${esc(ander.naam)}</strong>${ander.adres ? `, ${esc(ander.adres)}` : ''}, hierna "<strong>${bRol}</strong>";<br>
       komen het volgende overeen:</p>
     <div class="doc-body">
@@ -3223,12 +3273,14 @@ function buildContractDoc(c) {
       <div><strong>${aRol}</strong><br>${esc(homeinn.naam)}<div class="line">Naam &amp; handtekening · datum</div></div>
       <div><strong>${bRol}</strong><br>${esc(ander.naam)}<div class="line">Naam &amp; handtekening · datum</div></div>
     </div>
-    <footer class="doc-footer">Opgesteld met HomeINN OS. Dit is een concept-modelovereenkomst — laat deze vóór ondertekening controleren door een jurist of notaris. Aan dit document kunnen geen rechten worden ontleend.</footer>`;
+    <footer class="doc-footer">${voet}</footer>`;
 }
 
 function printContract(id) {
   const c = state.contracten.find(x => x.id === id);
   if (!c) return;
+  const issues = investmentContractIssues(c);
+  if (issues.length) { showToast(`Printen geblokkeerd: ${issues.join('; ')}.`); return; }
   $('#print-area').innerHTML = buildContractDoc(c);
   window.print();
 }
@@ -3239,6 +3291,9 @@ function openContractModal(id = null) {
   form.elements.id.value = id || '';
   $('#contract-modal-title').textContent = id ? 'Contract bewerken' : `Contract opstellen (${nextRef('CON', state.contracten)})`;
   const c = id ? state.contracten.find(x => x.id === id) : null;
+  // Type-sleutel blijft 'Investeringsovereenkomst' (hios_contracts filtert erop); alleen het label verandert.
+  const invOpt = [...form.elements.type.options].find(o => o.value === INV_CONTRACT);
+  if (invOpt) { invOpt.value = INV_CONTRACT; invOpt.textContent = 'Investeringsovereenkomst (achtergestelde geldlening)'; }
   fillSelect(form.elements.propertyId, state.properties, { empty: '— Geen pand —', selected: c?.propertyId || '' });
   fillSelect(form.elements.projectId, state.projects, { empty: '— Geen project —', selected: c?.projectId || '' });
   fillSelect(form.elements.contactId, state.contacts, { empty: '— Geen / handmatig —', selected: c?.contactId || '' });
@@ -3261,7 +3316,7 @@ function renderContracts() {
     </div>
     <div class="panel">
       <div class="panel-head">
-        <div><h2>Contracten &amp; overeenkomsten</h2><p>Genereer koop-, huur-, investerings- en aannemingsovereenkomsten uit je eigen gegevens. Bekijk/print met handtekeningblokken.</p></div>
+        <div><h2>Contracten &amp; overeenkomsten</h2><p>Genereer koop-, huur- en aannemingsovereenkomsten en overeenkomsten van achtergestelde geldlening uit je eigen gegevens. Bekijk/print met handtekeningblokken.</p></div>
         <button class="btn primary slim" data-action="new-contract">+ Nieuw contract</button>
       </div>
       <div class="table-wrap"><table>
@@ -3271,15 +3326,20 @@ function renderContracts() {
           const project = projectById(c.projectId);
           const betreft = pand ? pand.address : (project ? project.name : '—');
           const partij = (contactById(c.contactId)?.name) || c.partijNaam || '—';
+          const isLening = c.type === INV_CONTRACT;
+          const issues = investmentContractIssues(c);
+          const kern = kernartikelWaarschuwing(c);
+          const waarschuwing = (issues.length ? `<br><span class="sub alert">⚠ Niet te printen, versturen of tekenen: ${esc(issues.join('; '))}.</span>` : '')
+            + (kern ? `<br><span class="sub alert">⚠ ${esc(kern)}</span>` : '');
           return `<tr>
-            <td>${fmtDate(c.datum)}</td><td><strong>${esc(c.type)}</strong><br><span class="sub">${esc(c.ref)}</span></td>
+            <td>${fmtDate(c.datum)}</td><td><strong>${esc(contractTitle(c))}</strong><br><span class="sub">${esc(c.ref)}</span></td>
             <td>${esc(betreft)}</td><td>${esc(partij)}</td><td>${fmtMoney(c.bedrag)}</td>
             <td><select class="row-status" data-action="contract-status" data-id="${c.id}">
               ${['Concept', 'Verstuurd', 'Getekend'].map(s => `<option ${c.status === s ? 'selected' : ''}>${s}</option>`).join('')}
-            </select>${c.signedAt ? `<br><span class="sub maint-done">✔ digitaal getekend ${fmtDate(c.signedAt)}${c.signedName ? ' · ' + esc(c.signedName) : ''}</span>` : ''}</td>
+            </select>${c.signedAt ? `<br><span class="sub maint-done">✔ digitaal getekend ${fmtDate(c.signedAt)}${c.signedName ? ' · ' + esc(c.signedName) : ''}</span>` : ''}${waarschuwing}</td>
             <td class="row-actions">
               <button class="btn secondary slim" data-action="print-contract" data-id="${c.id}">Bekijk / print</button>
-              <button class="btn secondary slim" data-action="send-contract" data-id="${c.id}">Verstuur ter ondertekening</button>
+              <button class="btn secondary slim" data-action="send-contract" data-id="${c.id}">${isLening ? 'Zet klaar ter inzage' : 'Verstuur ter ondertekening'}</button>
               <button class="icon-btn" data-action="edit-contract" data-id="${c.id}" title="Bewerken">✎</button>
               <button class="icon-btn" data-action="del-contract" data-id="${c.id}" title="Verwijderen">🗑</button>
             </td></tr>`;
@@ -3460,12 +3520,16 @@ function openProjectModal(id = null, presetPropertyId = '') {
     form.elements.publish.checked = !!pr.publish;
     form.elements.investOpen.checked = !!pr.invest?.open;
     form.elements.doelbedrag.value = pr.invest?.doelbedrag ?? '';
-    form.elements.minInleg.value = pr.invest?.minInleg ?? '';
+    form.elements.minInleg.value = Math.max(Number(pr.invest?.minInleg) || 0, MIN_HOOFDSOM);
     form.elements.rendementPct.value = pr.invest?.rendementPct ?? '';
     form.elements.looptijd.value = pr.invest?.looptijd ?? '';
   } else {
     form.elements.startDate.value = todayISO();
+    form.elements.minInleg.value = MIN_HOOFDSOM;
+    form.elements.rendementPct.value = 7;
+    form.elements.looptijd.value = '12 maanden';
   }
+  form.elements.minInleg.min = String(MIN_HOOFDSOM);
   $('#project-modal').showModal();
 }
 
@@ -3668,12 +3732,12 @@ function handleModalSubmit(event) {
       showToast('Planning verwijderd.');
     }
     if (formId === 'payout-form' && delId) {
-      if (!confirmDel('Uitkering verwijderen?')) { event.preventDefault(); return; }
+      if (!confirmDel('Betaling verwijderen?')) { event.preventDefault(); return; }
       const pr = projectById(delData.get('projectId'));
       const inv = pr && (pr.investeerders || []).find(x => x.id === delData.get('investorId'));
       if (inv) inv.uitkeringen = (inv.uitkeringen || []).filter(x => x.id !== delId);
       rerender();
-      showToast('Uitkering verwijderd.');
+      showToast('Betaling verwijderd.');
     }
     return;
   }
@@ -3798,12 +3862,25 @@ function handleModalSubmit(event) {
   }
 
   if (formId === 'project-form') {
+    // Harde regel: de minimale hoofdsom per geldgever is ten minste € 100.000 ineens.
+    // Alleen voor projecten die openstaan voor geldgevers (of waar een minimum is ingevuld).
+    const minHoofdsom = num('minInleg');
+    if ((data.get('investOpen') || minHoofdsom > 0) && minHoofdsom < MIN_HOOFDSOM) { event.preventDefault(); showToast('Geblokkeerd: de minimale hoofdsom per geldgever is ten minste € 100.000.'); return; }
     const base = {
       name: str('name'), propertyId: data.get('propertyId'), status: str('status'), budget: num('budget'),
       startDate: data.get('startDate') || '', endDate: data.get('endDate') || '', note: str('note'),
       publish: !!data.get('publish'),
       invest: { open: !!data.get('investOpen'), doelbedrag: num('doelbedrag'), minInleg: num('minInleg'), rendementPct: num('rendementPct'), looptijd: str('looptijd') }
     };
+    // Rente en looptijd liggen vast in de overeenkomsten van geldgevers die al gestort hebben;
+    // het portaal van de geldgever toont de projectwaarden, dus die mogen dan niet meer wijzigen.
+    const oud = id ? projectById(id) : null;
+    if (oud && (oud.investeerders || []).some(i => i.datum) &&
+        (Number(oud.invest?.rendementPct || 0) !== base.invest.rendementPct || String(oud.invest?.looptijd || '').trim() !== base.invest.looptijd)) {
+      event.preventDefault();
+      showToast('Geblokkeerd: dit project heeft gestorte leningen. Rente en looptijd staan vast in die overeenkomsten en verschijnen zo in het portaal van de geldgevers.');
+      return;
+    }
     if (id) Object.assign(projectById(id), base);
     else state.projects.push(Object.assign({ id: uid('prj'), ref: nextRef('PRJ', state.projects), phases: DEFAULT_PHASES.map(name => ({ id: uid('ph'), name, status: 'Te doen' })), opleverpunten: [], updates: [], investeerders: [] }, base));
     showToast(`Project "${base.name}" opgeslagen.`);
@@ -3900,9 +3977,18 @@ function handleModalSubmit(event) {
       if (id) { const u = inv.uitkeringen.find(x => x.id === id); if (u) Object.assign(u, base); }
       else inv.uitkeringen.push(Object.assign({ id: uid('pay') }, base));
       if (!id && base.status === 'Uitbetaald' && inv.email && window.HCloud) {
-        HCloud.notify({ to: inv.email, subject: `Uitkering van HomeINN — ${pr.name}`, html: `<p>Beste ${esc(inv.naam)},</p><p>Er is een uitkering geregistreerd voor je investering in <strong>${esc(pr.name)}</strong>:</p><p>${esc(base.kind)} · <strong>${fmtMoney(base.amount)}</strong> · ${fmtDate(base.date)}</p><p>Bekijk je overzicht in het investeerdersportaal.</p><p>Met vriendelijke groet,<br>HomeINN</p>` });
+        HCloud.notify({ to: inv.email, subject: `Betaling op uw lening aan HomeINN B.V. — ${pr.name}`, html: `<p>Beste ${esc(inv.naam)},</p><p>Wij hebben een betaling op uw lening voor het project <strong>${esc(pr.name)}</strong> geregistreerd:</p><p>${esc(betalingSoort(base.kind))} · <strong>${fmtMoney(base.amount)}</strong> · ${fmtDate(base.date)}</p><p>U ziet uw hoofdsom, rentebetalingen en vervaldatum in het HomeINN-portaal.</p><p>Met vriendelijke groet,<br>HomeINN B.V.</p>` });
       }
-      showToast('Uitkering opgeslagen.');
+      // De leningsovereenkomst kent alleen aflossing van de volledige hoofdsom in één keer.
+      let aflosMelding = '';
+      if (base.kind === 'aflossing') {
+        const huidig = id ? inv.uitkeringen.find(x => x.id === id) : inv.uitkeringen[inv.uitkeringen.length - 1];
+        const eerder = inv.uitkeringen.filter(u => u !== huidig && u.kind === 'aflossing' && u.status === 'Uitbetaald')
+          .reduce((s, u) => s + (Number(u.amount) || 0), 0);
+        const rest = Math.max(0, (Number(inv.bedrag) || 0) - eerder);
+        if (Math.abs((Number(base.amount) || 0) - rest) > 0.5) aflosMelding = ` Let op: aflossing gebeurt in één keer voor de volledige uitstaande hoofdsom (${fmtMoney(rest)}); een gedeeltelijke aflossing is uitgesloten.`;
+      }
+      showToast(`${betalingSoort(base.kind)} opgeslagen.${aflosMelding}`);
     }
   }
 
@@ -3910,11 +3996,24 @@ function handleModalSubmit(event) {
     const pr = projectById(data.get('projectId'));
     const inv = pr && (pr.investeerders || []).find(x => x.id === id);
     if (inv) {
+      const nieuwBedrag = num('bedrag');
+      const oudBedrag = Number(inv.bedrag) || 0;
+      const nieuweDatum = data.get('datum') || '';
+      // Harde regels voor de hoofdsom: ten minste € 100.000 ineens, en na de storting niet meer te wijzigen
+      // (één storting per overeenkomst). Bestaande leningen met een ongewijzigd bedrag blijven ongemoeid.
+      if (nieuwBedrag !== oudBedrag && nieuwBedrag < MIN_HOOFDSOM) { event.preventDefault(); showToast('Geblokkeerd: de hoofdsom is ten minste € 100.000 ineens per geldgever.'); return; }
+      if (nieuwBedrag !== oudBedrag && inv.datum) { event.preventDefault(); showToast('Geblokkeerd: na de storting wijzigt de hoofdsom niet. Elke lening kent één storting; een nieuwe lening vereist een nieuwe overeenkomst.'); return; }
       inv.naam = str('naam');
       inv.email = str('email');
-      inv.bedrag = num('bedrag');
-      inv.datum = data.get('datum') || inv.datum;
-      showToast('Investeerder bijgewerkt.');
+      inv.bedrag = nieuwBedrag;
+      let melding = 'Geldgever bijgewerkt.';
+      if (nieuweDatum && nieuweDatum !== (inv.datum || '')) {
+        // Een storting (stortingsdatum) leg je pas vast na bevestigde identificatie.
+        if (inv.wwft === true) inv.datum = nieuweDatum;
+        else melding = 'Geldgever bijgewerkt. Stortingsdatum niet vastgelegd: bevestig eerst de identificatie.';
+      }
+      if ((Number(inv.bedrag) || 0) < MIN_HOOFDSOM) melding += ' Let op: deze bestaande lening ligt onder € 100.000; laat de advocaat meekijken.';
+      showToast(melding);
     }
   }
 
@@ -3932,9 +4031,20 @@ function handleModalSubmit(event) {
       bedrag: num('bedrag'), datum: data.get('datum') || todayISO(), ingangsdatum: data.get('ingangsdatum') || '',
       looptijd: str('looptijd'), rendementPct: num('rendementPct'), note: str('note')
     };
+    if (id && isOudLeningsmodel(state.contracten.find(x => x.id === id))) { event.preventDefault(); showToast(`Wijzigen geblokkeerd: ${OUD_MODEL_MELDING}.`); return; }
+    if (base.type === INV_CONTRACT) base.model = LENING_MODEL;
     if (id) Object.assign(state.contracten.find(x => x.id === id), base);
     else state.contracten.push(Object.assign({ id: uid('c'), ref: nextRef('CON', state.contracten), status: 'Concept', createdAt: todayISO() }, base));
-    showToast(`${base.type} opgeslagen.`);
+    const opgeslagen = id ? state.contracten.find(x => x.id === id) : state.contracten[state.contracten.length - 1];
+    const issues = investmentContractIssues(opgeslagen);
+    const kern = kernartikelWaarschuwing(opgeslagen);
+    if (issues.length || kern) {
+      // Opslaan blijft mogelijk; printen, 'Verstuurd' en 'Getekend' zijn geblokkeerd zolang een regel faalt.
+      // De status van een bestaande (getekende) overeenkomst passen we hier bewust niet aan.
+      showToast(`${contractTitle(base)} opgeslagen.${issues.length ? ' Nog niet te printen, versturen of tekenen: ' + issues.join('; ') + '.' : ''}${kern ? ' ' + kern : ''}`);
+    } else {
+      showToast(`${contractTitle(base)} opgeslagen.`);
+    }
   }
 
   if (formId === 'insurance-form') {
@@ -3949,21 +4059,9 @@ function handleModalSubmit(event) {
   }
 
   if (formId === 'capitalcall-form') {
-    const pr = projectById(data.get('projectId'));
-    const bedrag = num('bedrag');
-    if (pr && bedrag > 0) {
-      const split = capitalCallSplit(pr, bedrag);
-      if (!split.length) { showToast('Dit project heeft geen investeerders.'); return; }
-      state.capitalCalls = state.capitalCalls || [];
-      const call = { id: uid('cc'), projectId: pr.id, bedrag, deadline: data.get('deadline') || '', omschrijving: str('omschrijving'), aanmaakdatum: todayISO(), status: 'Open', perInvesteerder: split };
-      state.capitalCalls.push(call);
-      logAudit('kapitaaloproep-aangemaakt', `${fmtMoney(bedrag)} — ${pr.name}`);
-      // Optioneel: investeerders direct mailen als de cloud actief is.
-      if (window.HCloud && HCloud.status().ready) {
-        split.filter(r => r.email).forEach(r => HCloud.notify({ to: r.email, subject: `Kapitaaloproep HomeINN — ${pr.name}`, html: `<p>Beste ${esc(r.naam)},</p><p>Voor het project <strong>${esc(pr.name)}</strong> doen we een kapitaaloproep van ${fmtMoney(bedrag)}. Jouw pro-rata aandeel is <strong>${fmtMoney(r.bedragVerschuldigd)}</strong>. Reactiedeadline: ${fmtDate(call.deadline)}.</p>${call.omschrijving ? `<p>${esc(call.omschrijving)}</p>` : ''}<p>Met vriendelijke groet,<br>HomeINN</p>` }));
-      }
-      showToast(`Kapitaaloproep van ${fmtMoney(bedrag)} aangemaakt voor ${split.length} investeerder${split.length === 1 ? '' : 's'}.`);
-    }
+    // Uitgeschakeld: geen nieuwe kapitaaloproepen en geen e-mails meer aan geldgevers.
+    showToast(KAPITAALOPROEP_UIT);
+    return;
   }
 
   if (FORM_LABEL[formId]) logAudit(id ? 'bijgewerkt' : 'aangemaakt', FORM_LABEL[formId]);
@@ -4099,13 +4197,13 @@ function exportCurrentView() {
     case 'investors': {
       const inv = investorReportData();
       const jr = new Date().getFullYear();
-      rows = [['Investeerder', 'E-mail', 'Totaal inleg', 'Afgesproken rendement %', 'Netto IRR %', 'Multiple (MOIC)', 'Verwacht per jaar', `Uitbetaald ${jr - 2}`, `Uitbetaald ${jr - 1}`, `Uitbetaald ${jr}`, 'Totaal uitbetaald', 'Wwft', 'Projecten']];
-      inv.forEach(e => rows.push([e.naam, e.email, csvNum(e.inleg), csvNum(e.rendementPct), e.irr === null ? '' : csvNum(e.irr), e.moic === null ? '' : csvNum(e.moic), csvNum(e.verwachtJaar), csvNum(e.uitbetaaldPerJaar[jr - 2] || 0), csvNum(e.uitbetaaldPerJaar[jr - 1] || 0), csvNum(e.uitbetaaldPerJaar[jr] || 0), csvNum(e.uitbetaaldTotaal), e.wwft ? 'ja' : 'nee', e.projecten.map(p => p.project).join(' / ')]));
-      name = 'investeerders-ledger'; break;
+      rows = [['Geldgever', 'E-mail', 'Hoofdsom', 'Vaste rente %', 'Uitstaande hoofdsom', 'Rente per jaar', `Rente betaald ${jr - 2}`, `Rente betaald ${jr - 1}`, `Rente betaald ${jr}`, 'Totaal rente betaald', 'Afgelost', 'Volgende rentebetaling', 'Vervaldatum', 'Identificatie bevestigd', 'Projecten']];
+      inv.forEach(e => rows.push([e.naam, e.email, csvNum(e.hoofdsom), csvNum(e.rentePct), csvNum(e.uitstaand), csvNum(Math.round(e.renteJaar)), csvNum(e.renteBetaaldPerJaar[jr - 2] || 0), csvNum(e.renteBetaaldPerJaar[jr - 1] || 0), csvNum(e.renteBetaaldPerJaar[jr] || 0), csvNum(e.renteBetaald), csvNum(e.afgelost), e.volgendeRente || '', e.vervaldatum || '', e.wwft ? 'ja' : 'nee', e.leningen.map(l => l.project).join(' / ')]));
+      name = 'geldgevers-overzicht'; break;
     }
     case 'contracts':
       rows = [['Referentie', 'Datum', 'Type', 'Betreft', 'Wederpartij', 'Bedrag', 'Looptijd', 'Status']];
-      state.contracten.forEach(c => rows.push([c.ref, c.datum, c.type, propertyLabel(c.propertyId) || projectById(c.projectId)?.name || '', (contactById(c.contactId)?.name) || c.partijNaam, csvNum(c.bedrag), c.looptijd, c.status]));
+      state.contracten.forEach(c => rows.push([c.ref, c.datum, contractTitle(c), propertyLabel(c.propertyId) || projectById(c.projectId)?.name || '', (contactById(c.contactId)?.name) || c.partijNaam, csvNum(c.bedrag), c.looptijd, c.status]));
       name = 'contracten'; break;
     case 'reports': {
       const r = reportData();
@@ -4225,10 +4323,10 @@ function buildAanbodJson() {
       omschrijving: p.webOmschrijving || '', // bewust GEEN fallback op pr.note: dat is intern
       fotos: (pr.fotos && pr.fotos.length) ? pr.fotos : (p.fotos || []),
       updates: (pr.updates || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(u => ({ datum: u.date, tekst: u.text })),
+      // Publiek: geen doel- of opgehaald bedrag en geen bedragen per pand (geen financieringsmeter).
+      // Alleen de vaste rente en de looptijd voor de projectkaart 'Voor geldgevers'.
       investering: pr.invest?.open ? {
-        doelbedrag: Number(pr.invest.doelbedrag) || 0,
-        opgehaald: (pr.investeerders || []).reduce((s, i) => s + (Number(i.bedrag) || 0), 0),
-        minInleg: Number(pr.invest.minInleg) || 0,
+        open: true,
         rendementPct: Number(pr.invest.rendementPct) || 0,
         looptijd: pr.invest.looptijd || ''
       } : null
@@ -4624,9 +4722,8 @@ document.addEventListener('click', event => {
     case 'del-project': {
       const pr = projectById(id);
       if (!pr) break;
-      if (confirmDel(`Project "${pr.name}" verwijderen? Gekoppelde kosten blijven op het pand staan; open kapitaaloproepen worden verwijderd.`)) {
+      if (confirmDel(`Project "${pr.name}" verwijderen? Gekoppelde kosten blijven op het pand staan; oude kapitaaloproepen blijven voor de audit bewaard.`)) {
         state.costs.forEach(k => { if (k.projectId === id) k.projectId = ''; });
-        state.capitalCalls = (state.capitalCalls || []).filter(c => c.projectId !== id);
         state.projects = state.projects.filter(x => x.id !== id);
         if (detailId.project === id) detailId.project = null;
         rerender(); showToast('Project verwijderd.');
@@ -4732,7 +4829,7 @@ document.addEventListener('click', event => {
     case 'del-payout': {
       const pr = projectById(id);
       const inv = pr && (pr.investeerders || []).find(x => x.id === item);
-      if (inv && confirmDel('Uitkering verwijderen?')) { inv.uitkeringen = (inv.uitkeringen || []).filter(x => x.id !== payout); rerender(); showToast('Uitkering verwijderd.'); }
+      if (inv && confirmDel('Betaling verwijderen?')) { inv.uitkeringen = (inv.uitkeringen || []).filter(x => x.id !== payout); rerender(); showToast('Betaling verwijderd.'); }
       break;
     }
     case 'edit-investor': openInvestorModal(id, item); break;
@@ -4749,35 +4846,14 @@ document.addEventListener('click', event => {
       break;
     }
     // Kapitaaloproepen
-    case 'new-capitalcall': {
-      const pr = projectById(id);
-      if (!pr) break;
-      if (!(pr.investeerders || []).length) { showToast('Voeg eerst investeerders toe aan dit project.'); break; }
-      openCapitalCallModal(id);
+    // Kapitaaloproepen: uitgeschakeld. Aanmaken, herinneren, annuleren en verwijderen zijn geblokkeerd;
+    // bestaande oproepen blijven alleen-lezen bewaard voor de audit.
+    case 'new-capitalcall':
+    case 'cc-cancel':
+    case 'cc-del':
+    case 'cc-remind':
+      showToast(KAPITAALOPROEP_UIT);
       break;
-    }
-    case 'cc-cancel': {
-      const call = (state.capitalCalls || []).find(c => c.id === id);
-      if (call && confirmDel('Deze kapitaaloproep annuleren?')) { call.status = 'Geannuleerd'; logAudit('kapitaaloproep-geannuleerd', fmtMoney(call.bedrag)); rerender(); }
-      break;
-    }
-    case 'cc-del': {
-      if (confirmDel('Kapitaaloproep verwijderen?')) { state.capitalCalls = (state.capitalCalls || []).filter(c => c.id !== id); rerender(); }
-      break;
-    }
-    case 'cc-remind': {
-      const call = (state.capitalCalls || []).find(c => c.id === id);
-      if (!call) break;
-      const open = (call.perInvesteerder || []).filter(r => r.status !== 'Gestort' && r.email);
-      if (!open.length) { showToast('Iedereen heeft al gestort of er zijn geen e-mailadressen.'); break; }
-      if (window.HCloud && HCloud.status().ready) {
-        open.forEach(r => HCloud.notify({ to: r.email, subject: 'Herinnering: kapitaaloproep HomeINN', html: `<p>Beste ${esc(r.naam)},</p><p>Dit is een herinnering aan de kapitaaloproep van ${fmtMoney(call.bedrag)} (jouw aandeel: <strong>${fmtMoney(r.bedragVerschuldigd)}</strong>), reactiedeadline ${fmtDate(call.deadline)}.</p><p>Met vriendelijke groet,<br>HomeINN</p>` }));
-        showToast(`Herinnering verstuurd naar ${open.length} investeerder${open.length === 1 ? '' : 's'}.`);
-      } else {
-        showToast(`${open.length} investeerder(s) nog niet gestort. Log in op de cloud (Instellingen) om e-mails te versturen.`);
-      }
-      break;
-    }
     // Adverteren
     case 'open-adtext': openAdTextModal(id); break;
     case 'ad-add': openAdModal(id); break;
@@ -4843,6 +4919,7 @@ document.addEventListener('click', event => {
     case 'edit-contract': openContractModal(id); break;
     case 'print-contract': printContract(id); break;
     case 'del-contract':
+      if (isOudLeningsmodel(state.contracten.find(x => x.id === id))) { showToast(`Verwijderen geblokkeerd: ${OUD_MODEL_MELDING}.`); break; }
       if (confirmDel('Contract verwijderen?')) { state.contracten = state.contracten.filter(c => c.id !== id); rerender(); }
       break;
     case 'send-contract': {
@@ -4851,6 +4928,10 @@ document.addEventListener('click', event => {
       if (!window.HCloud || !HCloud.status().ready) { showToast('Cloud niet beschikbaar — log eerst in via Instellingen → Cloud.'); break; }
       const email = c.partijEmail || (contactById(c.contactId)?.email) || '';
       if (!email) { showToast('Vul eerst een e-mail van de wederpartij in (Contract bewerken).'); break; }
+      const isLening = c.type === INV_CONTRACT;
+      const issues = investmentContractIssues(c);
+      if (issues.length) { showToast(`Versturen geblokkeerd: ${issues.join('; ')}.`); break; }
+      if (isLening) c.model = LENING_MODEL;
       const payload = {
         local_id: c.id, type: c.type, ref: c.ref, party_email: email,
         amount: Number(c.bedrag) || 0, body_html: buildContractDoc(c), status: 'Verstuurd'
@@ -4859,8 +4940,14 @@ document.addEventListener('click', event => {
       HCloud.sendContract(payload)
         .then(() => {
           c.status = 'Verstuurd'; save(); renderCurrent();
-          HCloud.notify({ to: email, subject: `Je ${c.type.toLowerCase()} van HomeINN staat klaar`, html: `<p>Beste,</p><p>Er staat een ${esc(c.type.toLowerCase())} voor je klaar ter ondertekening. Log in op het HomeINN-portaal om deze te bekijken en digitaal te ondertekenen:</p><p><a href="${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html">Inloggen op het portaal</a></p><p>Met vriendelijke groet,<br>HomeINN</p>` });
-          showToast(`Contract verstuurd naar ${email}. De wederpartij kan het in het portaal ondertekenen.`);
+          const inlog = `${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html`;
+          if (isLening) {
+            HCloud.notify({ to: email, subject: 'Uw overeenkomst van achtergestelde geldlening van HomeINN B.V.', html: `<p>Beste,</p><p>Er staat een overeenkomst van achtergestelde geldlening voor u klaar. U kunt deze in het HomeINN-portaal inzien; ondertekening gaat met de hand of met een gekwalificeerde elektronische handtekening.</p><p><a href="${inlog}">Inloggen op het portaal</a></p><p>Met vriendelijke groet,<br>HomeINN B.V.</p>` });
+            showToast(`Overeenkomst klaargezet voor ${email}. Ondertekening met de hand of met een gekwalificeerde elektronische handtekening; zet de status pas op 'Getekend' na ontvangst van dat exemplaar.`);
+          } else {
+            HCloud.notify({ to: email, subject: `Je ${c.type.toLowerCase()} van HomeINN staat klaar`, html: `<p>Beste,</p><p>Er staat een ${esc(c.type.toLowerCase())} voor je klaar ter ondertekening. Log in op het HomeINN-portaal om deze te bekijken en digitaal te ondertekenen:</p><p><a href="${inlog}">Inloggen op het portaal</a></p><p>Met vriendelijke groet,<br>HomeINN</p>` });
+            showToast(`Contract verstuurd naar ${email}. De wederpartij kan het in het portaal ondertekenen.`);
+          }
         })
         .catch(e => showToast('Versturen mislukt: ' + (e.message || e)));
       break;
@@ -4917,7 +5004,9 @@ document.addEventListener('click', event => {
           const opEmail = state.settings.email;
           (contracts || []).forEach(cc => {
             const local = state.contracten.find(x => x.id === cc.local_id);
-            if (local && cc.status === 'Getekend' && local.status !== 'Getekend') {
+            // Leningsovereenkomsten tekent de geldgever met de hand of gekwalificeerd elektronisch; een
+            // getypte naam in het portaal zet die status nooit automatisch op 'Getekend'.
+            if (local && local.type !== INV_CONTRACT && cc.status === 'Getekend' && local.status !== 'Getekend') {
               local.status = 'Getekend'; local.signedAt = cc.signed_at; local.signedName = cc.signed_name; getekend++;
               if (opEmail && window.HCloud) HCloud.notify({ to: opEmail, subject: `Contract ondertekend: ${local.ref || ''} (${local.type})`, html: `<p>Het contract <strong>${esc(local.type)}</strong>${local.ref ? ' (' + esc(local.ref) + ')' : ''} is digitaal ondertekend door <strong>${esc(cc.signed_name || '—')}</strong> op ${fmtDate(cc.signed_at)}.</p>` });
             }
@@ -5087,34 +5176,20 @@ document.addEventListener('change', event => {
       break;
     }
     case 'cc-status': {
-      const call = (state.capitalCalls || []).find(c => c.id === id);
-      if (!call) return;
-      const row = (call.perInvesteerder || []).find(r => r.investorKey === el.dataset.item);
-      if (row) {
-        row.status = el.value;
-        if (el.value !== 'Verstuurd' && !row.respondedAt) row.respondedAt = todayISO();
-        // Gestort kapitaal moet de investeerders-ledger bereiken (inleg, IRR, MOIC, CSV-export,
-        // rapportage-donut) — anders blijft een storting via een kapitaaloproep daar onzichtbaar.
-        // De vlag voorkomt dubbel bijtellen als de status heen-en-weer wordt gewisseld.
-        const pr = projectById(call.projectId);
-        const inv = pr && (pr.investeerders || []).find(i => (i.id || i.email || i.naam) === row.investorKey);
-        if (inv) {
-          if (el.value === 'Gestort' && !row.ledgerToegepast) {
-            inv.bedrag = (Number(inv.bedrag) || 0) + (Number(row.bedragVerschuldigd) || 0);
-            row.ledgerToegepast = true;
-          } else if (el.value !== 'Gestort' && row.ledgerToegepast) {
-            inv.bedrag = Math.max(0, (Number(inv.bedrag) || 0) - (Number(row.bedragVerschuldigd) || 0));
-            row.ledgerToegepast = false;
-          }
-        }
-      }
-      // Alle gestort → oproep automatisch afronden
-      if ((call.perInvesteerder || []).every(r => r.status === 'Gestort')) call.status = 'Afgerond';
+      // Alleen-lezen: een kapitaaloproep zou een tweede storting op een lening zijn.
+      showToast(KAPITAALOPROEP_UIT);
       rerender();
       break;
     }
     case 'contract-status': {
       const c = state.contracten.find(x => x.id === id);
+      if (isOudLeningsmodel(c)) { showToast(`Status wijzigen geblokkeerd: ${OUD_MODEL_MELDING}.`); rerender(); break; }
+      if (c && c.type === INV_CONTRACT && (el.value === 'Verstuurd' || el.value === 'Getekend')) {
+        const issues = investmentContractIssues(c);
+        if (issues.length) { showToast(`Status '${el.value}' geblokkeerd: ${issues.join('; ')}.`); rerender(); break; }
+        if (el.value === 'Getekend' && !window.confirm('Heeft HomeINN B.V. het met de hand of met een gekwalificeerde elektronische handtekening ondertekende exemplaar ontvangen?')) { rerender(); break; }
+      }
+      if (c && c.type === INV_CONTRACT) c.model = LENING_MODEL;
       if (c) c.status = el.value;
       rerender();
       break;
@@ -5232,10 +5307,19 @@ document.addEventListener('submit', event => {
       const pr = projectById(form.dataset.id);
       if (!pr) return;
       pr.investeerders = pr.investeerders || [];
-      const nieuweInv = { id: uid('inv'), naam: String(data.get('naam')).trim(), email: String(data.get('email') || '').trim(), bedrag: Number(data.get('bedrag')) || 0, wwft: false, datum: data.get('datum') || todayISO() };
+      const naam = String(data.get('naam')).trim();
+      const email = String(data.get('email') || '').trim();
+      const bedrag = Number(data.get('bedrag')) || 0;
+      // Harde regels: ten minste € 100.000 ineens, en één storting per overeenkomst.
+      if (bedrag < MIN_HOOFDSOM) { showToast('Geblokkeerd: de hoofdsom is ten minste € 100.000 ineens per geldgever.'); return; }
+      const dubbel = pr.investeerders.find(i => (email && String(i.email || '').toLowerCase() === email.toLowerCase()) || String(i.naam || '').toLowerCase() === naam.toLowerCase());
+      if (dubbel) { showToast(`Geblokkeerd: ${dubbel.naam} heeft al een lening in dit project. Elke lening kent één storting; een nieuwe lening vereist een nieuwe overeenkomst.`); return; }
+      // De lening wordt geregistreerd zonder stortingsdatum: een storting leg je pas vast na bevestigde identificatie.
+      const nieuweInv = { id: uid('inv'), naam, email, bedrag, wwft: false, datum: '' };
       pr.investeerders.push(nieuweInv);
+      showToast(`Lening van ${fmtMoney(bedrag)} geregistreerd voor ${naam}. Bevestig eerst de identificatie; leg daarna de stortingsdatum vast via ✎.`);
       if (nieuweInv.email && window.HCloud) {
-        HCloud.notify({ to: nieuweInv.email, subject: 'Welkom als investeerder bij HomeINN', html: `<p>Beste ${esc(nieuweInv.naam)},</p><p>Je investering van <strong>${fmtMoney(nieuweInv.bedrag)}</strong> in het project <strong>${esc(pr.name)}</strong> is geregistreerd. Welkom!</p><p>Volg je investering, rendement en projectupdates in je persoonlijke portaal — log in met dit e-mailadres (je ontvangt een beveiligde inloglink, geen wachtwoord nodig):</p><p><a href="${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html">Inloggen op het HomeINN-portaal</a></p><p>Met vriendelijke groet,<br>HomeINN</p>` });
+        HCloud.notify({ to: nieuweInv.email, subject: 'Uw gegevens als geldgever bij HomeINN B.V.', html: `<p>Beste ${esc(nieuweInv.naam)},</p><p>Wij hebben uw gegevens vastgelegd voor een lening aan HomeINN B.V. voor het project <strong>${esc(pr.name)}</strong>, met een hoofdsom van <strong>${fmtMoney(nieuweInv.bedrag)}</strong>. Een lening komt pas tot stand met de ondertekening van een individuele leningsovereenkomst.</p><p>Maak nog niets over. Wij stellen eerst uw identiteit en de herkomst van het geld vast en bevestigen dat per e-mail, met het rekeningnummer van HomeINN B.V. Pas nadat u de leningsovereenkomst hebt ondertekend en die bevestiging hebt ontvangen, maakt u de hoofdsom in één keer over, vanaf een rekening op uw eigen naam.</p><p>In het HomeINN-portaal ziet u uw hoofdsom, rentebetalingen, vervaldatum en projectupdates. U logt in met dit e-mailadres; u ontvangt een beveiligde inloglink, geen wachtwoord.</p><p><a href="${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html">Inloggen op het HomeINN-portaal</a></p><p>Met vriendelijke groet,<br>HomeINN B.V.</p>` });
       }
     }
     form.reset();
@@ -5340,7 +5424,6 @@ function initStatic() {
   // Live previews in modals
   $('#deal-form').addEventListener('input', refreshDealPreview);
   $('#sale-form').addEventListener('input', refreshSalePreview);
-  const ccForm = $('#capitalcall-form'); if (ccForm) ccForm.addEventListener('input', refreshCapitalCallPreview);
 
   // Annuleren/sluiten zijn géén submit-knoppen: anders is × de default button en gooit Enter alle invoer weg
   $$('.modal [value="cancel"], .modal .close').forEach(b => {
@@ -5468,7 +5551,7 @@ if (window.HCloud) {
       let changed = 0;
       (contracts || []).forEach(cc => {
         const local = state.contracten.find(x => x.id === cc.local_id);
-        if (local && cc.status === 'Getekend' && local.status !== 'Getekend') {
+        if (local && local.type !== INV_CONTRACT && cc.status === 'Getekend' && local.status !== 'Getekend') {
           local.status = 'Getekend'; local.signedAt = cc.signed_at; local.signedName = cc.signed_name; changed++;
         }
       });

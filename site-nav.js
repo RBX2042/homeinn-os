@@ -442,14 +442,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var EN = (document.documentElement.lang || 'nl').indexOf('en') === 0;
     var pad = (location.pathname.split('/').pop() || 'index.html');
     var berichten = EN ? {
-      'invest-en.html': 'Hello HomeINN, I would like to receive the project information for investors.',
+      'invest-en.html': 'Hello HomeINN, I would like to receive the project information for lenders.',
       'sell-your-property-en.html': 'Hello HomeINN, I would like a no-obligation proposal for my property.',
       'for-sale-en.html': 'Hello HomeINN, I have a question about a property you have for sale.',
       'property-management-en.html': 'Hello HomeINN, I have a question about property management.',
       'letting-en.html': 'Hello HomeINN, I have a question about renting.',
       _: 'Hello HomeINN, I have a question.'
     } : {
-      'investeren.html': 'Hallo HomeINN, ik ontvang graag de projectinformatie voor investeerders.',
+      'investeren.html': 'Hallo HomeINN, ik ontvang graag de projectinformatie voor geldgevers.',
       'pand-verkopen.html': 'Hallo HomeINN, ik ontvang graag een vrijblijvend voorstel voor mijn pand.',
       'verkopen.html': 'Hallo HomeINN, ik ontvang graag een vrijblijvend voorstel voor mijn pand.',
       'te-koop.html': 'Hallo HomeINN, ik heb een vraag over een woning die te koop staat.',

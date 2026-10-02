@@ -183,7 +183,7 @@ function page(w) {
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
   <link rel="stylesheet" href="tokens.css?v=20261001a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20261001a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261002a">
   <style>
     /* Slimme, navigatie-lichte kop (géén SPA-#nav-afhankelijkheid). Tokens uit tokens.css. */
     .spoke-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
@@ -254,7 +254,7 @@ function page(w) {
               <span class="nav-mega-h">Aanbod &amp; achtergrond</span>
               <a href="te-koop.html"><span class="nav-sub-t">Woningaanbod</span><span class="nav-sub-d">Wat er te koop komt uit onze ontwikkeling</span></a>
               <a href="verhuur.html"><span class="nav-sub-t">Huuraanbod</span><span class="nav-sub-d">Huurwoningen en verhuurservice</span></a>
-              <a href="projecten.html"><span class="nav-sub-t">Projecten &amp; investeren</span><span class="nav-sub-d">Meelopen in een lopende ontwikkeling</span></a>
+              <a href="projecten.html"><span class="nav-sub-t">Projecten &amp; investeren</span><span class="nav-sub-d">Lopende projecten en meefinancieren</span></a>
               <a href="kennis.html"><span class="nav-sub-t">Kennis</span><span class="nav-sub-d">Wat wij zien in de Rotterdamse markt</span></a>
               <a href="werkgebied.html"><span class="nav-sub-t">Werkgebied</span><span class="nav-sub-d">Rotterdam en omstreken</span></a>
             </div>
@@ -292,7 +292,7 @@ function page(w) {
       <a class="mob-sm" href="werkgebied.html">Werkgebied</a>
       <a class="mob-sm" href="contact.html">Contact</a>
     </nav>
-    <a class="btn btn-primary mob-btn" href="investeren.html">Investeer mee in een project <span class="arr">&rarr;</span></a>
+    <a class="btn btn-primary mob-btn" href="investeren.html">Investeren bij HomeINN <span class="arr">&rarr;</span></a>
   <a class="mob-tweede" href="pand-verkopen.html">Of bied ons uw pand aan &rarr;</a>
     <p class="mob-sub"><a href="contact.html">Contact &amp; kennismaken</a> · Rotterdam</p>
     <div class="mob-legal">
@@ -409,7 +409,7 @@ function page(w) {
   <script type="application/ld+json">
   ${faqLD}
   </script>
-  <script src="site-nav.js?v=20261001a"></script>
+  <script src="site-nav.js?v=20261002a"></script>
 </body>
 </html>
 `;
