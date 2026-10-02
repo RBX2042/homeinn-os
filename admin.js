@@ -180,7 +180,7 @@
       kpi('Aanvragen open', nieuw, data.leads.length + ' totaal') +
       kpi('Panden', data.properties.length, 'in de cloud') +
       kpi('Projecten', data.projects.length, data.projects.filter(function (p) { return p.published; }).length + ' gepubliceerd') +
-      kpi('Investeerdersinleg', euro(inleg), data.investors.length + ' deelnames') +
+      kpi('Hoofdsom geldgevers', euro(inleg), data.investors.length + ' leningen') +
       kpi('Onderhoud open', openOnderhoud, data.maintenance.length + ' meldingen') +
       kpi('E-mail niet bezorgd', mislukt, data.emails.length + ' verzendingen');
 
@@ -315,9 +315,9 @@
       { label: 'Naam', cel: function (i) { return esc(i.naam); } },
       { label: 'E-mail', cel: function (i) { return esc(i.email || ''); } },
       { label: 'Project', cel: function (i) { return esc(projectNaam[i.project_id] || '—'); } },
-      { label: 'Inleg', cel: function (i) { return euro(i.bedrag); } },
-      { label: 'Rendement', cel: function (i) { return (Number(i.rendement_pct) || 0) + '%'; } },
-      { label: 'WWFT', cel: function (i) { return i.wwft ? badge('akkoord', 'green') : badge('open', 'red'); } },
+      { label: 'Hoofdsom', cel: function (i) { return euro(i.bedrag); } },
+      { label: 'Rente/jr', cel: function (i) { return (Number(i.rendement_pct) || 0) + '%'; } },
+      { label: 'Identificatie', cel: function (i) { return i.wwft ? badge('akkoord', 'green') : badge('open', 'red'); } },
       { label: 'Portaal', cel: function (i) { return i.profile_id ? badge('gekoppeld', 'green') : badge('nog niet', 'gray'); } }
     ], data.investors, 'Nog geen investeerders.');
   }

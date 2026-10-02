@@ -543,6 +543,12 @@
               <label>Verkoopkosten (%)<input name="verkoopkostenPct" type="number" min="0" step="any"></label>
               <label>Doel-ROI per deal (%)<input name="doelROI" type="number" min="0" step="any"></label>
             </div>
+            <h3 class="modal-section">Leningen aan HomeINN B.V. — bankcheck</h3>
+            <p class="hint">Vóór ondertekening van een leningsovereenkomst moeten alle bankfinancieringen zijn gecontroleerd: is extra (achtergestelde) schuld toegestaan, en is er een achterstellingsakte, verpanding of betalingsblokkade? Zolang datum en conclusie ontbreken, kan een leningsovereenkomst niet worden afgedrukt, verstuurd of op 'Getekend' gezet. Wijkt een bankafspraak af, leg de overeenkomst dan eerst voor aan de advocaat. Komt er daarna een nieuwe of gewijzigde bankfinanciering, controleer die dan ook en werk datum en conclusie bij vóór de volgende ondertekening.</p>
+            <div class="form-grid">
+              <label>Datum bankcheck<input name="bankcheckDatum" type="date"></label>
+              <label style="grid-column:1/-1">Conclusie bankcheck (welke kredietovereenkomsten, wat is gevonden)<textarea name="bankcheckConclusie" rows="3" placeholder="Bijv.: kredietovereenkomst(en) van [datum] gecontroleerd; extra achtergestelde schuld toegestaan; geen achterstellingsakte, verpanding of betalingsblokkade."></textarea></label>
+            </div>
             <menu><button class="btn primary" type="submit">Instellingen opslaan</button></menu>
           </form>
         </section>
@@ -869,7 +875,7 @@
         <label>Financieringsbehoefte (€, intern — niet publiek)<input name="doelbedrag" type="number" min="0" step="any"></label>
         <label>Minimale lening (€, minimaal 100.000 ineens)<input name="minInleg" type="number" min="100000" step="any"></label>
         <label>Vaste rente (% per jaar; verschijnt op de website en in het portaal van geldgevers)<input name="rendementPct" type="number" min="0" step="any"></label>
-        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden"></label>
+        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden" title="Alleen een vast aantal maanden of jaren, zoals '12 maanden' of '1 jaar'"></label>
       </div>
       <label>Notitie<textarea name="note" rows="2"></textarea></label>
       <menu>
@@ -1171,7 +1177,7 @@
         <label>Bedrag (€) — koopsom / maandhuur / hoofdsom lening / aanneemsom<input name="bedrag" type="number" min="0" step="any"></label>
         <label>Contractdatum<input name="datum" type="date"></label>
         <label>Ingangs-/leverdatum (lening: uiterste stortingsdatum)<input name="ingangsdatum" type="date"></label>
-        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden / onbepaalde tijd"></label>
+        <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden / onbepaalde tijd (huur)" title="Lening: alleen een vast aantal maanden of jaren, zoals '12 maanden' of '1 jaar'"></label>
         <label>Vaste rente (% per jaar, lening)<input name="rendementPct" type="number" min="0" step="any"></label>
       </div>
       <label>Bijzondere bepalingen<textarea name="note" rows="2" placeholder="Ontbindende voorwaarden, waarborgsom, opleverpunten…"></textarea></label>
@@ -1307,6 +1313,6 @@
   <div id="print-area" aria-hidden="true"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="cloud.js?v=20261002a"></script>
-  <script src="app.js?v=20261002a"></script>
+  <script src="app.js?v=20261003a"></script>
 </body>
 </html>
