@@ -46,14 +46,16 @@
     deals.forEach(function (d) {
       var data = d.data || {};
       var idx = STAGES.indexOf(d.status);
+      // De cloud bevat alleen uitgebrachte en geaccepteerde biedingen (datum, bedrag, status); interne
+      // notities en de calculatie van HomeINN staan er bewust niet in (cloud.js, pushAll).
       var biedingen = (data.biedingen || []).slice().sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
-      var laatsteBod = biedingen.find(function (b) { return b.status === 'Uitgebracht' || b.status === 'Geaccepteerd'; }) || biedingen[0];
+      var laatsteBod = biedingen.find(function (b) { return b.status === 'Uitgebracht' || b.status === 'Geaccepteerd'; });
       html += '<div class="card"><p class="eyebrow">' + esc(d.ref || '') + '</p><h2>' + esc(d.address || '') + (d.city ? ', ' + esc(d.city) : '') + '</h2>' +
         '<div class="steps">' + STAGES.map(function (s, i) { return '<div class="step ' + (i < idx ? 'done' : i === idx ? 'active' : '') + '">' + esc(s) + '</div>'; }).join('') + '</div>' +
         '<table><tbody>' +
         '<tr><td class="muted">Status</td><td><span class="badge">' + esc(d.status || '') + '</span></td></tr>' +
         (d.vraagprijs ? '<tr><td class="muted">Vraagprijs</td><td>' + money(d.vraagprijs) + '</td></tr>' : '') +
-        (laatsteBod ? '<tr><td class="muted">Voorstel HomeINN</td><td><strong>' + money(laatsteBod.amount) + '</strong> (' + fdate(laatsteBod.date) + ')' + (laatsteBod.note ? ' · ' + esc(laatsteBod.note) : '') + '</td></tr>' : '<tr><td class="muted">Voorstel HomeINN</td><td class="muted">nog geen bod uitgebracht</td></tr>') +
+        (laatsteBod ? '<tr><td class="muted">Voorstel HomeINN</td><td><strong>' + money(laatsteBod.amount) + '</strong> (' + fdate(laatsteBod.date) + ')' + (laatsteBod.status === 'Geaccepteerd' ? ' · geaccepteerd' : (laatsteBod.validUntil ? ' · geldig tot ' + fdate(laatsteBod.validUntil) : '')) + '</td></tr>' : '<tr><td class="muted">Voorstel HomeINN</td><td class="muted">nog geen bod uitgebracht</td></tr>') +
         '</tbody></table>' +
         '<p class="muted" style="font-size:.82rem;margin-top:12px">Vragen over dit voorstel? Neem contact op met HomeINN — we helpen je graag.</p></div>';
     });

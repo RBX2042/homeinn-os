@@ -1,14 +1,21 @@
 #!/bin/zsh
 # Bouwt de map 'website-online' — klaar om te uploaden naar je hosting (homeinn.nl)
-cd "$(dirname "$0")"
-# Bewaar de Vercel-koppeling (.vercel) zodat 'vercel deploy' naar het juiste project blijft gaan
-[ -d website-online/.vercel ] && cp -R website-online/.vercel /tmp/homeinn-vercel-link
+cd "$(dirname "$0")" || exit 1
+# Bewaar de Vercel-koppeling (.vercel) zodat 'vercel deploy' naar het juiste project blijft gaan.
+# Eigen tijdelijke map per build (mktemp): een vaste /tmp-map kon na een afgebroken build blijven
+# staan, waarna de koppeling genest (.vercel/.vercel) terugkwam en 'vercel deploy' een nieuw project koos.
+VERCEL_LINK=""
+if [ -d website-online/.vercel ]; then
+  VERCEL_LINK=$(mktemp -d "${TMPDIR:-/tmp}/homeinn-vercel-link.XXXXXX") && cp -R website-online/.vercel "$VERCEL_LINK/" || { echo "  ✗ kon de Vercel-koppeling niet bewaren — bundel NIET gebouwd"; exit 1; }
+fi
 echo "Generators draaien (legal, spokes, kennis)…"
 node build-legal.js >/dev/null && node build-spokes.js >/dev/null && node build-kennis.js >/dev/null && echo "  ✓ 19 gegenereerde pagina's up-to-date" || { echo "  ✗ generator faalde — bundel NIET gebouwd"; exit 1; }
 rm -rf website-online
 mkdir website-online
 # Herstel de Vercel-koppeling na de schone herbouw
-[ -d /tmp/homeinn-vercel-link ] && cp -R /tmp/homeinn-vercel-link website-online/.vercel && rm -rf /tmp/homeinn-vercel-link
+if [ -n "$VERCEL_LINK" ] && [ -d "$VERCEL_LINK/.vercel" ]; then
+  cp -R "$VERCEL_LINK/.vercel" website-online/.vercel && rm -rf "$VERCEL_LINK"
+fi
 cp homeinn-public.html website-online/index.html       # root = landingspagina
 cp homeinn-public.html website-online/                 # ook als zichzelf (interne links)
 cp tokens.css website-online/                          # design-tokens (single source of truth) — vereist door alle pagina's
@@ -151,14 +158,16 @@ io.open(HASHES, 'w', encoding='utf-8').write(json.dumps(opgeslagen, indent=1, so
 print("  ✓ sitemap lastmod bijgewerkt (op inhoud)")
 SITEMAP_PY
 
-# Cloudflare Pages security-headers + SEO-bestanden meeleveren
-cp _headers robots.txt sitemap.xml llms.txt website-online/ 2>/dev/null || true
-cp 7a22e12e33fce7b85e44fb8a26f7af89.txt website-online/ 2>/dev/null || true
-cp googleb83ad0198747fcb8.html website-online/ 2>/dev/null || true   # Google Search Console-eigendomsbewijs — verwijderen betekent dat de property vervalt   # IndexNow-sleutelbestand: Bing/Yandex controleren hierop voordat zij een indexeringsverzoek accepteren
-# Vercel security-headers (Vercel leest _headers niet) meeleveren
+# SEO-bestanden meeleveren. _headers (Cloudflare Pages) gaat bewust NIET mee: homeinn.nl draait op
+# Vercel, dat alleen vercel.json leest; een tweede, publiek leesbare kopie van de CSP raakt uit de pas.
+cp robots.txt sitemap.xml llms.txt website-online/ 2>/dev/null || true
+cp 7a22e12e33fce7b85e44fb8a26f7af89.txt website-online/ 2>/dev/null || true   # IndexNow-sleutelbestand: Bing/Yandex controleren hierop voordat zij een indexeringsverzoek accepteren
+cp googleb83ad0198747fcb8.html website-online/ 2>/dev/null || true   # Google Search Console-eigendomsbewijs — verwijderen betekent dat de property vervalt
+# Vercel: security-headers (CSP, HSTS), cache-regels en redirects
 cp vercel.json website-online/ 2>/dev/null || true
-# Manifest meekopiëren maar start_url + naam op de publieke site (index.html) zetten i.p.v. het portaal
-sed 's#"start_url": "portaal.html"#"start_url": "index.html"#; s#"short_name": "HomeINN OS"#"short_name": "HomeINN"#; s#"name": "HomeINN OS — Vastgoedportaal"#"name": "HomeINN"#; s#"description": "Portaal voor aankoop, ontwikkeling, verhuur en verkoop van vastgoed."#"description": "HomeINN — aankoop, ontwikkeling, verkoop, verhuur en beheer van vastgoed in Rotterdam."#' manifest.webmanifest > website-online/manifest.webmanifest
+# Publiek manifest (start_url ./, naam en omschrijving van de publieke site). Het portaal heeft zijn
+# eigen manifest-portaal.webmanifest; dit bestand wordt ongewijzigd meegekopieerd.
+cp manifest.webmanifest website-online/
 cp -R assets website-online/assets
 # Verwijder zware, ongebruikte logo-varianten uit de deploybundel (bronbestanden in assets/ blijven staan)
 rm -f website-online/assets/logo-light-fullres.png website-online/assets/logo-light-original.png website-online/assets/logo-dark-original.png website-online/assets/homeinn-logo-new.png website-online/assets/logo-light-700.png website-online/assets/logo-light-700.webp
@@ -168,11 +177,14 @@ cp -R fonts website-online/fonts 2>/dev/null || true
 # Verkleint de render-blocking stylesheet → betere Lighthouse/LCP. Gebruikt esbuild
 # via npx en slaat NETJES over als esbuild/internet ontbreekt (bundel werkt dan
 # gewoon ongeminificeerd). app.js / cloud.js (portaal) worden bewust niet geraakt.
+# esbuild is GEPIND: een nieuwe versie wordt pas gebruikt als iemand hier bewust het nummer ophoogt
+# (anders draait elke build de nieuwste npm-release over de code die live gaat).
+ESBUILD_VERSIE=0.28.2
 if command -v npx >/dev/null 2>&1; then
-  echo "Minify CSS/JS in bundel…"
+  echo "Minify CSS/JS in bundel (esbuild $ESBUILD_VERSIE)…"
   for f in tokens.css homeinn-public.css styles.css portal.css homeinn-public.js lightbox.js lead-cloud.js site-nav.js investeer-tools.js; do
     [ -f "website-online/$f" ] || continue
-    if npx --yes esbuild "website-online/$f" --minify --outfile="website-online/$f.min" >/dev/null 2>&1; then
+    if npx --yes "esbuild@$ESBUILD_VERSIE" "website-online/$f" --minify --outfile="website-online/$f.min" >/dev/null 2>&1; then
       mv "website-online/$f.min" "website-online/$f"
       echo "  ✓ $f geminificeerd"
     else
@@ -183,6 +195,182 @@ if command -v npx >/dev/null 2>&1; then
 else
   echo "npx/esbuild niet gevonden — minify overgeslagen (bundel werkt ongeminificeerd)."
 fi
+
+# ── Bundelcontrole ──
+# Eerder ontbraken lead-cloud.js en site-nav.js stil in de bundel (leads kwamen niet in het portaal,
+# het menu werkte niet) terwijl het script gewoon 'Klaar' meldde. Daarom: elk verplicht bestand en
+# elke lokale src/href/srcset in de bundel-HTML (plus elke <loc> in de sitemap) moet bestaan, anders
+# stopt de build met een foutcode. Verschillende ?v=-tokens voor hetzelfde bestand en ontbrekende
+# foto's geven alleen een waarschuwing.
+# Daarnaast bewaakt de controle de hosting-afspraken uit vercel.json (geldige JSON, blob: in img-src zodat
+# foto-upload in het portaal werkt, geen 'unsafe-inline' in portaal/admin, geen includeSubDomains in HSTS),
+# dat er geen interne bestanden (notities, generators, serverconfig) in de bundel staan, en dat de
+# Supabase-bibliotheek op een vaste versie mét integrity (SRI) wordt geladen.
+echo "Bundel controleren…"
+python3 - <<'CHECK_PY' || { echo "  ✗ BUNDEL AFGEKEURD — website-online NIET deployen; los de ✗-punten hierboven eerst op en bouw opnieuw."; exit 1; }
+import io, os, re, glob, sys, json, subprocess
+from urllib.parse import urlsplit, unquote
+B = 'website-online'
+VERPLICHT = ['index.html', 'homeinn-public.html', 'homeinn-public.css', 'homeinn-public.js', 'tokens.css', 'site-nav.js',
+             'lead-cloud.js', 'sw.js', 'vercel.json', 'manifest.webmanifest', 'robots.txt', 'sitemap.xml', '404.html',
+             'aanbod.json', 'fonts/fonts.css', 'contact.html', 'investeren.html', 'pand-verkopen.html', 'privacy.html',
+             'voorwaarden.html', 'cookies.html', 'inloggen.html', 'inloggen.js', 'investeerders.html', 'investeerders.js',
+             'portaal.html', 'app.js', 'cloud.js', 'styles.css', 'admin.html', 'admin.js']
+fout = [f for f in VERPLICHT if not os.path.isfile(os.path.join(B, f))]
+mist, foto_mist, tokens = {}, {}, {}
+SITE = re.compile(r'^https://homeinn\.nl/')
+def doel(u):
+    # Lokaal pad binnen de bundel (plus querystring), of None als het geen lokaal bestand is.
+    if SITE.match(u):
+        u = SITE.sub('', u)
+    elif re.match(r'^([a-z][a-z0-9+.-]*:|//|#)', u, re.I):
+        return None
+    if not u or any(c in u for c in "'+${}<> "):
+        return None  # stukje JavaScript (sjabloon of stringconcatenatie), geen echte URL
+    p = urlsplit(u)
+    pad = unquote(p.path).lstrip('/')
+    if pad.startswith('./'): pad = pad[2:]
+    if pad in ('', '.'): pad = 'index.html'
+    if pad.endswith('/'): pad += 'index.html'
+    return pad, p.query
+for f in sorted(glob.glob(os.path.join(B, '*.html'))):
+    s = io.open(f, encoding='utf-8').read()
+    for attr, val in re.findall(r'\b(src|href|srcset)\s*=\s*"([^"]*)"', s):
+        for u in ([d.strip().split(' ')[0] for d in val.split(',')] if attr == 'srcset' else [val.strip()]):
+            r = doel(u)
+            if not r: continue
+            pad, query = r
+            if not os.path.exists(os.path.join(B, pad)):
+                (foto_mist if pad.startswith('fotos/') else mist).setdefault(pad, set()).add(os.path.basename(f))
+            v = re.search(r'(?:^|&)v=([^&]+)', query)
+            if v: tokens.setdefault(pad, {}).setdefault(v.group(1), set()).add(os.path.basename(f))
+sm = os.path.join(B, 'sitemap.xml')
+if os.path.isfile(sm):
+    for loc in re.findall(r'<loc>(.*?)</loc>', io.open(sm, encoding='utf-8').read()):
+        r = doel(loc.strip())
+        if r and not os.path.exists(os.path.join(B, r[0])):
+            mist.setdefault(r[0], set()).add('sitemap.xml')
+# -- Interne bestanden mogen nooit in de bundel (de bundel is wat publiek live gaat) --
+INTERN = re.compile(r'(^|/)(_headers|_config\.yml|sitemap-hashes\.json|spokes-content\.json|kennis-content\.json|\.env[^/]*)$|\.(md|command|ts|sql|py|sh|yml|yaml)$|(^|/)build-[^/]*\.js$', re.I)
+intern = []
+for root, dirs, files in os.walk(B):
+    dirs[:] = [d for d in dirs if d != '.vercel']
+    for n in files:
+        rel = os.path.relpath(os.path.join(root, n), B)
+        if INTERN.search(rel): intern.append(rel)
+# -- vercel.json: geldig en met de afgesproken headers --
+vfout, vwaarsch = [], []
+def csp_delen(c):
+    d = {}
+    for deel in c.split(';'):
+        t = deel.strip().split()
+        if t: d[t[0]] = t[1:]
+    return d
+try:
+    vj = json.load(io.open(os.path.join(B, 'vercel.json'), encoding='utf-8'))
+except Exception as e:
+    vj = None
+    vfout.append("vercel.json is geen geldige JSON (%s)" % e)
+if vj is not None:
+    for regel in vj.get('headers', []):
+        bron = regel.get('source', '')
+        for h in regel.get('headers', []):
+            sleutel, waarde = h.get('key', '').lower(), h.get('value', '')
+            if sleutel == 'content-security-policy':
+                d = csp_delen(waarde)
+                if 'blob:' not in d.get('img-src', []):
+                    vfout.append("CSP voor %s mist blob: in img-src (foto-upload in het portaal faalt dan)" % bron)
+                if 'portaal' in bron or 'admin' in bron:
+                    if "'unsafe-inline'" in d.get('script-src', []):
+                        vfout.append("CSP voor %s staat 'unsafe-inline' in script-src toe (portaal/admin horen strikt te zijn)" % bron)
+            if sleutel == 'strict-transport-security' and re.search(r'includesubdomains|preload', waarde, re.I):
+                vwaarsch.append("HSTS bevat includeSubDomains/preload: webmail.homeinn.nl (Hostnet, ander certificaat) is dan onbereikbaar")
+    # Vercel past ALLE passende header-regels toe in de volgorde van het bestand; bij dezelfde header wint de LAATSTE.
+    # De strikte portaal/admin-CSP werkt dus alleen als zijn regel NA de algemene /(.*)-regel staat: toets daarom de
+    # effectieve CSP per pad, niet alleen de afzonderlijke regels.
+    def effectief_csp(pad):
+        gekozen = None
+        for regel in vj.get('headers', []):
+            try:
+                if not re.fullmatch(regel.get('source', ''), pad): continue
+            except re.error:
+                continue
+            for h in regel.get('headers', []):
+                if h.get('key', '').lower() == 'content-security-policy':
+                    gekozen = h.get('value', '')
+        return gekozen
+    for pad in ('/portaal.html', '/admin.html'):
+        c = effectief_csp(pad)
+        if c is None:
+            vfout.append("geen CSP-regel voor %s in vercel.json" % pad)
+        elif "'unsafe-inline'" in csp_delen(c).get('script-src', []):
+            vfout.append("effectieve CSP voor %s staat 'unsafe-inline' in script-src toe: staat de strikte regel vóór de algemene /(.*)-regel? (bij dezelfde header wint de laatste regel)" % pad)
+    c = effectief_csp('/index.html')
+    if c is None:
+        vfout.append("geen CSP-regel voor de publieke pagina's in vercel.json")
+    elif 'blob:' not in csp_delen(c).get('img-src', []):
+        vfout.append("effectieve CSP voor de publieke pagina's mist blob: in img-src")
+# -- Supabase-bibliotheek: vaste versie + integrity + crossorigin (SRI werkt niet op de zwevende @2-tag) --
+sdk_los = {}
+for f in sorted(glob.glob(os.path.join(B, '*.html'))):
+    for tag in re.findall(r'<script\b[^>]*\bsrc\s*=\s*"https?://[^"]*supabase-js[^"]*"[^>]*>', io.open(f, encoding='utf-8').read()):
+        src = re.search(r'src\s*=\s*"([^"]+)"', tag).group(1)
+        if not re.search(r'supabase-js@\d+\.\d+\.\d+/', src) or not re.search(r'integrity\s*=\s*"sha384-', tag) or 'crossorigin' not in tag:
+            sdk_los.setdefault(src, set()).add(os.path.basename(f))
+# De generators (build-legal/-spokes/-kennis) hebben de ?v-tokens ingebakken en schrijven bij elke build 19 pagina's
+# opnieuw. Bumpt iemand de tokens alleen in de *.html-bronnen, dan draaien die 19 pagina's met een oude token (en
+# houden browsers en de service worker de oude stylesheet vast). Dat is een fout, geen waarschuwing.
+GEGENEREERD = re.compile(r'^(privacy|voorwaarden|cookies|kennis(-.*)?|verkopen-.*)\.html$')
+gefout = []
+for pad, per in sorted(tokens.items()):
+    if len(per) > 1:
+        tekst = ', '.join('%s (%s)' % (t, ', '.join(sorted(p)[:3]) + (' …' if len(p) > 3 else '')) for t, p in sorted(per.items()))
+        if any(GEGENEREERD.match(n) for ps in per.values() for n in ps):
+            gefout.append("%s heeft verschillende ?v=-tokens: %s. Gegenereerde pagina's volgen build-legal.js/build-spokes.js/build-kennis.js: bump daar dezelfde token en draai de generators." % (pad, tekst))
+        else:
+            print("  ⚠ %s heeft verschillende ?v=-tokens: %s" % (pad, tekst))
+# ?v-bump-controle (alleen met git): een bestand dat sinds de laatste commit is gewijzigd moet een NIEUWE ?v-token
+# krijgen, anders blijven bezoekers en de service worker (cache eerst op ?v-URL's) de oude versie serveren.
+def git(*a):
+    try:
+        return subprocess.check_output(('git',) + a, stderr=subprocess.DEVNULL).decode('utf-8', 'replace')
+    except Exception:
+        return None
+bump, gewijzigd = [], []
+if git('rev-parse', '--verify', 'HEAD') is not None:
+    for pad, per in sorted(tokens.items()):
+        if not os.path.isfile(pad): continue
+        if subprocess.call(['git', 'diff', '--quiet', 'HEAD', '--', pad], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 1: continue
+        gewijzigd.append(pad)
+        oud = set()
+        for pagina in {n for ps in per.values() for n in ps}:
+            h = git('show', 'HEAD:' + pagina)
+            if h: oud |= set(re.findall(re.escape(pad) + r'\?v=([0-9a-z]+)', h))
+        if oud and set(per) <= oud:
+            bump.append("%s is gewijzigd sinds de laatste commit, maar zijn ?v-token (%s) is niet gebumpt: bezoekers en de service worker houden de oude versie vast" % (pad, ', '.join(sorted(per))))
+    m_nu = re.search(r"const CACHE = '([^']+)'", io.open('sw.js', encoding='utf-8').read())
+    m_oud = re.search(r"const CACHE = '([^']+)'", git('show', 'HEAD:sw.js') or '')
+    if (gewijzigd or subprocess.call(['git', 'diff', '--quiet', 'HEAD', '--', 'sw.js'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 1) \
+            and m_nu and m_oud and m_nu.group(1) == m_oud.group(1):
+        print("  ⚠ sw.js: CACHE (%s) is niet opgehoogd terwijl er wijzigingen zijn; oude caches blijven dan staan" % m_nu.group(1))
+for pad, bron in sorted(foto_mist.items()):
+    print("  ⚠ foto ontbreekt: %s (gevraagd door %s)" % (pad, ', '.join(sorted(bron)[:4])))
+for src, per in sorted(sdk_los.items()):
+    print("  ⚠ Supabase-bibliotheek zonder vaste versie + integrity: %s (in %s)" % (src, ', '.join(sorted(per)[:5]) + (' …' if len(per) > 5 else '')))
+for w in sorted(set(vwaarsch)):
+    print("  ⚠ %s" % w)
+for f in fout:
+    print("  ✗ verplicht bestand ontbreekt in de bundel: %s" % f)
+for pad, bron in sorted(mist.items()):
+    print("  ✗ %s ontbreekt, maar wordt gevraagd door %s" % (pad, ', '.join(sorted(bron)[:4]) + (' …' if len(bron) > 4 else '')))
+for rel in sorted(intern):
+    print("  ✗ intern bestand staat in de bundel (hoort niet publiek): %s" % rel)
+for m in vfout + gefout + bump:
+    print("  ✗ %s" % m)
+if fout or mist or intern or vfout or gefout or bump:
+    sys.exit(1)
+print("  ✓ alle verplichte bestanden en lokale verwijzingen staan in de bundel")
+CHECK_PY
 
 echo "Klaar: upload de inhoud van 'website-online' naar je hosting."
 [ "${HOMEINN_NO_OPEN:-0}" = "1" ] || open website-online

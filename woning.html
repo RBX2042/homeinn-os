@@ -21,7 +21,7 @@
   <link rel="preload" href="fonts/Outfit-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
   <link rel="stylesheet" href="tokens.css?v=20261001a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20261002a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261003b">
   <style>
     .wd-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .wd-top .brand img{height:34px;width:auto;display:block}
@@ -187,7 +187,7 @@
       </div>
     </div>
   </footer>
-  <script src="lead-cloud.js?v=20261001a" defer></script>
+  <script src="lead-cloud.js?v=20261003b" defer></script>
   <script src="lightbox.js?v=20260705" defer></script>
   <script>
   (function(){
@@ -196,7 +196,10 @@
        formulier pas na een fetch verschijnt was de 4-secondenvoorwaarde anders nooit waar.
        Bot = verborgen veld gevuld én (nooit een veld aangeraakt óf binnen 4 s). */
     var _hpT=0;document.addEventListener('focusin',function(e){if(!_hpT&&e.target&&e.target.form)_hpT=Date.now();},true);
-    function _isBot(f){return !!f.get('company_website') && (!_hpT || (Date.now()-_hpT)<4000);}
+    function _isBot(f){return !!f.get('_honey') && (!_hpT || (Date.now()-_hpT)<4000);}
+    /* Honeypot-treffer: nooit stil stoppen. Een echte bezoeker die snel verstuurt,
+       krijgt dezelfde uitweg als bij een mislukte bezorging. */
+    function _botFout(fm){if(!fm)return;var o=fm.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:var(--red-ink)';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';fm.appendChild(p);}
         function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
     function getParam(n){return new URLSearchParams(location.search).get(n);}
     var main = document.getElementById('wd-main');
@@ -252,7 +255,7 @@
           '<div class="wd-prijs">'+prijs+'</div>'+
           '<h3 style="margin-top:.75rem">'+(isHuur?'Bezichtiging aanvragen':'Vraagprijs en bezichtiging aanvragen')+'</h3>'+
           '<form id="wd-form" novalidate>'+
-          '<input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">'+
+          '<input class="hp-field" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">'+
           '<div class="cf-group"><label for="wd-naam">Naam</label><input id="wd-naam" type="text" autocomplete="name" name="naam" placeholder="Jan de Vries" required></div>'+
           '<div class="cf-group"><label for="wd-phone">Telefoon</label><input id="wd-phone" type="tel" autocomplete="tel" inputmode="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>'+
           '<div class="cf-group"><label for="wd-email">E-mail</label><input id="wd-email" type="email" autocomplete="email" inputmode="email" name="email" placeholder="jan@voorbeeld.nl"></div>'+
@@ -285,15 +288,20 @@
         var INBOX_KEY='homeinn-inbox-v1', EP='https://formsubmit.co/ajax/info@homeinn.nl';
         function saveLead(type,d){
           try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];d.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);d.type=type;d.date=new Date().toISOString();d.handled=false;l.push(d);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}
-          if(window.pushLeadToCloud) window.pushLeadToCloud(type,d,'woning.html');
-          try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return (window.fetchLeadWithTimeout || fetch)(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+d.subject,_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||''})}).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');l=l.filter(function(x){return x&&x.id!==d.id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}return ok;});}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}
+          // Geslaagd zodra de cloud OF de e-mail de aanvraag heeft (hiLeadOk, zoals property-en.html):
+          // anders ziet de bezoeker een foutmelding terwijl de aanvraag al binnen is, en levert elke
+          // nieuwe poging een dubbele aanvraag en bevestigingsmail op.
+          var cloud = window.pushLeadToCloud ? window.pushLeadToCloud(type,d,'woning.html') : false;
+          var mail = (function(){ try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return (window.fetchLeadWithTimeout || fetch)(EP,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+d.subject,_template:'table',Type:type,Naam:d.name||'',Email:d.email||'',Telefoon:d.phone||'',Onderwerp:d.subject||''})}).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');l=l.filter(function(x){return x&&x.id!==d.id});if(l.length)localStorage.setItem(INBOX_KEY,JSON.stringify(l));else localStorage.removeItem(INBOX_KEY);}catch(e){}}return ok;});}).catch(function(){return false;});}catch(e){return Promise.resolve(false);} })();
+          if(!window.hiLeadOk) return mail;
+          return window.hiLeadOk(cloud, mail.then(function(ok){ if(ok===false) throw new Error('mail'); return ok; })).catch(function(){ return false; });
         }
         var form = document.getElementById('wd-form');
         if (form) form.addEventListener('submit', function(e){
           e.preventDefault();
           if (!form.reportValidity()) return;
           var f=new FormData(form);
-          if(_isBot(f))return;
+          if(_isBot(f)){_botFout(form);return;}
           var naam=String(f.get('naam')||'').trim();
           if(!naam||(!String(f.get('email')||'').trim()&&!String(f.get('phone')||'').trim())){ var _v=document.getElementById('wd-naam'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:#b03a3a';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
           var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();

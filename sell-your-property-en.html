@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <script>try{var t=localStorage.getItem('hi-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <script>document.documentElement.classList.add('js')</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sell your property in Rotterdam | Proposal in 48 hours</title>
   <meta name="description" content="Selling a property in Rotterdam? HomeINN buys directly, tenanted or dated too. A substantiated proposal within 48 hours, no agent fees.">
@@ -89,8 +90,14 @@
     .flow-card{position:relative;background:var(--panel);border:1px solid var(--cream3);
       box-shadow:var(--elev-2);padding:clamp(var(--space-6),4vw,var(--space-10))}
     .flow-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
-    .step{display:none;animation:fade .35s var(--ease-out)}
-    .step.on{display:block}
+    /* Met JS één stap tegelijk; zonder JS (geen .js op <html>) staan alle stappen onder
+       elkaar en verstuurt de browser het hele formulier naar FormSubmit. */
+    .step{animation:fade .35s var(--ease-out)}
+    .js .step{display:none}
+    .js .step.on{display:block}
+    html:not(.js) [data-next],html:not(.js) [data-prev],html:not(.js) .progress{display:none}
+    html:not(.js) .step+.step{margin-top:var(--space-10);padding-top:var(--space-8);border-top:1px solid var(--cream3)}
+    .noscript-note{margin:0 0 var(--space-6);font-size:var(--text-sm);line-height:1.7;color:var(--ink3)}
     @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
     .step h2{font-family:var(--serif);font-weight:300;font-size:var(--h2-sm);line-height:1.12;
       letter-spacing:-.01em;color:var(--navy-text);margin:0 0 var(--space-3)}
@@ -330,8 +337,10 @@
           </div>
         </div>
 
-        <form class="flow-card" id="bodForm" method="post" action="https://formsubmit.co/info@homeinn.nl" novalidate>
-          <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <form class="flow-card" id="bodForm" method="post" action="https://formsubmit.co/info@homeinn.nl">
+          <input type="hidden" name="_subject" value="Website-aanvraag (zonder JavaScript): sell-your-property-en.html">
+          <noscript><p class="noscript-note">All questions are listed below; fill them in and send at the bottom. Prefer direct contact? Call <a href="tel:+31633322257">+31 6 33 32 22 57</a> or send a <a href="https://wa.me/31633322257" rel="noopener">WhatsApp message</a>.</p></noscript>
+          <input class="hp-field" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
 
           <!-- STAP 1 — Adres -->
           <section class="step on" data-step="1" aria-label="Step 1 of 5: address">
@@ -368,7 +377,7 @@
           </section>
 
           <!-- STAP 2 — Type -->
-          <section class="step" data-step="2" aria-label="Step 2 of 5: property type" hidden>
+          <section class="step" data-step="2" aria-label="Step 2 of 5: property type">
             <h2>What kind of property is it?</h2>
             <p class="step-sub">Choose the closest match.</p>
             <div class="opt-grid cols-2" role="radiogroup" aria-label="Property type">
@@ -386,7 +395,7 @@
           </section>
 
           <!-- STAP 3 — Situatie + staat -->
-          <section class="step" data-step="3" aria-label="Step 3 of 5: situation and condition" hidden>
+          <section class="step" data-step="3" aria-label="Step 3 of 5: situation and condition">
             <h2>What is the situation?</h2>
             <p class="step-sub">No situation is a problem — this only helps us sharpen the proposal.</p>
             <div class="opt-group" role="radiogroup" aria-label="Occupancy">
@@ -415,7 +424,7 @@
           </section>
 
           <!-- STAP 4 — Reden (optioneel) -->
-          <section class="step" data-step="4" aria-label="Step 4 of 5: reason" hidden>
+          <section class="step" data-step="4" aria-label="Step 4 of 5: reason">
             <h2>What is the reason? <span class="opt">(optional)</span></h2>
             <p class="step-sub">This helps us help you better. Rather not say? Feel free to skip this step.</p>
             <div class="opt-grid cols-2" role="radiogroup" aria-label="Reason">
@@ -438,7 +447,7 @@
           </section>
 
           <!-- STAP 5 — Contact -->
-          <section class="step" data-step="5" aria-label="Step 5 of 5: contact details" hidden>
+          <section class="step" data-step="5" aria-label="Step 5 of 5: contact details">
             <h2>Where may we send the proposal?</h2>
             <p class="step-sub">We will contact you personally within four hours on working days.</p>
             <div class="field">
@@ -559,7 +568,7 @@
     "description":"HomeINN buys houses, apartments and walk-up buildings in Rotterdam directly — tenanted or with overdue maintenance too. Proposal within 48 hours, no estate agent fees."
   }
   </script>
-  <script src="lead-cloud.js?v=20261001a" defer></script>
+  <script src="lead-cloud.js?v=20261003b" defer></script>
   <script>
   (function () {
     'use strict';
@@ -567,8 +576,12 @@
        formulier pas na een fetch verschijnt was de 4-secondenvoorwaarde anders nooit waar.
        Bot = verborgen veld gevuld én (nooit een veld aangeraakt óf binnen 4 s). */
     var _hpT=0;document.addEventListener('focusin',function(e){if(!_hpT&&e.target&&e.target.form)_hpT=Date.now();},true);
-    function _isBot(f){return !!f.get('company_website') && (!_hpT || (Date.now()-_hpT)<4000);}
+    function _isBot(f){return !!f.get('_honey') && (!_hpT || (Date.now()-_hpT)<4000);}
+    /* Honeypot-treffer: nooit stil stoppen. Een echte bezoeker die snel verstuurt,
+       krijgt dezelfde uitweg als bij een mislukte bezorging. */
+    function _botFout(fm){var o=fm.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='field-err show verzend-fout';p.setAttribute('role','alert');p.innerHTML='Sending failed \u2014 your details are still in the form. Please try again or call us directly: <a href="tel:+31633322257">+31 6 33 32 22 57</a>.';var k=fm.querySelector('button[type="submit"]');if(k&&k.parentElement)k.parentElement.insertAdjacentElement('afterend',p);else fm.appendChild(p);}
         var form = document.getElementById('bodForm');
+    form.noValidate = true; // native validatie alleen zonder JS (dan staan alle stappen onder elkaar)
     var flow = document.getElementById('flow');
     var doneCard = document.getElementById('done');
     var steps = Array.prototype.slice.call(form.querySelectorAll('.step'));
@@ -726,7 +739,7 @@
       if (current < steps.length - 1) { var vlg = steps[current].querySelector('[data-next]'); if (vlg) vlg.click(); return; }
       if (!validateStep(current)) return;
       var f = new FormData(form);
-      if (_isBot(f)) return; // honeypot: bot
+      if (_isBot(f)) { _botFout(form); return; } // honeypot: bot
 
       var adres = [f.get('straat'), f.get('huisnr')].filter(Boolean).join(' ').trim();
       var adresVol = (adres + ', ' + (f.get('postcode') || '') + ' ' + (f.get('plaats') || '')).trim();

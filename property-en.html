@@ -21,7 +21,7 @@
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
   <link rel="stylesheet" href="tokens.css?v=20261001a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20261002a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261003b">
   <style>
     .wd-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .wd-top .brand img{height:34px;width:auto;display:block}
@@ -189,7 +189,7 @@
       </div>
     </div>
   </footer>
-  <script src="lead-cloud.js?v=20261001a" defer></script>
+  <script src="lead-cloud.js?v=20261003b" defer></script>
   <script src="lightbox.js?v=20260705" defer></script>
   <script>
   (function(){
@@ -198,7 +198,10 @@
        formulier pas na een fetch verschijnt was de 4-secondenvoorwaarde anders nooit waar.
        Bot = verborgen veld gevuld én (nooit een veld aangeraakt óf binnen 4 s). */
     var _hpT=0;document.addEventListener('focusin',function(e){if(!_hpT&&e.target&&e.target.form)_hpT=Date.now();},true);
-    function _isBot(f){return !!f.get('company_website') && (!_hpT || (Date.now()-_hpT)<4000);}
+    function _isBot(f){return !!f.get('_honey') && (!_hpT || (Date.now()-_hpT)<4000);}
+    /* Honeypot-treffer: nooit stil stoppen. Een echte bezoeker die snel verstuurt,
+       krijgt dezelfde uitweg als bij een mislukte bezorging. */
+    function _botFout(fm){if(!fm)return;var o=fm.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:var(--red-ink)';p.innerHTML='Sending failed \u2014 your details are still in the form. Please try again or call us directly: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';fm.appendChild(p);}
         function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
     function getParam(n){return new URLSearchParams(location.search).get(n);}
     var main = document.getElementById('wd-main');
@@ -254,7 +257,7 @@
           '<div class="wd-prijs">'+prijs+'</div>'+
           '<h3 style="margin-top:.75rem">'+(isHuur?'Request a viewing':'Request the price and a viewing')+'</h3>'+
           '<form id="wd-form" novalidate>'+
-          '<input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">'+
+          '<input class="hp-field" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">'+
           '<div class="cf-group"><label for="wd-naam">Name</label><input id="wd-naam" type="text" autocomplete="name" name="naam" placeholder="Jane Smith" required></div>'+
           '<div class="cf-group"><label for="wd-phone">Telephone</label><input id="wd-phone" type="tel" autocomplete="tel" inputmode="tel" name="phone" placeholder="+31 6 12 34 56 78"></div>'+
           '<div class="cf-group"><label for="wd-email">E-mail</label><input id="wd-email" type="email" autocomplete="email" inputmode="email" name="email" placeholder="jane@example.com"></div>'+
@@ -297,7 +300,7 @@
           e.preventDefault();
           if (!form.reportValidity()) return;
           var f=new FormData(form);
-          if(_isBot(f))return;
+          if(_isBot(f)){_botFout(form);return;}
           var naam=String(f.get('naam')||'').trim();
           if(!naam||(!String(f.get('email')||'').trim()&&String(f.get('phone')||'').replace(/\D/g,'').length<6)){ var _v=document.getElementById('wd-naam'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:var(--red-ink)';p.textContent='Please enter your name and at least an e-mail address or telephone number so that we can reach you.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
           var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();

@@ -11,18 +11,26 @@
 (function () {
   'use strict';
 
+  /* Nooit in een frame op een andere pagina (clickjacking); zie app.js. */
+  if (window.top !== window.self) {
+    document.documentElement.style.display = 'none';
+    try { window.top.location = window.location.href; } catch (e) { /* pagina blijft verborgen */ }
+    return;
+  }
+
   var SUPABASE_URL = 'https://evguvdpuidyvkiinzvys.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_JZcuyhVWabuo33MZ8qGTDg_wwMth0zC';
 
   var sb = null, me = null;
+  var fouten = [];   // tabellen die bij de laatste laadronde niet konden worden gelezen
   var data = { leads: [], emails: [], properties: [], projects: [], investors: [], maintenance: [], contracts: [], invoices: [], costs: [], loans: [], profiles: [], state: null };
 
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
   function esc(v) {
-    return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
   function euro(n) {
@@ -56,6 +64,12 @@
       }).join('') + '</tr>';
     }).join('');
     el.innerHTML = '<div class="table-wrap"><table><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table></div>';
+  }
+  /* Spreadsheet-formule-injectie: aanvragen komen van anonieme bezoekers. Een cel die met = + - @
+     (of tab/CR) begint, krijgt een apostrof, zodat Excel er geen formule van maakt. Getallen blijven. */
+  function csvVeilig(v) {
+    var s = String(v == null ? '' : v);
+    return (/^[=+\-@\t\r]/.test(s) && !/^-?\d[\d.,]*$/.test(s)) ? "'" + s : s;
   }
   function badge(tekst, kleur) { return '<span class="badge ' + (kleur || 'gray') + '">' + esc(tekst) + '</span>'; }
 
@@ -135,10 +149,16 @@
   /* — Data ophalen (alles in één ronde) ————————————————————————————————— */
   async function laadAlles() {
     var c = client();
+    var nieuweFouten = [];
+    // Een leesfout (verlopen sessie, RLS, netwerk, gepauzeerd project) mag nooit als 'leeg' worden
+    // getoond: dan leest het team 'Nog geen aanvragen' terwijl het ophalen mislukte.
     function haal(tabel, select, order) {
       var q = c.from(tabel).select(select || '*');
       if (order) q = q.order(order, { ascending: false });
-      return q.then(function (r) { return r.error ? [] : (r.data || []); });
+      return q.then(function (r) {
+        if (r.error) { nieuweFouten.push(tabel + ': ' + r.error.message); return []; }
+        return r.data || [];
+      }, function (err) { nieuweFouten.push(tabel + ': ' + ((err && err.message) || err)); return []; });
     }
     var res = await Promise.all([
       haal('hios_leads', '*', 'created_at'),
@@ -152,12 +172,35 @@
       haal('hios_costs'),
       haal('hios_loans'),
       haal('hios_profiles'),
-      c.from('hios_state').select('updated_at').eq('id', 'main').maybeSingle().then(function (r) { return (r && r.data) || null; })
+      c.from('hios_state').select('updated_at').eq('id', 'main').maybeSingle().then(function (r) {
+        if (r && r.error) nieuweFouten.push('hios_state: ' + r.error.message);
+        return (r && r.data) || null;
+      }, function (err) { nieuweFouten.push('hios_state: ' + ((err && err.message) || err)); return null; })
     ]);
+    fouten = nieuweFouten;
     data.leads = res[0]; data.emails = res[1]; data.properties = res[2]; data.projects = res[3];
     data.investors = res[4]; data.maintenance = res[5]; data.contracts = res[6]; data.invoices = res[7];
     data.costs = res[8]; data.loans = res[9]; data.profiles = res[10]; data.state = res[11];
     tekenAlles();
+    if (fouten.length) toast('Niet alles kon worden geladen (' + fouten.length + ' tabel' + (fouten.length === 1 ? '' : 'len') + '). Klik Vernieuwen; zie Systeem.', true);
+  }
+
+  function laadFout(tabel) {
+    return fouten.some(function (f) { return f.indexOf(tabel + ':') === 0; });
+  }
+  function foutMelding(el, wat) {
+    var e = typeof el === 'string' ? $(el) : el;
+    if (e) e.innerHTML = '<p class="empty" style="color:#b3261e">' + esc(wat) + ' konden niet worden geladen. Klik op Vernieuwen; blijft dit, kijk dan bij Systeem.</p>';
+  }
+
+  /* Lead-alarm: 'gemeld' alleen als de interne melding echt is verstuurd (hios_emails), niet al
+     zodra lead-notify notified_at zette — dat gebeurt vóór het versturen. */
+  function alarmStatus(l) {
+    var rijen = data.emails.filter(function (m) { return m.kind === 'lead-alert' && m.meta && m.meta.lead_id === l.id; });
+    if (rijen.some(function (m) { return m.status === 'verzonden'; })) return 'verzonden';
+    if (rijen.some(function (m) { return m.status === 'mislukt'; })) return 'mislukt';
+    if (rijen.some(function (m) { return m.status === 'overgeslagen'; })) return 'overgeslagen';
+    return l.notified_at ? 'onbekend' : 'nee';
   }
 
   function tekenAlles() {
@@ -171,20 +214,21 @@
     return '<article class="kpi"><span class="mini-label">' + esc(label) + '</span><strong>' + waarde + '</strong>' + (sub ? '<p class="sub">' + esc(sub) + '</p>' : '') + '</article>';
   }
   function tekenDashboard() {
-    var nieuw = data.leads.filter(function (l) { return (l.status || 'nieuw') === 'nieuw'; }).length;
+    var nieuw = laadFout('hios_leads') ? '?' : data.leads.filter(function (l) { return (l.status || 'nieuw') === 'nieuw'; }).length;
     var mislukt = data.emails.filter(function (e) { return e.status !== 'verzonden'; }).length;
     var openOnderhoud = data.maintenance.filter(function (m) { return m.status !== 'Afgehandeld' && m.status !== 'Gereed'; }).length;
     var teTekenen = data.contracts.filter(function (k) { return k.status !== 'Getekend'; }).length;
     var inleg = data.investors.reduce(function (s, i) { return s + (Number(i.bedrag) || 0); }, 0);
     $('#kpis').innerHTML =
-      kpi('Aanvragen open', nieuw, data.leads.length + ' totaal') +
+      kpi('Aanvragen open', nieuw, laadFout('hios_leads') ? 'niet geladen' : data.leads.length + ' totaal') +
       kpi('Panden', data.properties.length, 'in de cloud') +
       kpi('Projecten', data.projects.length, data.projects.filter(function (p) { return p.published; }).length + ' gepubliceerd') +
       kpi('Hoofdsom geldgevers', euro(inleg), data.investors.length + ' leningen') +
       kpi('Onderhoud open', openOnderhoud, data.maintenance.length + ' meldingen') +
       kpi('E-mail niet bezorgd', mislukt, data.emails.length + ' verzendingen');
 
-    table('#recent-leads', [
+    if (laadFout('hios_leads')) foutMelding('#recent-leads', 'Aanvragen');
+    else table('#recent-leads', [
       { label: 'Datum', cel: function (l) { return datum(l.created_at); } },
       { label: 'Type', cel: function (l) { return esc(l.type); } },
       { label: 'Naam', cel: function (l) { return esc(l.name); } },
@@ -222,6 +266,7 @@
     }).join('');
 
     var statussen = ['nieuw', 'in behandeling', 'afgerond', 'geen interesse'];
+    if (laadFout('hios_leads')) { foutMelding('#leads-table', 'Aanvragen'); return; }
     table('#leads-table', [
       { label: 'Datum', cel: function (l) { return datum(l.created_at); } },
       { label: 'Type', cel: function (l) { return esc(l.type); } },
@@ -236,7 +281,14 @@
         return esc([l.subject, l.portfolio, l.message].filter(Boolean).join(' — ')) || '—';
       } },
       { label: 'Bron', cel: function (l) { return esc(l.source); } },
-      { label: 'Gemeld', cel: function (l) { return l.notified_at ? badge('ja', 'green') : badge('nee', 'gray'); } },
+      { label: 'Gemeld', cel: function (l) {
+        var a = alarmStatus(l);
+        return a === 'verzonden' ? badge('ja', 'green')
+          : a === 'mislukt' ? badge('mislukt', 'red')
+          : a === 'overgeslagen' ? badge('overgeslagen', 'red')
+          : a === 'onbekend' ? badge('onbekend', 'gold')
+          : badge('nee', 'gray');
+      } },
       { label: 'Status', cel: function (l) {
         return '<select data-lead-status="' + l.id + '">' + statussen.map(function (s) {
           return '<option' + ((l.status || 'nieuw') === s ? ' selected' : '') + '>' + s + '</option>';
@@ -294,7 +346,7 @@
     ], data.projects, 'Nog geen projecten in de cloud.');
   }
   function tekenOnderhoud() {
-    var statussen = ['Nieuw', 'In behandeling', 'Ingepland', 'Afgehandeld'];
+    var statussen = ['Open', 'In behandeling', 'Afgehandeld'];   // = hios_maintenance_status_check
     table('#onderhoud-table', [
       { label: 'Datum', cel: function (m) { return datum(m.created_at); } },
       { label: 'Pand', cel: function (m) { return esc(m.property ? m.property.address : ''); } },
@@ -375,7 +427,7 @@
 
   /* — Gebruikers ————————————————————————————————————————————————————————— */
   function tekenGebruikers() {
-    var rollen = ['eigenaar', 'team', 'investeerder', 'huurder', 'koper', 'verkoper'];
+    var rollen = ['eigenaar', 'team', 'investeerder', 'huurder'];   // = hios_profiles_role_check
     table('#gebruikers-table', [
       { label: 'E-mail', cel: function (p) { return esc(p.email); } },
       { label: 'Naam', cel: function (p) { return esc(p.full_name || ''); } },
@@ -399,10 +451,14 @@
       : overgeslagen > 0 ? badge('sleutel ontbreekt', 'red')
       : badge('nog niet gebruikt', 'gray');
     var regels = [
-      ['Cloudverbinding', badge('verbonden', 'green')],
+      ['Cloudverbinding', fouten.length ? badge('fouten bij laden', 'red') + ' <small>' + esc(fouten.join(' · ')) + '</small>' : badge('verbonden', 'green')],
       ['Ingelogd als', esc(me ? me.email : '—') + ' · ' + esc(me ? me.role : '')],
       ['Resend (e-mail)', resend + (overgeslagen ? ' <small>' + overgeslagen + ' mail overgeslagen</small>' : '')],
-      ['Automatische lead-melding', data.leads.filter(function (l) { return l.notified_at; }).length + ' van ' + data.leads.length + ' aanvragen gemeld'],
+      ['Automatische lead-melding', (function () {
+        var ok = data.leads.filter(function (l) { return alarmStatus(l) === 'verzonden'; }).length;
+        var mis = data.leads.filter(function (l) { var a = alarmStatus(l); return a === 'mislukt' || a === 'overgeslagen'; }).length;
+        return ok + ' van ' + data.leads.length + ' aanvragen gemeld' + (mis ? ' · ' + badge(mis + ' niet gemeld', 'red') + ' <small>bekijk ze bij Aanvragen</small>' : '');
+      })()],
       ['Laatste OS-back-up', data.state ? datum(data.state.updated_at) : 'nog nooit — maak een back-up in HomeINN OS → Instellingen']
     ];
     $('#health').innerHTML = regels.map(function (r) {
@@ -463,7 +519,7 @@
       var kop = ['datum', 'type', 'naam', 'email', 'telefoon', 'onderwerp', 'bericht', 'bron', 'status', 'notitie'];
       var csv = [kop.join(';')].concat(rijen.map(function (l) {
         return [l.created_at, l.type, l.name, l.email, l.phone, l.subject, (l.message || '').replace(/[\r\n;]+/g, ' '), l.source, l.status, l.note || '']
-          .map(function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }).join(';');
+          .map(function (v) { return '"' + csvVeilig(v).replace(/"/g, '""') + '"'; }).join(';');
       })).join('\n');
       var a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
@@ -477,8 +533,10 @@
       var t = e.target;
       if (t.dataset.leadStatus) {
         var l = data.leads.filter(function (x) { return x.id === t.dataset.leadStatus; })[0];
-        if (await wijzig('hios_leads', t.dataset.leadStatus, { status: t.value, handled: t.value === 'afgerond' }, 'Status bijgewerkt.') && l) {
-          l.status = t.value; tekenDashboard();
+        // 'geen interesse' is ook afgehandeld: anders blijft de aanvraag in het portaal op 'Nieuw' staan.
+        var klaar = t.value === 'afgerond' || t.value === 'geen interesse';
+        if (await wijzig('hios_leads', t.dataset.leadStatus, { status: t.value, handled: klaar }, 'Status bijgewerkt.') && l) {
+          l.status = t.value; l.handled = klaar; tekenDashboard();
         }
       }
       if (t.dataset.maintStatus) {
@@ -519,7 +577,6 @@
       }
       if (t.dataset && t.dataset.fill) {
         var adressen = [];
-        if (t.dataset.fill === 'leads') adressen = data.leads.map(function (l) { return l.email; });
         if (t.dataset.fill === 'investeerders') adressen = data.investors.map(function (i) { return i.email; });
         if (t.dataset.fill === 'gebruikers') adressen = data.profiles.map(function (p) { return p.email; });
         adressen = adressen.filter(function (a) { return a && /.+@.+\..+/.test(a); });

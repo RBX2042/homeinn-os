@@ -34,25 +34,56 @@
   // Daarboven laten we keepalive vallen in plaats van het verzoek te laten weigeren.
   var KEEPALIVE_MAX = 60000;
 
+  /* VELDEN EN GRENZEN (3 oktober 2026, beveiligingsronde)
+     - De rij bevat precies deze tien kolommen. De geplande database-migratie (kolomgrant)
+       geeft anon alleen INSERT op dezelfde tien; stuur hier dus nooit een extra kolom mee,
+       anders weigert PostgREST de hele insert.
+     - local_id komt in het portaal in de Aanvragen-inbox terecht. Alleen ons eigen formaat
+       ('lead' + base36, zie saveLead) gaat mee; een afwijkende waarde wordt null en de
+       database valt dan terug op de uuid. Een CHECK-constraint met exact dit patroon staat in
+       dezelfde geplande migratie; pas LOCAL_ID_RE en die constraint altijd samen aan.
+     - Tekstvelden worden op de lengtegrenzen van de geplande CHECK-constraint ingekort (in
+       tekens, net als length() in Postgres; MAX hieronder mag nooit ruimer zijn dan die
+       constraint), zodat een heel lang bericht de cloud-lead niet laat weigeren.
+       De e-mail via FormSubmit krijgt het volledige bericht. NUL-tekens en losse
+       surrogaathelften, die Postgres in JSON weigert, worden weggepoetst. */
+  var LOCAL_ID_RE = /^lead[a-z0-9]{4,24}$/;
+  var MAX = { type: 60, source: 200, name: 200, email: 254, phone: 100, subject: 300, message: 5000, portfolio: 300 };
+
+  function schoon(v, max) {
+    var s = (v == null ? '' : String(v)).replace(/\u0000/g, '');
+    var tekens = Array.from(s, function (c) {
+      var n = c.charCodeAt(0);
+      return (c.length === 1 && n >= 0xD800 && n <= 0xDFFF) ? '\uFFFD' : c;
+    });
+    if (tekens.length > max) tekens = tekens.slice(0, max - 1).concat('\u2026');
+    return tekens.join('');
+  }
+
   window.pushLeadToCloud = function (type, data, source) {
     try {
       if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(false);
+      if (!data) return Promise.resolve(false);
+      var contact = String(data.contact || '');
       var rij = {
-        local_id: data.id || null,
-        type: type || 'Contact',
-        source: source || location.pathname.replace(/^\//, '') || 'onbekend',
-        name: data.name || data.naam || '',
-        email: data.email || (/@/.test(data.contact || '') ? data.contact : ''),
-        phone: data.phone || (!/@/.test(data.contact || '') ? (data.contact || '') : ''),
-        subject: data.subject || '',
-        message: data.message || '',
-        portfolio: data.portfolio || '',
+        local_id: LOCAL_ID_RE.test(String(data.id || '')) ? String(data.id) : null,
+        type: schoon(type || 'Contact', MAX.type),
+        source: schoon(source || location.pathname.replace(/^\//, '') || 'onbekend', MAX.source),
+        name: schoon(data.name || data.naam || '', MAX.name),
+        email: schoon(data.email || (/@/.test(contact) ? contact : ''), MAX.email),
+        phone: schoon(data.phone || (!/@/.test(contact) ? contact : ''), MAX.phone),
+        subject: schoon(data.subject || '', MAX.subject),
+        message: schoon(data.message || '', MAX.message),
+        portfolio: schoon(data.portfolio || '', MAX.portfolio),
         handled: false
       };
       var body = JSON.stringify(rij);
+      // De keepalive-grens telt bytes, niet JS-tekens (een emoji = 4 bytes, maar .length 2).
+      var bytes = body.length;
+      try { if (window.TextEncoder) bytes = new TextEncoder().encode(body).length; } catch (e) { bytes = body.length * 3; }
       return fetch(ENDPOINT, {
         method: 'POST',
-        keepalive: body.length <= KEEPALIVE_MAX,
+        keepalive: bytes <= KEEPALIVE_MAX,
         headers: {
           'apikey': SUPABASE_KEY,
           'Authorization': 'Bearer ' + SUPABASE_KEY,

@@ -29,6 +29,41 @@
     return profile;
   }
 
+  var DEMO_MELDING = 'Dit zijn demo-gegevens. Synchroniseren en cloud-backup staan uit, zodat er geen voorbeeldpanden, -projecten of een voorbeeld-geldgever in de echte cloud komen. Haal eerst je gegevens op met "Herstel van cloud" of een backup, of kies in Instellingen "Begin met een lege administratie".';
+
+  /* Demo-werkstaat: de vlag die seedData() zet, of (voor werkstaten van vóór die vlag) de
+     voorbeeld-geldgever uit de demo-gegevens. */
+  function isDemoState(state) {
+    if (!state) return false;
+    if (state.demo === true) return true;
+    return (state.projects || []).some(function (pr) {
+      return (pr.investeerders || []).some(function (i) { return i.id === 'inv1' && i.naam === 'J. Smits'; });
+    });
+  }
+
+  /* Documentrijen voor hios_documents.
+     - Pand-documenten met een bestand of link: alleen als back-up voor eigenaar/team (visibility 'staff').
+     - Gedeeld met geldgevers (scope 'project', visibility 'shared'): uitsluitend documenten die het team
+       per stuk heeft aangevinkt ('Deel met geldgevers'), voor elk project op dat pand. Een koopakte of
+       taxatie bevat vaak persoonsgegevens van derden en gaat dus nooit automatisch mee.
+     propid/pid mogen null zijn (dan alleen de local_id's, voor het verwijder-verschil). */
+  function documentRows(state, propid, pid) {
+    var rows = [];
+    (state.properties || []).forEach(function (p) {
+      (p.docs || []).filter(function (d) { return d.file || d.url; }).forEach(function (d) {
+        rows.push({ local_id: d.id, scope: 'property', ref_id: propid ? (propid[p.id] || null) : null, name: d.name, url: d.url || null, file: d.file || null, visibility: 'staff' });
+      });
+    });
+    (state.projects || []).forEach(function (pr) {
+      var p = (state.properties || []).find(function (x) { return x.id === pr.propertyId; });
+      if (!p) return;
+      (p.docs || []).filter(function (d) { return d.deelMetGeldgevers === true && (d.file || d.url); }).forEach(function (d) {
+        rows.push({ local_id: 'prj:' + pr.id + ':' + d.id, scope: 'project', ref_id: pid ? (pid[pr.id] || null) : null, name: d.name, url: d.url || null, file: d.file || null, visibility: 'shared' });
+      });
+    });
+    return rows;
+  }
+
   window.HCloud = {
     available: available,
     status: function () {
@@ -41,6 +76,8 @@
       };
     },
     onChange: function (fn) { listeners.push(fn); },
+    isDemoState: isDemoState,
+    demoMelding: DEMO_MELDING,
     init: async function () {
       var c = get(); if (!c) { notify(); return; }
       c.auth.onAuthStateChange(async function () { await loadProfile(); notify(); });
@@ -62,27 +99,88 @@
     },
     signOut: async function () { var c = get(); if (c) { await c.auth.signOut(); profile = null; notify(); } },
 
-    /* Push de operator-data naar de cloud (alleen voor eigenaar/team). */
+    /* Push de operator-data naar de cloud (alleen voor eigenaar/team).
+       Verwijderingen: state.cloudLedger houdt per tabel bij welke local_id's DEZE werkstaat ooit
+       succesvol heeft gepusht. Wat daarin staat maar lokaal niet meer bestaat, is hier verwijderd
+       en wordt eerst uit de cloud gehaald. Rijen die een ander apparaat pushte staan niet in dit
+       grootboek en blijven dus altijd staan (geen 'alles wissen wat ik niet ken'). Panden worden
+       niet automatisch verwijderd: dat zou via de cascade ook de onderhoudsmeldingen van huurders
+       wissen. */
     pushAll: async function (state) {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
       var st = window.HCloud.status();
       if (!st.email) throw new Error('Log eerst in om te synchroniseren.');
       if (!st.staff) throw new Error('Alleen een eigenaar/team-account mag synchroniseren.');
+      if (window.HCloud.isDemoState(state)) throw new Error(DEMO_MELDING);
 
-      var props = state.properties.map(function (p) {
+      var ledger = (state.cloudLedger && typeof state.cloudLedger === 'object') ? state.cloudLedger : {};
+      state.cloudLedger = ledger;
+      function noteer(table, ids) {
+        var set = {}; (ledger[table] || []).forEach(function (x) { set[x] = 1; });
+        ids.forEach(function (x) { if (x) set[x] = 1; });
+        ledger[table] = Object.keys(set);
+      }
+
+      // Lokale id's per tabel (onafhankelijk van de cloud-uuid's), voor het verwijder-verschil.
+      var projects = state.projects || [], properties = state.properties || [];
+      var alleInv = [], alleUpd = [], allePay = [];
+      projects.forEach(function (pr) {
+        (pr.investeerders || []).forEach(function (i) {
+          alleInv.push(i.id);
+          (i.uitkeringen || []).forEach(function (u) { allePay.push(u.id); });
+        });
+        (pr.updates || []).forEach(function (u) { alleUpd.push(u.id); });
+      });
+      var docLocalIds = documentRows(state, null, null).map(function (d) { return d.local_id; });
+      var ids = function (arr) { return (arr || []).map(function (x) { return x.id; }); };
+      var huidig = {
+        hios_investor_payouts: allePay,
+        hios_project_updates: alleUpd,
+        hios_documents: docLocalIds,
+        hios_investors: alleInv,
+        hios_contracts: ids(state.contracten),
+        hios_deals: ids(state.deals),
+        hios_costs: ids(state.costs),
+        hios_invoices: ids(state.invoices),
+        hios_loans: ids(state.loans),
+        hios_contacts: ids(state.contacts),
+        hios_planning: ids(state.planning),
+        hios_campaigns: ids(state.campaigns),
+        hios_tasks: ids(state.tasks),
+        hios_projects: ids(projects)
+      };
+      // Kind vóór ouder; panden bewust niet (zie boven).
+      var verwijderd = 0;
+      for (var t in huidig) {
+        var nu = {}; huidig[t].forEach(function (x) { nu[x] = 1; });
+        var weg = (ledger[t] || []).filter(function (x) { return !nu[x]; });
+        for (var k = 0; k < weg.length; k += 100) {
+          var deel = weg.slice(k, k + 100);
+          var rd = await c.from(t).delete().in('local_id', deel);
+          if (rd.error) throw rd.error;
+          verwijderd += deel.length;
+        }
+        if (weg.length) ledger[t] = (ledger[t] || []).filter(function (x) { return nu[x]; });
+      }
+
+      var props = properties.map(function (p) {
         return { local_id: p.id, ref: p.ref, address: p.address, city: p.city, ptype: p.ptype, status: p.status, tenant_email: p.huurderEmail || null, data: p };
       });
-      if (props.length) { var r1 = await c.from('hios_properties').upsert(props, { onConflict: 'local_id' }); if (r1.error) throw r1.error; }
+      if (props.length) { var r1 = await c.from('hios_properties').upsert(props, { onConflict: 'local_id' }); if (r1.error) throw r1.error; noteer('hios_properties', ids(properties)); }
 
-      // hios_projects is leesbaar voor elke geldgever van het project (en bij publish voor elke
-      // ingelogde gebruiker). De geldgevers zelf staan in hios_investors met eigen RLS; hun namen,
-      // e-mails, bedragen en betalingen horen dus NIET in data (AVG, 2 oktober 2026).
-      var projs = state.projects.map(function (pr) {
-        var data = Object.assign({}, pr);
-        delete data.investeerders; delete data.capitalCalls;
+      // hios_projects is leesbaar voor elke geldgever van het project. Daarom alleen wat het portaal
+      // voor geldgevers toont (fasen, foto's, looptijd); budget, financieringsbehoefte, notities,
+      // opleverpunten en de geldgevers zelf blijven lokaal (AVG en 'geen bedragen publiek').
+      var projs = projects.map(function (pr) {
+        var inv = pr.invest || {};
+        var data = {
+          phases: (pr.phases || []).map(function (f) { return { name: f.name, status: f.status }; }),
+          fotos: Array.isArray(pr.fotos) ? pr.fotos : [],
+          invest: { rendementPct: Number(inv.rendementPct) || 0, looptijd: inv.looptijd || '' }
+        };
         return { local_id: pr.id, ref: pr.ref, name: pr.name, status: pr.status, published: !!pr.publish, data: data };
       });
-      if (projs.length) { var r2 = await c.from('hios_projects').upsert(projs, { onConflict: 'local_id' }); if (r2.error) throw r2.error; }
+      if (projs.length) { var r2 = await c.from('hios_projects').upsert(projs, { onConflict: 'local_id' }); if (r2.error) throw r2.error; noteer('hios_projects', ids(projects)); }
 
       // koppel lokale project-id → cloud-uuid voor de onderliggende rijen
       var cp = await c.from('hios_projects').select('id,local_id');
@@ -90,7 +188,7 @@
       var pid = {}; (cp.data || []).forEach(function (r) { pid[r.local_id] = r.id; });
 
       var investors = [], updates = [];
-      state.projects.forEach(function (pr) {
+      projects.forEach(function (pr) {
         var cpid = pid[pr.id]; if (!cpid) return;
         (pr.investeerders || []).forEach(function (i) {
           investors.push({ local_id: i.id, project_id: cpid, naam: i.naam, email: i.email || null, bedrag: Number(i.bedrag) || 0, rendement_pct: (pr.invest && Number(pr.invest.rendementPct)) || 0, datum: i.datum || null, wwft: !!i.wwft });
@@ -99,15 +197,15 @@
           updates.push({ local_id: u.id, project_id: cpid, date: u.date || null, text: u.text });
         });
       });
-      if (investors.length) { var r3 = await c.from('hios_investors').upsert(investors, { onConflict: 'local_id' }); if (r3.error) throw r3.error; }
-      if (updates.length) { var r4 = await c.from('hios_project_updates').upsert(updates, { onConflict: 'local_id' }); if (r4.error) throw r4.error; }
+      if (investors.length) { var r3 = await c.from('hios_investors').upsert(investors, { onConflict: 'local_id' }); if (r3.error) throw r3.error; noteer('hios_investors', investors.map(function (x) { return x.local_id; })); }
+      if (updates.length) { var r4 = await c.from('hios_project_updates').upsert(updates, { onConflict: 'local_id' }); if (r4.error) throw r4.error; noteer('hios_project_updates', updates.map(function (x) { return x.local_id; })); }
 
       // Uitkeringen: koppel lokale investeerder-id → cloud-uuid, dan upsert
       var ci = await c.from('hios_investors').select('id,local_id');
       if (ci.error) throw ci.error;
       var iid = {}; (ci.data || []).forEach(function (r) { iid[r.local_id] = r.id; });
       var payouts = [];
-      state.projects.forEach(function (pr) {
+      projects.forEach(function (pr) {
         (pr.investeerders || []).forEach(function (i) {
           var ciid = iid[i.id]; if (!ciid) return;
           (i.uitkeringen || []).forEach(function (u) {
@@ -115,7 +213,7 @@
           });
         });
       });
-      if (payouts.length) { var r5 = await c.from('hios_investor_payouts').upsert(payouts, { onConflict: 'local_id' }); if (r5.error) throw r5.error; }
+      if (payouts.length) { var r5 = await c.from('hios_investor_payouts').upsert(payouts, { onConflict: 'local_id' }); if (r5.error) throw r5.error; noteer('hios_investor_payouts', payouts.map(function (x) { return x.local_id; })); }
 
       // Pand-id-map (lokaal → cloud-uuid) voor onderliggende financiele/operationele rijen
       var cprop = await c.from('hios_properties').select('id,local_id');
@@ -126,12 +224,17 @@
         if (!rows.length) return 0;
         var rr = await c.from(table).upsert(rows, { onConflict: 'local_id' });
         if (rr.error) throw rr.error;
+        noteer(table, rows.map(function (x) { return x.local_id; }));
         return rows.length;
       }
 
       // Financiele tabellen
+      // hios_deals is leesbaar voor de verkoper (RLS op verkoper_email). Daarom NIET de hele deal
+      // (calculatie, maximale bod, notities, makelaar), maar alleen de uitgebrachte biedingen.
       var nDeals = await upsertSet('hios_deals', (state.deals || []).map(function (d) {
-        return { local_id: d.id, ref: d.ref, address: d.address, city: d.city, ptype: d.ptype, status: d.status, vraagprijs: Number(d.vraagprijs) || 0, verkoper_email: d.verkoperEmail || null, data: d };
+        var biedingen = (d.biedingen || []).filter(function (b) { return b.status === 'Uitgebracht' || b.status === 'Geaccepteerd'; })
+          .map(function (b) { return { date: b.date || '', amount: Number(b.amount) || 0, status: b.status, validUntil: b.validUntil || '' }; });
+        return { local_id: d.id, ref: d.ref, address: d.address, city: d.city, ptype: d.ptype, status: d.status, vraagprijs: Number(d.vraagprijs) || 0, verkoper_email: d.verkoperEmail || null, data: { biedingen: biedingen } };
       }));
       var nCosts = await upsertSet('hios_costs', (state.costs || []).map(function (k) {
         return { local_id: k.id, property_id: propid[k.propertyId] || null, project_id: pid[k.projectId] || null, descr: k.desc, category: k.category, amount: Number(k.amount) || 0, btw_pct: (k.btwPct === 0 || k.btwPct) ? Number(k.btwPct) : 21, date: k.date || null, status: k.status, data: k };
@@ -155,27 +258,19 @@
       var nTasks = await upsertSet('hios_tasks', (state.tasks || []).map(function (tk) {
         return { local_id: tk.id, property_id: propid[tk.propertyId] || null, project_id: pid[tk.projectId] || null, assignee_email: tk.assigneeEmail || null, title: tk.title, due: tk.due || null, done: !!tk.done, data: tk };
       }));
-      // Documenten: pand-docs (staff-backup, internal) + project-docs gedeeld met investeerders (van het gekoppelde pand)
-      var docs = [];
-      (state.properties || []).forEach(function (p) {
-        (p.docs || []).forEach(function (d) {
-          docs.push({ local_id: d.id, scope: 'property', ref_id: propid[p.id] || null, name: d.name, url: d.url || null, file: d.file || null, visibility: 'internal' });
-        });
-      });
-      (state.projects || []).filter(function (pr) { return pr.publish; }).forEach(function (pr) {
-        var cpid = pid[pr.id]; if (!cpid) return;
-        var p = (state.properties || []).find(function (x) { return x.id === pr.propertyId; });
-        if (!p) return;
-        (p.docs || []).filter(function (d) { return d.file || d.url; }).forEach(function (d) {
-          docs.push({ local_id: 'prj:' + pr.id + ':' + d.id, scope: 'project', ref_id: cpid, name: d.name, url: d.url || null, file: d.file || null, visibility: 'shared' });
-        });
-      });
-      var nDocs = await upsertSet('hios_documents', docs);
+      var nDocs = await upsertSet('hios_documents', documentRows(state, propid, pid).filter(function (d) { return d.ref_id; }));
+
+      // Leningsovereenkomsten die HomeINN B.V. als getekend heeft vastgelegd (na ontvangst van het met
+      // de hand of gekwalificeerd elektronisch getekende exemplaar): status ook in het portaal zetten.
+      var getekend = (state.contracten || []).filter(function (k) { return k.type === 'Investeringsovereenkomst' && k.status === 'Getekend'; });
+      for (var g = 0; g < getekend.length; g++) {
+        await window.HCloud.setContractStatus(getekend[g].id, 'Getekend', getekend[g].signedAt || null);
+      }
 
       lastSync = new Date().toISOString();
       notify();
       var overig = nDeals + nCosts + nInv + nLoans + nContacts + nPlan + nCamp + nTasks + nDocs;
-      return { panden: props.length, projecten: projs.length, investeerders: investors.length, updates: updates.length, overig: overig };
+      return { panden: props.length, projecten: projs.length, investeerders: investors.length, updates: updates.length, overig: overig, verwijderd: verwijderd };
     },
 
     /* Haal de door huurders ingediende onderhoudsmeldingen (incl. foto) op uit de cloud. */
@@ -235,6 +330,17 @@
       if (r.error) throw r.error;
     },
 
+    /* Zet de status van een in de cloud klaargezette overeenkomst (staff). Raakt 0 rijen als het
+       contract nooit via het portaal is verstuurd; dat is geen fout. */
+    setContractStatus: async function (localId, status, signedAt) {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      if (!window.HCloud.status().staff) throw new Error('Alleen een eigenaar/team-account mag contracten bijwerken.');
+      var velden = { status: status };
+      if (status === 'Getekend') velden.signed_at = signedAt ? new Date(String(signedAt).slice(0, 10) + 'T12:00:00').toISOString() : new Date().toISOString();
+      var r = await c.from('hios_contracts').update(velden).eq('local_id', localId).neq('status', status);
+      if (r.error) throw r.error;
+    },
+
     /* Team & toegang: profielen (gebruikers) lezen en rollen beheren (staff-only via RLS). */
     listProfiles: async function () {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
@@ -265,8 +371,17 @@
     saveState: async function (stateObj) {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
       if (!window.HCloud.status().staff) throw new Error('Log in als eigenaar/team.');
+      if (isDemoState(stateObj)) throw new Error(DEMO_MELDING);
       var r = await c.from('hios_state').upsert({ id: 'main', data: stateObj, updated_at: new Date().toISOString(), updated_by: profile ? profile.id : null }, { onConflict: 'id' });
       if (r.error) throw r.error;
+    },
+    /* Alleen het tijdstip van de huidige cloud-backup (voor de bevestiging vóór overschrijven). */
+    stateMeta: async function () {
+      var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
+      if (!window.HCloud.status().staff) throw new Error('Log in als eigenaar/team.');
+      var r = await c.from('hios_state').select('updated_at').eq('id', 'main').maybeSingle();
+      if (r.error) throw r.error;
+      return r.data; // { updated_at } of null
     },
     loadState: async function () {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
@@ -306,7 +421,8 @@
     },
     setLeadHandled: async function (cloudId, value) {
       var c = get(); if (!c) throw new Error('Cloud niet beschikbaar.');
-      var r = await c.from('hios_leads').update({ handled: value }).eq('id', cloudId);
+      // Ook de status: het adminpaneel telt open aanvragen op status, het portaal op handled.
+      var r = await c.from('hios_leads').update({ handled: value, status: value ? 'afgerond' : 'nieuw' }).eq('id', cloudId);
       if (r.error) throw r.error;
     },
     deleteLead: async function (cloudId) {

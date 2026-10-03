@@ -1,7 +1,7 @@
 {
   "name": "HomeINN OS — Vastgoedportaal",
   "short_name": "HomeINN OS",
-  "description": "Portaal voor aankoop, ontwikkeling, verhuur en verkoop van vastgoed.",
+  "description": "Portaal voor aankoop, ontwikkeling, verkoop, verhuur en beheer van vastgoed.",
   "start_url": "portaal.html",
   "scope": "./",
   "display": "standalone",

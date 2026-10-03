@@ -1,0 +1,24 @@
+# GitHub Pages (rbx2042.github.io/homeinn-os) bouwt de repo-root met Jekyll en zette daardoor ook
+# interne notities (LEESMIJ, ADMIN-EN-EMAIL, DESIGN-SYSTEM, fotolijsten), de broncode van de
+# generators en serverconfiguratie online, deels als indexeerbare webpagina. Dit sluit ze uit.
+# homeinn.nl (Vercel) gebruikt dit bestand niet: daar gaat alleen de map website-online live.
+#
+# Let op:
+# - GEEN .nojekyll toevoegen: dan slaat Pages Jekyll over en publiceert alles rauw, zonder deze lijst.
+# - De portaalpagina's (portaal, admin, inloggen, rolportalen) staan hier bewust NIET in: de
+#   Supabase-login kan nog op deze github.io-adressen terugvallen (Site URL / Redirect URLs).
+#   Haal ze pas weg, of zet Pages uit, als de Supabase-loginlinks aantoonbaar op homeinn.nl landen.
+# - Een eigen 'exclude' vervangt de standaardlijst van Jekyll; die gaat alleen over Gemfile,
+#   node_modules en vendor, en die bestaan in deze repo niet.
+exclude:
+  - "*.md"
+  - "fotos/*.md"
+  - supabase
+  - "build-*.js"
+  - "*-content.json"
+  - sitemap-hashes.json
+  - "*.command"
+  - vercel.json
+  - audit
+  - vertrouwelijk
+  - website-online

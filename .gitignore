@@ -10,3 +10,6 @@ audit/
 # Vertrouwelijk: juridische dossiers, compliance-onderzoek en bewijslijsten.
 # NOOIT committen: de repo is openbaar en GitHub Pages serveert de repo-root.
 vertrouwelijk/
+
+# Supabase-CLI werkmap (gekoppeld project, CLI-versie): lokale staat, geen broncode.
+supabase/.temp/

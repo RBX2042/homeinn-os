@@ -27,7 +27,7 @@
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
   <link rel="stylesheet" href="tokens.css?v=20261001a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20261002a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261003b">
   <style>
     .tk-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .tk-top .brand img{height:34px;width:auto;display:block}
@@ -373,9 +373,9 @@
         <div class="proc-head" style="text-align:center"><span class="t-eyebrow">Als eerste weten</span><h2>Schrijf u in voor <em>het aanbod.</em></h2></div>
         <p style="text-align:center;max-width:60ch;margin:1rem auto 2.5rem;font-weight:300;color:var(--ink3);line-height:1.8">Wij ontwikkelen 33 woningen in elf panden die de komende tijd één voor één worden opgeleverd. Laat uw woonwensen achter, dan benaderen wij u zodra er een passende woning in de verkoop gaat — vóór hij online staat.</p>
         <div class="cf" id="tk-form-box">
-          <form method="post" action="https://formsubmit.co/info@homeinn.nl" id="tk-form" novalidate>
+          <form method="post" action="https://formsubmit.co/info@homeinn.nl" id="tk-form">
             <input type="hidden" name="_subject" value="Website-aanvraag (zonder JavaScript): te-koop.html">
-            <input class="hp-field" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <input class="hp-field" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="cf-group"><label for="tk-object">Uw interesse</label><input type="text" name="object" id="tk-object" value="Algemeen woningaanbod" readonly><button type="button" id="tk-project-reset" hidden style="margin-top:.6rem;padding:.5rem 0;border:0;background:transparent;color:var(--gold-ink);text-decoration:underline;font:inherit;cursor:pointer">Liever algemeen inschrijven</button></div>
             <div class="cf-2col">
               <div class="cf-group"><label for="tk-first">Voornaam</label><input id="tk-first" type="text" autocomplete="given-name" name="first_name" placeholder="Jan" required></div>
@@ -438,7 +438,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"CollectionPage","name":"Woningaanbod te koop — HomeINN Rotterdam","url":"https://homeinn.nl/te-koop.html","inLanguage":"nl-NL","about":"Te koop staande woningen in Rotterdam","publisher":{"@type":"Organization","name":"HomeINN"}}
   </script>
-  <script src="lead-cloud.js?v=20261001a" defer></script>
+  <script src="lead-cloud.js?v=20261003b" defer></script>
   <script>
   (function(){
     'use strict';
@@ -446,7 +446,10 @@
        formulier pas na een fetch verschijnt was de 4-secondenvoorwaarde anders nooit waar.
        Bot = verborgen veld gevuld én (nooit een veld aangeraakt óf binnen 4 s). */
     var _hpT=0;document.addEventListener('focusin',function(e){if(!_hpT&&e.target&&e.target.form)_hpT=Date.now();},true);
-    function _isBot(f){return !!f.get('company_website') && (!_hpT || (Date.now()-_hpT)<4000);}
+    function _isBot(f){return !!f.get('_honey') && (!_hpT || (Date.now()-_hpT)<4000);}
+    /* Honeypot-treffer: nooit stil stoppen. Een echte bezoeker die snel verstuurt,
+       krijgt dezelfde uitweg als bij een mislukte bezorging. */
+    function _botFout(fm){if(!fm)return;var o=fm.querySelector('.verzend-fout');if(o)o.remove();var p=document.createElement('p');p.className='verzend-fout';p.setAttribute('role','alert');p.style.cssText='margin:.8rem 0 0;font-size:.88rem;line-height:1.6;color:var(--red-ink)';p.innerHTML='Het versturen is niet gelukt \u2014 uw gegevens staan nog in het formulier. Probeer het nog eens of bel ons direct: <a href="tel:+31633322257" style="color:inherit;text-decoration:underline">+31 6 33 32 22 57</a>.';fm.appendChild(p);}
         function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];});}
     function fmtPrijs(){return 'Prijs op aanvraag';}   /* vraagprijzen staan niet op de site: bezoekers vragen ze op */
     var HUIS = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11 L12 4 L20.5 11"/><path d="M6 10.2 V20 H18 V10.2"/><circle cx="12" cy="13.7" r="1.5"/><path d="M12 15.2 V18"/></svg>';
@@ -475,7 +478,7 @@
                 '<p class="aanbod-kenmerken">'+kenmerken+'</p>'+
                 '<div class="aanbod-prijs">'+fmtPrijs(w.prijs)+'</div>'+
                 '<p>'+escHtml((w.omschrijving||'').slice(0,140)+((w.omschrijving||'').length>140?'…':''))+'</p>'+
-                '<a class="pillar-cta" href="woning.html?id='+ref+'">Bekijk deze woning →</a> <a class="pillar-cta" href="#inschrijf">Vraagprijs opvragen →</a>'+
+                '<a class="pillar-cta" href="woning.html?id='+ref+'">Bekijk deze woning →</a> <a class="pillar-cta" href="#inschrijf" data-project="'+escHtml(w.adres)+'">Vraagprijs opvragen →</a>'+
                 '</div></article>';
             }).join('');
           } else { grid.innerHTML = leeg; }
@@ -493,13 +496,16 @@
     function stuurLeadDoor(type,data){try{if(location.protocol==='file:'||/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname))return Promise.resolve(true);return (window.fetchLeadWithTimeout || fetch)(LEAD_EMAIL_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:'Website-aanvraag: '+(data.subject||type),_template:'table',Type:type,Naam:data.name||'',Email:data.email||'',Telefoon:data.phone||'',Onderwerp:data.subject||'',Bericht:data.message||''})}).then(function(r){return r.json().catch(function(){return null;}).then(function(j){var ok=r.ok&&!!(j&&String(j.success).toLowerCase()==="true");if(ok)verwijderLokaleLead(data.id);return ok;});}).catch(function(){return false;});}catch(e){return Promise.resolve(false);}}
     function saveLead(type,data){try{var l=JSON.parse(localStorage.getItem(INBOX_KEY)||'[]');if(!Array.isArray(l))l=[];data.id='lead'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);data.type=type;data.date=new Date().toISOString();data.handled=false;l.push(data);localStorage.setItem(INBOX_KEY,JSON.stringify(l));}catch(e){}var cloud=window.pushLeadToCloud?window.pushLeadToCloud(type,data,'te-koop.html'):false;var mail=stuurLeadDoor(type,data);if(!window.hiLeadOk)return mail;return window.hiLeadOk(cloud,mail.then(function(ok){if(ok===false)throw new Error('mail');return ok;})).catch(function(){return false;});}
     var form=document.getElementById('tk-form');
+    if(form)form.noValidate=true; // native validatie alleen zonder JS
     var projectField=document.getElementById('tk-object');
     var resetProject=document.getElementById('tk-project-reset');
-    document.querySelectorAll('#komend [data-project]').forEach(function(link){
-      link.addEventListener('click',function(){
-        if(projectField) projectField.value=link.getAttribute('data-project');
-        if(resetProject) resetProject.hidden=false;
-      });
+    /* Gedelegeerd: ook de aanbodkaarten die pas na de fetch van aanbod.json verschijnen,
+       geven hun adres mee aan het formulier. */
+    document.addEventListener('click',function(e){
+      var link=e.target&&e.target.closest?e.target.closest('[data-project]'):null;
+      if(!link||!projectField)return;
+      projectField.value=link.getAttribute('data-project');
+      if(resetProject) resetProject.hidden=false;
     });
     if(resetProject) resetProject.addEventListener('click',function(){
       projectField.value='Algemeen woningaanbod';
@@ -510,7 +516,7 @@
       e.preventDefault();
       if (!form.reportValidity()) return;
       var f=new FormData(form);
-      if(_isBot(f))return;
+      if(_isBot(f)){_botFout(form);return;}
       var naam=(String(f.get('first_name')||'')+' '+String(f.get('last_name')||'')).trim();
       if(!naam||(!String(f.get('email')||'').trim()&&String(f.get('phone')||'').replace(/\D/g,'').length<6)){ var _v=document.getElementById('tk-first'); if(_v) (function(el){var f=el.form||el.closest('form');var o=f.querySelector('.form-fout');if(o)o.remove();var p=document.createElement('p');p.className='form-fout';p.setAttribute('role','alert');p.style.cssText='margin:.6rem 0 0;font-size:.85rem;color:var(--red-ink)';p.textContent='Vul uw naam in en minstens een e-mailadres of telefoonnummer, dan kunnen wij u bereiken.';el.insertAdjacentElement('afterend',p);el.focus();})(_v); return; }
       var _oudeFout=form.querySelector('.verzend-fout');if(_oudeFout)_oudeFout.remove();

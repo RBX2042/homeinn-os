@@ -73,8 +73,14 @@
   function printContractDoc(html) {
     var w = window.open('', '_blank');
     if (!w) { toast('Sta pop-ups toe om te downloaden of te printen.'); return; }
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>HomeINN B.V. — overeenkomst</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#111;max-width:800px;margin:24px auto;padding:0 18px;line-height:1.5}h1{font-size:20px;color:#0b1e30}h2{font-size:14px;color:#0b1e30;margin:14px 0 4px}img{max-width:140px;height:auto}table{width:100%;border-collapse:collapse}.doc-sign{display:flex;gap:40px;margin-top:34px}.doc-sign>div{flex:1}.doc-sign .line{border-top:1px solid #555;margin-top:42px;padding-top:4px;color:#666;font-size:12px}</style></head><body>' + html + '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},150);}</scr' + 'ipt></body></html>');
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>HomeINN B.V. — overeenkomst</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#111;max-width:800px;margin:24px auto;padding:0 18px;line-height:1.5}h1{font-size:20px;color:#0b1e30}h2{font-size:14px;color:#0b1e30;margin:14px 0 4px}img{max-width:140px;height:auto}table{width:100%;border-collapse:collapse}.doc-sign{display:flex;gap:40px;margin-top:34px}.doc-sign>div{flex:1}.doc-sign .line{border-top:1px solid #555;margin-top:42px;padding-top:4px;color:#666;font-size:12px}</style></head><body>' + html + '</body></html>');
     w.document.close();
+    // Printen vanuit dit venster in plaats van met een inline script in het pop-upvenster (dat een
+    // strikte CSP zonder 'unsafe-inline' zou blokkeren). Pas na het laden (logo), met een terugval.
+    var geprint = false;
+    function druk() { if (geprint) return; geprint = true; try { w.focus(); w.print(); } catch (e) { /* gebruiker print zelf via het menu */ } }
+    if (w.document.readyState === 'complete') setTimeout(druk, 150);
+    else { w.addEventListener('load', function () { setTimeout(druk, 150); }); setTimeout(druk, 2500); }
   }
 
   function renderUnavailable() {
@@ -182,7 +188,7 @@
             row('Rente betaald', money(st.renteBetaald)) +
             row('Identificatie vóór storting', inv.wwft ? '<span class="badge green">✔ Bevestigd</span>' : '<span class="badge red">In behandeling</span>') +
           '</tbody></table>' +
-          ((d.fotos && d.fotos.length) ? subblock('Foto\'s', '<div class="gallery">' + d.fotos.slice(0, 8).map(function (f) { return '<img src="' + esc(f) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'; }).join('') + '</div>') : '') +
+          ((d.fotos && d.fotos.length) ? subblock('Foto\'s', '<div class="gallery">' + d.fotos.slice(0, 8).map(function (f) { return '<img src="' + esc(f) + '" alt="" loading="lazy" data-verberg-bij-fout>'; }).join('') + '</div>') : '') +
           subblock('Projectupdates', projUpdates.length
             ? '<ul class="timeline">' + projUpdates.map(function (u) { return '<li><span class="date">' + fdate(u.date) + '</span><br>' + esc(u.text) + '</li>'; }).join('') + '</ul>'
             : '<p class="empty">Nog geen updates geplaatst.</p>') +
@@ -226,6 +232,12 @@
     var card = pb.closest('.card'); var doc = card ? card.querySelector('.contract-doc') : null;
     if (doc) printContractDoc(doc.innerHTML);
   });
+
+  // Foto's die niet laden verbergen zonder inline onerror (capture: error-events borrelen niet op).
+  document.addEventListener('error', function (e) {
+    var t = e.target;
+    if (t && t.tagName === 'IMG' && t.hasAttribute('data-verberg-bij-fout')) t.style.display = 'none';
+  }, true);
 
   function kpi(label, val) { return '<div class="kpi"><span>' + esc(label) + '</span><strong>' + val + '</strong></div>'; }
   function row(label, val) { return '<tr><td class="muted">' + esc(label) + '</td><td>' + val + '</td></tr>'; }

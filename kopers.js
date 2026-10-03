@@ -87,8 +87,14 @@
   function printContractDoc(html) {
     var w = window.open('', '_blank');
     if (!w) { toast('Sta pop-ups toe om te downloaden/printen.'); return; }
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>HomeINN contract</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#111;max-width:800px;margin:24px auto;padding:0 18px;line-height:1.5}h1{font-size:20px;color:#0b1e30}h2{font-size:14px;color:#0b1e30;margin:14px 0 4px}img{max-width:140px;height:auto}table{width:100%;border-collapse:collapse}.doc-sign{display:flex;gap:40px;margin-top:34px}.doc-sign>div{flex:1}.doc-sign .line{border-top:1px solid #555;margin-top:42px;padding-top:4px;color:#666;font-size:12px}</style></head><body>' + html + '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},150);}</scr' + 'ipt></body></html>');
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>HomeINN contract</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#111;max-width:800px;margin:24px auto;padding:0 18px;line-height:1.5}h1{font-size:20px;color:#0b1e30}h2{font-size:14px;color:#0b1e30;margin:14px 0 4px}img{max-width:140px;height:auto}table{width:100%;border-collapse:collapse}.doc-sign{display:flex;gap:40px;margin-top:34px}.doc-sign>div{flex:1}.doc-sign .line{border-top:1px solid #555;margin-top:42px;padding-top:4px;color:#666;font-size:12px}</style></head><body>' + html + '</body></html>');
     w.document.close();
+    // Printen vanuit dit venster in plaats van met een inline script in het pop-upvenster (dat een
+    // strikte CSP zonder 'unsafe-inline' zou blokkeren). Pas na het laden (logo), met een terugval.
+    var geprint = false;
+    function druk() { if (geprint) return; geprint = true; try { w.focus(); w.print(); } catch (e) { /* gebruiker print zelf via het menu */ } }
+    if (w.document.readyState === 'complete') setTimeout(druk, 150);
+    else { w.addEventListener('load', function () { setTimeout(druk, 150); }); setTimeout(druk, 2500); }
   }
 
   // Contract downloaden/printen (gedelegeerd)

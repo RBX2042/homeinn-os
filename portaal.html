@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="assets/favicon-512.png?v=20260616g">
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
   <link rel="stylesheet" href="tokens.css?v=20261001a">
-  <link rel="stylesheet" href="styles.css?v=20260919c">
+  <link rel="stylesheet" href="styles.css?v=20260922a">
   <style>.side-nav a.nav-item{display:block;text-decoration:none}</style>
 </head>
 <body>
@@ -874,7 +874,7 @@
         <label class="check-label" style="margin:0"><input type="checkbox" name="investOpen"> Open voor geldgevers (achtergestelde lening)</label>
         <label>Financieringsbehoefte (€, intern — niet publiek)<input name="doelbedrag" type="number" min="0" step="any"></label>
         <label>Minimale lening (€, minimaal 100.000 ineens)<input name="minInleg" type="number" min="100000" step="any"></label>
-        <label>Vaste rente (% per jaar; verschijnt op de website en in het portaal van geldgevers)<input name="rendementPct" type="number" min="0" step="any"></label>
+        <label>Vaste rente (% per jaar; verschijnt op de website en in het portaal van geldgevers)<input name="rendementPct" type="number" min="0" step="0.01"></label>
         <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden" title="Alleen een vast aantal maanden of jaren, zoals '12 maanden' of '1 jaar'"></label>
       </div>
       <label>Notitie<textarea name="note" rows="2"></textarea></label>
@@ -1178,7 +1178,7 @@
         <label>Contractdatum<input name="datum" type="date"></label>
         <label>Ingangs-/leverdatum (lening: uiterste stortingsdatum)<input name="ingangsdatum" type="date"></label>
         <label>Looptijd<input name="looptijd" placeholder="Bijv. 12 maanden / onbepaalde tijd (huur)" title="Lening: alleen een vast aantal maanden of jaren, zoals '12 maanden' of '1 jaar'"></label>
-        <label>Vaste rente (% per jaar, lening)<input name="rendementPct" type="number" min="0" step="any"></label>
+        <label>Vaste rente (% per jaar, lening)<input name="rendementPct" type="number" min="0" step="0.01"></label>
       </div>
       <label>Bijzondere bepalingen<textarea name="note" rows="2" placeholder="Ontbindende voorwaarden, waarborgsom, opleverpunten…"></textarea></label>
       <menu>
@@ -1227,7 +1227,7 @@
         <label>Naam<input name="naam" required></label>
         <label>E-mail (voor login portaal)<input name="email" type="email"></label>
         <label>Inleg (€)<input name="bedrag" type="number" min="0" step="any" required></label>
-        <label>Stortingsdatum<input name="datum" type="date" required></label>
+        <label>Stortingsdatum (pas na ontvangst van de hoofdsom)<input name="datum" type="date"></label>
       </div>
       <menu>
         <button class="btn secondary" value="cancel">Annuleren</button>
@@ -1311,8 +1311,8 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div id="print-area" aria-hidden="true"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=20261002a"></script>
-  <script src="app.js?v=20261003a"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+  <script src="cloud.js?v=20261003b"></script>
+  <script src="app.js?v=20261003b"></script>
 </body>
 </html>

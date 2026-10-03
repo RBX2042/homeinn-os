@@ -2009,7 +2009,7 @@ body .page-hero,body .vh-top~main .page-hero{
  position:relative;overflow:hidden;padding:clamp(3rem,5.5vw,5rem) var(--site-gutter) clamp(3.5rem,6vw,6rem);
  background:linear-gradient(90deg,rgba(4,11,20,.82),rgba(4,11,20,.52) 34%,rgba(4,11,20,.18)),radial-gradient(ellipse 120% 80% at 70% 120%,#1a3a5c,var(--navy) 55%,#060f1a)
 }
-body .page-hero::before{content:'';position:absolute;inset:0;background:url('assets/hero-bridge.svg') right center/auto 115% no-repeat;opacity:.12;-webkit-mask:linear-gradient(90deg,transparent 35%,#000 85%);mask:linear-gradient(90deg,transparent 35%,#000 85%);pointer-events:none}
+body .page-hero::before{content:'';position:absolute;inset:0;background:url('assets/hero-bridge.svg?v=20260907') right center/auto 115% no-repeat;opacity:.12;-webkit-mask:linear-gradient(90deg,transparent 35%,#000 85%);mask:linear-gradient(90deg,transparent 35%,#000 85%);pointer-events:none}
 body .page-hero .page-hero-inner,body .vh-top~main .page-hero-inner{position:relative;z-index:1;max-width:var(--site-content);margin:0 auto;padding:0}
 body .hero{min-height:0;display:block}
 body .hero-content{min-height:0;max-width:calc(var(--site-content) + 2 * var(--site-gutter));padding:clamp(3rem,5.5vw,5rem) var(--site-gutter) clamp(3.5rem,6vw,6rem)}

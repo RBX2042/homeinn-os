@@ -3,6 +3,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 // HomeINN bulk-mailing (nieuwsbrief). ALLEEN staff. Verstuurt per ontvanger (privacy).
 // v2 (20 september 2026): elke ontvanger wordt gelogd in hios_emails, zodat het
 // adminpaneel laat zien wie wat heeft gekregen en welke adressen faalden.
+// v3 (3 oktober 2026): staf = rol eigenaar/team ÉN actief, net als public.hios_is_staff().
+//   Een geblokkeerd teamlid (active = false) kan dus geen nieuwsbrief meer versturen.
 Deno.serve(async (req: Request) => {
   const cors = {
     'Access-Control-Allow-Origin': '*',
@@ -19,8 +21,8 @@ Deno.serve(async (req: Request) => {
     const { data: { user } } = await userClient.auth.getUser()
     if (!user) return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401, headers: cors })
     const admin = createClient(url, service)
-    const { data: prof } = await admin.from('hios_profiles').select('role').eq('id', user.id).maybeSingle()
-    const staff = !!(prof && (prof.role === 'eigenaar' || prof.role === 'team'))
+    const { data: prof } = await admin.from('hios_profiles').select('role, active').eq('id', user.id).maybeSingle()
+    const staff = !!(prof && prof.active === true && (prof.role === 'eigenaar' || prof.role === 'team'))
     if (!staff) return new Response(JSON.stringify({ error: 'alleen eigenaar/team mag mailen' }), { status: 403, headers: cors })
 
     const body = await req.json().catch(() => ({}))

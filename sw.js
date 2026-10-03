@@ -5,7 +5,7 @@
    (app.js ~320 kB, cloud.js, styles.css) wordt pas gecachet als iemand het portaal
    daadwerkelijk bezoekt — een bezoeker van de landingspagina hoort die niet te
    downloaden. HTML-pagina's worden bij bezoek gecachet (netwerk eerst). */
-const CACHE = 'homeinn-os-v124';
+const CACHE = 'homeinn-os-v125';
 const CORE = [
   'homeinn-public.html', 'homeinn-public.js', 'homeinn-public.css', 'site-nav.js', 'lead-cloud.js',
   'lightbox.js', 'tokens.css', 'fonts/fonts.css', 'manifest.webmanifest', 'aanbod.json',
@@ -40,9 +40,9 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return; // externe requests (CDN, kaarten) ongemoeid
 
-  // Data-JSON (aanbod.json, portefeuille.json, …) altijd vers proberen op te halen,
-  // val terug op cache (offline). Een JSON-wijziging bumpt geen CACHE.
-  if (/\.json$/.test(url.pathname)) {
+  // Data-JSON (aanbod.json, portefeuille.json, …) en de manifesten altijd vers proberen op te halen,
+  // val terug op cache (offline). Een JSON- of manifestwijziging bumpt geen CACHE.
+  if (/\.(json|webmanifest)$/.test(url.pathname)) {
     e.respondWith(fetch(req).then(r => bewaar(req, r)).catch(() => caches.match(req)));
     return;
   }
@@ -52,7 +52,10 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     e.respondWith(
       Promise.resolve(e.preloadResponse).then(p => p || fetch(req)).then(r => bewaar(req, r)).catch(() =>
-        caches.match(req).then(m => m || caches.match(PORTAAL.test(url.pathname) ? 'portaal.html' : 'homeinn-public.html'))
+        caches.match(req)
+          .then(m => m || caches.match(PORTAAL.test(url.pathname) ? 'portaal.html' : 'homeinn-public.html'))
+          // Portaal nog nooit bezocht = portaal.html niet gecachet: val dan terug op de (voorgecachete) publieke site.
+          .then(m => m || caches.match('homeinn-public.html'))
       )
     );
     return;

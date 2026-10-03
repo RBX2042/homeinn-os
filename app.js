@@ -4,6 +4,14 @@
    Alle data wordt lokaal opgeslagen (localStorage).
    ============================================================ */
 
+/* Nooit in een frame op een andere pagina (clickjacking). Op homeinn.nl staat frame-ancestors 'self'
+   in de CSP; de GitHub Pages-kopie stuurt geen headers. Alleen dit bestand en admin.js doen dit:
+   cloud.js en lead-cloud.js worden ook door de frame met de website-preview geladen. */
+if (window.top !== window.self) {
+  document.documentElement.style.display = 'none';
+  try { window.top.location = window.location.href; } catch (e) { /* pagina blijft verborgen */ }
+}
+
 const STORAGE_KEY = 'homeinn-os-v3';
 const INBOX_KEY = 'homeinn-inbox-v1'; // gedeeld met de website (homeinn-public.js)
 
@@ -93,7 +101,11 @@ function seedData() {
   const t = todayISO();
   return {
     version: 3,
+    // Demo-werkstaat: zolang deze vlag staat, zijn 'Synchroniseer nu' en 'Backup naar cloud'
+    // geblokkeerd (cloud.js). Gaat weg bij herstel van cloud/backup of 'Begin met een lege administratie'.
+    demo: true,
     lastBackup: '',
+    cloudLedger: {}, // per cloudtabel de local_id's die deze werkstaat ooit pushte (voor verwijderingen)
     settings: {
       companyName: 'HomeINN', address: 'Rotterdam', email: 'info@homeinn.nl', phone: '[TELEFOON]',
       kvk: '[KVK-NUMMER]', btw: '[BTW-NUMMER]', siteUrl: 'https://homeinn.nl',
@@ -338,6 +350,8 @@ function sanitizeState(parsed) {
   const out = {};
   Object.keys(seed).forEach(key => {
     if (Array.isArray(seed[key])) out[key] = Array.isArray(parsed[key]) ? parsed[key] : [];
+    else if (key === 'demo') out.demo = parsed.demo === true; // nooit van de seed erven
+    else if (key === 'cloudLedger') out.cloudLedger = (parsed.cloudLedger && typeof parsed.cloudLedger === 'object' && !Array.isArray(parsed.cloudLedger)) ? parsed.cloudLedger : {};
     else if (key === 'settings') out[key] = Object.assign({}, seed.settings, (parsed.settings && typeof parsed.settings === 'object') ? parsed.settings : {});
     else out[key] = parsed[key] ?? seed[key];
   });
@@ -372,7 +386,10 @@ function save() {
 
 /* ---------- Aanvragen (website-inbox) ---------- */
 let cloudLeadsCache = [];
-let cloudLeadsLoaded = false;
+let cloudLeadsLoadedAt = 0;   // tijdstip van de laatste geslaagde ophaalronde (0 = nog nooit)
+let cloudLeadsFailedAt = 0;   // tijdstip van de laatste mislukte ronde (remt herhaalpogingen)
+let cloudLeadsBusy = false;
+let cloudLeadsError = '';
 
 function loadInbox() {
   try {
@@ -403,15 +420,36 @@ function combinedInbox() {
   return local.concat(cloudOnly);
 }
 
-// Haalt eenmalig per portaalsessie de leads op die via andere apparaten zijn binnengekomen.
-// Faalt stil zonder cloud-login/staff-rol — de lokale inbox blijft dan gewoon leidend.
-function fetchCloudLeads() {
-  if (cloudLeadsLoaded || !window.HCloud || !HCloud.available() || !HCloud.status().staff) return;
-  cloudLeadsLoaded = true;
+// Haalt de leads op die via andere apparaten zijn binnengekomen: bij het openen van Aanvragen of
+// het dashboard, opnieuw zodra de vorige ronde ouder is dan een minuut (nieuwe aanvragen tijdens een
+// lange sessie), en na een mislukte ronde opnieuw na 30 seconden. Zonder cloud-login/staff-rol doet
+// dit niets — de lokale inbox blijft dan leidend. Een fout wordt gemeld, niet ingeslikt: een lege
+// inbox mag nooit 'geen aanvragen' betekenen terwijl het ophalen mislukte.
+function fetchCloudLeads(force = false) {
+  if (!window.HCloud || !HCloud.available() || !HCloud.status().staff) return;
+  if (cloudLeadsBusy) return;
+  const nu = Date.now();
+  if (!force && cloudLeadsLoadedAt && nu - cloudLeadsLoadedAt < 60000) return;
+  if (!force && cloudLeadsFailedAt && nu - cloudLeadsFailedAt < 30000) return;
+  cloudLeadsBusy = true;
   HCloud.fetchLeads().then(rows => {
     cloudLeadsCache = rows || [];
+    cloudLeadsLoadedAt = Date.now();
+    cloudLeadsFailedAt = 0;
+    cloudLeadsError = '';
     if (currentView === 'inbox' || currentView === 'dashboard') renderCurrent();
-  }).catch(() => {});
+  }).catch(err => {
+    cloudLeadsFailedAt = Date.now();
+    cloudLeadsError = (err && err.message) || String(err);
+    if (currentView === 'inbox' || currentView === 'dashboard') {
+      showToast('Aanvragen uit de cloud konden niet worden geladen: ' + cloudLeadsError);
+      if (currentView === 'inbox') renderCurrent();
+    }
+  }).finally(() => { cloudLeadsBusy = false; });
+}
+
+function cloudLeadFout(actie) {
+  return err => showToast(`${actie} in de cloud mislukt: ${(err && err.message) || err}. Vernieuw Aanvragen en probeer het opnieuw.`);
 }
 
 function setLeadHandled(id, value) {
@@ -420,13 +458,13 @@ function setLeadHandled(id, value) {
   if (lead) {
     lead.handled = value; saveInbox(list);
     const cl = cloudLeadsCache.find(c => c.local_id === id);
-    if (cl && window.HCloud && HCloud.available()) { cl.handled = value; HCloud.setLeadHandled(cl.id, value).catch(() => {}); }
+    if (cl && window.HCloud && HCloud.available()) { cl.handled = value; HCloud.setLeadHandled(cl.id, value).catch(cloudLeadFout('Status bijwerken')); }
     return lead;
   }
   const cloudLead = cloudLeadsCache.find(cl => (cl.local_id || cl.id) === id);
   if (cloudLead) {
     cloudLead.handled = value;
-    if (window.HCloud && HCloud.available()) HCloud.setLeadHandled(cloudLead.id, value).catch(() => {});
+    if (window.HCloud && HCloud.available()) HCloud.setLeadHandled(cloudLead.id, value).catch(cloudLeadFout('Status bijwerken'));
     return { id, handled: value, name: cloudLead.name, email: cloudLead.email, phone: cloudLead.phone, subject: cloudLead.subject, message: cloudLead.message, date: cloudLead.created_at };
   }
   return null;
@@ -453,6 +491,19 @@ function nextRef(prefix, list) {
     if (m && Number(m[1]) === year) max = Math.max(max, Number(m[2]));
   });
   return `${prefix}-${year}-${String(max + 1).padStart(3, '0')}`;
+}
+
+/* Contractnummers lopen alleen op: een verwijderd contract geeft zijn nummer niet vrij, omdat het
+   (bijvoorbeeld in het portaal of op papier) al in omloop kan zijn. */
+function nextConRef() {
+  const extra = state.settings && state.settings.lastConRef ? [{ ref: state.settings.lastConRef }] : [];
+  return nextRef('CON', state.contracten.concat(extra));
+}
+
+function noteerCloudLedger(table, id) {
+  state.cloudLedger = (state.cloudLedger && typeof state.cloudLedger === 'object') ? state.cloudLedger : {};
+  const lijst = state.cloudLedger[table] = Array.isArray(state.cloudLedger[table]) ? state.cloudLedger[table] : [];
+  if (!lijst.includes(id)) lijst.push(id);
 }
 
 function refLabel(ref) {
@@ -662,14 +713,14 @@ function buildSignals() {
     const acts = (c.activities || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     const laatste = acts[0];
     if (laatste && laatste.nextFollowUp && laatste.nextFollowUp <= t) {
-      signals.push({ level: 'middel', text: `Vervolgactie voor ${c.name} (afgesproken op ${fmtDate(laatste.nextFollowUp)}): ${esc((laatste.description || '').slice(0, 50))}`, go: 'relations' });
+      signals.push({ level: 'middel', text: `Vervolgactie voor ${c.name} (afgesproken op ${fmtDate(laatste.nextFollowUp)}): ${(laatste.description || '').slice(0, 50)}`, go: 'relations' });
     }
   });
   // Huurachterstand: onbetaalde uitgaande facturen over de vervaldatum
   const teLaat = (state.invoices || []).filter(f => f.status !== 'Betaald' && f.status !== 'Concept' && f.due && f.due < t);
   teLaat.forEach(f => {
     const dgn = daysBetween(f.due, t);
-    signals.push({ level: 'hoog', text: `Huurachterstand: ${fmtMoney(f.amount)} van ${esc(f.debiteur || propertyLabel(f.propertyId))} — ${dgn} dagen over vervaldatum (${esc(f.desc)}).`, go: 'money' });
+    signals.push({ level: 'hoog', text: `Huurachterstand: ${fmtMoney(f.amount)} van ${f.debiteur || propertyLabel(f.propertyId)} — ${dgn} dagen over vervaldatum (${f.desc}).`, go: 'money' });
   });
   // Backup-discipline: alles staat in één browser
   if (!state.lastBackup) {
@@ -847,27 +898,28 @@ function renderInbox() {
   $('#inbox-kpis').innerHTML = `
     <article class="kpi small"><span>Nieuw / op te volgen</span><strong class="${open.length ? 'alert' : ''}">${open.length}</strong><small>${open.length ? 'reageer binnen 4 uur — dat beloof je op de site' : 'alles afgehandeld'}</small></article>
     <article class="kpi small"><span>Waarvan pand-verkopen</span><strong>${verkoop}</strong><small>directe aankoopkansen</small></article>
-    <article class="kpi small"><span>Totaal ontvangen</span><strong>${list.length}</strong><small>via website-formulieren</small></article>`;
+    <article class="kpi small"><span>Totaal ontvangen</span><strong>${list.length}</strong><small class="${cloudLeadsError ? 'alert' : ''}">${cloudLeadsError ? 'let op: aanvragen uit de cloud niet geladen — vernieuw straks opnieuw' : 'via website-formulieren'}</small></article>`;
 
   $('#inbox-table').innerHTML = list.length ? list.map(l => `
     <tr class="${l.handled ? '' : 'late-row'}">
-      <td>${fmtDateTime(l.date)}</td>
+      <td>${esc(fmtDateTime(l.date))}</td>
       <td>${statusBadge(l.type || 'Contact')}</td>
       <td><strong>${esc(l.name || 'Onbekend')}</strong>${l.portfolio ? `<br><span class="sub">${esc(l.portfolio)}</span>` : ''}</td>
       <td>${esc(leadContactInfo(l)) || '—'}</td>
       <td>${esc(l.subject || '—')}${l.message ? `<br><span class="sub">${esc(l.message)}</span>` : ''}</td>
       <td>${statusBadge(l.handled ? 'Afgehandeld' : 'Nieuw')}</td>
       <td class="row-actions">
-        <button class="btn primary slim" data-action="inbox-to-deal" data-id="${l.id}" title="Maak aankoopkans">→ Kans</button>
-        <button class="btn secondary slim" data-action="inbox-to-contact" data-id="${l.id}" title="Maak relatie">→ Relatie</button>
-        <button class="icon-btn" data-action="inbox-handled" data-id="${l.id}" title="${l.handled ? 'Terugzetten naar nieuw' : 'Markeer afgehandeld'}">${l.handled ? '↩' : '✓'}</button>
-        <button class="icon-btn" data-action="inbox-del" data-id="${l.id}" title="Verwijderen">🗑</button>
+        <button class="btn primary slim" data-action="inbox-to-deal" data-id="${esc(l.id)}" title="Maak aankoopkans">→ Kans</button>
+        <button class="btn secondary slim" data-action="inbox-to-contact" data-id="${esc(l.id)}" title="Maak relatie">→ Relatie</button>
+        <button class="icon-btn" data-action="inbox-handled" data-id="${esc(l.id)}" title="${l.handled ? 'Terugzetten naar nieuw' : 'Markeer afgehandeld'}">${l.handled ? '↩' : '✓'}</button>
+        <button class="icon-btn" data-action="inbox-del" data-id="${esc(l.id)}" title="Verwijderen">🗑</button>
       </td>
     </tr>`).join('') : emptyRow(7, 'Nog geen aanvragen. Formulieren op je website komen hier automatisch binnen — test het via Website preview (Gratis gesprek of het contactformulier).');
 }
 
 /* ---------- Dashboard ---------- */
 function renderDashboard() {
+  fetchCloudLeads(); // nieuwe aanvragen uit de cloud (begrensd: hoogstens eens per minuut)
   const t = todayISO();
   const inBezit = state.properties.filter(p => p.status !== 'Verkocht');
   const investTotaal = inBezit.reduce((sum, p) => sum + propertyFinance(p).investering, 0);
@@ -1445,6 +1497,7 @@ function renderPropertyDetail() {
               <button class="task-check ${doc.done ? 'checked' : ''}" data-action="toggle-doc" data-id="${p.id}" data-item="${doc.id}" aria-label="Afvinken"></button>
               <span>${esc(doc.name)}</span>
               ${(doc.file || doc.url) ? `<a class="text-btn doc-link" href="${esc(doc.file || doc.url)}" download="${esc(doc.name)}" target="_blank" rel="noopener">Bekijk ↗</a>` : ''}
+              ${(doc.file || doc.url) && state.projects.some(pr => pr.propertyId === p.id) ? `<button class="text-btn" data-action="toggle-doc-share" data-id="${p.id}" data-item="${doc.id}" title="${doc.deelMetGeldgevers ? 'Wordt gedeeld met de geldgevers van het project op dit pand — klik om te stoppen' : 'Niet gedeeld — klik om dit document met de geldgevers van het project te delen'}">${doc.deelMetGeldgevers ? 'Gedeeld met geldgevers ✓' : 'Deel met geldgevers'}</button>` : ''}
               <button class="icon-btn" data-action="del-doc" data-id="${p.id}" data-item="${doc.id}" title="Verwijderen">🗑</button>
             </div>`).join('') || '<p class="empty">Geen documenten.</p>'}
         </div>
@@ -1903,7 +1956,7 @@ function renderProjectDetail() {
           return `<div class="totals-box">
             <div><dt>Hoofdsom geleend</dt><dd>${fmtMoney(geleend)}${doel ? ' van ' + fmtMoney(doel) + ' financieringsbehoefte (' + pct + '%)' : ''}</dd></div>
             ${doel ? `<div class="progress"><i style="width:${pct}%"></i></div>` : ''}
-            ${pr.invest?.open ? `<div><dt>Min. hoofdsom · rente · looptijd</dt><dd>${fmtMoney(pr.invest.minInleg)} · ${fmtNum(pr.invest.rendementPct, 1)}% vast/jr · ${esc(pr.invest.looptijd || '—')}</dd></div>` : ''}
+            ${pr.invest?.open ? `<div><dt>Min. hoofdsom · rente · looptijd</dt><dd>${fmtMoney(pr.invest.minInleg)} · ${fmtNum(pr.invest.rendementPct, 2)}% vast/jr · ${esc(pr.invest.looptijd || '—')}</dd></div>` : ''}
           </div>`;
         })()}
         ${(() => {
@@ -1922,7 +1975,7 @@ function renderProjectDetail() {
                 <td class="row-actions"><button class="icon-btn" data-action="edit-payout" data-id="${pr.id}" data-item="${i.id}" data-payout="${u.id}" title="Bewerken">✎</button>
                 <button class="icon-btn" data-action="del-payout" data-id="${pr.id}" data-item="${i.id}" data-payout="${u.id}" title="Verwijderen">🗑</button></td></tr>`).join('')}</tbody>
             </table></div></td></tr>` : '';
-            return `<tr><td>${esc(i.naam)}<br><span class="sub">${i.datum ? 'Storting ' + fmtDate(i.datum) + (l.vervaldatum ? ' · vervalt ' + fmtDate(l.vervaldatum) : '') : 'Nog niet gestort'}</span></td><td><strong>${fmtMoney(i.bedrag)}</strong>${(Number(i.bedrag) || 0) < MIN_HOOFDSOM ? '<br><span class="sub alert">onder € 100.000</span>' : ''}</td>
+            return `<tr><td>${esc(i.naam)}<br><span class="sub">${i.hoedanigheid ? esc(i.hoedanigheid === 'zakelijk' ? 'Zakelijk' : i.hoedanigheid === 'particulier' ? 'Particulier' : i.hoedanigheid) + ' · ' : ''}${i.datum ? 'Storting ' + fmtDate(i.datum) + (l.vervaldatum ? ' · vervalt ' + fmtDate(l.vervaldatum) : '') : 'Nog niet gestort'}</span></td><td><strong>${fmtMoney(i.bedrag)}</strong>${(Number(i.bedrag) || 0) < MIN_HOOFDSOM ? '<br><span class="sub alert">onder € 100.000</span>' : ''}</td>
             <td>${fmtMoney(Math.round((Number(i.bedrag) || 0) * (rPct || 0) / 100))}</td>
             <td>${fmtMoney(l.renteBetaald)} / ${fmtMoney(l.afgelost)}${betalingen.length ? `<br><span class="sub">${betalingen.length} betaling${betalingen.length === 1 ? '' : 'en'}</span>` : ''}</td>
             <td><button class="link-toggle ${i.wwft ? 'maint-done' : 'maint-open'}" data-action="wwft-toggle" data-id="${pr.id}" data-item="${i.id}" title="Klik om te wisselen">${i.wwft ? '✔ Bevestigd' : '⚠ Te doen'}</button></td>
@@ -1936,7 +1989,7 @@ function renderProjectDetail() {
           <input name="naam" placeholder="Naam geldgever…" required>
           <input name="email" type="email" placeholder="E-mail (voor login portaal)">
           <input name="bedrag" type="number" step="any" min="${MIN_HOOFDSOM}" placeholder="€ hoofdsom (min. 100.000)" required>
-          <select name="hoedanigheid" required title="Bepaalt o.a. of het overdrachtsverbod geldt (art. 3:83 lid 3 BW) en welke rechter bevoegd is">
+          <select name="hoedanigheid" required title="Wordt vastgelegd voor de administratie en de advocaat; de overeenkomst is voor particulier en zakelijk gelijk">
             <option value="" disabled selected>Leent als…</option>
             <option value="particulier">Particulier (niet voor beroep of bedrijf)</option>
             <option value="zakelijk">Zakelijk (beroep, bedrijf, holding)</option>
@@ -2198,12 +2251,21 @@ function renderCloudPanel() {
     return;
   }
   const sync = st.lastSync ? `Laatste sync: ${fmtDateTime(st.lastSync)}.` : 'Nog niet gesynchroniseerd.';
+  const demo = window.HCloud && HCloud.isDemoState && HCloud.isDemoState(state);
+  const demoBlok = demo ? `
+      <div class="panel" style="margin:12px 0;border-color:var(--gold,#b8933a)">
+        <p class="hint" style="margin:0 0 8px"><strong>Je werkt met demo-gegevens.</strong> Synchroniseren en 'Backup naar cloud' staan uit, zodat er geen voorbeeldpanden, -projecten of een voorbeeld-geldgever in de echte cloud (en in de portalen) terechtkomen en de echte cloud-backup niet wordt overschreven. Haal je eigen gegevens op met "Herstel van cloud" of "Herstel backup", of begin leeg.</p>
+        <div class="head-actions">
+          <button class="btn secondary slim" data-action="demo-leeg">Begin met een lege administratie</button>
+          ${state.demo === true ? '<button class="btn secondary slim" data-action="demo-eigen">Dit zijn al mijn eigen gegevens</button>' : ''}
+        </div>
+      </div>` : '';
   el.innerHTML = `
     <div class="totals-box">
       <div><dt>Ingelogd als</dt><dd>${esc(st.email)}</dd></div>
       <div><dt>Rol</dt><dd>${esc(st.role || '—')} ${st.staff ? '<span class="badge green">staff</span>' : '<span class="badge gray">extern</span>'}</dd></div>
     </div>
-    ${st.staff ? `
+    ${st.staff ? `${demoBlok}
       <p class="hint">${sync} Synchroniseren stuurt je panden, projecten, geldgevers en updates naar de cloud (voor de portalen) én haalt nieuwe huurder-meldingen (incl. foto) terug naar je portaal.</p>
       <div class="head-actions">
         <button class="btn primary slim" data-action="cloud-sync">Synchroniseer nu</button>
@@ -2559,7 +2621,7 @@ function renderInvestorReports() {
       <div class="table-wrap"><table class="investor-table">
         <thead><tr><th>Geldgever</th><th>Hoofdsom</th><th>Uitstaand</th><th>Rente/jr</th>${jaren.map(j => `<th>Rente betaald ${j}</th>`).join('')}<th>Volgende rentebetaling</th><th>Vervaldatum</th><th>Identificatie</th></tr></thead>
         <tbody>${list.map((e, idx) => `<tr class="investor-row" data-action="toggle-investor" data-idx="${idx}">
-          <td><strong>${esc(e.naam)}</strong>${e.email ? `<br><span class="sub">${esc(e.email)}</span>` : ''}<br><span class="sub">${e.leningen.length} lening${e.leningen.length === 1 ? '' : 'en'} · ${fmtNum(e.rentePct, 1)}% vaste rente</span></td>
+          <td><strong>${esc(e.naam)}</strong>${e.email ? `<br><span class="sub">${esc(e.email)}</span>` : ''}<br><span class="sub">${e.leningen.length} lening${e.leningen.length === 1 ? '' : 'en'} · ${fmtNum(e.rentePct, 2)}% vaste rente</span></td>
           <td><strong>${fmtMoney(e.hoofdsom)}</strong></td>
           <td>${fmtMoney(e.uitstaand)}</td>
           <td>${fmtMoney(Math.round(e.renteJaar))}</td>
@@ -2580,7 +2642,7 @@ function investorLoanDetail(e) {
   const leningen = e.leningen.map(l => `<tr>
     <td>${esc(l.project)}</td>
     <td style="text-align:right">${fmtMoney(l.hoofdsom)}</td>
-    <td>${fmtNum(l.rPct, 1)}%</td>
+    <td>${fmtNum(l.rPct, 2)}%</td>
     <td>${l.storting ? fmtDate(l.storting) : '<span class="alert">nog niet gestort</span>'}</td>
     <td>${esc(l.looptijd || '—')}</td>
     <td>${l.volgendeRente ? fmtDate(l.volgendeRente) : '—'}</td>
@@ -2673,7 +2735,7 @@ function renderAds() {
       const foto = (p.fotos || [])[0];
       return `<section class="panel ad-card">
         <div class="ad-card-head">
-          ${foto ? `<img class="ad-thumb" src="${esc(foto)}" alt="" onerror="this.style.display='none'">` : ''}
+          ${foto ? `<img class="ad-thumb" src="${esc(foto)}" alt="" data-verberg-bij-fout>` : ''}
           <div class="ad-card-info">
             <h2>${esc(p.address)}, ${esc(p.city)} ${statusBadge(p.status)}</h2>
             <p class="sub">${esc(p.ptype)}${Number(p.m2) ? ' · ' + p.m2 + ' m²' : ''}${Number(p.kamers) ? ' · ' + p.kamers + ' kamers' : ''} · ${Number(p.vraagprijs) ? fmtMoney(p.vraagprijs) + ' k.k.' : (Number(p.maandhuur) ? fmtMoney(p.maandhuur) + ' p/m' : 'prijs op aanvraag')}</p>
@@ -2943,8 +3005,12 @@ function openInvestorModal(projectId, investorId) {
   ['naam', 'email', 'bedrag', 'datum'].forEach(k => form.elements[k].value = inv[k] ?? '');
   // Nieuwe hoofdsommen: ten minste € 100.000 (bestaande lagere bedragen blijven ongewijzigd opslaanbaar).
   form.elements.bedrag.min = (Number(inv.bedrag) || 0) < MIN_HOOFDSOM ? '0' : String(MIN_HOOFDSOM);
-  // Geen stortingsdatum zonder bevestigde identificatie.
-  form.elements.datum.required = !!inv.wwft;
+  // Geen stortingsdatum zonder bevestigde identificatie: het veld is dan uitgeschakeld (en wordt niet
+  // meegestuurd). Na bevestiging is het optioneel — tussen identificatie en storting zit gewoon tijd,
+  // en naam, e-mail of hoofdsom moeten dan nog te wijzigen zijn zonder een datum te verzinnen.
+  form.elements.datum.required = false;
+  form.elements.datum.disabled = !inv.wwft;
+  form.elements.datum.title = inv.wwft ? 'Leeg laten zolang de hoofdsom niet is ontvangen' : 'Bevestig eerst de identificatie';
   $('#investor-modal-title').textContent = inv.wwft ? `Geldgever — ${inv.naam}` : `Geldgever — ${inv.naam} (identificatie nog niet bevestigd)`;
   $('#investor-modal').showModal();
 }
@@ -3033,11 +3099,15 @@ function renderLiquidity() {
 }
 
 /* ---------- Mailing / nieuwsbrief ---------- */
+/* Doelgroepen: alleen geldgevers met een lopende lening en relaties. Website-aanvragers zijn bewust
+   GEEN doelgroep: de formulieren vragen geen toestemming voor een nieuwsbrief, de site belooft
+   'geen nieuwsbrief zonder uw toestemming' en gebruikt hun gegevens 'uitsluitend om uw aanvraag te
+   behandelen' (Telecommunicatiewet art. 11.7: vooraf toestemming). Een relatie die uit een aanvraag
+   is aangemaakt, staat daarom standaard op 'Geen mailings sturen'. */
 function mailingAudienceEmails(audiences) {
   const out = [];
   if (audiences.includes('investeerders')) state.projects.forEach(p => (p.investeerders || []).forEach(i => { if (i.email) out.push(i.email); }));
   if (audiences.includes('relaties')) state.contacts.forEach(c => { if (c.email && !c.geenMailing) out.push(c.email); });
-  if (audiences.includes('leads')) combinedInbox().forEach(l => { if (l.email && !l.handled && l.type !== 'Investeerder') out.push(l.email); /* geldgevers is 'geen nieuwsbrief' beloofd */ });
   return [...new Set(out.map(e => String(e).trim().toLowerCase()).filter(e => /.+@.+\..+/.test(e)))];
 }
 
@@ -3055,8 +3125,7 @@ function mailingHtml(body) {
 function renderMailing() {
   const counts = {
     investeerders: mailingAudienceEmails(['investeerders']).length,
-    relaties: mailingAudienceEmails(['relaties']).length,
-    leads: mailingAudienceEmails(['leads']).length
+    relaties: mailingAudienceEmails(['relaties']).length
   };
   const st = (window.HCloud && HCloud.status()) || { ready: false };
   const camps = (state.campaigns || []).slice();
@@ -3067,10 +3136,10 @@ function renderMailing() {
         <div class="panel-head compact"><h2>Nieuwe mailing</h2></div>
         <p class="hint">Stuur een nieuwsbrief of update. Elke ontvanger krijgt een persoonlijke e-mail (geen zichtbare adressen van anderen).</p>
         <div class="form-grid">
-          <label class="check-label" style="margin:0"><input type="checkbox" class="mail-aud" value="investeerders" checked> Investeerders (${counts.investeerders})</label>
+          <label class="check-label" style="margin:0"><input type="checkbox" class="mail-aud" value="investeerders"> Geldgevers met een lening (${counts.investeerders})</label>
           <label class="check-label" style="margin:0"><input type="checkbox" class="mail-aud" value="relaties"> Relaties (${counts.relaties})</label>
-          <label class="check-label" style="margin:0"><input type="checkbox" class="mail-aud" value="leads"> Website-leads (${counts.leads})</label>
         </div>
+        <p class="hint" style="margin-top:6px">Kies bewust een doelgroep. Website-aanvragers krijgen geen nieuwsbrief: daar hebben zij geen toestemming voor gegeven.</p>
         <label style="display:block;margin-top:10px">Onderwerp<input id="mail-subject" placeholder="Bijv. HomeINN update — voortgang projecten" style="width:100%"></label>
         <label style="display:block;margin-top:10px">Bericht<textarea id="mail-body" rows="8" placeholder="Beste,&#10;&#10;..." style="width:100%"></textarea></label>
         <div class="head-actions" style="margin-top:12px">
@@ -3086,7 +3155,7 @@ function renderMailing() {
             <td>${fmtDate(c.datum)}</td><td>${esc(c.onderwerp)}</td><td class="sub">${esc((c.audience || []).join(', '))}</td>
             <td>${c.aantal}</td><td>${esc(c.resultaat || c.status || '—')}</td></tr>`).join('') || emptyRow(5, 'Nog geen mailings verzonden.')}</tbody>
         </table></div>
-        <p class="report-note">AVG: stuur commerciële mail alleen naar ontvangers die daarvoor toestemming gaven. Investeerders/relaties met een lopende relatie mag je informeren.</p>
+        <p class="report-note">AVG en Telecommunicatiewet: stuur commerciële mail alleen naar ontvangers die daarvoor toestemming gaven. Geldgevers en relaties met een lopende relatie mag je informeren over die relatie; wie zich afmeldt, zet je bij Relaties op 'Geen mailings sturen'.</p>
       </section>
     </div>`;
 }
@@ -3122,12 +3191,29 @@ function isOudLeningsmodel(c) {
   return !!c && c.type === INV_CONTRACT && c.model !== LENING_MODEL && (c.status === 'Verstuurd' || c.status === 'Getekend');
 }
 
+/* Een verstuurde of getekende leningsovereenkomst (elk model) ligt vast: niet wijzigen, niet
+   verwijderen en de status niet terugzetten. Alleen 'Verstuurd' → 'Getekend' mag nog. Het verstuurde
+   of getekende exemplaar is leidend; een correctie is een nieuwe overeenkomst, via de advocaat. */
+const BEVROREN_MELDING = 'deze leningsovereenkomst is verstuurd of getekend en ligt daarmee vast; het verstuurde of getekende exemplaar is leidend. Een correctie gaat via een nieuwe overeenkomst; leg die eerst voor aan de advocaat';
+function isBevrorenLening(c) {
+  return !!c && c.type === INV_CONTRACT && (c.status === 'Verstuurd' || c.status === 'Getekend');
+}
+
+/* De overeenkomst drukt de rente af met hoogstens twee decimalen; meer decimalen zouden afgerond
+   op papier komen en dan afwijken van registratie en portaal. */
+function renteHeeftTweeDecimalen(v) {
+  const n = Number(v) || 0;
+  return Math.abs(Math.round(n * 100) - n * 100) < 1e-6;
+}
+
 /* Looptijd van een lening: alleen een vast aantal maanden of jaren ('12 maanden', '1 jaar'). Open of
    voorwaardelijke termijnen ('tot verkoop', 'onbepaald', '12 maanden of tot verkoop') worden geweigerd. */
 const LENING_LOOPTIJD_RE = /^\s*(\d+)\s*(maand|maanden|jaar)\s*$/i;
 function geldigeLeningLooptijd(looptijd) {
   const m = LENING_LOOPTIJD_RE.exec(String(looptijd || ''));
-  return !!m && Number(m[1]) > 0;
+  if (!m) return false;
+  // De site belooft 'looptijd vanaf één jaar': korter dan 12 maanden mag niet.
+  return (/jaar/i.test(m[2]) ? Number(m[1]) * 12 : Number(m[1])) >= 12;
 }
 
 function contractTitle(c) {
@@ -3151,9 +3237,22 @@ function contractInvestor(c) {
   return null;
 }
 
+/* Waarom een geldgever-record niet weg mag (leeg = mag wel): na de storting, of zodra er een
+   verstuurde of getekende leningsovereenkomst voor deze geldgever in dit project bestaat. */
+function vasteLeningOvereenkomst(pr, inv) {
+  return (state.contracten || []).find(c => isBevrorenLening(c) &&
+    (c.projectId === pr.id || (!c.projectId && c.propertyId && c.propertyId === pr.propertyId)) && contractInvestor(c) === inv) || null;
+}
+function leningVerwijderBlokkade(pr, inv) {
+  if (inv.datum) return 'de lening is gestort (stortingsdatum ' + fmtDate(inv.datum) + '). Een gestorte lening blijft in de administratie; leg een correctie vast met een betaling of overleg met de advocaat.';
+  const contract = vasteLeningOvereenkomst(pr, inv);
+  if (contract) return `er is een ${contract.status === 'Getekend' ? 'getekende' : 'verstuurde'} leningsovereenkomst (${contract.ref || 'zonder referentie'}) voor deze geldgever.`;
+  return '';
+}
+
 /* Harde blokkades voor printen, 'Verstuurd' en 'Getekend' bij een leningsovereenkomst.
    Opslaan als 'Concept' blijft mogelijk; de lijst toont dan welke regel faalt. */
-function investmentContractIssues(c) {
+function investmentContractIssues(c, opties = {}) {
   if (!c || c.type !== INV_CONTRACT) return [];
   if (isOudLeningsmodel(c)) return [OUD_MODEL_MELDING];
   const issues = [];
@@ -3162,17 +3261,31 @@ function investmentContractIssues(c) {
   // verklaring onjuist zijn; daarom geen print, 'Verstuurd' of 'Getekend' tot datum en conclusie vastliggen.
   const bank = state.settings || {};
   if (!String(bank.bankcheckDatum || '').trim()) issues.push('bankcheck niet vastgelegd: vul in Instellingen de datum in van de controle van alle bankfinancieringen (verbod op extra schuld, achterstellingsakte, betalingsblokkade)');
-  else if (!String(bank.bankcheckConclusie || '').trim()) issues.push('conclusie van de bankcheck ontbreekt (Instellingen)');
+  else {
+    if (!String(bank.bankcheckConclusie || '').trim()) issues.push('conclusie van de bankcheck ontbreekt (Instellingen)');
+    // De verklaring geldt bij ondertekening: de check mag niet in de toekomst liggen, niet verouderd zijn
+    // en niet ouder zijn dan een financiering die daarna is aangegaan.
+    const bd = String(bank.bankcheckDatum).trim();
+    if (bd > todayISO()) issues.push('de datum van de bankcheck ligt in de toekomst (Instellingen)');
+    else if (daysBetween(bd, todayISO()) > 90) issues.push('de bankcheck is ouder dan 90 dagen: herhaal de controle en leg haar opnieuw vast (Instellingen)');
+    const nieuweFin = (state.loans || []).find(l => l.start && String(l.start) > bd);
+    if (nieuweFin) issues.push(`er is financiering aangegaan na de bankcheck (${nieuweFin.soort || 'lening'}, ${fmtDate(nieuweFin.start)}): herhaal de bankcheck en leg haar opnieuw vast`);
+  }
   if ((Number(c.bedrag) || 0) < MIN_HOOFDSOM) issues.push('hoofdsom lager dan € 100.000');
   if (!String(c.looptijd || '').trim()) issues.push('looptijd ontbreekt');
-  else if (!geldigeLeningLooptijd(c.looptijd)) issues.push('looptijd moet een vast aantal maanden of jaren zijn, zoals "12 maanden" of "1 jaar" (geen open of voorwaardelijke termijn)');
+  else if (!geldigeLeningLooptijd(c.looptijd)) issues.push('looptijd moet een vast aantal maanden of jaren zijn, ten minste 12 maanden of 1 jaar (geen open of voorwaardelijke termijn)');
   if (!(Number(c.rendementPct) > 0)) issues.push('rente ontbreekt of is 0%');
   if (!c.projectId && !c.propertyId) issues.push('geen project of pand gekozen');
   const inv = (c.projectId || c.propertyId) ? contractInvestor(c) : null;
-  if (!inv) issues.push('geen geldgever in het project geregistreerd met dezelfde naam of e-mail');
-  else if (inv.wwft !== true) issues.push('identificatie van de geldgever nog niet bevestigd');
+  // Een concept met rente en looptijd (het 'concept van de overeenkomst' dat de site in het dossier belooft)
+  // mag vóór de registratie en identificatie van de geldgever worden afgedrukt; versturen en tekenen niet.
+  if (!inv) { if (!opties.concept) issues.push('geen geldgever in het project geregistreerd met dezelfde naam of e-mail'); }
+  else if (inv.wwft !== true && !opties.concept) issues.push('identificatie van de geldgever nog niet bevestigd');
   // Contract, registratie en portaal moeten dezelfde kerncijfers tonen.
-  const prj = c.projectId ? projectById(c.projectId) : state.projects.find(p => p.propertyId === c.propertyId);
+  // Zonder projectId: het project waarin déze geldgever staat (contractInvestor zoekt in alle projecten op het pand),
+  // niet het eerste project op het pand — anders een valse afwijking bij een tweede project op hetzelfde pand.
+  const prj = c.projectId ? projectById(c.projectId)
+    : (inv ? state.projects.find(p => (p.investeerders || []).includes(inv)) : state.projects.find(p => p.propertyId === c.propertyId));
   if (inv && Number(inv.bedrag) !== Number(c.bedrag)) issues.push('hoofdsom wijkt af van de geregistreerde lening (het portaal toont die)');
   if (prj && (Number(prj.invest?.rendementPct) !== Number(c.rendementPct) || String(prj.invest?.looptijd || '').trim() !== String(c.looptijd || '').trim())) issues.push('rente of looptijd wijkt af van het project (portaal en projectkaart tonen de projectwaarden)');
   if (!c.ingangsdatum) issues.push('uiterste stortingsdatum ontbreekt');
@@ -3243,7 +3356,7 @@ function contractClauses(c, ctx) {
       { kop: 'Bestemming; geen recht op een pand of opbrengst', tekst: `De Geldnemer gebruikt de Hoofdsom voor de financiering van ${esc(onderwerp)} (het Project). Deze bestemming maakt de Hoofdsom niet tot een afgescheiden vermogen en geeft de Geldgever geen voorrang. De Hoofdsom wordt onderdeel van het vermogen van de Geldnemer; zij hoeft de Hoofdsom niet afzonderlijk te houden en mag het Project ook met andere middelen financieren. De Geldgever verkrijgt geen eigendom van of aandeel in een pand of project, geen hypotheek, pandrecht of ander zekerheidsrecht, geen recht op (een deel van) de opbrengst, de waardestijging of de winst van een pand, een project of de Geldnemer, en geen zeggenschap of stemrecht. Zijn vordering is een vordering op de Geldnemer als geheel; ook de resultaten van haar andere projecten zijn van invloed op haar vermogen om te betalen.` },
       { kop: 'Minimale hoofdsom en storting ineens', tekst: `Deze lening is uitsluitend bestemd voor geldgevers die ten minste € 100.000 ineens ter beschikking stellen; de Hoofdsom bedraagt daarom ten minste € 100.000. De Geldgever stelt de volledige Hoofdsom in één keer ter beschikking, door één overboeking vanaf een rekening die uitsluitend op zijn naam staat bij een bank in de Europese Economische Ruimte, naar de rekening op naam van HomeINN B.V. die is vermeld in de bevestiging bedoeld in het artikel 'Identificatie vóór storting'. Uiterste stortingsdatum: ${lever}. De dag waarop de volledige Hoofdsom op die rekening is bijgeschreven, is de Stortingsdatum; de verplichtingen van de Geldnemer tot betaling van rente en aflossing ontstaan pas op die dag. Is de volledige Hoofdsom niet uiterlijk op de uiterste stortingsdatum met één overboeking bijgeschreven, dan kan ieder van partijen deze overeenkomst kosteloos door een schriftelijke mededeling beëindigen, zolang die bijschrijving niet heeft plaatsgevonden.</p><p>Storting in termijnen, gedeeltelijke storting, contante betaling en betaling door of via een derde zijn uitgesloten. Zulke bedragen, een bedrag boven de Hoofdsom en een bedrag dat na beëindiging van deze overeenkomst binnenkomt, betaalt de Geldnemer onverwijld en zonder rente terug naar de rekening waarvan zij afkomstig zijn. Verbiedt de wet, waaronder een in Nederland geldende sanctiemaatregel, die terugbetaling, dan betaalt de Geldnemer niet terug zolang dat verbod geldt en handelt zij volgens dat verbod.</p><p>De Geldgever leent voor eigen rekening en met eigen middelen, en niet namens, ten behoeve van of samen met anderen. De Geldgever is niet verplicht tot een aanvullende storting en de Geldnemer doet geen kapitaal- of stortingsoproepen. Rente wordt nooit bij de Hoofdsom gevoegd. Een nieuwe lening, ook na (vervroegde) aflossing van deze lening, vereist een nieuwe overeenkomst die aan dit artikel voldoet; de storting daarvoor wordt niet verrekend met rente of aflossing uit deze overeenkomst.` },
       { kop: 'Identificatie vóór storting', tekst: `De Geldgever stort niet, en de Geldnemer aanvaardt geen storting, voordat de Geldnemer schriftelijk of per e-mail heeft bevestigd dat zij (a) de identiteit van de Geldgever heeft vastgesteld en geverifieerd en, als de Geldgever een rechtspersoon is, ook die van zijn vertegenwoordigers en uiteindelijk belanghebbenden (de natuurlijke personen die uiteindelijk eigenaar zijn van de Geldgever of zeggenschap over hem hebben); (b) de herkomst van de middelen heeft vastgelegd; en (c) heeft vastgesteld dat geen van hen voorkomt op een Europese of nationale sanctielijst en dat de Geldgever niet in eigendom is van of onder zeggenschap staat van iemand die daarop voorkomt. In die bevestiging vermeldt de Geldnemer de rekening op naam van HomeINN B.V. waarop de Hoofdsom moet worden gestort. De Geldgever verstrekt de daarvoor gevraagde gegevens en stukken, als rechtspersoon in elk geval een recent uittreksel uit het handelsregister en een recent overzicht van zijn inschrijving in het register van uiteindelijk belanghebbenden, of vergelijkbare stukken uit het land waar hij is gevestigd, en meldt wijzigingen onverwijld.</p><p>De Geldnemer stelt de identiteit van de Geldgever, als hij een natuurlijk persoon is, en van ieder die namens de Geldgever tekent, vast aan de hand van een geldig identiteitsbewijs dat die persoon haar persoonlijk of tijdens een videogesprek waarvan geen opname wordt gemaakt toont; zij noteert daarvan alleen de naam, de geboortedatum, het soort document, het documentnummer en de geldigheidsdatum. Alleen als de identiteit niet op die manier kan worden vastgesteld, vraagt zij een kopie van het identiteitsbewijs waarop de pasfoto en het burgerservicenummer of een ander persoonsnummer, ook in de cijferreeks onderaan, zijn afgeschermd. De Geldnemer verwerkt geen burgerservicenummer of ander persoonsnummer; ontvangt zij een kopie waarop een daarvan leesbaar is, dan vernietigt zij die en vraagt zij zo nodig een afgeschermde kopie. Zij gebruikt de gegevens en stukken die zij op grond van dit artikel ontvangt alleen voor de identificatie, de vaststelling van de herkomst van de middelen, de controle op sanctielijsten, de administratie van de lening en de nakoming van wettelijke verplichtingen, en bewaart ze niet langer dan vijf jaar na het einde van deze overeenkomst, tenzij de wet een langere bewaartermijn voorschrijft. De Geldnemer mag de controle op sanctielijsten tijdens de looptijd en vóór iedere betaling herhalen.</p><p>Is de bevestiging niet binnen dertig dagen na ondertekening gegeven, dan kan ieder van partijen deze overeenkomst kosteloos door een schriftelijke mededeling beëindigen, zolang die bevestiging niet is gegeven; een bedrag dat toch is ontvangen, betaalt de Geldnemer dan onverwijld en zonder rente terug naar de rekening waarvan het afkomstig is. Verbiedt de wet, waaronder een in Nederland geldende sanctiemaatregel, die terugbetaling, dan betaalt de Geldnemer niet terug zolang dat verbod geldt en handelt zij volgens dat verbod.` },
-      { kop: 'Rente', tekst: `Over de uitstaande Hoofdsom is de Geldnemer een vaste rente verschuldigd van <strong>${fmtNum(Number(c.rendementPct) || 0, 1)}% per jaar</strong>. Deze rente wordt niet bij de Hoofdsom gevoegd en over rente is geen rente van dit artikel verschuldigd. De rente loopt vanaf de Stortingsdatum tot de dag waarop de Hoofdsom volledig op de rekening van de Geldgever is bijgeschreven, en wordt berekend over het werkelijke aantal dagen, op basis van een jaar van 365 dagen. De rente staat vast voor de gehele looptijd en hangt niet af van de opbrengst, de waarde of het resultaat van het Project, van andere projecten of van de Geldnemer. De rente is ook verschuldigd over een periode waarin de Geldnemer verlies lijdt. Naast deze rente heeft de Geldgever geen recht op een bonus, winstdeling of andere vergoeding die afhangt van de winst, de opbrengst of de waarde van een pand, een project of de Geldnemer.</p><p>De Geldnemer betaalt de rente achteraf: telkens binnen tien werkdagen nadat een jaar sinds de Stortingsdatum is verstreken, en het restant op de Vervaldatum tegelijk met de aflossing van de Hoofdsom; valt de Vervaldatum binnen zo'n termijn van tien werkdagen, dan betaalt zij de rente op de Vervaldatum. Betaalt de Geldnemer rente niet op tijd, dan is zij over het achterstallige bedrag vanaf de dag na de laatste betaaldag tot de dag van betaling de wettelijke rente verschuldigd, behalve over een periode waarin een sanctiemaatregel als bedoeld in het artikel 'Betalingen en kosten' die betaling verbiedt. Lost de Geldnemer de Hoofdsom niet op tijd af, dan loopt de rente van dit artikel over de Hoofdsom door tot de dag van betaling.` },
+      { kop: 'Rente', tekst: `Over de uitstaande Hoofdsom is de Geldnemer een vaste rente verschuldigd van <strong>${fmtNum(Number(c.rendementPct) || 0, 2)}% per jaar</strong>. Deze rente wordt niet bij de Hoofdsom gevoegd en over rente is geen rente van dit artikel verschuldigd. De rente loopt vanaf de Stortingsdatum tot de dag waarop de Hoofdsom volledig op de rekening van de Geldgever is bijgeschreven, en wordt berekend over het werkelijke aantal dagen, op basis van een jaar van 365 dagen. De rente staat vast voor de gehele looptijd en hangt niet af van de opbrengst, de waarde of het resultaat van het Project, van andere projecten of van de Geldnemer. De rente is ook verschuldigd over een periode waarin de Geldnemer verlies lijdt. Naast deze rente heeft de Geldgever geen recht op een bonus, winstdeling of andere vergoeding die afhangt van de winst, de opbrengst of de waarde van een pand, een project of de Geldnemer.</p><p>De Geldnemer betaalt de rente achteraf: telkens binnen tien werkdagen nadat een jaar sinds de Stortingsdatum is verstreken, en het restant op de Vervaldatum tegelijk met de aflossing van de Hoofdsom; valt de Vervaldatum binnen zo'n termijn van tien werkdagen, dan betaalt zij de rente op de Vervaldatum. Betaalt de Geldnemer rente niet op tijd, dan is zij over het achterstallige bedrag vanaf de dag na de laatste betaaldag tot de dag van betaling de wettelijke rente verschuldigd, behalve over een periode waarin een sanctiemaatregel als bedoeld in het artikel 'Betalingen en kosten' die betaling verbiedt. Lost de Geldnemer de Hoofdsom niet op tijd af, dan loopt de rente van dit artikel over de Hoofdsom door tot de dag van betaling.` },
       { kop: 'Looptijd en aflossing', tekst: `De lening heeft een looptijd van ${esc(c.looptijd || 'nader overeen te komen')}, gerekend vanaf de Stortingsdatum; de laatste dag daarvan is de Vervaldatum. De Geldnemer bevestigt de Stortingsdatum en de Vervaldatum binnen vijf werkdagen na de Stortingsdatum schriftelijk of per e-mail aan de Geldgever. Op de Vervaldatum lost de Geldnemer de Hoofdsom in één keer af en betaalt zij de dan nog verschuldigde rente, per bankoverschrijving op de rekening van waaruit de Hoofdsom is ontvangen of op een andere rekening op naam van de Geldgever die hij schriftelijk opgeeft. Deze verplichting hangt niet af van de verkoop, de verhuur of de afronding van het Project.</p><p>De looptijd wordt niet eenzijdig of automatisch verlengd; verlenging is alleen mogelijk als partijen vóór de Vervaldatum schriftelijk een nieuwe Vervaldatum overeenkomen, vastgelegd als kalenderdatum. Ook de aflossing op een nieuwe Vervaldatum hangt niet af van de verkoop, de verhuur of de afronding van het Project. Een verlenging geldt als wijziging van deze overeenkomst en betreft altijd de volledige uitstaande Hoofdsom; bij die gelegenheid wordt niets afgelost of bijgestort. Een lening die partijen na de Vervaldatum aangaan, ook als die wordt gefinancierd met het bij aflossing ontvangen bedrag, is een nieuwe lening als bedoeld in het artikel 'Minimale hoofdsom en storting ineens'.` },
       { kop: 'Vervroegde aflossing; geen tussentijdse opeising', tekst: `De Geldnemer mag de lening op ieder moment in haar geheel vervroegd aflossen, met betaling van de rente tot de dag van aflossing en zonder boete of andere vergoeding, na een schriftelijke mededeling van ten minste tien werkdagen waarin zij de dag van aflossing noemt. Gedeeltelijke vervroegde aflossing is uitgesloten. Een vervroegde aflossing gebeurt uitsluitend op initiatief van de Geldnemer en nooit op verzoek van de Geldgever. De Geldnemer financiert een vervroegde aflossing niet met een achtergestelde lening die zij aangaat om de plaats van de Geldgever in te nemen, en zij brengt de Geldgever niet in contact met een ander die zijn lening wil overnemen.</p><p>De Geldgever kan de lening niet opzeggen en de Hoofdsom niet eerder opeisen dan op de Vervaldatum, behalve in de gevallen van het artikel 'Opeisbaarheid'. Dit laat de bevoegdheden die de Geldgever volgens de wet heeft als de Geldnemer in de nakoming tekortschiet, waaronder ontbinding (artikel 6:265 BW), en artikel 6:40 BW onverlet; vorderingen die daaruit voortvloeien, vallen onder het artikel 'Achterstelling'.` },
       { kop: 'Achterstelling', tekst: `Alle vorderingen van de Geldgever uit deze overeenkomst, waaronder die tot betaling van Hoofdsom, rente, wettelijke rente en kosten en een vordering tot ongedaanmaking na ontbinding van deze overeenkomst, zijn achtergesteld bij alle bestaande en toekomstige vorderingen van alle andere schuldeisers van de Geldnemer, behalve vorderingen die op gelijke wijze of verder zijn achtergesteld; dit is een rangafspraak in de zin van artikel 3:277 lid 2 BW. Tot de vorderingen die vóórgaan behoren in elk geval die van banken en andere financiers van de Geldnemer, met of zonder zekerheidsrecht, van de Belastingdienst, van leveranciers en aannemers, en van eerdere geldgevers, aandeelhouders, bestuurders en groepsmaatschappijen van de Geldnemer voor zover hun vorderingen niet op gelijke wijze of verder zijn achtergesteld.</p><p>Insolventie is: (a) faillissement of surseance van betaling van de Geldnemer, vanaf de dag van de uitspraak; (b) de voorbereiding of het aanbieden van een akkoord als bedoeld in artikel 370 Faillissementswet, vanaf de dag waarop de Geldnemer de verklaring bedoeld in artikel 370 lid 3 Faillissementswet deponeert of, als dat eerder is, het akkoord aanbiedt; (c) een akkoord buiten rechte dat de Geldnemer aan haar schuldeisers in het algemeen aanbiedt, vanaf de dag van het aanbod; (d) haar ontbinding, vanaf het besluit of de uitspraak daartoe; en (e) iedere andere verdeling van haar vermogen onder haar schuldeisers. De Geldnemer meldt het begin en het einde van een Insolventie onverwijld schriftelijk aan de Geldgever. Een Insolventie als bedoeld onder (a) eindigt als de surseance of het faillissement eindigt zonder dat het vermogen van de Geldnemer wordt vereffend, of, als zij door een akkoord eindigen, zodra dat akkoord volledig is uitgevoerd. Een Insolventie als bedoeld onder (b) of (c) eindigt op de dag waarop de Geldnemer schriftelijk meedeelt dat zij het akkoord niet langer nastreeft, het akkoord is verworpen, de homologatie is geweigerd of het akkoord volledig is uitgevoerd, en in elk geval één jaar na haar begin als het akkoord dan niet ter stemming is voorgelegd of door de schuldeisers is aanvaard. Wordt vóór het einde van een Insolventie faillissement of surseance van betaling van de Geldnemer aangevraagd, dan loopt de Insolventie door totdat ook dat faillissement of die surseance is geëindigd.</p><p>Tijdens Insolventie ontvangt de Geldgever pas een betaling op zijn vorderingen nadat alle vorderingen die vóórgaan volledig zijn voldaan; een vordering die vóórgaat en die volgens een akkoord is voldaan of kwijtgescholden, geldt als volledig voldaan. Bindt een akkoord ook de Geldgever, dan ontvangt hij wat dat akkoord hem toekent. Bij een akkoord geldt dit artikel als een contractuele regeling van de rangorde in de zin van artikel 374 lid 1 en artikel 384 lid 4 onderdeel b Faillissementswet. De vorderingen van de Geldgever hebben gelijke rang met die van andere geldgevers die op gelijke voorwaarden achtergesteld aan de Geldnemer hebben geleend, ongeacht voor welk project; zij worden onderling naar verhouding van hun vorderingen voldaan. Ontvangt de Geldgever tijdens Insolventie toch een betaling of ander voordeel waarop hij op grond van dit artikel geen recht had, dan draagt hij dat onverwijld af aan de curator, de bewindvoerder, de herstructureringsdeskundige of de vereffenaar, of, als er geen is, aan de Geldnemer ten behoeve van de schuldeisers die vóórgaan. Tijdens Insolventie kan de Geldgever zijn vorderingen niet verrekenen met een schuld aan de Geldnemer, ook niet op grond van artikel 53 of artikel 234 Faillissementswet; zonder deze beperking zou hij door verrekening vóór de schuldeisers die vóórgaan worden voldaan en zou de achterstelling worden doorkruist. Gaat een vordering van de Geldgever op een ander over of wordt zij verpand, dan blijft zij op dezelfde wijze achtergesteld en kan de Geldnemer dit artikel ook tegenover de verkrijger of pandhouder inroepen.</p><p>Buiten Insolventie betaalt de Geldnemer rente en Hoofdsom op de overeengekomen data; de achterstelling geeft haar geen recht op uitstel. Eindigt een Insolventie, dan betaalt de Geldnemer onverwijld wat zij tijdens de Insolventie op grond van dit artikel niet heeft betaald, tenzij een akkoord dat de Geldgever bindt anders bepaalt. De Geldnemer verklaart dat zij bij ondertekening met geen bank of andere financier een afspraak heeft die deze lening verbiedt of die betaling van rente of Hoofdsom buiten Insolventie verbiedt of uitstelt.</p><p>De Geldgever kan als gevolg van deze achterstelling zijn Hoofdsom en de rente geheel of gedeeltelijk verliezen. Een akkoord dat de rechtbank homologeert, kan de Geldgever ook binden als hij tegenstemt; zo'n akkoord kan zijn vorderingen verminderen of de betaling ervan uitstellen.` },
@@ -3320,7 +3433,7 @@ function buildContractDoc(c) {
 function printContract(id) {
   const c = state.contracten.find(x => x.id === id);
   if (!c) return;
-  const issues = investmentContractIssues(c);
+  const issues = investmentContractIssues(c, { concept: !c.status || c.status === 'Concept' });
   if (issues.length) { showToast(`Printen geblokkeerd: ${issues.join('; ')}.`); return; }
   $('#print-area').innerHTML = buildContractDoc(c);
   window.print();
@@ -3330,7 +3443,7 @@ function openContractModal(id = null) {
   const form = $('#contract-form');
   form.reset();
   form.elements.id.value = id || '';
-  $('#contract-modal-title').textContent = id ? 'Contract bewerken' : `Contract opstellen (${nextRef('CON', state.contracten)})`;
+  $('#contract-modal-title').textContent = id ? 'Contract bewerken' : `Contract opstellen (${nextConRef()})`;
   const c = id ? state.contracten.find(x => x.id === id) : null;
   // Type-sleutel blijft 'Investeringsovereenkomst' (hios_contracts filtert erop); alleen het label verandert.
   const invOpt = [...form.elements.type.options].find(o => o.value === INV_CONTRACT);
@@ -3907,19 +4020,28 @@ function handleModalSubmit(event) {
     // Alleen voor projecten die openstaan voor geldgevers (of waar een minimum is ingevuld).
     const minHoofdsom = num('minInleg');
     if ((data.get('investOpen') || minHoofdsom > 0) && minHoofdsom < MIN_HOOFDSOM) { event.preventDefault(); showToast('Geblokkeerd: de minimale hoofdsom per geldgever is ten minste € 100.000.'); return; }
+    if (!renteHeeftTweeDecimalen(num('rendementPct'))) { event.preventDefault(); showToast('Geblokkeerd: geef de rente op met hoogstens twee decimalen (bijv. 7 of 7,25).'); return; }
     const base = {
       name: str('name'), propertyId: data.get('propertyId'), status: str('status'), budget: num('budget'),
       startDate: data.get('startDate') || '', endDate: data.get('endDate') || '', note: str('note'),
       publish: !!data.get('publish'),
       invest: { open: !!data.get('investOpen'), doelbedrag: num('doelbedrag'), minInleg: num('minInleg'), rendementPct: num('rendementPct'), looptijd: str('looptijd') }
     };
-    // Rente en looptijd liggen vast in de overeenkomsten van geldgevers die al gestort hebben;
-    // het portaal van de geldgever toont de projectwaarden, dus die mogen dan niet meer wijzigen.
+    // Rente en looptijd liggen vast zodra een leningsovereenkomst voor dit project is verstuurd of
+    // getekend, of een geldgever heeft gestort. Het portaal van de geldgever toont de projectwaarden,
+    // dus die mogen dan niet meer wijzigen (anders wijkt het portaal af van de overeenkomst).
     const oud = id ? projectById(id) : null;
-    if (oud && (oud.investeerders || []).some(i => i.datum) &&
+    // Een contract zonder projectId telt alleen mee als de geldgever ervan in DIT project staat (een tweede
+    // project op hetzelfde pand blijft anders ten onrechte vastgezet).
+    const vastContract = oud && (state.contracten || []).find(c => isBevrorenLening(c) &&
+      (c.projectId ? c.projectId === oud.id
+        : (c.propertyId && c.propertyId === oud.propertyId && (oud.investeerders || []).includes(contractInvestor(c)))));
+    if (oud && ((oud.investeerders || []).some(i => i.datum) || vastContract) &&
         (Number(oud.invest?.rendementPct || 0) !== base.invest.rendementPct || String(oud.invest?.looptijd || '').trim() !== base.invest.looptijd)) {
       event.preventDefault();
-      showToast('Geblokkeerd: dit project heeft gestorte leningen. Rente en looptijd staan vast in die overeenkomsten en verschijnen zo in het portaal van de geldgevers.');
+      showToast(vastContract
+        ? `Geblokkeerd: voor dit project is leningsovereenkomst ${vastContract.ref || ''} ${vastContract.status === 'Getekend' ? 'getekend' : 'verstuurd'}. Rente en looptijd staan daarin vast en verschijnen zo in het portaal van de geldgevers.`
+        : 'Geblokkeerd: dit project heeft gestorte leningen. Rente en looptijd staan vast in die overeenkomsten en verschijnen zo in het portaal van de geldgevers.');
       return;
     }
     // Een project dat openstaat voor geldgevers krijgt alleen een vaste looptijd (zelfde regel als de
@@ -4053,6 +4175,15 @@ function handleModalSubmit(event) {
       // (één storting per overeenkomst). Bestaande leningen met een ongewijzigd bedrag blijven ongemoeid.
       if (nieuwBedrag !== oudBedrag && nieuwBedrag < MIN_HOOFDSOM) { event.preventDefault(); showToast('Geblokkeerd: de hoofdsom is ten minste € 100.000 ineens per geldgever.'); return; }
       if (nieuwBedrag !== oudBedrag && inv.datum) { event.preventDefault(); showToast('Geblokkeerd: na de storting wijzigt de hoofdsom niet. Elke lening kent één storting; een nieuwe lening vereist een nieuwe overeenkomst.'); return; }
+      // Ook vóór de storting liggen hoofdsom en partij vast zodra de leningsovereenkomst is verstuurd of
+      // getekend: het portaal van de geldgever toont de registratie, en die mag niet afwijken van het exemplaar.
+      const vast = vasteLeningOvereenkomst(pr, inv);
+      const partijGewijzigd = str('naam') !== String(inv.naam || '').trim() || str('email').toLowerCase() !== String(inv.email || '').trim().toLowerCase();
+      if (vast && (nieuwBedrag !== oudBedrag || partijGewijzigd)) {
+        event.preventDefault();
+        showToast(`Geblokkeerd: voor deze geldgever is leningsovereenkomst ${vast.ref || ''} ${vast.status === 'Getekend' ? 'getekend' : 'verstuurd'}. Hoofdsom, naam en e-mail staan daarin vast; een correctie gaat via een nieuwe overeenkomst, na overleg met de advocaat.`.replace(/\s+/g, ' '));
+        return;
+      }
       inv.naam = str('naam');
       inv.email = str('email');
       inv.bedrag = nieuwBedrag;
@@ -4061,6 +4192,10 @@ function handleModalSubmit(event) {
         // Een storting (stortingsdatum) leg je pas vast na bevestigde identificatie.
         if (inv.wwft === true) inv.datum = nieuweDatum;
         else melding = 'Geldgever bijgewerkt. Stortingsdatum niet vastgelegd: bevestig eerst de identificatie.';
+      } else if (!nieuweDatum && inv.datum && !form.elements.datum.disabled) {
+        // Een per vergissing ingevulde stortingsdatum moet weg kunnen, zolang er nog niets is betaald.
+        if ((inv.uitkeringen || []).length) melding = 'Geldgever bijgewerkt. Stortingsdatum niet gewist: er staan al betalingen (rente/aflossing) bij deze lening.';
+        else if (window.confirm(`Stortingsdatum ${fmtDate(inv.datum)} wissen? Doe dit alleen als de hoofdsom nog niet is ontvangen.`)) { inv.datum = ''; melding = 'Geldgever bijgewerkt; stortingsdatum gewist.'; }
       }
       if ((Number(inv.bedrag) || 0) < MIN_HOOFDSOM) melding += ' Let op: deze bestaande lening ligt onder € 100.000; laat de advocaat meekijken.';
       showToast(melding);
@@ -4082,9 +4217,15 @@ function handleModalSubmit(event) {
       looptijd: str('looptijd'), rendementPct: num('rendementPct'), note: str('note')
     };
     if (id && isOudLeningsmodel(state.contracten.find(x => x.id === id))) { event.preventDefault(); showToast(`Wijzigen geblokkeerd: ${OUD_MODEL_MELDING}.`); return; }
+    if (id && isBevrorenLening(state.contracten.find(x => x.id === id))) { event.preventDefault(); showToast(`Wijzigen geblokkeerd: ${BEVROREN_MELDING}.`); return; }
+    if (!renteHeeftTweeDecimalen(base.rendementPct)) { event.preventDefault(); showToast('Geblokkeerd: geef de rente op met hoogstens twee decimalen (bijv. 7 of 7,25); de overeenkomst drukt de rente zo af.'); return; }
     if (base.type === INV_CONTRACT) base.model = LENING_MODEL;
     if (id) Object.assign(state.contracten.find(x => x.id === id), base);
-    else state.contracten.push(Object.assign({ id: uid('c'), ref: nextRef('CON', state.contracten), status: 'Concept', createdAt: todayISO() }, base));
+    else {
+      const ref = nextConRef();
+      state.settings.lastConRef = ref;
+      state.contracten.push(Object.assign({ id: uid('c'), ref, status: 'Concept', createdAt: todayISO() }, base));
+    }
     const opgeslagen = id ? state.contracten.find(x => x.id === id) : state.contracten[state.contracten.length - 1];
     const issues = investmentContractIssues(opgeslagen);
     const kern = kernartikelWaarschuwing(opgeslagen);
@@ -4182,8 +4323,16 @@ function downloadFile(filename, content, mime) {
   URL.revokeObjectURL(a.href);
 }
 
+/* Spreadsheet-formule-injectie: een cel die met = + - @ (of tab/CR) begint, voert Excel uit als
+   formule. Aanvragen komen van anonieme bezoekers, dus zo'n cel krijgt een apostrof ervoor.
+   Echte getallen (ook negatieve bedragen uit csvNum, zoals -123,45) blijven ongemoeid. */
+function csvVeilig(v) {
+  const s = String(v ?? '');
+  return (/^[=+\-@\t\r]/.test(s) && !/^-?\d[\d.,]*$/.test(s)) ? "'" + s : s;
+}
+
 function toCSV(rows) {
-  const cell = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const cell = v => `"${csvVeilig(v).replace(/"/g, '""')}"`;
   return '﻿' + rows.map(r => r.map(cell).join(';')).join('\r\n');
 }
 
@@ -4676,6 +4825,11 @@ function showToast(message) {
 /* ---------- Acties (event delegation) ---------- */
 function confirmDel(msg) { return window.confirm(msg); }
 
+function demoBlokkade() {
+  if (state.demo === true) return (window.HCloud && HCloud.demoMelding) || 'Dit zijn demo-gegevens; synchroniseren en cloud-backup staan uit.';
+  return 'Geblokkeerd: deze werkstaat bevat nog de voorbeeld-geldgever "J. Smits" uit de demo-gegevens. Verwijder die eerst (Ontwikkelprojecten → project → geldgevers), dan kun je synchroniseren en back-uppen.';
+}
+
 document.addEventListener('click', event => {
   const el = event.target.closest('[data-action]');
   if (!el) {
@@ -4741,6 +4895,23 @@ document.addEventListener('click', event => {
       if (doc) { doc.done = !doc.done; rerender(); }
       break;
     }
+    case 'toggle-doc-share': {
+      // Delen met geldgevers is een bewuste keuze per document (AVG): een koopakte, taxatie of
+      // financieringsakte bevat vaak persoonsgegevens van derden. Geldt bij de volgende synchronisatie.
+      const p = propertyById(id);
+      const doc = p && (p.docs || []).find(x => x.id === item);
+      if (!doc) break;
+      if (!doc.deelMetGeldgevers) {
+        if (!window.confirm(`"${doc.name}" delen met alle geldgevers van het project op dit pand? Zij kunnen het bij de volgende synchronisatie in hun portaal downloaden. Deel geen stukken met persoonsgegevens van derden (zoals de verkoper in een koopakte) of met interne cijfers.`)) break;
+        doc.deelMetGeldgevers = true;
+        showToast('Gedeeld met geldgevers — synchroniseer om het in het portaal te zetten.');
+      } else {
+        doc.deelMetGeldgevers = false;
+        showToast('Niet meer gedeeld — synchroniseer om het uit het portaal te halen.');
+      }
+      rerender();
+      break;
+    }
     case 'del-doc': {
       const p = propertyById(id);
       if (!p) break;
@@ -4772,6 +4943,9 @@ document.addEventListener('click', event => {
     case 'del-project': {
       const pr = projectById(id);
       if (!pr) break;
+      // Met het project zouden ook de leningen van de geldgevers (en bij synchronisatie hun portaal) verdwijnen.
+      const metLening = (pr.investeerders || []).filter(i => !(i.id === 'inv1' && i.naam === 'J. Smits'));
+      if (metLening.length) { showToast(`Project "${pr.name}" heeft ${metLening.length} geldgever${metLening.length === 1 ? '' : 's'}. Verwijder of verplaats eerst de leningen; een gestorte lening blijft in de administratie.`); break; }
       if (confirmDel(`Project "${pr.name}" verwijderen? Gekoppelde kosten blijven op het pand staan; oude kapitaaloproepen blijven voor de audit bewaard.`)) {
         state.costs.forEach(k => { if (k.projectId === id) k.projectId = ''; });
         state.projects = state.projects.filter(x => x.id !== id);
@@ -4892,7 +5066,15 @@ document.addEventListener('click', event => {
     }
     case 'del-investor': {
       const pr = projectById(id);
-      if (confirmDel('Investeerder verwijderen uit de administratie?')) { pr.investeerders = (pr.investeerders || []).filter(i => i.id !== item); rerender(); }
+      const inv = pr && (pr.investeerders || []).find(i => i.id === item);
+      if (!inv) break;
+      // Een gestorte lening of een verstuurde/getekende leningsovereenkomst verdwijnt niet uit de
+      // administratie: de geldgever ziet die lening in het portaal en de overeenkomst blijft leidend.
+      // Alleen de voorbeeld-geldgever uit de demo-gegevens mag altijd weg.
+      const demoInv = inv.id === 'inv1' && inv.naam === 'J. Smits';
+      const blokkade = demoInv ? '' : leningVerwijderBlokkade(pr, inv);
+      if (blokkade) { showToast(`Verwijderen geblokkeerd: ${blokkade}`); break; }
+      if (confirmDel(`Geldgever ${inv.naam || ''} verwijderen uit de administratie? Bij de volgende synchronisatie verdwijnt de lening ook uit het portaal.`)) { pr.investeerders = (pr.investeerders || []).filter(i => i.id !== item); rerender(); }
       break;
     }
     // Kapitaaloproepen
@@ -4970,11 +5152,16 @@ document.addEventListener('click', event => {
     case 'print-contract': printContract(id); break;
     case 'del-contract':
       if (isOudLeningsmodel(state.contracten.find(x => x.id === id))) { showToast(`Verwijderen geblokkeerd: ${OUD_MODEL_MELDING}.`); break; }
-      if (confirmDel('Contract verwijderen?')) { state.contracten = state.contracten.filter(c => c.id !== id); rerender(); }
+      if (isBevrorenLening(state.contracten.find(x => x.id === id))) { showToast(`Verwijderen geblokkeerd: ${BEVROREN_MELDING}.`); break; }
+      if (confirmDel('Contract verwijderen? Staat het in het portaal klaar, dan verdwijnt het daar bij de volgende synchronisatie.')) { state.contracten = state.contracten.filter(c => c.id !== id); rerender(); }
       break;
     case 'send-contract': {
       const c = state.contracten.find(x => x.id === id);
       if (!c) break;
+      // Opnieuw klaarzetten zou de status in de cloud (en lokaal) terugzetten naar 'Verstuurd'.
+      if (c.status === 'Getekend') { showToast('Niet opnieuw klaargezet: dit contract is al getekend.'); break; }
+      // Een verstuurde leningsovereenkomst ligt vast; staat ze al in het portaal, dan niet opnieuw opmaken.
+      if (isBevrorenLening(c) && ((state.cloudLedger || {}).hios_contracts || []).includes(c.id)) { showToast(`Niet opnieuw klaargezet: ${BEVROREN_MELDING}.`); break; }
       if (!window.HCloud || !HCloud.status().ready) { showToast('Cloud niet beschikbaar — log eerst in via Instellingen → Cloud.'); break; }
       const email = c.partijEmail || (contactById(c.contactId)?.email) || '';
       if (!email) { showToast('Vul eerst een e-mail van de wederpartij in (Contract bewerken).'); break; }
@@ -4989,7 +5176,7 @@ document.addEventListener('click', event => {
       showToast('Versturen…');
       HCloud.sendContract(payload)
         .then(() => {
-          c.status = 'Verstuurd'; save(); renderCurrent();
+          c.status = 'Verstuurd'; noteerCloudLedger('hios_contracts', c.id); save(); renderCurrent();
           const inlog = `${location.origin + location.pathname.replace(/portaal\.html$/, '')}inloggen.html`;
           if (isLening) {
             HCloud.notify({ to: email, subject: 'Uw overeenkomst van achtergestelde geldlening van HomeINN B.V.', html: `<p>Beste,</p><p>Er staat een overeenkomst van achtergestelde geldlening voor u klaar. U kunt deze in het HomeINN-portaal inzien; ondertekening gaat met de hand of met een gekwalificeerde elektronische handtekening.</p><p><a href="${inlog}">Inloggen op het portaal</a></p><p>Met vriendelijke groet,<br>HomeINN B.V.</p>` });
@@ -5044,40 +5231,84 @@ document.addEventListener('click', event => {
     // Cloud
     case 'cloud-sync': {
       if (!window.HCloud) break;
+      if (HCloud.isDemoState(state)) { showToast(demoBlokkade()); break; }
       showToast('Synchroniseren…');
       const vorigeMeldingIds = new Set((state.cloudMaintenance || []).map(x => x.id));
-      HCloud.pushAll(state)
-        .then(r => Promise.all([HCloud.pullMaintenance(), HCloud.pullContracts()]).then(([m, contracts]) => {
-          state.cloudMaintenance = m;
-          // ondertekenstatus terugkoppelen naar lokale contracten + operator mailen
-          let getekend = 0;
-          const opEmail = state.settings.email;
-          (contracts || []).forEach(cc => {
-            const local = state.contracten.find(x => x.id === cc.local_id);
-            // Leningsovereenkomsten tekent de geldgever met de hand of gekwalificeerd elektronisch; een
-            // getypte naam in het portaal zet die status nooit automatisch op 'Getekend'.
-            if (local && local.type !== INV_CONTRACT && cc.status === 'Getekend' && local.status !== 'Getekend') {
-              local.status = 'Getekend'; local.signedAt = cc.signed_at; local.signedName = cc.signed_name; getekend++;
-              if (opEmail && window.HCloud) HCloud.notify({ to: opEmail, subject: `Contract ondertekend: ${local.ref || ''} (${local.type})`, html: `<p>Het contract <strong>${esc(local.type)}</strong>${local.ref ? ' (' + esc(local.ref) + ')' : ''} is digitaal ondertekend door <strong>${esc(cc.signed_name || '—')}</strong> op ${fmtDate(cc.signed_at)}.</p>` });
+      // Versturen en ophalen staan los van elkaar: een fout bij het versturen mag de huurdermeldingen
+      // en de ondertekenstatus niet tegenhouden (en omgekeerd). Het verwijdergrootboek (cloudLedger)
+      // wordt ook na een gedeeltelijk mislukte push bewaard.
+      const push = HCloud.pushAll(state).then(r => { save(); return r; }, e => { save(); throw e; });
+      push.catch(() => {}).then(() => Promise.all([HCloud.pullMaintenance(), HCloud.pullContracts()]))
+        .then(([m, contracts]) => ({ m, contracts }), e => ({ fout: e }))
+        .then(pull => Promise.allSettled([push]).then(([pushRes]) => {
+          const meldingen = [];
+          if (pushRes.status === 'fulfilled') {
+            const r = pushRes.value;
+            meldingen.push(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} geldgevers, ${r.overig || 0} overige records${r.verwijderd ? `, ${r.verwijderd} verwijderd` : ''}.`);
+          } else {
+            meldingen.push('Versturen naar de cloud mislukt: ' + ((pushRes.reason && pushRes.reason.message) || pushRes.reason) + '.');
+          }
+          if (pull.fout) {
+            meldingen.push('Ophalen van meldingen en ondertekenstatus mislukt: ' + ((pull.fout && pull.fout.message) || pull.fout) + '.');
+          } else {
+            const m = pull.m || [];
+            state.cloudMaintenance = m;
+            // ondertekenstatus terugkoppelen naar lokale contracten + operator mailen
+            let getekend = 0;
+            const opEmail = state.settings.email;
+            (pull.contracts || []).forEach(cc => {
+              const local = state.contracten.find(x => x.id === cc.local_id);
+              // Leningsovereenkomsten tekent de geldgever met de hand of gekwalificeerd elektronisch; een
+              // getypte naam in het portaal zet die status nooit automatisch op 'Getekend'.
+              if (local && local.type !== INV_CONTRACT && cc.status === 'Getekend' && local.status !== 'Getekend') {
+                local.status = 'Getekend'; local.signedAt = cc.signed_at; local.signedName = cc.signed_name; getekend++;
+                if (opEmail && window.HCloud) HCloud.notify({ to: opEmail, subject: `Contract ondertekend: ${local.ref || ''} (${local.type})`, html: `<p>Het contract <strong>${esc(local.type)}</strong>${local.ref ? ' (' + esc(local.ref) + ')' : ''} is digitaal ondertekend door <strong>${esc(cc.signed_name || '—')}</strong> op ${fmtDate(cc.signed_at)}.</p>` });
+              }
+            });
+            // nieuwe huurder-meldingen → operator mailen (samengevat)
+            const nieuweMeldingen = m.filter(x => x.status === 'Open' && !vorigeMeldingIds.has(x.id));
+            if (nieuweMeldingen.length && opEmail && window.HCloud) {
+              HCloud.notify({ to: opEmail, subject: `${nieuweMeldingen.length} nieuwe onderhoudsmelding${nieuweMeldingen.length === 1 ? '' : 'en'} via het huurdersportaal`, html: `<p>Er ${nieuweMeldingen.length === 1 ? 'is' : 'zijn'} ${nieuweMeldingen.length} nieuwe melding${nieuweMeldingen.length === 1 ? '' : 'en'} binnengekomen:</p><ul>${nieuweMeldingen.map(x => `<li>${esc(x.address || '')}: ${esc(x.descr)}</li>`).join('')}</ul><p>Bekijk en handel af in HomeINN OS.</p>` });
             }
-          });
-          // nieuwe huurder-meldingen → operator mailen (samengevat)
-          const nieuweMeldingen = m.filter(x => x.status === 'Open' && !vorigeMeldingIds.has(x.id));
-          if (nieuweMeldingen.length && opEmail && window.HCloud) {
-            HCloud.notify({ to: opEmail, subject: `${nieuweMeldingen.length} nieuwe onderhoudsmelding${nieuweMeldingen.length === 1 ? '' : 'en'} via het huurdersportaal`, html: `<p>Er ${nieuweMeldingen.length === 1 ? 'is' : 'zijn'} ${nieuweMeldingen.length} nieuwe melding${nieuweMeldingen.length === 1 ? '' : 'en'} binnengekomen:</p><ul>${nieuweMeldingen.map(x => `<li>${esc(x.address || '')}: ${esc(x.descr)}</li>`).join('')}</ul><p>Bekijk en handel af in HomeINN OS.</p>` });
+            const open = m.filter(x => x.status === 'Open').length;
+            meldingen.push(`${m.length} melding${m.length === 1 ? '' : 'en'}${open ? ` (${open} open)` : ''}${getekend ? `, ${getekend} contract(en) ondertekend` : ''}.`);
           }
           save();
           renderCurrent();
-          const open = m.filter(x => x.status === 'Open').length;
-          showToast(`Gesynchroniseerd: ${r.panden} panden, ${r.projecten} projecten, ${r.investeerders} investeerders, ${r.overig || 0} overige records. ${m.length} melding${m.length === 1 ? '' : 'en'}${open ? ` (${open} open)` : ''}${getekend ? `, ${getekend} contract(en) ondertekend` : ''}.`);
+          showToast(meldingen.join(' '));
         }))
-        .catch(e => showToast('Sync mislukt: ' + (e.message || e)));
+        .catch(e => showToast('Synchroniseren onderbroken: ' + ((e && e.message) || e)));
       break;
     }
     case 'cloud-backup':
       if (window.HCloud) {
-        showToast('Backup naar cloud…');
-        HCloud.saveState(state).then(() => showToast('Volledige werkstaat geback-upt naar de cloud.')).catch(e => showToast('Backup mislukt: ' + (e.message || e)));
+        if (HCloud.isDemoState(state)) { showToast(demoBlokkade()); break; }
+        // Er is één gedeelde cloud-backup ('main'). Eerst laten zien welke versie wordt overschreven,
+        // zodat een ander apparaat (of een verse browser) die niet ongemerkt vervangt.
+        HCloud.stateMeta().then(meta => {
+          const wanneer = meta && meta.updated_at ? new Date(meta.updated_at).toLocaleString('nl-NL', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+          const vraag = wanneer
+            ? `De huidige cloud-backup is van ${wanneer}. Die vervangen door de werkstaat van dit apparaat (${state.properties.length} panden, ${state.projects.length} projecten)? Heb je sindsdien op een ander apparaat gewerkt, kies dan eerst "Herstel van cloud".`
+            : `Er staat nog geen cloud-backup. De werkstaat van dit apparaat (${state.properties.length} panden, ${state.projects.length} projecten) nu back-uppen?`;
+          if (!window.confirm(vraag)) return;
+          showToast('Backup naar cloud…');
+          return HCloud.saveState(state).then(() => showToast('Volledige werkstaat geback-upt naar de cloud.'));
+        }).catch(e => showToast('Backup mislukt: ' + (e.message || e)));
+      }
+      break;
+    case 'demo-leeg':
+      if (confirmDel('Alle demo-gegevens wissen en beginnen met een lege administratie? Je instellingen blijven staan. Maak eerst een backup als je iets wilt bewaren.')) {
+        const instellingen = Object.assign({}, state.settings);
+        state = sanitizeState({ properties: [], settings: instellingen });
+        save();
+        setView('dashboard');
+        showToast('Lege administratie gestart. Synchroniseren naar de cloud is nu mogelijk.');
+      }
+      break;
+    case 'demo-eigen':
+      if (window.confirm('Bevestig dat deze werkstaat jouw eigen gegevens bevat. Verwijder eerst alle voorbeeldrecords (panden, projecten, geldgever "J. Smits", relaties, contracten): wat hier staat, gaat bij synchroniseren naar de cloud en de portalen.')) {
+        state.demo = false; save(); renderCurrent();
+        showToast(window.HCloud && HCloud.isDemoState(state) ? demoBlokkade() : 'Gemarkeerd als eigen gegevens.');
       }
       break;
     case 'cloud-restore':
@@ -5128,7 +5359,9 @@ document.addEventListener('click', event => {
           email: lead.email || (heeftMail ? lead.contact : ''),
           phone: lead.phone || (!heeftMail ? (lead.contact || '') : ''),
           address: '',
-          note: `Websiteaanvraag ${fmtDateTime(lead.date)} · ${lead.subject || ''}${lead.message ? ' · ' + lead.message : ''}`.trim()
+          note: `Websiteaanvraag ${fmtDateTime(lead.date)} · ${lead.subject || ''}${lead.message ? ' · ' + lead.message : ''}`.trim(),
+          // Een aanvraag is geen toestemming voor mailings (zie mailingAudienceEmails).
+          geenMailing: true
         });
         setLeadHandled(id, true);
         rerender();
@@ -5143,15 +5376,15 @@ document.addEventListener('click', event => {
     }
     case 'inbox-del':
       if (confirmDel('Aanvraag verwijderen?')) {
+        // Lokaal én de cloudkopie (zelfde local_id): anders komt een lokaal verwijderde aanvraag
+        // via de cloud gewoon terug. De cloudkopie verdwijnt pas uit de lijst als de cloud het bevestigt.
         const local = loadInbox();
-        if (local.some(l => l.id === id)) {
-          saveInbox(local.filter(l => l.id !== id));
-        } else {
-          const cl = cloudLeadsCache.find(c => (c.local_id || c.id) === id);
-          if (cl) {
-            cloudLeadsCache = cloudLeadsCache.filter(c => c !== cl);
-            if (window.HCloud && HCloud.available()) HCloud.deleteLead(cl.id).catch(() => {});
-          }
+        if (local.some(l => l.id === id)) saveInbox(local.filter(l => l.id !== id));
+        const cl = cloudLeadsCache.find(c => (c.local_id || c.id) === id);
+        if (cl && window.HCloud && HCloud.available()) {
+          HCloud.deleteLead(cl.id)
+            .then(() => { cloudLeadsCache = cloudLeadsCache.filter(c => c !== cl); renderCurrent(); })
+            .catch(cloudLeadFout('Verwijderen'));
         }
         renderCurrent();
       }
@@ -5234,6 +5467,8 @@ document.addEventListener('change', event => {
     case 'contract-status': {
       const c = state.contracten.find(x => x.id === id);
       if (isOudLeningsmodel(c)) { showToast(`Status wijzigen geblokkeerd: ${OUD_MODEL_MELDING}.`); rerender(); break; }
+      // Vastliggende lening: alleen nog 'Verstuurd' → 'Getekend'.
+      if (isBevrorenLening(c) && !(c.status === 'Verstuurd' && el.value === 'Getekend')) { showToast(`Status wijzigen geblokkeerd: ${BEVROREN_MELDING}.`); rerender(); break; }
       if (c && c.type === INV_CONTRACT && (el.value === 'Verstuurd' || el.value === 'Getekend')) {
         const issues = investmentContractIssues(c);
         if (issues.length) { showToast(`Status '${el.value}' geblokkeerd: ${issues.join('; ')}.`); rerender(); break; }
@@ -5241,6 +5476,14 @@ document.addEventListener('change', event => {
       }
       if (c && c.type === INV_CONTRACT) c.model = LENING_MODEL;
       if (c) c.status = el.value;
+      if (c && c.type === INV_CONTRACT && el.value === 'Getekend') {
+        c.signedAt = todayISO();
+        // Ook in het portaal van de geldgever: anders blijft daar 'Ter inzage' staan. Lukt dat nu niet
+        // (offline, niet ingelogd), dan zet de volgende synchronisatie het alsnog goed.
+        if (window.HCloud && HCloud.status().staff) {
+          HCloud.setContractStatus(c.id, 'Getekend', c.signedAt).catch(e => showToast('Getekend lokaal vastgelegd; het portaal volgt bij de volgende synchronisatie (' + (e.message || e) + ').'));
+        }
+      }
       rerender();
       break;
     }
@@ -5550,6 +5793,13 @@ function initStatic() {
   });
 }
 
+/* Afbeeldingen die niet laden verbergen zonder inline onerror (dat vraagt 'unsafe-inline' in de CSP).
+   error-events borrelen niet op, dus luisteren in de capture-fase. */
+document.addEventListener('error', event => {
+  const t = event.target;
+  if (t && t.tagName === 'IMG' && t.hasAttribute('data-verberg-bij-fout')) t.style.display = 'none';
+}, true);
+
 /* ---------- Init ---------- */
 load();
 initStatic();
@@ -5558,11 +5808,16 @@ applyHash();
 /* PWA: registreer de service worker zodat het portaal installeerbaar + offline bruikbaar is.
    Alleen op http(s) — onder file:// werkt dit niet en hoeft het ook niet. */
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  // Zodra een nieuwe service worker de controle overneemt: één keer automatisch herladen,
-  // zodat nieuwe code/logo's meteen verschijnen (voorkomt het "twee keer verversen"-gedoe).
+  // Zodra een NIEUWE service worker de controle overneemt van een bestaande: één keer automatisch
+  // herladen, zodat nieuwe code/logo's meteen verschijnen (voorkomt het "twee keer verversen"-gedoe).
+  // Geen herlaad bij het eerste bezoek (clients.claim() meldt dan óók een controllerchange, maar de pagina
+  // is al vers van het netwerk) en niet terwijl een dialoog openstaat: half ingevulde invoer gaat anders
+  // verloren. De nieuwe code komt dan bij de eerstvolgende navigatie (HTML is network-first, ?v wisselt).
+  const _swHadController = !!navigator.serviceWorker.controller;
   let _swRefreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (_swRefreshing) return;
+    if (!_swHadController || _swRefreshing) return;
+    if (document.querySelector('dialog[open]')) return;
     _swRefreshing = true;
     location.reload();
   });

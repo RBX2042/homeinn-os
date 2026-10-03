@@ -59,7 +59,7 @@ function head(titel, desc, canonical, ogType = 'article') {
   <link rel="preload" href="fonts/Outfit-300.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="fonts/fonts.css?v=20260922a">
   <link rel="stylesheet" href="tokens.css?v=20261001a">
-  <link rel="stylesheet" href="homeinn-public.css?v=20261002a">
+  <link rel="stylesheet" href="homeinn-public.css?v=20261003b">
   <style>
     .kn-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem clamp(1.25rem,5vw,5.5rem);background:var(--navy);border-bottom:1px solid rgba(var(--gold-rgb),.35);position:sticky;top:0;z-index:800}
     .kn-top .brand img{height:34px;width:auto;display:block}

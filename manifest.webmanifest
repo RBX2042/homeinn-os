@@ -1,7 +1,7 @@
 {
   "name": "HomeINN — Projectontwikkeling in Rotterdam",
   "short_name": "HomeINN",
-  "description": "Projectontwikkeling, aankoop, verhuur en verkoop van vastgoed in Rotterdam.",
+  "description": "Aankoop, projectontwikkeling, verkoop, verhuur en beheer van vastgoed in Rotterdam.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
