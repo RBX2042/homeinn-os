@@ -1,0 +1,10 @@
+# Alleen de instellingen die in de repo moeten vastliggen. NIET verwijderen: zonder deze regels
+# zet de Supabase-CLI bij elke deploy verify_jwt op true, en dan krijgt de browser (zonder JWT) een 401.
+project_id = "evguvdpuidyvkiinzvys"
+
+[functions.lead-submit]
+verify_jwt = false
+
+# Wordt door een database-trigger (pg_net) aangeroepen, zonder JWT.
+[functions.lead-notify]
+verify_jwt = false

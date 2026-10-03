@@ -1,0 +1,40 @@
+# Dagelijkse controle van de Supabase-kant van de website (gratis plan):
+#  1. Houdt de database wakker. Een project zonder verkeer pauzeert na 7 dagen; daarna komen
+#     website-aanvragen niet meer in het portaal en gaan de bevestigingsmails niet meer uit.
+#  2. Controleert dat de edge function 'lead-submit' leeft (opstarten, JWT-instelling, service-sleutel
+#     en database-aanroep), zonder iets in te voeren. Valt hij uit, dan komt de FormSubmit-mail nog
+#     wel binnen, maar niet de Resend-mail ('Nieuwe aanvraag'), en staat de aanvraag niet in het
+#     portaal: dit is de enige automatische waarschuwing daarvoor. GitHub mailt de eigenaar bij een
+#     mislukte run.
+# Let op: GitHub schakelt geplande workflows uit na 60 dagen zonder activiteit in de repo.
+name: Supabase controleren
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch: {}
+permissions: {}
+jobs:
+  controleer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      BASIS: https://evguvdpuidyvkiinzvys.supabase.co
+      KEY: sb_publishable_JZcuyhVWabuo33MZ8qGTDg_wwMth0zC # bedoeld voor de browser; RLS bewaakt de tabel
+    steps:
+      - name: Database aanspreken
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 \
+            "$BASIS/rest/v1/hios_leads?select=id&limit=1" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+          echo "HTTP $code"
+          [ "$code" = "200" ] || { echo "::error::Supabase antwoordde $code — mogelijk gepauzeerd; herstel via het Supabase-dashboard."; exit 1; }
+      - name: lead-submit gezond
+        run: |
+          code=$(curl -s -o /tmp/ls.json -w '%{http_code}' --max-time 60 -X POST \
+            "$BASIS/functions/v1/lead-submit" \
+            -H 'Content-Type: text/plain;charset=UTF-8' -H 'Origin: https://homeinn.nl' \
+            --data '{"type":"__gezondheid"}')
+          echo "HTTP $code"; cat /tmp/ls.json; echo
+          if [ "$code" = "200" ] && grep -q '"ok":true' /tmp/ls.json; then echo "lead-submit ok"; exit 0; fi
+          echo "::error::lead-submit antwoordt niet zoals verwacht (HTTP $code). 401 = verify_jwt staat aan, 404 = niet geplaatst, 5xx = stuk. Aanvragen komen nu alleen nog per FormSubmit-mail binnen."
+          exit 1

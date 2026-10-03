@@ -31,8 +31,12 @@ const CORS = {
 }
 
 const DAG = 86400000
-const MAX_ALARMEN_PER_DAG = 50
-const MAX_BEVESTIGINGEN_PER_DAG = 30
+// Het gratis Resend-plan geeft ca. 100 mails per dag voor ALLE mail (ook contracten en betalingen).
+// Aanvragen krijgen daarom maximaal een kwart ervan. Is het alarmplafond bereikt, dan krijgt het team
+// toch hoogstens één overzichtsmail per uur ('lead-digest'), zodat een flinke golf nepaanvragen het
+// team niet blind maakt voor echte aanvragen.
+const MAX_ALARMEN_PER_DAG = 25
+const MAX_BEVESTIGINGEN_PER_DAG = 10
 const MAX_ALARM_POGINGEN = 3
 const MAX_PER_ONTVANGER_PER_DAG = 5
 
@@ -116,6 +120,8 @@ Deno.serve(async (req: Request) => {
     // Een tijdstip in de toekomst komt alleen uit een vervalste rij (anon kan created_at sinds
     // 3 oktober 2026 niet meer zelf zetten). Zo'n rij levert nooit mail op.
     if (aangemaakt > Date.now() + 5 * 60000) return json({ skipped: 'tijdstip in de toekomst' })
+    // Een spamverdachte aanvraag (lead-submit boven de sitelimiet) levert nooit mail op.
+    if (lead.status && lead.status !== 'nieuw') return json({ skipped: 'status ' + lead.status })
 
     // Atomisch claimen: alleen de aanroep die notified_at van leeg naar gevuld zet, gaat door.
     const { data: claim, error: claimFout } = await admin.from('hios_leads')
@@ -212,6 +218,15 @@ Deno.serve(async (req: Request) => {
         await log('lead-alert', operator, alarmOnderwerp, 'overgeslagen',
           `daglimiet van ${MAX_ALARMEN_PER_DAG} alarmen bereikt; de aanvraag staat in het adminpaneel`)
         alarm = 'overgeslagen'
+        // Hoogstens één overzichtsmail per uur: het team blijft op de hoogte, ook bij een golf nepaanvragen.
+        const { count: digestUur } = await admin.from('hios_emails')
+          .select('id', { count: 'exact', head: true })
+          .eq('kind', 'lead-digest').eq('status', 'verzonden')
+          .gte('created_at', new Date(Date.now() - 3600000).toISOString())
+        if (!digestUur) {
+          await verstuur('lead-digest', operator, 'Veel aanvragen: controleer het adminpaneel',
+            shell(`<p style="margin:0 0 12px">Het alarmplafond (${MAX_ALARMEN_PER_DAG} per dag) is bereikt. Nieuwe aanvragen komen niet meer apart in uw mail, maar staan wel in het <a href="${esc(adminUrl)}">adminpaneel</a>.</p><p style="margin:0">Zijn het er opvallend veel, dan kan het een golf nepaanvragen zijn; filter in het adminpaneel op status.</p>`))
+        }
       } else {
         alarm = await verstuur('lead-alert', operator, alarmOnderwerp, internHtml(lead, adminUrl))
       }

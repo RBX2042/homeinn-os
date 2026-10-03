@@ -30,6 +30,11 @@
   var SUPABASE_URL = 'https://evguvdpuidyvkiinzvys.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_JZcuyhVWabuo33MZ8qGTDg_wwMth0zC'; // publishable (anon) key — bedoeld voor de browser; RLS bewaakt de tabel
   var ENDPOINT = SUPABASE_URL + '/rest/v1/hios_leads';
+  // Eerste keus: de edge function 'lead-submit' (limiet per IP-adres, 3 oktober 2026). De directe
+  // insert in ENDPOINT blijft de terugval voor als die function niet bereikbaar is. Zodra
+  // supabase/migrations/20261003_vervolg_5_anon_insert_dicht.sql is toegepast, weigert de database
+  // de directe insert en is de function de enige route.
+  var FUNCTIE = SUPABASE_URL + '/functions/v1/lead-submit';
   // Een keepalive-verzoek mag samen met andere keepalive-verzoeken niet boven ~64 kB uitkomen.
   // Daarboven laten we keepalive vallen in plaats van het verzoek te laten weigeren.
   var KEEPALIVE_MAX = 60000;
@@ -60,6 +65,52 @@
     return tekens.join('');
   }
 
+  /* Via de edge function. Een 'simple request' (text/plain): geen CORS-preflight, dus geen extra
+     roundtrip. Een weigering van de server (400 ongeldig, 413 te groot, 429 limiet) is een beslissing
+     en wordt NIET omzeild met de directe insert. De aanroeper valt alleen terug op directInvoegen()
+     als de function niet bereikbaar of fout geconfigureerd is: netwerk of een tijdslimiet van 10 s,
+     401 (verify_jwt staat aan), 403 (deze website staat niet in TOEGESTANE_ORIGINS), 404 (nog niet
+     geplaatst) en 5xx. Na fase B (directe insert dicht) is die terugval onschadelijk: hij faalt. */
+  function viaFunctie(body, keepalive) {
+    var stuur = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (stuur) stuur.abort(); }, 10000);
+    return fetch(FUNCTIE, {
+      method: 'POST',
+      keepalive: keepalive,
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: body,
+      signal: stuur ? stuur.signal : undefined
+    }).then(function (r) {
+      clearTimeout(timer);
+      if (r.ok) return { klaar: true, ok: true };
+      if (r.status >= 400 && r.status < 500 && r.status !== 401 && r.status !== 403 && r.status !== 404) {
+        console.warn('Lead-cloud: aanvraag geweigerd door de server (' + r.status + ')');
+        return { klaar: true, ok: false };
+      }
+      return { klaar: false };
+    }, function () { clearTimeout(timer); return { klaar: false }; });
+  }
+
+  function directInvoegen(body, keepalive) {
+    return fetch(ENDPOINT, {
+      method: 'POST',
+      keepalive: keepalive,
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: body
+    }).then(function (r) {
+      if (!r.ok) {
+        r.text().then(function (t) { console.warn('Lead-cloud insert mislukt (' + r.status + '):', t); })
+          .catch(function () { console.warn('Lead-cloud insert mislukt (' + r.status + ')'); });
+      }
+      return r.ok;
+    }).catch(function () { return false; /* offline of geblokkeerd — lokale flow + e-mail blijven werken */ });
+  }
+
   window.pushLeadToCloud = function (type, data, source) {
     try {
       if (location.protocol === 'file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return Promise.resolve(false);
@@ -81,23 +132,10 @@
       // De keepalive-grens telt bytes, niet JS-tekens (een emoji = 4 bytes, maar .length 2).
       var bytes = body.length;
       try { if (window.TextEncoder) bytes = new TextEncoder().encode(body).length; } catch (e) { bytes = body.length * 3; }
-      return fetch(ENDPOINT, {
-        method: 'POST',
-        keepalive: bytes <= KEEPALIVE_MAX,
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
-        },
-        body: body
-      }).then(function (r) {
-        if (!r.ok) {
-          r.text().then(function (t) { console.warn('Lead-cloud insert mislukt (' + r.status + '):', t); })
-            .catch(function () { console.warn('Lead-cloud insert mislukt (' + r.status + ')'); });
-        }
-        return r.ok;
-      }).catch(function () { return false; /* offline of geblokkeerd — lokale flow + e-mail blijven werken */ });
+      var keepalive = bytes <= KEEPALIVE_MAX;
+      return viaFunctie(body, keepalive).then(function (res) {
+        return res.klaar ? res.ok : directInvoegen(body, keepalive);
+      });
     } catch (err) { return Promise.resolve(false); /* nooit de bezoeker hinderen */ }
   };
 })();

@@ -106,3 +106,77 @@ De API-sleutel werkt, maar Resend weigert met *"The homeinn.nl domain is not
 verified"*. Voeg `homeinn.nl` toe op https://resend.com/domains, zet de getoonde
 DKIM- en SPF-records in de DNS bij Hostnet en verifieer. Tot die tijd komt er geen
 mail aan; elke poging staat wel in het e-maillog met de foutmelding erbij.
+
+
+---
+
+## Edge functions plaatsen en de aanvraagroute veiligstellen (3 oktober 2026)
+
+Er zijn vier functies. **Alle vier plaatsen vanuit de repo-root** (daar staat `supabase/config.toml`, die
+`lead-submit` en `lead-notify` zonder JWT laat draaien):
+
+```bash
+supabase login                                   # opent de browser; keur goed
+supabase functions deploy lead-submit --no-verify-jwt --use-api --project-ref evguvdpuidyvkiinzvys
+supabase functions deploy lead-notify --no-verify-jwt --use-api --project-ref evguvdpuidyvkiinzvys
+supabase functions deploy notify    --use-api --project-ref evguvdpuidyvkiinzvys
+supabase functions deploy broadcast --use-api --project-ref evguvdpuidyvkiinzvys
+```
+
+`--no-verify-jwt` is verplicht voor `lead-submit` en `lead-notify`: bezoekers en de database-trigger sturen
+geen JWT. Zonder die vlag antwoordt de gateway met 401 en valt het formulier stilletjes terug op de oude route.
+`notify` en `broadcast` blijven mét JWT (alleen ingelogd team).
+
+### Direct na het plaatsen: de acceptatietest (alles moet kloppen)
+
+1. **Leeft hij, en is verify_jwt uit?** Verwacht **HTTP 400**, niet 401 of 404:
+   ```bash
+   curl -s -o /dev/null -w '%{http_code}\n' -X POST -H 'Origin: https://homeinn.nl' -d '{}' \
+     https://evguvdpuidyvkiinzvys.supabase.co/functions/v1/lead-submit
+   ```
+2. **Werkt de database-aanroep?** Verwacht `{"ok":true}`:
+   ```bash
+   curl -s -X POST -H 'Origin: https://homeinn.nl' -d '{"type":"__gezondheid"}' \
+     https://evguvdpuidyvkiinzvys.supabase.co/functions/v1/lead-submit
+   ```
+3. **Staat verify_jwt goed?** In Supabase (Dashboard > Edge Functions) of via de MCP-koppeling:
+   `lead-submit` en `lead-notify` → verify_jwt **uit**; `notify` en `broadcast` → **aan**.
+4. **Een echte aanvraag via de website** op https://homeinn.nl (contactformulier, met je eigen
+   e-mailadres). Controleer **alle** punten:
+   - de browser-netwerktab toont `POST /functions/v1/lead-submit` → 201 en **géén** `POST /rest/v1/hios_leads`;
+   - `select count(*) from private.lead_submit_log where created_at > now() - interval '30 minutes';` → minstens 1
+     (alleen de function schrijft daar; een rij in `hios_leads` bewijst niets, want de terugval kan hem ook
+     hebben ingevoegd);
+   - in `hios_emails` staat een `lead-alert` met status `verzonden`, en je krijgt de mail
+     *"Nieuwe aanvraag: Contact"* (de Resend-mail) náást de FormSubmit-mail;
+   - Dashboard > Edge Functions > lead-submit > Logs: geen 5xx en geen regel *"geen cf-connecting-ip"*.
+   Maximaal 3 testen per uur vanaf één netwerk (limiet 5 per uur per IP-bereik); een 429 valt bewust niet terug.
+5. Verwijder de testaanvraag in het adminpaneel.
+
+### Pas daarna: fase B (de directe route dichtzetten)
+
+Zonder fase B houdt iedereen met de (openbare) sleutel in `lead-cloud.js` een directe route naar de tabel,
+met alleen de oude rem van 40 per uur. Fase B sluit die. **Wacht minstens 48 uur na het live zetten van de
+nieuwe `lead-cloud.js`** (browsers houden het oude script een dag vast) en voer dan uit:
+
+```sql
+-- verwacht 0 (aanvragen die NIET via de function zijn binnengekomen):
+select count(*) from public.hios_leads l where l.created_at > now() - interval '2 days'
+  and not exists (select 1 from private.lead_submit_log g where g.created_at = l.created_at);
+```
+daarna `supabase/migrations/20261003_vervolg_5_anon_insert_dicht.sql` (weigert zelf als de function de
+laatste 2 dagen niets heeft opgeslagen). **Terugdraaien:** `supabase/rollback/20261003_vervolg_5_TERUGDRAAIEN.sql`.
+
+### Doorlopend
+
+- De GitHub-taak *Supabase controleren* draait elke dag en mailt je als `lead-submit` niet gezond is. Daarna
+  komen aanvragen alleen nog per **FormSubmit**-mail binnen. Elke echte aanvraag geeft normaal **twee** mails op
+  info@homeinn.nl: *"Website-aanvraag: …"* (FormSubmit) en *"Nieuwe aanvraag: …"* (Resend). Komt alleen de eerste,
+  dan is de cloudroute stuk.
+- Nieuwe domeinnaam of alias voor de website? Voeg die toe aan `TOEGESTANE_ORIGINS` in
+  `supabase/functions/lead-submit/valideer.ts` en plaats de function opnieuw.
+- Boven 40 aanvragen per uur of 150 per dag worden aanvragen opgeslagen met status `spamverdacht`: geen mail,
+  niet in de gewone lijsten, de teller staat op het dashboard, na 30 dagen gewist. Boven 200 per uur of 600
+  per dag weigert de function nog (429).
+- Het alarmplafond van `lead-notify` is 25 alarmen en 10 bevestigingen per 24 uur (het gratis Resend-plan
+  geeft ~100 mails per dag voor alle mail). Daarboven krijg je hoogstens één overzichtsmail per uur.

@@ -23,7 +23,7 @@
 
   var sb = null, me = null;
   var fouten = [];   // tabellen die bij de laatste laadronde niet konden worden gelezen
-  var data = { leads: [], emails: [], properties: [], projects: [], investors: [], maintenance: [], contracts: [], invoices: [], costs: [], loans: [], profiles: [], state: null };
+  var data = { spam: 0, leads: [], emails: [], properties: [], projects: [], investors: [], maintenance: [], contracts: [], invoices: [], costs: [], loans: [], profiles: [], state: null };
 
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
@@ -152,8 +152,9 @@
     var nieuweFouten = [];
     // Een leesfout (verlopen sessie, RLS, netwerk, gepauzeerd project) mag nooit als 'leeg' worden
     // getoond: dan leest het team 'Nog geen aanvragen' terwijl het ophalen mislukte.
-    function haal(tabel, select, order) {
+    function haal(tabel, select, order, filter) {
       var q = c.from(tabel).select(select || '*');
+      if (filter) q = filter(q);
       if (order) q = q.order(order, { ascending: false });
       return q.then(function (r) {
         if (r.error) { nieuweFouten.push(tabel + ': ' + r.error.message); return []; }
@@ -161,7 +162,9 @@
       }, function (err) { nieuweFouten.push(tabel + ': ' + ((err && err.message) || err)); return []; });
     }
     var res = await Promise.all([
-      haal('hios_leads', '*', 'created_at'),
+      // Spamverdachte aanvragen (lead-submit boven de sitelimiet) staan apart; maximaal 500 per keer,
+      // zodat nepaanvragen echte aanvragen niet uit de lijst duwen (PostgREST kapt af op 1000 rijen).
+      haal('hios_leads', '*', 'created_at', function (q) { return q.neq('status', 'spamverdacht').limit(500); }),
       haal('hios_emails', '*', 'created_at'),
       haal('hios_properties'),
       haal('hios_projects'),
@@ -181,6 +184,10 @@
     data.leads = res[0]; data.emails = res[1]; data.properties = res[2]; data.projects = res[3];
     data.investors = res[4]; data.maintenance = res[5]; data.contracts = res[6]; data.invoices = res[7];
     data.costs = res[8]; data.loans = res[9]; data.profiles = res[10]; data.state = res[11];
+    try {
+      var sp = await c.from('hios_leads').select('id', { count: 'exact', head: true }).eq('status', 'spamverdacht');
+      data.spam = sp && !sp.error ? (sp.count || 0) : 0;
+    } catch (e) { data.spam = 0; }
     tekenAlles();
     if (fouten.length) toast('Niet alles kon worden geladen (' + fouten.length + ' tabel' + (fouten.length === 1 ? '' : 'len') + '). Klik Vernieuwen; zie Systeem.', true);
   }
@@ -220,7 +227,7 @@
     var teTekenen = data.contracts.filter(function (k) { return k.status !== 'Getekend'; }).length;
     var inleg = data.investors.reduce(function (s, i) { return s + (Number(i.bedrag) || 0); }, 0);
     $('#kpis').innerHTML =
-      kpi('Aanvragen open', nieuw, laadFout('hios_leads') ? 'niet geladen' : data.leads.length + ' totaal') +
+      kpi('Aanvragen open', nieuw, laadFout('hios_leads') ? 'niet geladen' : data.leads.length + ' totaal' + (data.spam ? ' · ' + data.spam + ' spamverdacht (apart, 30 dagen bewaard)' : '')) +
       kpi('Panden', data.properties.length, 'in de cloud') +
       kpi('Projecten', data.projects.length, data.projects.filter(function (p) { return p.published; }).length + ' gepubliceerd') +
       kpi('Hoofdsom geldgevers', euro(inleg), data.investors.length + ' leningen') +

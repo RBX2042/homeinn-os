@@ -415,7 +415,8 @@
     fetchLeads: async function () {
       var c = get(); if (!c) return [];
       if (!window.HCloud.status().staff) return [];
-      var r = await c.from('hios_leads').select('*').order('created_at', { ascending: false });
+      // Zonder spamverdachte aanvragen (lead-submit) en met een bovengrens, zodat nepaanvragen de echte niet uit de lijst duwen.
+      var r = await c.from('hios_leads').select('*').neq('status', 'spamverdacht').order('created_at', { ascending: false }).limit(500);
       if (r.error) throw r.error;
       return r.data || [];
     },
